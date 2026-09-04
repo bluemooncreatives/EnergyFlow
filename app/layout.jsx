@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata = {
   metadataBase: new URL('https://www.energyflow.com'),
   title: {
-    default: 'NUTS | SEEDS | MILLETS | HERBS',
+    default: 'Energyflow- NUTS | SEEDS | MILLETS | HERBS',
     template: '%s | Energyflow',
   },
   description:
@@ -26,7 +26,7 @@ export const metadata = {
     type: 'website',
     locale: 'en_IN',
     siteName: 'Energyflow',
-    title: 'Energyflow - Handcrafted Women\'s Ethnic Wear',
+    title: 'Energyflow - NUTS | SEEDS | MILLETS | HERBS',
     description:
       "From everyday comfort to festive charm, Energyflow brings you handcrafted women's ethnic wear — designs that make you shine effortlessly.",
     url: 'https://www.energyflow.com',
@@ -35,13 +35,13 @@ export const metadata = {
         url: '/assets/images/hero/01.webp',
         width: 1200,
         height: 630,
-        alt: 'Energyflow - Handcrafted Women\'s Ethnic Wear',
+        alt: 'Energyflow - NUTS | SEEDS | MILLETS | HERBS',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Energyflow - Handcrafted Women\'s Ethnic Wear',
+    title: 'Energyflow - NUTS | SEEDS | MILLETS | HERBS',
     description:
       "From everyday comfort to festive charm, Energyflow brings you handcrafted women's ethnic wear — designs that make you shine effortlessly.",
     images: ['/assets/images/hero/01.webp'],
