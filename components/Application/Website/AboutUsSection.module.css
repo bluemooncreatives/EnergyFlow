@@ -1,0 +1,213 @@
+/* ── Section shell ──────────────────────────────────────────────── */
+.section {
+    position: relative;
+    width: 100%;
+    background: var(--background);
+    padding: clamp(1.25rem, 2.5vw, 2rem) var(--website-gutter) clamp(2rem, 4vw, 3.5rem);
+    overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.heading {
+    margin: 0;
+    font-size: clamp(1.8rem, 4.8vw, 3.8rem);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--brand-primary-hover);
+    line-height: 1.1;
+}
+
+.seeAll {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brand-primary-hover);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity var(--duration-fast) var(--ease-in-out);
+}
+.seeAll:hover { opacity: 0.6; }
+
+/* ── 3-column grid: Big | Small | Writeup & Image ───────────────── */
+/* At 1456px: col1 ≈ 660px | col2 ≈ 190px | col3 ≈ 470px          */
+.grid {
+    display: grid;
+    grid-template-columns: 7fr 2fr 5fr;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    align-items: stretch;
+}
+
+/* ── Col 1: tall portrait image (drives row height) ─────────────── */
+/* 9:10 ratio matches reference: ~660px wide × ~733px tall          */
+.leftImage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 10;
+    border-radius: var(--radius, 8px);
+    overflow: hidden;
+    background: var(--brand-warm-bg);
+}
+
+/* ── Col 2: small portrait image + blank space below ────────────── */
+.midCol {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* Full column width, portrait — blank space fills the rest below   */
+.smallImage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius, 8px);
+    overflow: hidden;
+    background: var(--brand-warm-bg);
+    flex-shrink: 0;
+}
+
+/* ── Col 3: writeup at top, image + caption at bottom ───────────── */
+.rightCol {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.brandName {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-style: normal;
+}
+
+.bodyText {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+    line-height: 1.55;
+    color: var(--text-body);
+    text-align: justify;
+}
+
+/* ── Bottom image + caption (col 3 only) ────────────────────────── */
+.rightBottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+/* 4:3 landscape fills the column width without being too short     */
+.bottomImage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius, 8px);
+    overflow: hidden;
+    background: var(--brand-warm-bg);
+}
+
+.captionRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+}
+
+.captionTitle {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.008rem;
+    line-height: 1;
+    color: var(--brand-ink-soft);
+    -webkit-font-smoothing: antialiased;
+}
+
+.captionDate {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.008rem;
+    line-height: 1;
+    color: color-mix(in srgb, var(--brand-primary) 45%, transparent);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── Medium screens ≤1280px ─────────────────────────────────────── */
+@media (max-width: 1280px) {
+    .leftImage {
+        aspect-ratio: 4 / 5;
+    }
+}
+
+/* ── Tablet ≤900px ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
+
+    /* Col 1 spans both columns */
+    .leftImage {
+        grid-column: 1 / -1;
+        aspect-ratio: 4 / 3;
+    }
+
+    /* Col 2 & 3 sit side-by-side below the big image */
+    .midCol,
+    .rightCol {
+        justify-content: flex-start;
+        gap: 1.25rem;
+    }
+
+    .bottomImage {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+/* ── Mobile ≤640px ──────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Hide the small image on mobile, keep the "See More" button */
+    .smallImage {
+        display: none;
+    }
+
+    .heading {
+        font-size: clamp(1.8rem, 8vw, 2.45rem);
+    }
+
+    .leftImage {
+        grid-column: 1;
+        aspect-ratio: 3 / 4;
+    }
+
+    .bodyText {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        text-align: left;
+    }
+}

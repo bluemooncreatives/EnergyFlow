@@ -1,0 +1,38 @@
+/* Auth pages (/auth/login, /auth/register, …) — green colour scheme.
+   Re-points the brand tokens the auth cards consume from the default
+   oxblood to green. Scoped to `.auth-theme` so nothing else changes.
+
+   NOTE: tokens like --auth-panel-gradient and --dark-red are declared
+   on :root as var(--brand-primary…), so they get computed there with
+   the red values and inherit down already-resolved. Overriding
+   --brand-primary alone is not enough — every derived token that the
+   auth UI actually paints with is redefined here too. */
+.auth-theme {
+  /* core brand hues */
+  --brand-primary:        #1E4229;   /* deep green — left panel fill          */
+  --brand-primary-hover:  #2C5A38;   /* richer green — hover / active         */
+  --brand-primary-bright: #3B6B47;   /* mid green — gradient highlight        */
+  --brand-primary-deep:   #16301F;   /* darkest green — gradient depth stop   */
+
+  /* legacy aliases used by the brand CTA button (bg-[var(--dark-red)]) */
+  --dark-red:   #1E4229;
+  --dark-red-2: #2C5A38;
+
+  /* brand CTA token set */
+  --btn-brand-bg:       #1E4229;
+  --btn-brand-bg-hover: #2C5A38;
+
+  /* form-field accents that resolve off --brand-primary */
+  --form-field-placeholder: color-mix(in srgb, #1E4229 35%, transparent);
+  --form-field-focus-ring:  color-mix(in srgb, #1E4229 20%, transparent);
+
+  /* left-panel layered radial glow — same structure as the global token,
+     rebuilt so the color-mix() calls resolve against the green hues */
+  --auth-panel-gradient:
+    radial-gradient(66% 112% at  6% 100%, color-mix(in srgb, var(--brand-primary-hover)  88%, transparent), transparent 78%),
+    radial-gradient(56% 102% at 22% 100%, color-mix(in srgb, var(--brand-primary-bright) 84%, transparent), transparent 80%),
+    radial-gradient(48%  96% at 42% 100%, color-mix(in srgb, var(--brand-primary-hover)  82%, transparent), transparent 82%),
+    radial-gradient(44%  92% at 64% 100%, color-mix(in srgb, var(--brand-primary-deep)   76%, transparent), transparent 84%),
+    radial-gradient(42%  88% at 86% 100%, color-mix(in srgb, var(--brand-primary)        68%, transparent), transparent 86%),
+    linear-gradient(0deg, rgb(255 255 255 / 0.08), transparent 62%);
+}

@@ -1,0 +1,240 @@
+/* Portfolio-style Featured Products Grid */
+.fp-section {
+    padding: clamp(2.25rem, 4vw, 3.75rem) 0 clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.fp-container {
+    margin: 0 auto;
+    padding: 0 var(--website-gutter);
+}
+
+/* Row layout: 3 items per row */
+.fp-row {
+    width: 100%;
+    display: flex;
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Each column/card */
+.fp-col {
+    position: relative;
+    width: 100%;
+    height: clamp(18rem, 32vw, 23.75rem);
+    margin-bottom: clamp(1rem, 2vw, 2rem);
+    overflow: hidden;
+    border-radius: var(--radius);
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+    background: var(--product-card-bg);
+}
+
+.fp-col a {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.fp-col img {
+    will-change: transform;
+    object-fit: cover;
+}
+
+/* Size variants */
+.fp-col.lg {
+    flex: 2;
+}
+
+.fp-col.sm {
+    flex: 1.25;
+}
+
+/* Title overlay */
+.fp-project-title {
+    position: absolute;
+    left: clamp(0.875rem, 2vw, 1.1rem);
+    right: clamp(0.875rem, 2vw, 1.1rem);
+    bottom: clamp(0.875rem, 2vw, 1.1rem);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    z-index: 2;
+}
+
+.fp-project-title h3 {
+    position: relative;
+    transform: translateY(28px);
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-weight: 300;
+    color: #fff;
+    will-change: transform;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-wrap: balance;
+}
+
+.fp-project-title span {
+    display: block;
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 0.2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.fp-col:hover .fp-project-title span {
+    opacity: 1;
+}
+
+/* Subtle dark gradient at bottom for text readability */
+.fp-col::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 46%;
+    pointer-events: none;
+    opacity: 0.75;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.72) 100%);
+}
+
+.fp-col:hover::after {
+    opacity: 1;
+}
+
+/* Skeleton loading */
+.fp-col-skeleton {
+    width: 100%;
+    height: clamp(18rem, 32vw, 23.75rem);
+    margin-bottom: clamp(1rem, 2vw, 2rem);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.fp-col-skeleton.lg {
+    flex: 2;
+}
+
+.fp-col-skeleton.sm {
+    flex: 1.25;
+}
+
+.fp-actions {
+    margin-top: clamp(0.5rem, 1.75vw, 1.25rem);
+    display: flex;
+    justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .fp-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .fp-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .fp-col {
+        margin-bottom: 0;
+        height: auto;
+        min-height: 16rem;
+        aspect-ratio: 4 / 5;
+    }
+
+    .fp-col-skeleton {
+        margin-bottom: 0;
+        height: auto;
+        min-height: 16rem;
+        aspect-ratio: 4 / 5;
+    }
+
+    .fp-row .fp-col:nth-child(3),
+    .fp-row .fp-col-skeleton:nth-child(3) {
+        grid-column: 1 / -1;
+        aspect-ratio: 16 / 10;
+    }
+
+    .fp-container {
+        padding: 0 var(--website-gutter);
+    }
+
+    .fp-section {
+        padding: 2rem 0 1.5rem;
+    }
+
+    .fp-project-title h3 {
+        transform: translateY(0);
+    }
+
+    .fp-project-title span {
+        opacity: 1;
+    }
+
+    .fp-actions {
+        margin-top: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .fp-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.625rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .fp-col {
+        min-height: 0;
+        aspect-ratio: 3 / 4;
+    }
+
+    .fp-col-skeleton {
+        min-height: 0;
+        aspect-ratio: 3 / 4;
+    }
+
+    /* 3rd card in each row spans full width as a landscape accent */
+    .fp-row .fp-col:nth-child(3),
+    .fp-row .fp-col-skeleton:nth-child(3) {
+        grid-column: 1 / -1;
+        aspect-ratio: 16 / 9;
+    }
+
+    .fp-project-title h3 {
+        font-size: 0.875rem;
+    }
+
+    .fp-project-title span {
+        font-size: 0.78rem;
+    }
+
+    .fp-actions {
+        display: flex;
+    }
+
+    .fp-actions :is(button, a) {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (hover: none), (pointer: coarse) {
+    .fp-project-title h3 {
+        transform: translateY(0);
+    }
+
+    .fp-project-title span {
+        opacity: 1;
+    }
+
+    .fp-col::after {
+        opacity: 1;
+    }
+}

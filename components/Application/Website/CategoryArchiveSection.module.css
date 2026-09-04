@@ -1,0 +1,177 @@
+.section {
+  position: relative;
+  width: 100%;
+  background-color: var(--background);
+  padding: clamp(1.25rem, 2.5vw, 2rem) 0 clamp(2rem, 4vw, 3.5rem);
+  overflow: hidden;
+}
+
+.archivePage {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  padding: 0 var(--website-gutter);
+  gap: 1em;
+  box-sizing: border-box;
+}
+
+.archive {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.copyBlock {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.1rem, 4.8vw, 3.8rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--brand-primary-hover);
+}
+
+.writeup {
+  margin: 0.75rem 0 0;
+  font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+  line-height: 1.55;
+  color: var(--text-body);
+}
+
+.archiveItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.header,
+.item {
+  display: flex;
+  gap: 1em;
+}
+
+.header {
+  display: none;
+}
+
+.item {
+  text-decoration: none;
+  color: inherit;
+  user-select: none;
+  cursor: pointer;
+}
+
+.item:hover .itemText,
+.item:hover .metaText,
+.item:hover .yearText {
+  opacity: 0.5;
+}
+
+.headerName,
+.itemName {
+  flex: 1;
+}
+
+.headerDesigner,
+.itemDesigner {
+  flex: 2;
+}
+
+.headerYear,
+.itemYear {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.revealer {
+  position: relative;
+  width: max-content;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.revealerText,
+.itemText,
+.metaText,
+.yearText,
+.headerText {
+  position: relative;
+  margin: 0;
+  display: block;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.008rem;
+  line-height: 1;
+  color: var(--foreground);
+  will-change: transform;
+  -webkit-font-smoothing: antialiased;
+  transition: opacity var(--duration-normal) var(--ease-in-out);
+}
+
+.emptyCol {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.preview {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  width: 32.5%;
+  aspect-ratio: 5/3;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.previewImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(0);
+}
+
+@media (max-width: 900px) {
+  .emptyCol {
+    display: none;
+  }
+
+  .headerDesigner,
+  .itemDesigner {
+    display: none;
+  }
+
+  /* Keep preview visible on tablet/mobile — scroll-trigger drives it on touch devices */
+  .preview {
+    width: 42%;
+    aspect-ratio: 5 / 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: clamp(1.8rem, 8vw, 2.45rem);
+  }
+
+  .writeup {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .preview {
+    width: 50%;
+    aspect-ratio: 4 / 3;
+    bottom: 0.75em;
+    right: 0.75em;
+  }
+}

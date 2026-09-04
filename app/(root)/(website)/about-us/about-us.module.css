@@ -1,0 +1,318 @@
+/* ================================================================
+   ABOUT US — dark editorial layout (August-style)
+   Scoped, page-local theme. Brand tokens still drive the footer/
+   header; this page introduces a local dark surface + lime accent.
+   ================================================================ */
+
+.page {
+  /* Local page palette — mapped to the global homepage design tokens */
+  --about-bg:          var(--background);        /* white page surface        */
+  --about-fg:          var(--foreground);        /* near-black headings        */
+  --about-muted:       var(--text-body);         /* #4a4a4a body copy          */
+  --about-line:        var(--border);            /* light hairline rules       */
+  --about-accent:      var(--brand-primary-hover); /* crimson brand accent     */
+  --about-accent-soft: color-mix(in srgb, var(--brand-primary-hover) 14%, transparent);
+
+  /* Section rhythm — identical to the homepage section padding so the gap
+     between blocks matches every other page. (homepage: top clamp(1.25,2.5vw,2),
+     bottom clamp(2,4vw,3.5); --about-gap = the two combined.) */
+  --about-section-pt: clamp(1.25rem, 2.5vw, 2rem);
+  --about-section-pb: clamp(2rem, 4vw, 3.5rem);
+  --about-gap:        clamp(3.25rem, 6.5vw, 5.5rem);
+
+  position: relative;
+  z-index: 1;                 /* sit above the sticky footer reveal */
+  background: var(--about-bg);
+  color: var(--about-fg);
+  overflow: clip;             /* contain the giant headline — no h-scroll */
+  /* Clear the fixed site header */
+  padding-top: clamp(7rem, 12vw, 10rem);
+  padding-bottom: var(--about-section-pb);
+}
+
+.inner {
+  width: 100%;
+  max-width: none;   /* full-bleed — no auto-centering side margin */
+  margin: 0;
+  padding-left: var(--website-gutter);
+  padding-right: var(--website-gutter);
+}
+
+/* ── Hero: centered image + flanking thumbs + giant headline ────── */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.centerImage {
+  position: relative;
+  width: clamp(220px, 28vw, 360px);
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--brand-warm-bg);
+  z-index: 2;
+  will-change: transform;
+}
+.centerImage :global(img) {
+  object-fit: cover;
+}
+
+/* Small decorative thumbnails, desktop only */
+.flankImage {
+  position: absolute;
+  top: clamp(1rem, 6vw, 4rem);
+  width: clamp(140px, 14vw, 210px);
+  aspect-ratio: 3 / 4;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--brand-warm-bg);
+  z-index: 1;
+  will-change: transform;
+}
+.flankLeft  { left: 4%; }
+.flankRight { right: 4%; }
+.flankImage :global(img) { object-fit: cover; }
+
+/* The giant masked headline — overlaps the bottom of the center image */
+.headlineMask {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  margin-top: clamp(-2.5rem, -4vw, -3.5rem);
+  text-align: center;
+  overflow: hidden;          /* mask for the slide-up reveal */
+  line-height: 0.8;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  font-size: clamp(4.5rem, 21vw, 17rem);
+  color: var(--brand-primary);   /* #3E000D oxblood */
+  /* sits below the mask until revealed */
+  transform: translateY(110%);
+  will-change: transform;
+}
+
+/* ── Plus marker + caption ──────────────────────────────────────── */
+.marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: var(--about-gap) 0 var(--about-section-pt);
+}
+.marker .plus {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--about-fg);
+}
+.marker .rule {
+  width: 1px;
+  height: clamp(2rem, 4vw, 3rem);
+  background: var(--about-line);
+}
+.marker .caption {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  text-align: center;
+  color: var(--about-muted);
+  line-height: 1.45;
+}
+
+/* ── Big statement + supporting copy ────────────────────────────── */
+.statementWrap {
+  max-width: 80rem;   /* wider container → much smaller auto side margin */
+  margin: 0 auto;
+  text-align: center;
+}
+
+.statement {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 3rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--about-fg);
+}
+
+.story {
+  max-width: none;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  text-align: center;
+}
+.storyText {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+  line-height: 1.7;
+  color: var(--about-muted);
+}
+
+/* ── Full-width scroll-scaled middle image (Image 2) ────────────── */
+.scrollImageWrap {
+  position: relative;
+  width: 100%;
+  height: clamp(46vh, 60vw, 80vh);
+  margin: var(--about-gap) 0;
+  overflow: hidden;
+}
+.scrollImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* ── The family / founder profiles ──────────────────────────────── */
+.people {
+  position: relative;
+  max-width: none;
+  margin: 0;
+}
+
+.peopleHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vw, 5.5rem);
+}
+.peopleEyebrow {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  color: var(--about-accent);
+}
+.peopleHeadline {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--about-fg);
+}
+.peopleIntro {
+  margin: 0.4rem 0 0;
+  max-width: 60ch;
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+  line-height: 1.7;
+  color: var(--about-muted);
+}
+
+/* Two-column profile: image | text, alternating */
+.profile {
+  display: grid;
+  grid-template-columns: 0.78fr 1.32fr;
+  gap: clamp(2rem, 4.5vw, 4.5rem);
+  align-items: center;
+  margin-bottom: clamp(3.5rem, 8vw, 7rem);
+}
+.profile:last-of-type { margin-bottom: 0; }
+
+.profileImg {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 4 / 5;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--brand-warm-bg);
+  will-change: clip-path;
+}
+.profileImg :global(img) {
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Reversed row: image moves to the right, text to the left.
+   Columns swap too so the image keeps the narrower track. */
+.profileReverse { grid-template-columns: 1.32fr 0.78fr; }
+.profileReverse .profileImg { order: 2; justify-self: end; }
+.profileReverse .profileBody { order: 1; }
+
+.profileBody {
+  display: flex;
+  flex-direction: column;
+}
+.profileRole {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+  color: var(--about-accent);
+}
+.profileName {
+  margin: 0 0 1.1rem;
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--about-fg);
+}
+.profileBio {
+  margin: 0 0 0.85rem;
+  font-size: clamp(0.92rem, 1.05vw, 1rem);
+  line-height: 1.7;
+  color: var(--about-muted);
+}
+.profileBio:last-child { margin-bottom: 0; }
+
+/* ── CTA ────────────────────────────────────────────────────────── */
+.ctaWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--about-gap);
+}
+
+/* ── Curated For You · You May Also Like ─────────────────────────── */
+.related {
+  margin-top: var(--about-gap);
+}
+
+/* ── Shared masked line-reveal helpers (SplitType) ──────────────── */
+.lineWrapper {
+  display: block;
+  overflow: hidden;
+}
+.lineWrapper > span {
+  display: block;
+  position: relative;
+  transform: translateY(115%);
+  will-change: transform;
+}
+
+/* ── Reduced motion: show everything, no transforms ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .headline { transform: none; }
+  .lineWrapper > span { transform: none; }
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .flankImage { display: none; }
+
+  .headlineMask { margin-top: clamp(-1.5rem, -5vw, -2.25rem); }
+
+  .scrollImageWrap { height: 48vh; }
+
+  /* Stack each profile: image on top, text below (both rows) */
+  .profile {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .profileReverse .profileImg { order: 0; }
+  .profileImg { aspect-ratio: 4 / 3; max-height: 60vh; }
+  .profileBody { text-align: left; }
+}
