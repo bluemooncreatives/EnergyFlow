@@ -18,11 +18,9 @@ const BenefitsSection = dynamic(() => import('@/components/Application/Website/B
 const FAQSection = dynamic(() => import('@/components/Application/Website/FAQSection'))
 
 export const metadata = {
-    title: 'ENERGYFLOW - Handcrafted Women\'s Ethnic Wear | Shop Online',
     description:
         'Discover handcrafted women\'s ethnic wear at Energyflow. From festive ensembles to everyday elegance - premium fabrics, thoughtful silhouettes, and meticulous detailing.',
     openGraph: {
-        title: 'ENERGYFLOW - Handcrafted Women\'s Ethnic Wear | Shop Online',
         description:
             'Discover handcrafted women\'s ethnic wear at Energyflow. From festive ensembles to everyday elegance - premium fabrics, thoughtful silhouettes, and meticulous detailing.',
     },
