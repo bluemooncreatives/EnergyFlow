@@ -50,7 +50,7 @@ export const metadata = {
     icon: '/favicon.ico',
   },
   other: {
-    'theme-color': '#3E000D',
+    'theme-color': '#1E4229',
   },
 };
 

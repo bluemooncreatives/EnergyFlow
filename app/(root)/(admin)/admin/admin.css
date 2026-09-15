@@ -105,7 +105,7 @@
 
 /* ────────────────────────────────────────────────────────────────
    Sage-green scrollbar — admin panel only.
-   Overrides the global 1px oxblood scrollbar from design-system.css.
+   Overrides the global 1px brand-green scrollbar from design-system.css.
    The sage tone (--accent: #8A9A3F light / #A3B34C dark) is the same
    green already used by the dashboard stat-card icons.
    The doubled `.admin-theme.admin-theme` bumps specificity above the

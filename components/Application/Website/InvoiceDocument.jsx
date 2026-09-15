@@ -15,7 +15,7 @@ const BRAND = {
     web: 'www.energyflow.com',
 }
 
-const OX = '#3E000D'
+const BRAND_GREEN = '#1E4229'   // deep forest green — matches --brand-primary
 const CREAM = '#FFECD1'
 const INK = '#1A1A1A'
 const MUTE = '#8a8a8a'
@@ -47,13 +47,13 @@ const s = StyleSheet.create({
     page: { paddingVertical: 40, paddingHorizontal: 44, fontFamily: 'Helvetica', fontSize: 9, color: INK, lineHeight: 1.5 },
 
     // header
-    head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 2, borderBottomColor: OX, paddingBottom: 14 },
-    brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: OX, letterSpacing: 1 },
+    head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 2, borderBottomColor: BRAND_GREEN, paddingBottom: 14 },
+    brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: BRAND_GREEN, letterSpacing: 1 },
     brandTag: { fontSize: 7.5, color: MUTE, marginTop: 2, letterSpacing: 0.5 },
     brandMeta: { fontSize: 7.5, color: '#6a6a6a', marginTop: 6 },
     invTitleWrap: { alignItems: 'flex-end' },
     invTitle: { fontSize: 16, fontFamily: 'Helvetica-Bold', color: INK, letterSpacing: 3 },
-    badge: { marginTop: 6, backgroundColor: CREAM, color: OX, paddingVertical: 3, paddingHorizontal: 8, borderRadius: 8, fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1 },
+    badge: { marginTop: 6, backgroundColor: CREAM, color: BRAND_GREEN, paddingVertical: 3, paddingHorizontal: 8, borderRadius: 8, fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1 },
 
     // meta
     meta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
@@ -67,7 +67,7 @@ const s = StyleSheet.create({
 
     // items table
     table: { marginTop: 22 },
-    thead: { flexDirection: 'row', backgroundColor: OX, color: '#fff', paddingVertical: 7, paddingHorizontal: 8 },
+    thead: { flexDirection: 'row', backgroundColor: BRAND_GREEN, color: '#fff', paddingVertical: 7, paddingHorizontal: 8 },
     th: { fontSize: 6.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 0.8, color: '#fff' },
     row: { flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#ececec' },
     cNum: { width: '7%', color: '#9a9a9a' },
@@ -101,7 +101,7 @@ const s = StyleSheet.create({
 
     // footer
     foot: { marginTop: 30, borderTopWidth: 1, borderTopColor: '#ececec', paddingTop: 14, alignItems: 'center' },
-    thanks: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: OX },
+    thanks: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: BRAND_GREEN },
     footSmall: { fontSize: 7.5, color: '#9a9a9a', marginTop: 5, textAlign: 'center', lineHeight: 1.6 },
 })
 

@@ -10,7 +10,7 @@
   --about-fg:          var(--foreground);        /* near-black headings        */
   --about-muted:       var(--text-body);         /* #4a4a4a body copy          */
   --about-line:        var(--border);            /* light hairline rules       */
-  --about-accent:      var(--brand-primary-hover); /* crimson brand accent     */
+  --about-accent:      var(--brand-primary-hover); /* green brand accent       */
   --about-accent-soft: color-mix(in srgb, var(--brand-primary-hover) 14%, transparent);
 
   /* Section rhythm — identical to the homepage section padding so the gap
@@ -95,7 +95,7 @@
   letter-spacing: -0.04em;
   line-height: 0.8;
   font-size: clamp(4.5rem, 21vw, 17rem);
-  color: var(--brand-primary);   /* #3E000D oxblood */
+  color: var(--brand-primary);   /* #1E4229 brand green */
   /* sits below the mask until revealed */
   transform: translateY(110%);
   will-change: transform;

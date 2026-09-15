@@ -104,7 +104,7 @@ const Footer = ({ categoryLinks = [] }) => {
     }, { scope: rootRef })
 
     return (
-        <footer ref={rootRef} className='sticky z-0 bottom-0 left-0 w-full bg-[var(--brand-primary)] text-white overflow-hidden' aria-label='Site footer'>
+        <footer ref={rootRef} className='sticky z-0 bottom-0 left-0 w-full bg-[var(--brand-primary)] text-white overflow-hidden' style={{ backgroundImage: 'var(--brand-panel-gradient)' }} aria-label='Site footer'>
             <div className='website-gutter pt-14 pb-8'>
 
                 {/* ───── Top row: caption + big email + CTA card ───── */}

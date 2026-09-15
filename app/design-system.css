@@ -12,9 +12,9 @@
    All component colors should resolve back to these tokens.
    ──────────────────────────────────────────────────────────────── */
 :root {
-  /* Primary brand reds */
-  --brand-primary:       #3E000D;   /* deep oxblood — nav logo, borders, CTAs */
-  --brand-primary-hover: #8E1616;   /* richer crimson — hover / active states  */
+  /* Primary brand greens */
+  --brand-primary:       #1E4229;   /* deep forest green — nav logo, borders, CTAs */
+  --brand-primary-hover: #2C5A38;   /* richer green — hover / active states        */
 
   /* Neutral palette */
   --brand-ink:       #000000;   /* true black */
@@ -22,9 +22,9 @@
   --brand-white:     #FFFFFF;   /* pure white */
   --brand-cream:     #FFECD1;   /* warm cream — secondary fills */
 
-  /* Brand gradient range (auth panel + decorative highlights) */
-  --brand-primary-bright: #a01c1c;   /* mid-bright crimson — gradient highlight  */
-  --brand-primary-deep:   #6b1010;   /* deep crimson — gradient depth stop       */
+  /* Brand gradient range (auth panel, footer + decorative highlights) */
+  --brand-primary-bright: #3B6B47;   /* mid green — gradient highlight      */
+  --brand-primary-deep:   #16301F;   /* darkest green — gradient depth stop */
 
   /* Warm neutral fill (image placeholders, instagram cards, section accents) */
   --brand-warm-bg: #efe9e2;
@@ -397,7 +397,7 @@
   --form-field-radius:        var(--radius-sm);                           /* 4px      */
   --form-field-border:        color-mix(in srgb, var(--brand-ink-soft) 40%, transparent);  /* ink-soft/40 */
   --form-field-border-hover:  var(--brand-ink-soft);                                       /* full on hover */
-  --form-field-placeholder:   color-mix(in srgb, var(--brand-primary) 35%, transparent);  /* oxblood/35 */
+  --form-field-placeholder:   color-mix(in srgb, var(--brand-primary) 35%, transparent);  /* brand green/35 */
   --form-field-focus-ring:    color-mix(in srgb, var(--brand-primary) 20%, transparent);
 
   /* ── Cards ── */
@@ -428,15 +428,18 @@
   --header-blur-bg: rgba(255, 255, 255, 0.8);
   --header-border:  rgba(0, 0, 0, 0.208);
 
-  /* ── Auth panel (shared across login / register / reset-password) ── */
-  /* Layered radial glow that creates depth on the brand-red left panel */
-  --auth-panel-gradient:
+  /* ── Brand panel gradient (auth panels, footer, dark brand sections) ── */
+  /* Layered radial glow that creates depth on a flat brand-green fill */
+  --brand-panel-gradient:
     radial-gradient(66% 112% at  6% 100%, color-mix(in srgb, var(--brand-primary-hover)  88%, transparent), transparent 78%),
     radial-gradient(56% 102% at 22% 100%, color-mix(in srgb, var(--brand-primary-bright) 84%, transparent), transparent 80%),
     radial-gradient(48%  96% at 42% 100%, color-mix(in srgb, var(--brand-primary-hover)  82%, transparent), transparent 82%),
     radial-gradient(44%  92% at 64% 100%, color-mix(in srgb, var(--brand-primary-deep)   76%, transparent), transparent 84%),
     radial-gradient(42%  88% at 86% 100%, color-mix(in srgb, var(--brand-primary)        68%, transparent), transparent 86%),
     linear-gradient(0deg, rgb(255 255 255 / 0.08), transparent 62%);
+
+  /* Back-compat alias — auth pages still reference this name */
+  --auth-panel-gradient: var(--brand-panel-gradient);
 }
 
 
