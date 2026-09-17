@@ -63,9 +63,11 @@ const ProductBox = ({ product, priority = false }) => {
     return (
         <div className='group relative flex flex-col overflow-hidden rounded-[var(--radius)] border border-border/60 bg-background transition duration-300 hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-[var(--shadow-card-hover)]'>
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--product-card-bg)]">
-                <span className={`absolute right-3 top-3 z-20 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm ${hasDiscount ? 'bg-[var(--dark-red)] text-white' : 'bg-background/90 text-foreground/70'}`}>
-                    {hasDiscount ? `Sale ${discount}%` : 'Hot'}
-                </span>
+                {hasDiscount && (
+                    <span className="absolute right-3 top-3 z-20 rounded-full bg-[var(--dark-red)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
+                        {`Sale ${discount}%`}
+                    </span>
+                )}
 
                 <Link
                     href={WEBSITE_PRODUCT_DETAILS(product.slug)}
