@@ -173,7 +173,6 @@ const OrderDetails = async ({ params }) => {
                                             const name = product?.productId?.name || product?.name || 'Product'
                                             const slug = product?.productId?.slug
                                             const media = product?.variantId?.media?.[0]?.secure_url || placeholderImg.src
-                                            const color = product?.variantId?.color
                                             const size = product?.variantId?.size
                                             const lineTotal = (product?.sellingPrice || 0) * (product?.qty || 0)
                                             const lineMrp = (product?.mrp || product?.sellingPrice || 0) * (product?.qty || 0)
@@ -189,9 +188,9 @@ const OrderDetails = async ({ params }) => {
                                                         <h4 className='line-clamp-2 text-sm font-semibold leading-snug text-foreground'>
                                                             {nameNode}
                                                         </h4>
-                                                        {(size || color) && (
+                                                        {size && (
                                                             <span className='mt-1.5 w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground'>
-                                                                {[size, color].filter(Boolean).join(' / ')}
+                                                                {size}
                                                             </span>
                                                         )}
                                                         <div className='mt-auto flex items-end justify-between pt-3'>

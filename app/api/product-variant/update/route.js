@@ -21,8 +21,6 @@ export async function PUT(request) {
             _id: true,
             product: true,
             sku: true,
-            color: true,
-            colorHex: true,
             size: true,
             mrp: true,
             sellingPrice: true,
@@ -80,8 +78,6 @@ export async function PUT(request) {
         }
 
         getProductVariant.product = validatedData.product
-        getProductVariant.color = validatedData.color
-        getProductVariant.colorHex = validatedData.colorHex || ''
         getProductVariant.size = validatedData.size
         getProductVariant.sku = sku
         getProductVariant.mrp = validatedData.mrp
@@ -90,10 +86,8 @@ export async function PUT(request) {
         getProductVariant.media = validatedData.media
         await getProductVariant.save()
 
-        // Colour / media edits can change the shop filter list and the homepage
-        // "Shop by Colour" section (label + representative image).
+        // Size / media edits can change the shop filter list.
         revalidateTag('storefront-shop-filters')
-        revalidateTag('storefront-home-colors')
 
         return response(true, 200, 'Product variant updated successfully.')
 

@@ -111,7 +111,7 @@ const Cart = () => {
                                             {product.name}
                                         </h4>
                                         <span className="w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
-                                            {product.size} / {product.color}
+                                            {product.size}
                                         </span>
                                         <div className="flex items-center justify-between">
                                             <span className="rounded-xs bg-[var(--dark-red)]/10 px-1.5 py-0.5 font-neue text-[10px] font-semibold text-[var(--dark-red)]">

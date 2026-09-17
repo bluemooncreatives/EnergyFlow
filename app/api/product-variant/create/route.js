@@ -20,8 +20,6 @@ export async function POST(request) {
         const schema = zSchema.pick({
             product: true,
             sku: true,
-            color: true,
-            colorHex: true,
             size: true,
             mrp: true,
             sellingPrice: true,
@@ -76,8 +74,6 @@ export async function POST(request) {
 
         const newProductVariant = new ProductVariantModel({
             product: variantData.product,
-            color: variantData.color,
-            colorHex: variantData.colorHex || '',
             size: variantData.size,
             sku,
             mrp: variantData.mrp,
@@ -88,10 +84,8 @@ export async function POST(request) {
 
         await newProductVariant.save()
 
-        // A new variant can introduce a new colour/size — refresh the shop filter
-        // list and the homepage "Shop by Colour" section.
+        // A new variant can introduce a new size — refresh the shop filter list.
         revalidateTag('storefront-shop-filters')
-        revalidateTag('storefront-home-colors')
 
         return response(true, 200, 'Product Variant added successfully.')
 

@@ -166,7 +166,7 @@ const InvoiceDocument = ({ order = {} }) => {
                         <View style={s.row}><Text style={{ width: '100%', textAlign: 'center', color: '#999' }}>No items found.</Text></View>
                     ) : products.map((p, i) => {
                         const name = p?.productId?.name || p?.name || 'Product'
-                        const variant = [p?.variantId?.size, p?.variantId?.color].filter(Boolean).join(' / ')
+                        const variant = p?.variantId?.size || ''
                         const price = p?.sellingPrice || 0
                         const qty = p?.qty || 0
                         const lineTotal = price * qty

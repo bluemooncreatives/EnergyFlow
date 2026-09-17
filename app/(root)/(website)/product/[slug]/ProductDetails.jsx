@@ -38,11 +38,9 @@ import LazyHydrate from "@/components/Application/LazyHydrate"
 // Split the heavy client-only islands out of the page's hydration chunk.
 // ProductReveiw drags in react-hook-form, zod, tanstack-query and axios but
 // renders nothing until its own client fetches resolve, so there is no SSR
-// markup to lose. SizeGuideModal is invisible until the shopper asks for it.
+// markup to lose.
 const ProductReveiw = dynamic(() => import("@/components/Application/Website/ProductReveiw"), { ssr: false })
-const SizeGuideModal = dynamic(() => import("@/components/Application/Website/SizeGuideModal"), { ssr: false })
-import { cn, decodeHTMLDeep, htmlToText, normalizeColor } from "@/lib/utils"
-import { resolveColorStyle } from "@/lib/colorMap"
+import { cn, decodeHTMLDeep, htmlToText } from "@/lib/utils"
 import { MAX_CART_QTY } from "@/lib/cartConstants"
 
 const MAX_QTY = MAX_CART_QTY
@@ -78,27 +76,20 @@ const RatingStars = ({ value = 0, size = 'size-4' }) => (
     </div>
 )
 
-const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variantOptions, reviewCount, ratingAvg, relatedProducts = [] }) => {
+const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relatedProducts = [] }) => {
     const dispatch = useDispatch()
     const cartStore = useSelector(store => store.cartStore)
 
     const media = variant?.media?.length ? variant.media : []
     const [activeIndex, setActiveIndex] = useState(0)
     const [qty, setQty] = useState(1)
-    const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false)
-    // Latches true on first open and stays true so the dynamic chunk only
-    // downloads on demand, but the dialog stays mounted to animate closed.
-    const [sizeGuideRequested, setSizeGuideRequested] = useState(false)
-    // Color swatch resolution uses CSS.supports (browser-only). Gate the
-    // resolved fill behind a mount flag to avoid an SSR/client hydration
-    // mismatch for CSS-named colors. The same flag gates the cart-state UI so
-    // the server-rendered "Add to Cart" matches the first client paint (the
-    // persisted cart only rehydrates after mount).
+    // Gates the cart-state UI so the server-rendered "Add to Cart" matches the
+    // first client paint (the persisted cart only rehydrates after mount).
     const [mounted, setMounted] = useState(false)
     useEffect(() => setMounted(true), [])
 
     // Reset gallery + quantity whenever the resolved variant changes (e.g. the
-    // shopper switched color/size and the server returned a new variant).
+    // shopper switched size and the server returned a new variant).
     useEffect(() => {
         setActiveIndex(0)
         setQty(1)
@@ -107,7 +98,7 @@ const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variant
     // The live cart line for the *currently selected* variant (or null). Derived
     // straight from the store so add / increase / decrease / remove anywhere —
     // including the cart page — is always reflected here without local state to
-    // keep in sync. Keyed by variantId, so switching color/size re-evaluates.
+    // keep in sync. Keyed by variantId, so switching size re-evaluates.
     const cartLine = useMemo(
         () => cartStore.products.find(
             (p) => p.productId === product._id && p.variantId === variant?._id
@@ -142,7 +133,6 @@ const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variant
             name: product.name,
             url: product.slug,
             size: variant.size,
-            color: variant.color,
             mrp: variant.mrp,
             sellingPrice: variant.sellingPrice,
             media: media[0]?.secure_url || imgPlaceholder.src,
@@ -167,26 +157,9 @@ const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variant
         dispatch(decreaseQuantity(cartKey))
     }
 
-    // ── Variant availability matrix ───────────────────────────────────────
-    const optionSet = useMemo(
-        () => new Set((variantOptions || []).map((o) => `${o.color}|${o.size}`)),
-        [variantOptions]
-    )
-    const isCombo = (color, size) => optionSet.has(`${normalizeColor(color)}|${size}`)
-
-    // When switching color, keep the current size if that combo exists,
-    // otherwise land on the first available size for the new color — so a
-    // color click never dead-ends on a non-existent combination.
-    const sizeForColor = (color) => {
-        const c = normalizeColor(color)
-        if ((variantOptions || []).some((o) => o.color === c && o.size === variant.size)) return variant.size
-        return (variantOptions || []).find((o) => o.color === c)?.size || variant.size
-    }
-
     const inr = (n) => Number(n || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
     const hasDiscount = variant?.mrp > variant?.sellingPrice
     const shortDescription = htmlToText(product?.description)
-    const swatches = colorEntries?.length ? colorEntries : (colors || []).map((name) => ({ name, hex: '' }))
 
     const scrollToReviews = () => {
         if (typeof document !== 'undefined') {
@@ -366,82 +339,19 @@ const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variant
 
                         <div className="my-6 h-px w-full bg-border/60" />
 
-                        {/* Color */}
-                        {swatches.length > 0 && (
-                            <div className="mb-6">
-                                <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                                    Color: <span className="text-foreground">{variant?.color}</span>
-                                </p>
-                                <div className="flex flex-wrap gap-2.5">
-                                    {swatches.map(({ name, hex }) => {
-                                        const isSelected = normalizeColor(name) === normalizeColor(variant?.color)
-                                        const style = mounted ? resolveColorStyle(name, hex) : null
-                                        return (
-                                            <Link
-                                                key={name}
-                                                href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?color=${encodeURIComponent(name)}&size=${encodeURIComponent(sizeForColor(name))}`}
-                                                title={name}
-                                                aria-label={`Color ${name}`}
-                                                aria-pressed={isSelected}
-                                                className={cn(
-                                                    'relative flex size-9 items-center justify-center rounded-full border transition',
-                                                    isSelected
-                                                        ? 'border-[var(--dark-red)] ring-2 ring-[var(--dark-red)]/25 ring-offset-2 ring-offset-background'
-                                                        : 'border-border/70 hover:border-foreground/50'
-                                                )}
-                                            >
-                                                <span
-                                                    className="size-7 rounded-full border border-black/10"
-                                                    style={style || undefined}
-                                                >
-                                                    {!style && (
-                                                        <span className="flex h-full w-full items-center justify-center text-[9px] font-semibold uppercase text-foreground/60">
-                                                            {name?.slice(0, 2)}
-                                                        </span>
-                                                    )}
-                                                </span>
-                                                {!isSelected && <NavSpinner />}
-                                            </Link>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
                         {/* Size */}
                         {sizes?.length > 0 && (
                             <div className="mb-6">
-                                <div className="mb-3 flex items-center justify-between gap-3">
-                                    <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                                        Size: <span className="text-foreground">{variant?.size}</span>
-                                    </p>
-                                    <button
-                                        type="button"
-                                        onClick={() => { setSizeGuideRequested(true); setIsSizeGuideOpen(true) }}
-                                        className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--dark-red)] underline-offset-4 hover:underline"
-                                    >
-                                        Size Guide
-                                    </button>
-                                </div>
+                                <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                                    Size: <span className="text-foreground">{variant?.size}</span>
+                                </p>
                                 <div className="flex flex-wrap gap-2">
                                     {sizes.map((size) => {
                                         const isSelected = size === variant?.size
-                                        const available = isCombo(variant?.color, size)
-                                        if (!available && !isSelected) {
-                                            return (
-                                                <span
-                                                    key={size}
-                                                    title={`${size} — unavailable in ${variant?.color}`}
-                                                    className="relative min-w-[44px] cursor-not-allowed select-none rounded-[var(--radius-sm)] border border-border/50 px-3.5 py-2 text-center text-sm text-foreground/30"
-                                                >
-                                                    <span className="line-through">{size}</span>
-                                                </span>
-                                            )
-                                        }
                                         return (
                                             <Link
                                                 key={size}
-                                                href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?color=${encodeURIComponent(variant.color)}&size=${encodeURIComponent(size)}`}
+                                                href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?size=${encodeURIComponent(size)}`}
                                                 aria-pressed={isSelected}
                                                 className={cn(
                                                     'relative min-w-[44px] rounded-[var(--radius-sm)] border px-3.5 py-2 text-center text-sm font-medium transition',
@@ -613,14 +523,6 @@ const ProductDetails = ({ product, variant, colors, colorEntries, sizes, variant
                         ))}
                     </dl>
                 </section>
-
-                {sizeGuideRequested && (
-                    <SizeGuideModal
-                        open={isSizeGuideOpen}
-                        onOpenChange={setIsSizeGuideOpen}
-                        sizeGuide={product?.sizeGuide}
-                    />
-                )}
 
                 <div id="reviews" className="mt-14 scroll-mt-24">
                     <LazyHydrate>

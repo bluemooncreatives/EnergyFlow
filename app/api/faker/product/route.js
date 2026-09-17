@@ -30,7 +30,6 @@ export async function POST(req) {
             mediaMap.push(media._id);
         });
 
-        const colors = ["Red", "Blue", "Green", "Black"];
         const sizes = ["S", "M", "L", "XL", "2XL"];
 
         let products = [];
@@ -65,27 +64,24 @@ export async function POST(req) {
 
                 products.push(product);
 
-                // Generate 20 variants (4 colors x 5 sizes)
-                for (const color of colors) {
-                    for (const size of sizes) {
+                // Generate one variant per size
+                for (const size of sizes) {
 
-                        const variantMedia = getRandomItems(mediaMap, 4);
-                        variants.push({
-                            _id: new mongoose.Types.ObjectId(),
-                            product: productId,
-                            color,
-                            size,
-                            mrp: product.mrp,
-                            sellingPrice: product.sellingPrice,
-                            discountPercentage: product.discountPercentage,
-                            sku: `${product.slug}-${color}-${size}-${faker.number.int({ min: 1000, max: 9999 })}`,
-                            stock: faker.number.int({ min: 10, max: 100 }),
-                            media: variantMedia,
-                            deletedAt: null,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        });
-                    }
+                    const variantMedia = getRandomItems(mediaMap, 4);
+                    variants.push({
+                        _id: new mongoose.Types.ObjectId(),
+                        product: productId,
+                        size,
+                        mrp: product.mrp,
+                        sellingPrice: product.sellingPrice,
+                        discountPercentage: product.discountPercentage,
+                        sku: `${product.slug}-${size}-${faker.number.int({ min: 1000, max: 9999 })}`,
+                        stock: faker.number.int({ min: 10, max: 100 }),
+                        media: variantMedia,
+                        deletedAt: null,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    });
                 }
             }
         }

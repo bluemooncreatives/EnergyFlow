@@ -30,9 +30,7 @@ const EditProduct = ({ params }) => {
 
   const [loading, setLoading] = useState(false)
   const [categoryOption, setCategoryOption] = useState([])
-  const [sizeGuideOption, setSizeGuideOption] = useState([])
   const { data: getCategory } = useFetch('/api/category?deleteType=SD&&size=10000')
-  const { data: getSizeGuides } = useFetch('/api/size-guide?activeOnly=true&&deleteType=SD&&size=10000')
   const { data: getProduct, loading: getProductLoading } = useFetch(`/api/product/get/${id}`)
 
 
@@ -49,20 +47,11 @@ const EditProduct = ({ params }) => {
     }
   }, [getCategory])
 
-  useEffect(() => {
-    if (getSizeGuides && getSizeGuides.success) {
-      const data = getSizeGuides.data || []
-      const options = data.map((guide) => ({ label: guide.name, value: guide._id }))
-      setSizeGuideOption(options)
-    }
-  }, [getSizeGuides])
-
   const formSchema = zSchema.pick({
     _id: true,
     name: true,
     slug: true,
     category: true,
-    sizeGuide: true,
     mrp: true,
     sellingPrice: true,
     discountPercentage: true,
@@ -76,7 +65,6 @@ const EditProduct = ({ params }) => {
       name: "",
       slug: "",
       category: "",
-      sizeGuide: null,
       mrp: 0,
       sellingPrice: 0,
       discountPercentage: 0,
@@ -88,13 +76,11 @@ const EditProduct = ({ params }) => {
   useEffect(() => {
     if (getProduct && getProduct.success) {
       const product = getProduct.data
-      const sizeGuideValue = product?.sizeGuide?._id || product?.sizeGuide || null
       form.reset({
         _id: product?._id,
         name: product?.name,
         slug: product?.slug,
         category: product?.category,
-        sizeGuide: sizeGuideValue,
         mrp: product?.mrp,
         sellingPrice: product?.sellingPrice,
         discountPercentage: product?.discountPercentage,
@@ -219,27 +205,6 @@ const EditProduct = ({ params }) => {
                           options={categoryOption}
                           selected={field.value}
                           setSelected={field.onChange}
-                          isMulti={false}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div>
-                <FormField
-                  control={form.control}
-                  name="sizeGuide"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Size Guide</FormLabel>
-                      <FormControl>
-                        <Select
-                          options={sizeGuideOption}
-                          selected={field.value}
-                          setSelected={field.onChange}
-                          placeholder="Select Size Guide"
                           isMulti={false}
                         />
                       </FormControl>

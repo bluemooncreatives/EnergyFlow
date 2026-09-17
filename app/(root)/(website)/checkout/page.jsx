@@ -707,7 +707,7 @@ const Checkout = () => {
                                                         </div>
 
                                                         <span className='mt-1 w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground'>
-                                                            {product.size} / {product.color}
+                                                            {product.size}
                                                         </span>
 
                                                         <div className='mt-auto flex items-center justify-between pt-2.5'>

@@ -31,9 +31,7 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false)
   const [createdProductId, setCreatedProductId] = useState('')
   const [categoryOption, setCategoryOption] = useState([])
-  const [sizeGuideOption, setSizeGuideOption] = useState([])
   const { data: getCategory } = useFetch('/api/category?deleteType=SD&&size=10000')
-  const { data: getSizeGuides } = useFetch('/api/size-guide?activeOnly=true&&deleteType=SD&&size=10000')
 
   // media modal states  
   const [open, setOpen] = useState(false)
@@ -47,20 +45,11 @@ const AddProduct = () => {
     }
   }, [getCategory])
 
-  useEffect(() => {
-    if (getSizeGuides && getSizeGuides.success) {
-      const data = getSizeGuides.data || []
-      const options = data.map((guide) => ({ label: guide.name, value: guide._id }))
-      setSizeGuideOption(options)
-    }
-  }, [getSizeGuides])
-
   const formSchema = zSchema.pick({
     name: true,
     parentSku: true,
     slug: true,
     category: true,
-    sizeGuide: true,
     mrp: true,
     sellingPrice: true,
     discountPercentage: true,
@@ -74,7 +63,6 @@ const AddProduct = () => {
       parentSku: "",
       slug: "",
       category: "",
-      sizeGuide: null,
       mrp: 0,
       sellingPrice: 0,
       discountPercentage: 0,
@@ -223,27 +211,6 @@ const AddProduct = () => {
                           options={categoryOption}
                           selected={field.value}
                           setSelected={field.onChange}
-                          isMulti={false}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div>
-                <FormField
-                  control={form.control}
-                  name="sizeGuide"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Size Guide</FormLabel>
-                      <FormControl>
-                        <Select
-                          options={sizeGuideOption}
-                          selected={field.value}
-                          setSelected={field.onChange}
-                          placeholder="Select Size Guide"
                           isMulti={false}
                         />
                       </FormControl>

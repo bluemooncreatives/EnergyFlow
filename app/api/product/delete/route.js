@@ -40,10 +40,8 @@ export async function PUT(request) {
         // should show, so drop its cache.
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
-        // It also changes category product counts / representative images, and
-        // which colours have shoppable products.
+        // It also changes category product counts / representative images.
         revalidateTag('storefront-home-categories')
-        revalidateTag('storefront-home-colors')
 
         return response(true, 200, deleteType === 'SD' ? 'Data moved into trash.' : "Data restored.")
 
@@ -85,7 +83,6 @@ export async function DELETE(request) {
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
         revalidateTag('storefront-home-categories')
-        revalidateTag('storefront-home-colors')
 
         return response(true, 200, 'Data deleted permanently')
     } catch (error) {

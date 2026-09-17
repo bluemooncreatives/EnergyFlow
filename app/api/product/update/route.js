@@ -16,17 +16,12 @@ export async function PUT(request) {
 
         await connectDB()
         const payload = await request.json()
-        const hasSizeGuide = Object.prototype.hasOwnProperty.call(payload || {}, 'sizeGuide')
-        if (payload && payload.sizeGuide === '') {
-            payload.sizeGuide = null
-        }
 
         const schema = zSchema.pick({
             _id: true,
             name: true,
             slug: true,
             category: true,
-            sizeGuide: true,
             mrp: true,
             sellingPrice: true,
             discountPercentage: true,
@@ -55,9 +50,6 @@ export async function PUT(request) {
         getProduct.name = validatedData.name
         getProduct.slug = validatedData.slug
         getProduct.category = validatedData.category
-        if (hasSizeGuide) {
-            getProduct.sizeGuide = validatedData.sizeGuide ?? null
-        }
         getProduct.mrp = validatedData.mrp
         getProduct.sellingPrice = validatedData.sellingPrice
         getProduct.discountPercentage = pricing.discountPercentage

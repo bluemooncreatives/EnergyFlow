@@ -174,7 +174,7 @@ const CartPageClient = () => {
                                                                     </Link>
                                                                 </h4>
                                                                 <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                                                                    {product.color} / {product.size}
+                                                                    {product.size}
                                                                 </p>
                                                             </div>
                                                         </div>

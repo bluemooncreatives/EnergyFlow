@@ -9,24 +9,20 @@ import { BrandButton } from '@/components/Application/Website/BrandButton'
 import Link from 'next/link'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Minus, Plus, Crown, Sparkles } from 'lucide-react'
-import { resolveColorStyle } from '@/lib/colorMap'
 const Filter = ({ filters, showClearLink = true }) => {
     const instanceId = useId()
     const searchParams = useSearchParams()
 
     const [priceFilter, setPriceFilter] = useState({ minPrice: 0, maxPrice: 3000 })
     const [selectedCategory, setSelectedCategory] = useState([])
-    const [selectedColor, setSelectedColor] = useState([])
     const [selectedSize, setSelectedSize] = useState([])
     const [bestsellerOnly, setBestsellerOnly] = useState(false)
     const [freshlyArrivedOnly, setFreshlyArrivedOnly] = useState(false)
 
     const categories = filters?.categories ?? null
-    const colors = filters?.colors ?? null
     const sizes = filters?.sizes ?? null
 
     const categoriesReady = Array.isArray(categories)
-    const colorsReady = Array.isArray(colors)
     const sizesReady = Array.isArray(sizes)
 
     const urlSearchParams = new URLSearchParams(searchParams.toString())
@@ -34,8 +30,6 @@ const Filter = ({ filters, showClearLink = true }) => {
 
     useEffect(() => {
         searchParams.get('category') ? setSelectedCategory(searchParams.get('category').split(',')) : setSelectedCategory([])
-
-        searchParams.get('color') ? setSelectedColor(searchParams.get('color').split(',')) : setSelectedColor([])
 
         searchParams.get('size') ? setSelectedSize(searchParams.get('size').split(',')) : setSelectedSize([])
 
@@ -74,22 +68,6 @@ const Filter = ({ filters, showClearLink = true }) => {
         setSelectedCategory(newSelectedCategory)
 
         newSelectedCategory.length > 0 ? urlSearchParams.set('category', newSelectedCategory.join(',')) : urlSearchParams.delete('category')
-
-        router.push(`${WEBSITE_SHOP}?${urlSearchParams}`)
-
-    }
-
-    const handleColorFilter = (color) => {
-        let newSelectedColor = [...selectedColor]
-        if (newSelectedColor.includes(color)) {
-            newSelectedColor = newSelectedColor.filter(cat => cat !== color)
-        } else {
-            newSelectedColor.push(color)
-        }
-
-        setSelectedColor(newSelectedColor)
-
-        newSelectedColor.length > 0 ? urlSearchParams.set('color', newSelectedColor.join(',')) : urlSearchParams.delete('color')
 
         router.push(`${WEBSITE_SHOP}?${urlSearchParams}`)
 
@@ -188,7 +166,7 @@ const Filter = ({ filters, showClearLink = true }) => {
 
             <Accordion
                 type="multiple"
-                defaultValue={['category', 'color', 'size', 'price']}
+                defaultValue={['category', 'size', 'price']}
                 className="space-y-4"
             >
                 <AccordionItem value="category" className="border-b border-border/60">
@@ -222,68 +200,6 @@ const Filter = ({ filters, showClearLink = true }) => {
                                                 checked={selectedCategory.includes(category.slug)}
                                             />
                                             <span>{category.name}</span>
-                                        </label>
-                                    </li>
-                                )
-                            })}
-                        </ul>
-                    </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="color" className="border-b border-border/60">
-                    <AccordionTrigger className="group flex w-full items-center justify-between py-2 text-base font-semibold text-[var(--brand-primary)] hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
-                        <span>Color</span>
-                        <span className="relative flex size-4 items-center justify-center">
-                            <Plus className="absolute size-4 transition-all duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
-                            <Minus className="absolute size-4 opacity-0 transition-all duration-200 group-data-[state=open]:opacity-100" />
-                        </span>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-4">
-                        <ul className="space-y-2.5">
-                            {!colorsReady && (
-                                <li className="px-2 py-1.5 text-[12px] text-muted-foreground">Loading colors...</li>
-                            )}
-                            {colorsReady && colors.length === 0 && (
-                                <li className="px-2 py-1.5 text-[12px] text-muted-foreground">No colors available.</li>
-                            )}
-                            {colorsReady && colors.map((colorItem, index) => {
-                                // Colors arrive as { name, hex }. Older cached payloads may still
-                                // be plain strings, so accept both shapes defensively.
-                                const colorName = typeof colorItem === 'string' ? colorItem : colorItem?.name
-                                const colorHex = typeof colorItem === 'string' ? '' : colorItem?.hex
-                                if (!colorName) return null
-                                // Index keeps the id unique even when colors differ only by case
-                                // (e.g. "Purple" vs "purple"), which would otherwise collide.
-                                const colorId = `${instanceId}-color-${index}`
-                                const active = selectedColor.includes(colorName)
-                                // Admin hex wins, then the curated dictionary / CSS name.
-                                // null => render a neutral "no swatch" placeholder.
-                                const swatchStyle = resolveColorStyle(colorName, colorHex)
-                                return (
-                                    <li key={`${colorName}-${index}`}>
-                                        <label
-                                            htmlFor={colorId}
-                                            className={`flex cursor-pointer items-center gap-3 px-1 py-1.5 text-[13px] transition ${active ? 'font-semibold text-[var(--brand-primary-hover)]' : 'font-semibold text-[var(--brand-ink)] hover:text-[var(--brand-primary-hover)]'}`}
-                                        >
-                                            <Checkbox
-                                                id={colorId}
-                                                onCheckedChange={() => handleColorFilter(colorName)}
-                                                checked={selectedColor.includes(colorName)}
-                                            />
-                                            {swatchStyle ? (
-                                                <span
-                                                    className="h-3.5 w-3.5 rounded-full border border-black/20"
-                                                    style={swatchStyle}
-                                                    aria-hidden
-                                                />
-                                            ) : (
-                                                <span
-                                                    className="h-3.5 w-3.5 rounded-full border border-black/20 bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_2px,#fff_2px,#fff_4px)]"
-                                                    aria-hidden
-                                                    title="No swatch color set"
-                                                />
-                                            )}
-                                            <span>{colorName}</span>
                                         </label>
                                     </li>
                                 )

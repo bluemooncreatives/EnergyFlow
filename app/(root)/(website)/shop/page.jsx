@@ -25,7 +25,6 @@ const Shop = async ({ searchParams }) => {
             ? getDefaultShopProducts()
             : getShopProducts({
                 size: resolvedSearchParams?.size,
-                color: resolvedSearchParams?.color,
                 minPrice: resolvedSearchParams?.minPrice,
                 maxPrice: resolvedSearchParams?.maxPrice,
                 category: resolvedSearchParams?.category,

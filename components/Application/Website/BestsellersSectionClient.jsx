@@ -44,7 +44,6 @@ const BestsellersSectionClient = ({ products = [] }) => {
             name: product.name,
             url: product.slug,
             size: variant.size,
-            color: variant.color,
             mrp: variant.mrp ?? product.mrp,
             sellingPrice: variant.sellingPrice ?? product.sellingPrice,
             media: product?.media?.[0]?.secure_url || imgPlaceholder.src,

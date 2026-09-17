@@ -12,9 +12,8 @@ export async function GET(request, { params }) {
 
         const searchParams = request.nextUrl.searchParams
         const size = searchParams.get('size')
-        const color = searchParams.get('color')
 
-        const productData = await getProductDetailsBySlug(slug, size, color)
+        const productData = await getProductDetailsBySlug(slug, size)
         if (!productData) {
             return response(false, 404, 'Product not found.', {}, { headers: CACHE_HEADERS })
         }

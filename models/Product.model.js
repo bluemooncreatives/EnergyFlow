@@ -24,11 +24,6 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-    sizeGuide: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'SizeGuide',
-        default: null
-    },
     mrp: {
         type: Number,
         required: true,

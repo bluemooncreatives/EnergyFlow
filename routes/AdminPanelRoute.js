@@ -24,12 +24,6 @@ export const ADMIN_PRODUCT_VARIANT_SHOW = '/admin/product-variant'
 export const ADMIN_PRODUCT_VARIANT_EDIT = (id) => id ? `/admin/product-variant/edit/${id}` : ''
 
 
-// Size guide routes
-
-export const ADMIN_SIZE_GUIDE_ADD = '/admin/size-guide/add'
-export const ADMIN_SIZE_GUIDE_SHOW = '/admin/size-guide/all'
-export const ADMIN_SIZE_GUIDE_EDIT = (id) => id ? `/admin/size-guide/edit/${id}` : ''
-
 
 // Coupon routes 
 

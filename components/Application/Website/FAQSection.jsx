@@ -39,7 +39,7 @@ const FAQS = [
     },
     {
         q: 'How do I choose the right size?',
-        a: 'We provide a detailed size guide to help you find your fit. If you\'re unsure, feel free to share your measurements with us — we\'ll personally assist you in selecting the perfect size.',
+        a: 'If you\'re unsure about your fit, feel free to share your measurements with us — we\'ll personally assist you in selecting the perfect size.',
     },
     {
         q: 'Are all outfits made to order?',

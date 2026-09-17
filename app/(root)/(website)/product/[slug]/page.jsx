@@ -26,9 +26,9 @@ export async function generateMetadata({ params }) {
 
 const ProductPage = async ({ params, searchParams }) => {
     const { slug } = await params
-    const { color, size } = await searchParams
+    const { size } = await searchParams
 
-    const productData = await getProductDetailsBySlug(slug, size, color)
+    const productData = await getProductDetailsBySlug(slug, size)
 
     if (!productData) notFound()
 
@@ -43,10 +43,7 @@ const ProductPage = async ({ params, searchParams }) => {
         <ProductDetails
             product={productData.product}
             variant={productData.variant}
-            colors={productData.colors}
-            colorEntries={productData.colorEntries}
             sizes={productData.sizes}
-            variantOptions={productData.variantOptions}
             reviewCount={productData.reviewCount}
             ratingAvg={productData.ratingAvg}
             relatedProducts={relatedProducts}

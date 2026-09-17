@@ -4,7 +4,6 @@ import { isAuthenticated } from "@/lib/authentication";
 import { isValidObjectId } from "mongoose";
 import ProductModel from "@/models/Product.model";
 import MediaModel from "@/models/Media.model";
-import "@/models/SizeGuide.model";
 
 export async function GET(request, { params }) {
     try {
@@ -30,7 +29,6 @@ export async function GET(request, { params }) {
 
         const getProduct = await ProductModel.findOne(filter)
             .populate('media', '_id secure_url')
-            .populate('sizeGuide', 'name slug type columns rows note isActive')
             .lean()
 
         if (!getProduct) {

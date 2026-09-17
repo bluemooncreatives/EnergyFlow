@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/Application/Admin/BreadCrumb"
 import DatatableWrapper from "@/components/Application/Admin/DatatableWrapper"
 import DeleteAction from "@/components/Application/Admin/DeleteAction"
 import PageHeader from "@/components/Application/Admin/PageHeader"
-import { DT_CATEGORY_COLUMN, DT_CONTACT_COLUMN, DT_COUPON_COLUMN, DT_CUSTOMERS_COLUMN, DT_ORDER_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN, DT_REVIEW_COLUMN, DT_SIZE_GUIDE_COLUMN } from "@/lib/column"
+import { DT_CATEGORY_COLUMN, DT_CONTACT_COLUMN, DT_COUPON_COLUMN, DT_CUSTOMERS_COLUMN, DT_ORDER_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN, DT_REVIEW_COLUMN } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
 import { ADMIN_DASHBOARD, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
 
@@ -65,14 +65,6 @@ const TRASH_CONFIG = {
         fetchUrl: '/api/orders',
         exportUrl: '/api/orders/export',
         deleteUrl: '/api/orders/delete'
-    },
-
-    'size-guide': {
-        title: 'Size Guide Trash',
-        columns: DT_SIZE_GUIDE_COLUMN,
-        fetchUrl: '/api/size-guide',
-        exportUrl: '/api/size-guide/export',
-        deleteUrl: '/api/size-guide/delete'
     },
 
     contacts: {
