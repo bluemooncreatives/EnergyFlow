@@ -119,7 +119,7 @@ const OrderDetails = ({ params }) => {
                                                     <div>
                                                         <h4 className="text-lg">
                                                             <Link href={WEBSITE_PRODUCT_DETAILS(product?.productId?.slug)}>{product?.productId?.name}</Link>
-                                                            <p>Size: {product?.variantId?.size}</p>
+                                                            <p>Pack Size: {product?.variantId?.size}</p>
                                                         </h4>
                                                     </div>
                                                 </div>

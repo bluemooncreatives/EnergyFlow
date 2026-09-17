@@ -210,7 +210,7 @@ const Filter = ({ filters, showClearLink = true }) => {
 
                 <AccordionItem value="size" className="border-b border-border/60">
                     <AccordionTrigger className="group flex w-full items-center justify-between py-2 text-base font-semibold text-[var(--brand-primary)] hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
-                        <span>Size</span>
+                        <span>Pack Size</span>
                         <span className="relative flex size-4 items-center justify-center">
                             <Plus className="absolute size-4 transition-all duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
                             <Minus className="absolute size-4 opacity-0 transition-all duration-200 group-data-[state=open]:opacity-100" />
@@ -219,10 +219,10 @@ const Filter = ({ filters, showClearLink = true }) => {
                     <AccordionContent className="pb-4">
                         <ul className="grid grid-cols-2 gap-2">
                             {!sizesReady && (
-                                <li className="col-span-2 px-2 py-1.5 text-[12px] text-muted-foreground">Loading sizes...</li>
+                                <li className="col-span-2 px-2 py-1.5 text-[12px] text-muted-foreground">Loading pack sizes...</li>
                             )}
                             {sizesReady && sizes.length === 0 && (
-                                <li className="col-span-2 px-2 py-1.5 text-[12px] text-muted-foreground">No sizes available.</li>
+                                <li className="col-span-2 px-2 py-1.5 text-[12px] text-muted-foreground">No pack sizes available.</li>
                             )}
                             {sizesReady && sizes.map((size, index) => {
                                 const sizeId = `${instanceId}-size-${index}`

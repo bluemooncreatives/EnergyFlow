@@ -30,7 +30,7 @@ export async function POST(req) {
             mediaMap.push(media._id);
         });
 
-        const sizes = ["S", "M", "L", "XL", "2XL"];
+        const sizes = ["200g", "500g", "600g"];
 
         let products = [];
         let variants = [];
@@ -64,7 +64,7 @@ export async function POST(req) {
 
                 products.push(product);
 
-                // Generate one variant per size
+                // Generate one variant per pack size
                 for (const size of sizes) {
 
                     const variantMedia = getRandomItems(mediaMap, 4);

@@ -343,7 +343,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         {sizes?.length > 0 && (
                             <div className="mb-6">
                                 <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                                    Size: <span className="text-foreground">{variant?.size}</span>
+                                    Pack Size: <span className="text-foreground">{variant?.size}</span>
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     {sizes.map((size) => {

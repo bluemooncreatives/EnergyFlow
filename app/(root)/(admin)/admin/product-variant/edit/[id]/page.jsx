@@ -181,7 +181,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Size <span className="text-red-500">*</span>
+                        Pack Size <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Select

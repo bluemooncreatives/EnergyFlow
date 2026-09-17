@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
+import { sortSizes } from "@/lib/utils";
 import ProductVariantModel from "@/models/ProductVariant.model";
 
 const CACHE_HEADERS = {
@@ -25,12 +26,13 @@ export async function GET() {
         ])
 
         if (!getSize.length) {
-            return response(false, 404, 'Size not found.', {}, { headers: CACHE_HEADERS })
+            return response(false, 404, 'Pack size not found.', {}, { headers: CACHE_HEADERS })
         }
 
-        const sizes = getSize.map(item => item.size)
+        // Ordered by pack weight rather than insertion order.
+        const sizes = sortSizes(getSize.map(item => item.size))
 
-        return response(true, 200, 'Size found.', sizes, { headers: CACHE_HEADERS })
+        return response(true, 200, 'Pack size found.', sizes, { headers: CACHE_HEADERS })
 
     } catch (error) {
         return catchError(error)
