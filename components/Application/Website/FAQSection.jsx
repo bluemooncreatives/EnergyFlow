@@ -10,58 +10,70 @@ gsap.registerPlugin(ScrollTrigger)
 
 const FAQS = [
     {
-        q: 'How long does it take to process an order?',
-        a: 'Since every piece is made-to-order, it typically takes 7–14 days to carefully stitch and dispatch your outfit. This ensures each garment receives the time and attention it deserves.',
+        q: 'How fresh are your dry fruits and nuts?',
+        a: 'We buy in small, frequent lots rather than sitting on large stock, so what reaches you is from a recent batch. Every pack is sealed to lock in crunch and aroma, and the packed and best before dates are printed clearly, so you always know what you are getting.',
     },
     {
-        q: 'Can I wear these outfits for daily use or only occasions?',
-        a: 'Our designs are crafted to be truly versatile — refined enough for small festive gatherings yet comfortable enough for everyday elegance. One wardrobe, many moments.',
+        q: 'How long does delivery take?',
+        a: 'Orders are packed within 24 to 48 hours of confirmation. Delivery usually takes 2 to 4 working days in metros and 4 to 7 working days elsewhere in India. You will get a tracking link by email as soon as your parcel is dispatched.',
     },
     {
-        q: 'What if the outfit doesn\'t fit well?',
-        a: 'We put great care into getting the fit right, but if something feels off, simply reach out to us. We\'ll guide you through possible alterations or find the best solution for you.',
+        q: 'How should I store dry fruits, seeds and super foods?',
+        a: 'Keep them in an airtight container away from heat, moisture and direct sunlight. Nuts and seeds with a higher oil content, such as walnuts, flax, chia and pine nuts, stay freshest in the fridge, especially through humid months.',
     },
     {
-        q: 'How should I care for my outfit?',
-        a: 'To preserve the fabric quality and stitching, we recommend a gentle hand wash or dry clean. Treating each piece with care ensures it stays beautiful for years to come.',
+        q: 'What is A2 Gir cow bilona ghee, and why is it different?',
+        a: 'It is made the traditional bilona way. Curd from A2 Gir cow milk is churned by hand into butter, then simmered slowly into ghee. The method takes longer and yields less than the usual process that starts from cream, and that is exactly what gives this ghee its grainy texture, deep aroma and nutrient profile.',
     },
     {
-        q: 'Do you accept returns or exchanges?',
-        a: 'As most pieces are made-to-order, we offer limited exchange options. Please review our return policy for full details, or reach out to us — we\'re happy to help find a resolution.',
+        q: 'Are your oils really cold pressed?',
+        a: 'Yes. Our oils are extracted at low temperature in a wood or expeller press, with no chemical refining, bleaching or deodorising. That keeps the natural aroma, colour and nutrients intact, which is why cold pressed oil tastes and smells nothing like refined oil.',
     },
     {
-        q: 'What fabrics do you use?',
-        a: 'We carefully source fabrics that are breathable, comfortable, and suited for Indian weather — without compromising on the elegant ethnic aesthetic that defines Energyflow.',
+        q: 'Do you offer organic products?',
+        a: 'Several products in our range are organic and are labelled as such on the product page. We do not describe anything as organic unless it is backed by the supplier documentation, so if the label does not say it, the product is conventionally grown.',
     },
     {
-        q: 'Do you offer customization?',
-        a: 'Yes, we welcome minor customizations such as sleeve length, neckline adjustments, and fit preferences. Simply mention your requirements while placing the order and we\'ll do our best.',
+        q: 'Do you take corporate and festive gifting orders?',
+        a: 'Yes, and it is one of the things we do best. We put together dry fruit and super food hampers for Diwali, New Year, weddings and employee gifting, with options for custom combinations, budgets and branded packaging. Tell us your requirement and quantity and we will share a proposal.',
     },
     {
-        q: 'How do I choose the right size?',
-        a: 'If you\'re unsure about your fit, feel free to share your measurements with us — we\'ll personally assist you in selecting the perfect size.',
+        q: 'Can I place a bulk order?',
+        a: 'Absolutely. We supply bulk quantities to households, offices, retailers and institutional buyers at volume pricing. Contact us with the products and quantities you need and we will confirm availability and rates.',
     },
     {
-        q: 'Are all outfits made to order?',
-        a: 'Yes, every Energyflow piece is made-to-order with close attention to detail. This approach ensures a better fit, superior finish, and a quality that truly stands apart.',
+        q: 'What pack sizes are available?',
+        a: 'Most products come in a range of weights, from small trial packs to value family packs and bulk sizes. You can pick the pack size you want on each product page, with the price per pack shown before you add to cart.',
     },
     {
-        q: 'Can I place a bulk or group order?',
-        a: 'Absolutely. We happily take bulk orders for small functions or coordinated group outfits. Reach out to us with your requirements and we\'ll take care of the rest.',
+        q: 'Are your products tested for quality?',
+        a: 'Every lot is checked on intake for grade, moisture, foreign matter and freshness before it is packed. We work only with suppliers who meet our sourcing standards, and anything that fails a check does not make it to the shelf.',
     },
     {
-        q: 'Can I make changes after placing the order?',
-        a: 'If your order hasn\'t entered production yet, we\'ll do our best to accommodate your request. Please contact us as early as possible so we can act in time.',
+        q: 'Do you have a physical store I can visit?',
+        a: 'Yes. Our first Energyflow Dry Fruits and Super Food Store is open, and we are expanding into a wider retail and franchise network across India. Get in touch for current store details or franchise enquiries.',
     },
     {
-        q: 'Are your outfits suitable for all age groups?',
-        a: 'Yes — our designs are timeless, comfortable, and thoughtfully crafted to be worn and loved across different age groups, from young adults to elders.',
+        q: 'What is your return policy?',
+        a: 'If a product arrives damaged, sealed incorrectly, or is not what you ordered, tell us within 7 days of delivery and we will replace it or refund you. As these are food products, we cannot accept returns on packs that have been opened, unless there is a genuine quality issue.',
     },
     {
-        q: 'Do you restock designs?',
-        a: 'Since most pieces are made-to-order, traditional restocks aren\'t our usual practice. However, you\'re welcome to reach out and we\'ll let you know what\'s possible.',
+        q: 'Do you deliver across India?',
+        a: 'Yes, we ship to serviceable pin codes across India. Enter your pin code at checkout to confirm delivery and see the expected timeline for your address.',
     },
 ]
+
+// FAQPage structured data built from the same array the UI renders, so the
+// markup and the rich result can never fall out of sync.
+const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map(({ q, a }) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+}
 
 const FAQItem = ({ faq, isOpen, onToggle }) => (
     <div className="border-b border-foreground/10">
@@ -143,7 +155,12 @@ const FAQSection = () => {
     }, { scope: sectionRef })
 
     return (
-        <section ref={sectionRef} className="website-gutter bg-background pt-[clamp(1.25rem,2.5vw,2rem)] pb-[clamp(2rem,4vw,3.5rem)]">
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+            <section ref={sectionRef} className="website-gutter bg-background pt-[clamp(1.25rem,2.5vw,2rem)] pb-[clamp(2rem,4vw,3.5rem)]">
 
             {/* section header */}
             <div ref={headerRef} className="mb-4 flex items-end justify-between lg:mb-6">
@@ -156,7 +173,7 @@ const FAQSection = () => {
                     </h2>
                 </div>
                 <span className="hidden text-[0.68rem] font-semibold uppercase text-muted-foreground sm:block">
-                    Returns · Shipping · Orders
+                    Freshness · Shipping · Gifting
                 </span>
             </div>
 
@@ -189,7 +206,8 @@ const FAQSection = () => {
                     Contact our team
                 </a>
             </p>
-        </section>
+            </section>
+        </>
     )
 }
 

@@ -179,7 +179,7 @@ export const emailShell = ({ preheader = "", bodyHtml = "", title = BRAND_NAME }
                 </tr>
                 <tr>
                   <td style="font-family:${FONT_BODY};font-size:13px;line-height:21px;color:${BRAND.cream};opacity:0.85;padding-bottom:16px;">
-                    Handmade with care, stitched with love.
+                    Fuel Your Health, Energize Your Life.
                   </td>
                 </tr>
                 <tr>

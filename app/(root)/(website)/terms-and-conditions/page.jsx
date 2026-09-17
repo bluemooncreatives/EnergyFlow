@@ -1,6 +1,13 @@
 import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrumb'
 import Link from 'next/link'
 
+export const metadata = {
+    title: 'Terms & Conditions',
+    description:
+        'The terms that govern your use of the Energyflow website, ordering, pricing, shipping, returns and refunds for dry fruits, super foods and wellness products.',
+    alternates: { canonical: '/terms-and-conditions' },
+}
+
 const breadcrumb = {
     title: 'Terms & Conditions',
     links: [
@@ -72,7 +79,9 @@ const TermsAndConditions = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>All products listed on Energyflow are subject to availability. We reserve the right to discontinue any product at any time without prior notice.</li>
                         <li>Prices are listed in Indian Rupees (INR) and are inclusive of applicable taxes unless stated otherwise. For international customers, currency conversion rates and additional duties are the buyer&apos;s responsibility.</li>
-                        <li>We make every effort to display product colors, dimensions, and descriptions accurately; however, actual colors may vary slightly due to monitor settings. Custom/handcrafted items may have minor natural variations.</li>
+                        <li>We make every effort to display product images, pack sizes, weights and descriptions accurately; however, natural products vary by harvest and season, so colour, size and appearance may differ slightly from the images shown.</li>
+                        <li>Net weight is stated on every product page and pack. Minor variation within permitted tolerances may occur, and dry fruits, nuts and seeds may settle in transit.</li>
+                        <li>Nutritional information, ingredient lists, allergen declarations and best before dates are provided on the product page and on the pack. If you have an allergy or a medical condition, please read the pack before consuming and consult a qualified professional. Our products are not intended to diagnose, treat, cure or prevent any disease.</li>
                         <li>We reserve the right to correct pricing errors. If a product is listed at an incorrect price, we will notify you before processing your order and give you the option to proceed at the correct price or cancel.</li>
                         <li>Promotional prices and discounts are valid only for the stated period and cannot be applied retroactively.</li>
                     </ul>
@@ -83,7 +92,7 @@ const TermsAndConditions = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>Placing an item in your cart does not constitute a binding order. A contract is formed only when you receive an order confirmation email from us.</li>
                         <li>We reserve the right to refuse or cancel any order at our sole discretion, including orders suspected of fraud, incorrect pricing, or stock unavailability. A full refund will be issued in such cases.</li>
-                        <li>For custom or made-to-order products, cancellations may not be accepted once production has commenced.</li>
+                        <li>For custom gift hampers and bulk or corporate orders, cancellations may not be accepted once assembly or procurement has commenced.</li>
                         <li>You are responsible for providing accurate shipping details. We are not liable for non-delivery caused by incorrect addresses.</li>
                     </ul>
                 </Section>
@@ -114,8 +123,10 @@ const TermsAndConditions = () => {
                 {/* Section 7 */}
                 <Section number="7" title="Returns, Refunds & Exchanges">
                     <ul className='list-disc ps-6 space-y-2'>
-                        <li>We offer returns within <strong>7 days</strong> of delivery for items that are unused, unwashed, in original condition, and with all tags attached.</li>
-                        <li>Custom-made, personalized, or altered items are non-returnable unless they arrive defective or damaged.</li>
+                        <li>As these are food products, we accept returns within <strong>7 days</strong> of delivery only for packs that are <strong>unopened, with the factory seal intact</strong>, in their original packaging, and still within the best before date.</li>
+                        <li>Opened or partially consumed packs cannot be returned, for reasons of hygiene and food safety. This does not affect your rights where a product is damaged, expired, incorrectly supplied, or otherwise not of satisfactory quality.</li>
+                        <li>If a product arrives damaged, leaking, expired, or is not what you ordered, contact us within 48 hours of delivery with photographs of the pack, seal and batch details, and we will replace it or refund you in full.</li>
+                        <li>Custom gift hampers and personalised or branded bulk orders cannot be returned unless they arrive defective or damaged.</li>
                         <li>To initiate a return, contact us at <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>energyflow.official@gmail.com</a> with your order number and photos of the item.</li>
                         <li>Approved refunds are processed within 5–10 business days to the original payment method.</li>
                         <li>Return shipping costs are the customer&apos;s responsibility unless the return is due to our error (wrong item, defective product).</li>

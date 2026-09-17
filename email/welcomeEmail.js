@@ -22,8 +22,8 @@ export const welcomeEmail = (opts = {}) => {
 ${eyebrow("Welcome")}
 ${heading("You're all set!")}
 ${paragraph(`Hi ${firstName(name)},`)}
-${paragraph("Your email is verified and your Energyflow account is ready. Thank you for joining us — we can't wait for you to discover pieces stitched with care.")}
-${paragraph("Explore the latest arrivals and find something you'll love.")}
+${paragraph("Your email is verified and your Energyflow account is ready. Thank you for joining us. We can't wait for you to taste the difference honest sourcing makes.")}
+${paragraph("Explore our dry fruits, nuts, seeds, super foods and wellness range, and find your new everyday staples.")}
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:8px 0;">
   <tr><td align="center">${button("Start shopping", `${siteUrl()}/shop`)}</td></tr>
 </table>`;

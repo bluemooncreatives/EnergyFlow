@@ -1,6 +1,13 @@
 import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrumb'
 import Link from 'next/link'
 
+export const metadata = {
+    title: 'Privacy Policy',
+    description:
+        'How Energy Flow Supply Hub Pvt. Ltd. collects, uses, stores and protects your personal data, who we share it with, and the rights you have over your information.',
+    alternates: { canonical: '/privacy-policy' },
+}
+
 const breadcrumb = {
     title: 'Privacy Policy',
     links: [

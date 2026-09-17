@@ -17,18 +17,52 @@ const EditorialCardsSection = dynamic(() => import('@/components/Application/Web
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
 const FAQSection = dynamic(() => import('@/components/Application/Website/FAQSection'))
 
+const HOME_DESCRIPTION =
+    'Shop premium dry fruits, nuts, seeds and super foods at Energyflow. Almonds, cashews, walnuts, pistachios, chia and pumpkin seeds, roasted healthy snacks, millets, muesli, berries, cold pressed oils, A2 Gir cow bilona ghee, herbal powders and honey. Freshly sourced, quality checked and delivered across India.'
+
 export const metadata = {
-    description:
-        'Discover handcrafted women\'s ethnic wear at Energyflow. From festive ensembles to everyday elegance - premium fabrics, thoughtful silhouettes, and meticulous detailing.',
+    title: 'Buy Premium Dry Fruits, Nuts, Seeds & Super Foods Online',
+    description: HOME_DESCRIPTION,
+    alternates: {
+        canonical: '/',
+    },
     openGraph: {
-        description:
-            'Discover handcrafted women\'s ethnic wear at Energyflow. From festive ensembles to everyday elegance - premium fabrics, thoughtful silhouettes, and meticulous detailing.',
+        title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
+        description: HOME_DESCRIPTION,
+        url: '/',
+    },
+    twitter: {
+        title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
+        description: HOME_DESCRIPTION,
+    },
+}
+
+// Declares the site's internal search endpoint so Google can render a sitelinks
+// search box against the brand result. The homepage is the only correct place
+// for it — repeating it per page is treated as spam.
+const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Energyflow',
+    url: 'https://www.energyflow.com',
+    description: HOME_DESCRIPTION,
+    potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://www.energyflow.com/shop?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
     },
 }
 
 const Home = () => {
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+            />
             <section>
                 <HeroSection />
             </section>

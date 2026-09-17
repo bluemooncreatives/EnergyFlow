@@ -1,6 +1,20 @@
 import ShopClient from '@/components/Application/Website/ShopClient'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
 
+const DESCRIPTION =
+    'Browse the full Energyflow range. Premium dry fruits and nuts, seeds and super foods, roasted healthy snacks, millets and pulses, muesli and oats, berries, organic wellness products, cold pressed oils, A2 Gir cow bilona ghee, herbal powders and honey. Filter by category, pack size and price.'
+
+export const metadata = {
+    title: 'Shop Dry Fruits, Nuts, Seeds, Super Foods & Healthy Snacks',
+    description: DESCRIPTION,
+    alternates: { canonical: '/shop' },
+    openGraph: {
+        title: 'Shop Dry Fruits, Nuts, Seeds & Super Foods | Energyflow',
+        description: DESCRIPTION,
+        url: '/shop',
+    },
+}
+
 const buildSearchParamString = (searchParams) => {
     if (!searchParams) return ''
     const params = new URLSearchParams()

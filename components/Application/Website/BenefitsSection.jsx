@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
-import { RotateCcw, Truck, Headset, BadgePercent } from 'lucide-react'
+import { Leaf, Truck, ShieldCheck, Gift } from 'lucide-react'
 import ShopAllButton from '@/components/Application/Website/ShopAllButton'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -12,9 +12,9 @@ gsap.registerPlugin(ScrollTrigger)
 const BENEFITS = [
     {
         num: '01',
-        Icon: RotateCcw,
-        title: '7-Days Returns',
-        description: 'Risk-free shopping with easy, hassle-free returns on every order.',
+        Icon: Leaf,
+        title: 'Freshly Sourced',
+        description: 'Bought in small, frequent lots and packed fresh, never left sitting in storage.',
     },
     {
         num: '02',
@@ -24,15 +24,15 @@ const BENEFITS = [
     },
     {
         num: '03',
-        Icon: Headset,
-        title: '24/7 Support',
-        description: 'Our team is always here, ready to help you at any hour.',
+        Icon: ShieldCheck,
+        title: 'Quality Checked',
+        description: 'Every lot graded for freshness and purity before it reaches your pack.',
     },
     {
         num: '04',
-        Icon: BadgePercent,
-        title: 'Member Discounts',
-        description: 'Exclusive offers and special deals for our loyal customers.',
+        Icon: Gift,
+        title: 'Bulk & Gifting',
+        description: 'Corporate hampers and bulk orders at volume pricing, built to your brief.',
     },
 ]
 

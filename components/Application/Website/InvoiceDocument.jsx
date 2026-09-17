@@ -10,7 +10,7 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 
 const BRAND = {
     name: 'ENERGYFLOW',
-    tagline: 'Fashion, stitched with love',
+    tagline: 'Fuel Your Health, Energize Your Life.',
     email: 'support@energyflow.com',
     web: 'www.energyflow.com',
 }

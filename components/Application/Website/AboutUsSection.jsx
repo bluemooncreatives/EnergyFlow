@@ -15,21 +15,23 @@ gsap.registerPlugin(ScrollTrigger)
 const CONTENT = {
     leftImage: {
         src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783146225/DSCF5008_1_r7uftx.jpg',
-        alt: 'Energyflow - handcrafted women\'s fashion',
+        alt: 'Energyflow premium dry fruits and super foods',
     },
     smallImage: {
         src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1779221853/mtonkotfj50dwoswlr2j.jpg',
-        alt: 'A detail from the Energyflow collection',
+        alt: 'Nuts and seeds from the Energyflow range',
     },
     bottomImage: {
         src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1781947914/wbbpf3ivaxy7f8geenmb.jpg',
-        alt: 'Energyflow atelier at work',
+        alt: 'Inside the Energyflow dry fruits and super food store',
     },
+    brandName: 'Energyflow',
     paragraphs: [
-        'Energyflow is a family-owned contemporary women\'s fashion brand, founded by a devoted mother and her passion for handcrafted clothing. Our journey began with a mission to create garments that transcend trends and serve as a celebration of femininity, culture, and grace. Every stitch carries a story - of care, of craft, and of a deep love for the women who wear our pieces.',
-        'We take pride in working with the finest fabrics and artisan techniques. Our collections are as unique as they are wearable - pieces designed to make every woman feel confident, beautiful, and deeply seen in what she wears. From delicate hand-embroidery to thoughtfully draped silhouettes, each garment is shaped by generations of tradition and a modern eye for elegance.',
+        'is a healthy food brand built on one simple belief: good nutrition should be easy to reach, easy to trust, and genuinely enjoyable. We bring together premium dry fruits, nuts, seeds, super foods, millets, cold pressed oils and A2 Gir cow bilona ghee under one roof, so a healthier kitchen never means shopping in five different places.',
+        'Every product is selected for quality first. We source from growers and producers we can vouch for, check each lot for freshness and grade, and pack it to protect taste and nutrition on the way to you. From our first dry fruits and super food store to a growing retail and franchise network across India, the standard stays the same: honest products, fair prices, and nothing we would not serve at our own table.',
     ],
-    date: 'Est. 2019',
+    caption: 'Dry Fruits, Super Foods & Wellness',
+    date: 'Est. 2025',
 }
 
 const AboutUsSection = () => {
@@ -103,7 +105,7 @@ const AboutUsSection = () => {
                     </div>
                     <ShopAllButton
                         label="See More"
-                        href="/about"
+                        href="/about-us"
                         colorScheme="dark-red"
                         radius="md"
                         className="mt-3 min-w-0 w-full h-10 px-4 rounded-sm text-[0.72rem]"

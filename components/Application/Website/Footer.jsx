@@ -111,8 +111,8 @@ const Footer = ({ categoryLinks = [] }) => {
                 <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10'>
                     <div className='min-w-0'>
                         <p className='footer-caption text-md text-white/60 leading-snug mb-5 max-w-md'>
-                            Every stitch carries a story of care, craft, and grace. Discover handcrafted garments made to celebrate femininity and
-                            culture Reach <span className='font-semibold text-white'>Energyflow</span> at
+                            Premium dry fruits, nuts, seeds and super foods, sourced with care, checked for quality, and
+                            delivered across India. Reach <span className='font-semibold text-white'>Energyflow</span> at
                         </p>
                         <Link
                             href={`mailto:${CONTACT_EMAIL}`}

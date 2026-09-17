@@ -196,11 +196,11 @@ const PageLoader = ({ onReady, onComplete }) => {
             <div className="intro-logo absolute inset-0">
                 <div className="word absolute top-1/2 right-1/2 -translate-y-1/2 pr-3 [clip-path:polygon(0_0,100%_0,100%_100%,0%_100%)]" id="word-1">
                     <h1 className="text-3xl text-white font-header -translate-y-[120%] will-change-transform">
-                        Mom
+                        Energy
                     </h1>
                 </div>
                 <div className="word absolute top-1/2 left-1/2 -translate-y-1/2 pl-3 [clip-path:polygon(0_0,100%_0,100%_100%,0%_100%)]" id="word-2">
-                    <h1 className="text-3xl text-white font-header translate-y-[120%] will-change-transform">Stitched</h1>
+                    <h1 className="text-3xl text-white font-header translate-y-[120%] will-change-transform">Flow</h1>
                 </div>
             </div>
 

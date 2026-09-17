@@ -29,44 +29,41 @@ const HERO_LEFT_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783
 const HERO_CENTER_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783063101/WhatsApp_Image_2026-07-03_at_12.46.03_PM_uqte4t.jpg";
 const HERO_RIGHT_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781942605/x98cddrvoz82losytye7.jpg";
 
-// Profile photos — kept separate from the hero images above so each can change independently.
-const ADITI_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781945835/einxusjo1pubrtkgfddc.jpg";
-const SANDHYA_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783063101/WhatsApp_Image_2026-07-03_at_12.46.03_PM_uqte4t.jpg";
+// Director portraits — kept separate from the hero images above so each can change independently.
+const DIRECTOR_ONE_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781945835/einxusjo1pubrtkgfddc.jpg";
+const DIRECTOR_TWO_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783063101/WhatsApp_Image_2026-07-03_at_12.46.03_PM_uqte4t.jpg";
 
-// Brand-story paragraphs shown beneath the statement.
+/// Brand-story paragraphs shown beneath the statement.
 const STORY = [
-  "Energyflow was born in May 2021, in the heart of India's hardest COVID days. What started as one small idea, carried through so much uncertainty, slowly grew into something far greater - a quiet symbol of hope. And it began with my mom: her creativity, her strength, and her endless love became the spirit behind every thread we stitch, and the reason this journey ever started.",
-  "What makes us different is simple - we're not backed by big corporations, we're powered by family. My sister keeps everything running seamlessly online, my father handles logistics like a pro, and together, by hand, we build every part of this brand. Every design, every package, every decision travels straight from our home to yours.",
-  "Rooted in India and driven by passion, we make clothing that feels real, personal, and meaningful - because it truly is. This isn't fast fashion. It's family fashion. This is Energyflow.",
+  "Energy Flow Supply Hub Pvt. Ltd. was registered on 19 November 2025 with a clear ambition: to build a trusted, recognisable name in healthy food and nutrition. Not another shelf of imported packets, but a brand people could rely on for the everyday staples that actually make a difference to how they eat.",
+  "We began with our first ENERGYFLOW DRY FRUITS AND SUPER FOOD STORE, a single dedicated destination for premium dry fruits, nuts, seeds, super foods and wholesome pantry essentials. That store is the foundation of a wider retail and franchise network we are building across India.",
+  "Our approach is simple. Source from growers and producers we can vouch for. Check every lot for grade, freshness and purity. Price it fairly. Pack it so it reaches you the way it left us. Whether you are buying a 200g pack of almonds or a hundred festive hampers, the standard does not change.",
 ];
 
-// The two people behind the brand. `reverse` flips the image/text order.
+// The directors behind the company. `reverse` flips the image/text order.
 const PEOPLE = [
   {
-    name: "Aditi Dhakate",
-    role: "Founder · Face Behind the brand",
-    image: ADITI_IMAGE,
+    name: "Mr. Parveen Singla",
+    role: "Director",
+    image: DIRECTOR_ONE_IMAGE,
     bio: [
-      "I started out in IT engineering - a world of code, systems, and logic. But creativity had other plans for me.",
-      "Taking a leap from tech into fashion wasn't random - it was inspired by the strongest influence in my life: my mom. Her creativity and passion became the soul of Energyflow, and the reason I dared to turn this idea into reality.",
-      "Today I'm the face behind the brand, bringing together creativity, clarity, and a fresh perspective. I still carry my technical mindset - but now I use it to build something more expressive and personal.",
-      "Bubbly, driven, and real - professional when it matters, cool always. For me, fashion is about confidence, identity, and owning your story. And I'm just getting started.",
+      "Parveen leads sourcing and operations at Energyflow, the part of the business that decides what actually earns a place on our shelf.",
+      "Their focus is on building direct, lasting relationships with growers, mills and producers, so quality is controlled at origin rather than inspected at the end. It takes longer to set up and it is far more reliable once it runs.",
+      "That same discipline shapes how we price: buy well, keep the chain short, and pass the difference on to the customer instead of spending it on middlemen.",
     ],
   },
   {
-    name: "Sandhya Dhakate",
-    role: "Mom · Heart of Energyflow",
-    image: SANDHYA_IMAGE,
+    name: "Mr. Ayush Singla",
+    role: "Director",
+    image: DIRECTOR_TWO_IMAGE,
     reverse: true,
     bio: [
-      "She is the heart, the strength, and the soul behind Energyflow. A homemaker by role but a creator by passion, she has always expressed her love through every stitch she made for her daughters.",
-      "What began as simple, thoughtful creations at home has grown into something much bigger - today she stitches not just for us, but for daughters everywhere.",
-      "Her strength lies in her warmth, her creativity, and the way she brings life into everything she touches - graceful, vibrant, and endlessly inspiring.",
-      "Beyond the brand she's full of life — kitty parties, picnics, community work, and peace in her bhajan groups. Energyflow exists because of her: her love, her vision, and her magic in every stitch.",
+      "Ayush drives retail, brand and expansion, turning a single store into a network that can grow without losing what makes it work.",
+      "That means getting the fundamentals right first: a product range people genuinely want, a shopping experience that is easy online and in store, and a franchise model partners can run profitably.",
+      "The goal is a professionally managed brand rather than a chain of lookalike outlets, one where every Energyflow store, wherever it opens, means the same thing to the person walking in.",
     ],
   },
 ];
-
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -329,7 +326,7 @@ const AboutUsContent = ({ products = [] }) => {
           <div className={styles.centerImage} ref={centerImgRef}>
             <Image
               src={HERO_CENTER_IMAGE}
-              alt="Energyflow atelier"
+              alt="Inside the Energyflow dry fruits and super food store"
               fill
               priority
               sizes="(max-width: 900px) 70vw, 360px"
@@ -349,9 +346,9 @@ const AboutUsContent = ({ products = [] }) => {
           <span className={styles.plus}>+</span>
           <span className={styles.rule} />
           <span className={styles.caption}>
-            Born May 2021 · made by family,
+            Registered 19 Nov 2025 · first store open,
             <br />
-            rooted in India
+            franchise network growing
           </span>
         </div>
 
@@ -359,8 +356,8 @@ const AboutUsContent = ({ products = [] }) => {
         <div className={styles.statementWrap}>
           <div ref={statementRef}>
             <h2 className={styles.statement}>
-              Energyflow isn&apos;t just a clothing brand - it&apos;s a story
-              stitched with love, resilience, and family.
+              Energyflow isn&apos;t just a store. It&apos;s a standard for what
+              healthy food should be: honest, fresh, and worth trusting.
             </h2>
           </div>
           <div className={styles.story} ref={supportRef}>
@@ -378,7 +375,7 @@ const AboutUsContent = ({ products = [] }) => {
         <img
           ref={scrollImgRef}
           src={SCROLL_IMAGE}
-          alt="Energyflow craftsmanship"
+          alt="Premium dry fruits, nuts and seeds from Energyflow"
           className={styles.scrollImage}
           loading="lazy"
           decoding="async"
@@ -389,15 +386,14 @@ const AboutUsContent = ({ products = [] }) => {
         {/* The family behind the brand */}
         <div className={styles.people} ref={peopleRef}>
           <div className={styles.peopleHead}>
-            <span className={styles.peopleEyebrow}>THE FAMILY</span>
+            <span className={styles.peopleEyebrow}>LEADERSHIP</span>
             <h2 className={styles.peopleHeadline}>
-              Not built by a corporation - built by a family, by hand.
+              Built by people who care where every product comes from.
             </h2>
             <p className={styles.peopleIntro}>
-              Behind every Energyflow piece is one small family doing every
-              part themselves - designing, stitching, packing, and shipping
-              straight from our home in India to yours. These are the two women
-              at the very heart of it.
+              Energyflow is led by two directors who between them handle
+              sourcing, quality, retail and expansion, with a shared focus on
+              customer satisfaction, innovation and sustainable growth.
             </p>
           </div>
 

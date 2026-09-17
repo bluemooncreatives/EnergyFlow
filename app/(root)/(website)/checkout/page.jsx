@@ -320,7 +320,7 @@ const Checkout = () => {
                 "amount": payableAmount * 100,
                 "currency": "INR",
                 "name": "Energyflow",
-                "description": "Handcrafted Women's Fashion",
+                "description": "Premium Dry Fruits, Nuts & Super Foods",
                 "image": razorpayLogoUrl,
                 "order_id": order_id,
                 "handler": async function (response) {

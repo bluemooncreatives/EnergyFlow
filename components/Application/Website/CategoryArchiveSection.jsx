@@ -6,12 +6,13 @@ import { getHomeCategories } from '@/lib/services/categoryService'
 const ArchiveSectionClient = dynamic(() => import('./ArchiveSectionClient'))
 
 const WRITEUP =
-    'Discover signature silhouettes, everyday essentials, and statement pieces curated for every ' +
-    'wardrobe. Each category brings together styles designed for comfort, movement, and everyday ' +
-    'confidence, from relaxed daily basics to elevated looks for special moments. Explore collections ' +
-    'that balance fit, fabric, and finish, so every piece feels as good as it looks. Whether you are ' +
-    'building a capsule wardrobe, updating seasonal staples, or searching for one standout outfit, this ' +
-    'archive helps you find the right mood, shape, and style with ease.'
+    'Explore the full Energyflow range, category by category. Premium dry fruits and nuts for everyday ' +
+    'energy, seeds and super foods for focused nutrition, roasted healthy snacks you can eat without ' +
+    'a second thought, and millets, pulses, muesli and oats for wholesome meals. Go further and you ' +
+    'will find berries and natural foods, organic and wellness products, cold pressed oils, A2 Gir ' +
+    'cow bilona ghee, herbs and herbal powders, honey and natural sweeteners, and corporate and ' +
+    'festive hampers ready to gift. Whether you are restocking your pantry, building a daily wellness ' +
+    'routine, or choosing a thoughtful gift, start here and find exactly what you need.'
 
 const mapCategory = (category) => ({
     id: `cat-${category.id}`,

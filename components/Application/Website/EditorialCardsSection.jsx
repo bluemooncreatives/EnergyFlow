@@ -15,7 +15,7 @@ const CARDS = [
     {
         num: '01',
         heading: 'Our Story',
-        description: "Crafted with a mother's love — each piece carries the warmth, care, and attention that defines who we are.",
+        description: 'From a single dry fruits and super food store to a growing retail network, built on sourcing we stand behind.',
         cta: 'Discover More',
         href: '/about-us',
         image: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783145809/mom.stitched_1770484683_3827423237227958318_47423868805_yw1u6u.png',
@@ -24,7 +24,7 @@ const CARDS = [
     {
         num: '02',
         heading: 'Shop Now',
-        description: 'From everyday essentials to statement pieces — explore our full range of thoughtfully designed clothing.',
+        description: 'Dry fruits, nuts, seeds, super foods, millets, cold pressed oils and ghee. Your whole healthy pantry in one place.',
         cta: 'Shop Collection',
         href: WEBSITE_SHOP,
         image: '/assets/images/hero/01.webp',
@@ -32,8 +32,8 @@ const CARDS = [
     },
     {
         num: '03',
-        heading: 'Contact Us',
-        description: "Have a question or need help finding the right fit? We're always here to help you.",
+        heading: 'Bulk & Gifting',
+        description: 'Corporate hampers, festive gift boxes and bulk orders, put together to suit your budget and branding.',
         cta: 'Get In Touch',
         href: '/contact',
         image: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783145808/medha111_1744463187_3609141260625880268_2034285964_kpfguy.jpg',
