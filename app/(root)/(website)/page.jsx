@@ -6,6 +6,7 @@ import BestsellersSection from '@/components/Application/Website/BestsellersSect
 // Async server components (fetch their own data): imported directly so they run
 // on the server, like BestsellersSection. Each code-splits its own client chunk.
 import CategoryArchiveSection from '@/components/Application/Website/CategoryArchiveSection'
+import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
 
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
@@ -86,6 +87,10 @@ const Home = () => {
 
             <LazyHydrate>
                 <BestsellersSection />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <PopularProductsSection />
             </LazyHydrate>
 
             {/* The gallery's styled-jsx CSS is client-only (no SSR registry), so
