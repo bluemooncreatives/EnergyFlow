@@ -60,6 +60,11 @@ export async function PUT(request) {
         // Re-categorising a product or changing its media can change category
         // counts and the homepage "Categories" representative image.
         revalidateTag('storefront-home-categories')
+        // An edit to mrp/sellingPrice decides whether a product qualifies for
+        // the Daily Best Sells rail at all, and both homepage rails render the
+        // name, image and price that just changed.
+        revalidateTag('storefront-daily-best-sells')
+        revalidateTag('storefront-popular-products')
 
         return response(true, 200, 'Product updated successfully.')
 

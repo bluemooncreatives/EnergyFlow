@@ -64,6 +64,10 @@ export async function POST(request) {
         // A new product changes its category's product count and may become the
         // representative image for the homepage "Categories" section.
         revalidateTag('storefront-home-categories')
+        // A product created with a discount belongs on the deal rail, and the
+        // Popular Products grid tops up with the newest products.
+        revalidateTag('storefront-daily-best-sells')
+        revalidateTag('storefront-popular-products')
 
         return response(true, 200, 'Product added successfully.', { _id: newProduct._id })
 

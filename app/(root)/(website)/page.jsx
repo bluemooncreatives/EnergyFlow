@@ -7,6 +7,7 @@ import BestsellersSection from '@/components/Application/Website/BestsellersSect
 // on the server, like BestsellersSection. Each code-splits its own client chunk.
 import CategoryArchiveSection from '@/components/Application/Website/CategoryArchiveSection'
 import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
+import DailyBestSellsSection from '@/components/Application/Website/DailyBestSellsSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
 
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
@@ -85,11 +86,11 @@ const Home = () => {
             </LazyHydrate>
 
             <LazyHydrate>
-                <BestsellersSection />
+                <PopularProductsSection />
             </LazyHydrate>
 
             <LazyHydrate>
-                <PopularProductsSection />
+                <DailyBestSellsSection />
             </LazyHydrate>
 
             <LazyHydrate>
@@ -102,6 +103,10 @@ const Home = () => {
 
             <LazyHydrate>
                 <BenefitsSection />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <BestsellersSection />
             </LazyHydrate>
 
             <LazyHydrate>

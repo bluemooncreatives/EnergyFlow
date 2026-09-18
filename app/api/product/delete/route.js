@@ -40,6 +40,8 @@ export async function PUT(request) {
         // should show, so drop its cache.
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
+        revalidateTag('storefront-daily-best-sells')
+        revalidateTag('storefront-popular-products')
         // It also changes category product counts / representative images.
         revalidateTag('storefront-home-categories')
 
@@ -82,6 +84,8 @@ export async function DELETE(request) {
 
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
+        revalidateTag('storefront-daily-best-sells')
+        revalidateTag('storefront-popular-products')
         revalidateTag('storefront-home-categories')
 
         return response(true, 200, 'Data deleted permanently')
