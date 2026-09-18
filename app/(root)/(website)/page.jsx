@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic'
 import HeroSection from '@/components/Application/Website/HeroSection'
 import LazyHydrate from '@/components/Application/LazyHydrate'
-import FeaturedProduct from '@/components/Application/Website/FeaturedProduct'
 import BestsellersSection from '@/components/Application/Website/BestsellersSection'
 // Async server components (fetch their own data): imported directly so they run
 // on the server, like BestsellersSection. Each code-splits its own client chunk.
@@ -72,10 +71,6 @@ const Home = () => {
                 defers its hydration until the user scrolls near it, so the
                 initial load only hydrates the hero + header. */}
             <Marquee text="freshly arrived" repeatCount={12} />
-
-            <LazyHydrate>
-                <FeaturedProduct />
-            </LazyHydrate>
 
             <LazyHydrate>
                 <CategoryArchiveSection />
