@@ -12,7 +12,6 @@ import Testimonial from '@/components/Application/Website/Testimonial'
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
 // so they don't block parsing and hydration of the above-fold critical path.
 const Marquee = dynamic(() => import('@/components/Application/Website/Marquee'))
-const InstagramReelsMarquee = dynamic(() => import('@/components/Application/Website/InstagramReelsMarquee'))
 const AboutUsSection = dynamic(() => import('@/components/Application/Website/AboutUsSection'))
 const EditorialCardsSection = dynamic(() => import('@/components/Application/Website/EditorialCardsSection'))
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
@@ -91,14 +90,6 @@ const Home = () => {
 
             <LazyHydrate>
                 <PopularProductsSection />
-            </LazyHydrate>
-
-            {/* The gallery's styled-jsx CSS is client-only (no SSR registry), so
-                its server HTML is unstyled and ~1600px taller until hydration
-                reflows it. Hydrate it extra early so that reflow always happens
-                while the section is still far below the viewport. */}
-            <LazyHydrate rootMargin='1500px'>
-                <InstagramReelsMarquee />
             </LazyHydrate>
 
             <LazyHydrate>
