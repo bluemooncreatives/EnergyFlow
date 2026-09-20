@@ -18,7 +18,7 @@ const CARDS = [
         description: 'From a single dry fruits and super food store to a growing retail network, built on sourcing we stand behind.',
         cta: 'Discover More',
         href: '/about-us',
-        image: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783145809/mom.stitched_1770484683_3827423237227958318_47423868805_yw1u6u.png',
+        image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/IMG_20260920_155108.jpg.jpg',
         overlay: 'bg-gradient-to-t from-black/80 via-black/30 to-black/10',
     },
     {
@@ -27,7 +27,7 @@ const CARDS = [
         description: 'Dry fruits, nuts, seeds, super foods, millets, cold pressed oils and ghee. Your whole healthy pantry in one place.',
         cta: 'Shop Collection',
         href: WEBSITE_SHOP,
-        image: '/assets/images/hero/01.webp',
+        image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789636906/WhatsApp_Image_2026-09-17_at_2.50.29_PM_jkfnws.jpg',
         overlay: 'bg-gradient-to-t from-[var(--dark-red)]/90 via-[var(--dark-red)]/25 to-transparent',
     },
     {
@@ -36,7 +36,7 @@ const CARDS = [
         description: 'Corporate hampers, festive gift boxes and bulk orders, put together to suit your budget and branding.',
         cta: 'Get In Touch',
         href: '/contact',
-        image: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783145808/medha111_1744463187_3609141260625880268_2034285964_kpfguy.jpg',
+        image:'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png',
         overlay: 'bg-gradient-to-t from-black/85 via-black/35 to-black/10',
     },
 ]
