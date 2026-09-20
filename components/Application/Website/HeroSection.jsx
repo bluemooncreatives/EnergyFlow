@@ -15,8 +15,12 @@ gsap.registerPlugin(useGSAP, CustomEase);
 
 const AUTO_SLIDE_MS = 3000;
 const MAX_ACTIVE_SLIDES = 2;
+// Fallback step heights, used only when a track is display:none at its
+// breakpoint and so measures 0. The live values come from the DOM (see
+// `stepOf`) so the CSS clamps can change without desyncing the tracks.
 const DESKTOP_HEADLINE_STEP = 172;
 const MOBILE_TITLE_STEP = 160;
+const WRITEUP_STEP = 176;
 const LOADER_SESSION_KEY = "energyflow_loader_seen";
 
 // Cloudinary serves the plate PNGs; f_auto,q_auto keeps them off the critical
@@ -392,6 +396,38 @@ const HeroSection = () => {
         }
       };
 
+      // ── Track stepping ──────────────────────────────────────────
+      // The three stacked text tracks scroll by exactly one slide height.
+      // That height is now fluid (the mobile title clamps against both vw and
+      // svh), so it is measured rather than hardcoded — otherwise a wrapped
+      // title on a 320px handset, or a landscape window, leaves the track
+      // parked between two slides.
+      const stepOf = (trackRef, fallback) => {
+        const firstSlide = trackRef.current?.children[0];
+        const height = firstSlide?.getBoundingClientRect().height ?? 0;
+        // A track hidden at this breakpoint measures 0; it isn't visible, so
+        // the fallback is only there to keep the transform sane.
+        return height > 1 ? height : fallback;
+      };
+
+      const TRACKS = [
+        [mobileTitleTrackRef, MOBILE_TITLE_STEP],
+        [headlineTrackRef, DESKTOP_HEADLINE_STEP],
+        [writeupTrackRef, WRITEUP_STEP],
+      ];
+
+      const syncTracks = (animate) => {
+        TRACKS.forEach(([trackRef, fallback]) => {
+          if (!trackRef.current) return;
+          const y = -stepOf(trackRef, fallback) * currentIndex;
+          if (animate) {
+            gsap.to(trackRef.current, { y, duration: 0.95, ease: "hop2", force3D: true });
+          } else {
+            gsap.set(trackRef.current, { y });
+          }
+        });
+      };
+
       const updateTextAndCounter = (prevIndex) => {
         gsap.to(counterRef.current, {
           y: -20 * currentIndex,
@@ -400,26 +436,7 @@ const HeroSection = () => {
           force3D: true,
         });
 
-        gsap.to(mobileTitleTrackRef.current, {
-          y: -MOBILE_TITLE_STEP * currentIndex,
-          duration: 0.95,
-          ease: "hop2",
-          force3D: true,
-        });
-
-        gsap.to(headlineTrackRef.current, {
-          y: -DESKTOP_HEADLINE_STEP * currentIndex,
-          duration: 0.95,
-          ease: "hop2",
-          force3D: true,
-        });
-
-        gsap.to(writeupTrackRef.current, {
-          y: -176 * currentIndex,
-          duration: 0.95,
-          ease: "hop2",
-          force3D: true,
-        });
+        syncTracks(true);
 
         if (prevIndex !== undefined && prevIndex !== currentIndex) {
           animateCharsOut(mobileTitleTrackRef, prevIndex);
@@ -650,8 +667,21 @@ const HeroSection = () => {
       startLeafDrift();
       const orbitDrift = startOrbitDrift();
 
-      const handleResize = () => placeOrbitThumbs();
+      // Rotating a handset, or the URL bar collapsing, changes every clamped
+      // height at once. Re-measure on the next frame (after layout settles)
+      // and re-park the tracks without animating, so the slide in view stays
+      // in view instead of sliding to a stale offset.
+      let resizeFrame = 0;
+      const handleResize = () => {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = 0;
+          placeOrbitThumbs();
+          syncTracks(false);
+        });
+      };
       window.addEventListener("resize", handleResize);
+      window.addEventListener("orientationchange", handleResize);
 
       updateActivePreview();
       updateTextAndCounter();
@@ -663,6 +693,8 @@ const HeroSection = () => {
       return () => {
         sliderRef.current?.removeEventListener("click", handleClick);
         window.removeEventListener("resize", handleResize);
+        window.removeEventListener("orientationchange", handleResize);
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
         clearAutoSlide();
         if (progressTween) progressTween.kill();
         if (orbitDrift) orbitDrift.kill();
@@ -741,13 +773,13 @@ const HeroSection = () => {
         </div>
 
         {/* Mobile title */}
-        <div className="absolute left-1/2 top-1/2 z-20 h-40 w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden px-8 lg:hidden">
+        <div className={`${styles.mobileTitleViewport} absolute left-1/2 top-1/2 z-20 w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden px-6 sm:px-8 lg:hidden`}>
           <div ref={mobileTitleTrackRef} className="relative top-0 w-full will-change-transform">
             {SLIDES.map((slide) => (
-              <div key={slide.id} className="flex h-40 flex-col items-center justify-center">
+              <div key={slide.id} className={`${styles.mobileTitleSlide} flex flex-col items-center justify-center`}>
                 <Link
                   href={WEBSITE_SHOP}
-                  className={`${styles.mobileTitleLink} pointer-events-auto text-center text-[38px] font-medium leading-tight transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
+                  className={`${styles.mobileTitleLink} ${styles.mobileTitle} pointer-events-auto text-center font-medium transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
                   onClick={(event) => event.stopPropagation()}
                 >
                   {textSplit ? splitToChars(slide.title) : slide.title}
@@ -796,7 +828,7 @@ const HeroSection = () => {
 
         {/* Counter */}
         <div
-          className="absolute bottom-8 left-1/2 z-20 flex h-6 -translate-x-1/2 gap-2 overflow-hidden max-lg:bottom-40"
+          className={`${styles.counterDock} absolute left-1/2 z-20 flex h-6 -translate-x-1/2 gap-2 overflow-hidden`}
           aria-live="polite"
           aria-atomic="true"
         >
@@ -819,7 +851,7 @@ const HeroSection = () => {
 
         {/* Preview thumbnails with progress bars */}
         <div
-          className="slider-preview absolute bottom-8 right-8 z-20 flex h-[64px] w-[34%] gap-2.5 max-lg:right-1/2 max-lg:h-[58px] max-lg:w-[92%] max-lg:translate-x-1/2 max-lg:gap-1.5"
+          className={`slider-preview ${styles.previewDock} absolute right-8 z-20 flex w-[34%] gap-2.5 max-lg:right-1/2 max-lg:w-[92%] max-lg:translate-x-1/2 max-lg:gap-1.5`}
           role="tablist"
           aria-label="Slide thumbnails"
         >
@@ -853,10 +885,10 @@ const HeroSection = () => {
         {/* Indicators */}
         <div
           ref={indicatorsRef}
-          className="pointer-events-none absolute left-1/2 top-1/2 z-20 flex w-3/4 -translate-x-1/2 -translate-y-1/2 justify-between max-lg:w-[90%]"
+          className={`${styles.indicators} pointer-events-none absolute left-1/2 top-1/2 z-20 flex w-3/4 -translate-x-1/2 -translate-y-1/2 justify-between max-lg:w-[94%]`}
         >
-          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform`}>+</p>
-          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform`}>+</p>
+          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform max-lg:text-[28px]`}>+</p>
+          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform max-lg:text-[28px]`}>+</p>
         </div>
       </div>
     </>

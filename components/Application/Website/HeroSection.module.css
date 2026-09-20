@@ -7,6 +7,11 @@
     width: 100%;
     height: 100svh;
     overflow: hidden;
+    /* Every stacked text track is offset by exactly one slide height, so the
+       viewport, each slide and the GSAP step all read from one number. The
+       JS measures the rendered height rather than assuming it, which is what
+       lets these clamps change freely without desyncing the carousel. */
+    --m-title-h: clamp(6.25rem, 19svh, 10rem);
     background:
         radial-gradient(120% 90% at 82% 42%, rgba(30, 66, 41, 0.07) 0%, rgba(30, 66, 41, 0) 62%),
         linear-gradient(160deg, var(--brand-white) 0%, var(--brand-warm-bg) 100%);
@@ -148,6 +153,35 @@
     opacity: 0.5;
 }
 
+/* ── Mobile title track ─────────────────────────────────────────── */
+/* Viewport and slide share one height so the track steps cleanly. */
+.mobileTitleViewport,
+.mobileTitleSlide {
+    height: var(--m-title-h);
+}
+
+/* Scales with the viewport instead of sitting at a fixed 38px, which wrapped
+   to three lines (and overflowed the track) on 320–360px handsets. */
+.mobileTitle {
+    font-size: clamp(1.5rem, 7.2vw, 2.5rem);
+    line-height: 1.12;
+    text-wrap: balance;
+}
+
+/* ── Bottom furniture ───────────────────────────────────────────── */
+/* Placement lives here rather than in utility classes: the mobile and
+   short-viewport rules below are inside media queries, so a Tailwind
+   `bottom-8` on the same element would out-rank them depending on
+   stylesheet order. One owner per property, no cascade coin-flips. */
+.counterDock {
+    bottom: 2rem;
+}
+
+.previewDock {
+    bottom: 2rem;
+    height: 64px;
+}
+
 /* ── Text colours over the light canvas ─────────────────────────── */
 .headlineLink,
 .mobileTitleLink {
@@ -227,4 +261,50 @@
     .orbit {
         display: none;
     }
+
+    /* Bottom furniture is docked in one stack: previews sit on the floor and
+       the counter rides directly above them, both measured off the same
+       safe-area-aware base so they can't collide on any height. */
+    .previewDock {
+        bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+        height: clamp(3rem, 8svh, 3.75rem);
+    }
+
+    .counterDock {
+        bottom: calc(1.25rem + clamp(3rem, 8svh, 3.75rem) + 0.75rem + env(safe-area-inset-bottom, 0px));
+    }
+
 }
+
+/* Landscape handsets and short windows: the centred title and the bottom
+   dock were budgeted for portrait and met in the middle around 600px tall.
+   Everything tightens rather than anything being dropped. */
+@media (max-width: 1023px) and (max-height: 620px) {
+    .hero {
+        --m-title-h: clamp(4.5rem, 26svh, 7rem);
+    }
+
+    .mobileTitle {
+        font-size: clamp(1.25rem, 4.6vh, 2rem);
+    }
+
+    .stage {
+        top: 40%;
+        width: min(52vw, 46svh, 300px);
+    }
+
+    .previewDock {
+        bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        height: clamp(2.25rem, 7svh, 3rem);
+    }
+
+    .counterDock {
+        bottom: calc(0.75rem + clamp(2.25rem, 7svh, 3rem) + 0.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* At this height the crosses are pure noise against the title. */
+    .indicators {
+        opacity: 0;
+    }
+}
+
