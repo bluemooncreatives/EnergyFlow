@@ -43,19 +43,19 @@ const SLIDES = [
   },
   {
     id: 3,
-    headline: "Real Wellness",
-    title: "Cold Pressed Oils & A2 Ghee",
-    writeup: "Cold pressed oils and A2 Gir cow bilona ghee, made the traditional way. Nothing refined, nothing rushed, nothing hidden.",
+    headline: "Made To Gift",
+    title: "Festive Gift Hampers",
+    writeup: "Curated chocolate and dry fruit gift boxes, wrapped and ready for festivals, weddings and every reason worth celebrating.",
     plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_22_PM"),
-    alt: "Energyflow cold pressed oils and A2 Gir cow bilona ghee",
+    alt: "Energyflow festive chocolate and dry fruit gift hamper box",
   },
   {
     id: 4,
     headline: "Everyday Good",
-    title: "Snacks, Millets & Muesli",
-    writeup: "Roasted healthy snacks, millets, pulses, muesli and oats for mindful eating that still tastes like something you look forward to.",
+    title: "Healthy Candies & Treats",
+    writeup: "Guilt free candies and chewables made with real fruit and clean ingredients, so the sweet part of the day stays on your side.",
     plate: plateUrl("1789923297", "ChatGPT_Image_Sep_20_2026_09_58_05_PM"),
-    alt: "Energyflow healthy roasted snacks, millets, muesli and oats",
+    alt: "Energyflow healthy fruit candies and chewable treats",
   },
 ];
 
