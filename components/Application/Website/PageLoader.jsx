@@ -6,21 +6,29 @@ import CustomEase from "gsap/CustomEase"
 
 gsap.registerPlugin(CustomEase)
 
+// The lockup never has to be a flash: a short floor keeps the brand beat
+// readable on a warm cache without meaningfully delaying a slow one (the
+// 2.5s safety net below still bounds the worst case).
+const MIN_VISIBLE_MS = 1400
+
 const PageLoader = ({ onReady, onComplete }) => {
     const loaderRef = useRef(null)
+    const barRef = useRef(null)
+    const barTweenRef = useRef(null)
+    const progressRef = useRef({ value: 0 })
     const [isLoaded, setIsLoaded] = useState(false)
-    const countRef = useRef(0)
-    const countTextRef = useRef(null)
-    const tlRef = useRef(null)
+    const startRef = useRef(0)
+    if (startRef.current === 0 && typeof performance !== 'undefined') {
+        startRef.current = performance.now()
+    }
 
-    // Write the counter straight to the DOM instead of through React state.
-    // GSAP fires onUpdate ~60x/s during the most load-sensitive window; routing
-    // each tick through setState would queue ~90 renders/reconciliations and an
-    // equal number of forced reflows on a 12rem element, inflating Total Blocking
-    // Time. A direct textContent write keeps the same visual with none of that cost.
-    const paintCount = (value) => {
-        if (countTextRef.current) {
-            countTextRef.current.textContent = value.toString().padStart(2, '0')
+    // Paint the bar straight to the DOM rather than through React state. GSAP
+    // updates ~60x/s during the most load-sensitive window; routing each tick
+    // through setState would queue ~90 renders and as many forced reflows,
+    // inflating Total Blocking Time for no visual gain.
+    const paintProgress = (value) => {
+        if (barRef.current) {
+            barRef.current.style.transform = `scaleX(${value / 100})`
         }
     }
 
@@ -30,192 +38,227 @@ const PageLoader = ({ onReady, onComplete }) => {
     // net so the loader can never trap the page behind a stalled image.
     useEffect(() => {
         let done = false
+        let minTimer = null
         const markLoaded = () => {
             if (done) return
             done = true
-            setIsLoaded(true)
+            const elapsed = performance.now() - startRef.current
+            const wait = Math.max(MIN_VISIBLE_MS - elapsed, 0)
+            minTimer = window.setTimeout(() => setIsLoaded(true), wait)
         }
 
         const heroImage = document.querySelector('.slide-visual')
         if (!heroImage || heroImage.complete || document.readyState === 'complete') {
             markLoaded()
-            return
+        } else {
+            heroImage.addEventListener('load', markLoaded)
+            heroImage.addEventListener('error', markLoaded)
         }
 
-        heroImage.addEventListener('load', markLoaded)
-        heroImage.addEventListener('error', markLoaded)
         const timeoutId = window.setTimeout(markLoaded, 2500)
 
         return () => {
-            heroImage.removeEventListener('load', markLoaded)
-            heroImage.removeEventListener('error', markLoaded)
+            if (heroImage) {
+                heroImage.removeEventListener('load', markLoaded)
+                heroImage.removeEventListener('error', markLoaded)
+            }
             window.clearTimeout(timeoutId)
+            if (minTimer !== null) window.clearTimeout(minTimer)
         }
     }, [])
 
-    // Counter animation — starts immediately, no async delay
+    // Entrance cascade, then the fill. The mark arrives first, the wordmark
+    // and subline follow it in, and the rule draws itself last — by which
+    // point the lime fill is already running, so the bar tracks the real load
+    // alongside the rest of the page rather than after it.
+    //
+    // The fill races to 90% and waits there: the final stretch is reserved
+    // for the load signal, so the bar never claims to be done while the hero
+    // image is still in flight.
     useEffect(() => {
-        const counterTl = gsap.timeline()
+        const loader = loaderRef.current
+        if (!loader) return
 
-        counterTl.to(countRef, {
-            current: 90,
-            duration: 1.5,
-            ease: "power2.out",
-            onUpdate: () => {
-                paintCount(Math.round(countRef.current))
-            }
+        const markEl = loader.querySelector(".lockup-mark")
+        const wordEl = loader.querySelector(".lockup-word")
+        const subEl = loader.querySelector(".lockup-sub")
+        const trackEl = loader.querySelector(".bar-track")
+
+        const tl = gsap.timeline()
+
+        tl.to(markEl, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
         })
 
-        tlRef.current = counterTl
+        tl.to(
+            wordEl,
+            { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+            "-=0.25"
+        )
 
-        return () => {
-            counterTl.kill()
-        }
+        tl.to(
+            subEl,
+            { opacity: 0.6, y: 0, duration: 0.45, ease: "power3.out" },
+            "-=0.32"
+        )
+
+        // The white rule draws out from its centre as the fill begins.
+        tl.to(
+            trackEl,
+            { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" },
+            "-=0.28"
+        )
+
+        tl.add(
+            gsap.to(progressRef.current, {
+                value: 90,
+                duration: 1.6,
+                ease: "power2.out",
+                onUpdate: () => paintProgress(progressRef.current.value),
+            }),
+            "<"
+        )
+
+        barTweenRef.current = tl
+        return () => tl.kill()
     }, [])
 
-    // When page is loaded, complete the counter to 100 and reveal
+    // Exit choreography: the bar completes, the lockup lifts away, then the
+    // two brand blocks wipe off the screen. `onReady` fires while the blocks
+    // still cover everything, so the hero's entrance starts behind the
+    // curtain rather than popping in after it.
     useEffect(() => {
         if (!isLoaded) return
-
-        // Kill any running counter animation
-        if (tlRef.current) {
-            tlRef.current.kill()
-        }
-
-        const currentCount = countRef.current
-        const remainingProgress = 100 - currentCount
-        const duration = Math.max(0.25, Math.min(0.5, remainingProgress / 150))
-
-        // Create the ease right before the timeline that uses it
-        CustomEase.create("hop", "0.9, 0, 0.1, 1")
-
-        const completeTl = gsap.timeline({
-            defaults: { ease: "hop" }
-        })
-
-        // Complete counter to 100
-        completeTl.to(countRef, {
-            current: 100,
-            duration: duration,
-            ease: "power2.out",
-            onUpdate: () => {
-                paintCount(Math.round(countRef.current))
-            }
-        })
 
         const loader = loaderRef.current
         if (!loader) return
 
-        const counterEl = loader.querySelector(".counter")
-        const wordEls = loader.querySelectorAll(".word h1")
-        const dividerEl = loader.querySelector(".divider")
-        const word1H1 = loader.querySelector("#word-1 h1")
-        const word2H1 = loader.querySelector("#word-2 h1")
+        if (barTweenRef.current) barTweenRef.current.kill()
+
+        CustomEase.create("hop", "0.9, 0, 0.1, 1")
+
+        const lockupEl = loader.querySelector(".lockup")
+        const trackEl = loader.querySelector(".bar-track")
         const blockEls = loader.querySelectorAll(".block")
 
-        // The choreography below overlaps aggressively: the original sequential
-        // timeline held the page behind the overlay for ~4s after load, which
-        // dominated Speed Index. Same beats, ~1.5s total.
+        const remaining = 100 - progressRef.current.value
+        const fillDuration = Math.max(0.25, Math.min(0.5, remaining / 150))
 
-        // Hide counter
-        completeTl.to(counterEl, {
+        const tl = gsap.timeline({ defaults: { ease: "hop" } })
+
+        tl.to(progressRef.current, {
+            value: 100,
+            duration: fillDuration,
+            ease: "power2.out",
+            onUpdate: () => paintProgress(progressRef.current.value),
+        })
+
+        // Bar retires first, then the lockup lifts.
+        tl.to(trackEl, {
             opacity: 0,
+            y: -6,
             duration: 0.3,
-            ease: "power2.out"
+            ease: "power2.out",
         })
 
-        // Show logo words + divider together
-        completeTl.to(
-            wordEls,
+        tl.to(
+            lockupEl,
             {
-                y: "0%",
-                duration: 0.5,
+                opacity: 0,
+                y: -18,
+                duration: 0.45,
             },
-            "<0.1"
+            "<0.08"
         )
 
-        completeTl.to(
-            dividerEl,
-            {
-                scaleY: 1,
-                duration: 0.5,
-                onComplete: () =>
-                    gsap.to(dividerEl, { opacity: 0, duration: 0.15 }),
-            },
-            "<"
-        )
+        // Signal the hero to start while blocks still cover the screen.
+        tl.call(() => { if (onReady) onReady() })
 
-        // Hide words
-        completeTl.to(word1H1, {
-            y: "100%",
-            duration: 0.5,
-            delay: 0.15,
-        })
-
-        completeTl.to(
-            word2H1,
-            {
-                y: "-100%",
-                duration: 0.5,
-            },
-            "<"
-        )
-
-        // Signal hero section to start while blocks still cover the screen
-        completeTl.call(() => { if (onReady) onReady() })
-
-        // Reveal hero - blocks slide away, overlapping the words' exit
-        completeTl.to(
+        tl.to(
             blockEls,
             {
                 clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
                 duration: 0.7,
                 stagger: 0.08,
-                delay: 0.15,
+                delay: 0.1,
             },
             "<"
         )
 
-        // Hide the entire loader after animation
-        completeTl.set(loader, {
+        tl.set(loader, {
             display: "none",
             onComplete: () => {
                 if (onComplete) onComplete()
             }
         })
 
+        return () => {
+            tl.kill()
+        }
     }, [isLoaded, onReady, onComplete])
 
     return (
-        <div ref={loaderRef} className="loader fixed top-0 left-0 w-full h-svh overflow-hidden z-[120] pointer-events-none">
+        <div
+            ref={loaderRef}
+            role="status"
+            aria-live="polite"
+            aria-label="Loading Energyflow"
+            className="loader fixed top-0 left-0 w-full h-svh overflow-hidden z-[120] pointer-events-none"
+        >
             <div className="overlay absolute top-0 w-full h-full flex">
-                <div className="block w-full h-full bg-[var(--brand-primary-hover)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
-                <div className="block w-full h-full bg-[var(--brand-primary-hover)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
+                <div className="block w-full h-full bg-[var(--brand-primary)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
+                <div className="block w-full h-full bg-[var(--brand-primary)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
             </div>
 
-            <div className="intro-logo absolute inset-0">
-                <div className="word absolute top-1/2 right-1/2 -translate-y-1/2 pr-3 [clip-path:polygon(0_0,100%_0,100%_100%,0%_100%)]" id="word-1">
-                    <h1 className="text-3xl text-white font-header -translate-y-[120%] will-change-transform">
-                        Energy
-                    </h1>
+            {/* Centred lockup: mark, wordmark, then the progress rule beneath. */}
+            <div className="lockup absolute inset-0 z-[2] flex flex-col items-center justify-center gap-7 will-change-transform">
+                {/* Initial states are inline rather than Tailwind classes so
+                    they're correct in the server-rendered HTML — a class GSAP
+                    later overrides with a transform would fight it. */}
+                <div className="flex flex-col items-center gap-3">
+                    {/* Plain <img>: this sits on the critical path and needs no
+                        optimisation hop or layout transform. */}
+                    <img
+                        src="/assets/images/hero/logo.png"
+                        alt=""
+                        width={88}
+                        height={72}
+                        className="lockup-mark h-auto w-[4.5rem] object-contain will-change-transform max-sm:w-16"
+                        style={{ opacity: 0, transform: 'translateY(14px) scale(0.92)' }}
+                    />
+                    <span className="flex flex-col items-center leading-none">
+                        <span
+                            className="lockup-word font-header text-[1.75rem] text-white will-change-transform max-sm:text-2xl"
+                            style={{ opacity: 0, transform: 'translateY(12px)' }}
+                        >
+                            Energyflow
+                        </span>
+                        <span
+                            className="lockup-sub mt-1.5 text-[0.7rem] font-medium uppercase tracking-[0.08em] text-white will-change-transform max-sm:text-[0.625rem]"
+                            style={{ opacity: 0, transform: 'translateY(10px)' }}
+                        >
+                            Premium Dry Fruits &amp; Super Foods
+                        </span>
+                    </span>
                 </div>
-                <div className="word absolute top-1/2 left-1/2 -translate-y-1/2 pl-3 [clip-path:polygon(0_0,100%_0,100%_100%,0%_100%)]" id="word-2">
-                    <h1 className="text-3xl text-white font-header translate-y-[120%] will-change-transform">Flow</h1>
+
+                <div
+                    className="bar-track h-px w-40 overflow-hidden rounded-full bg-white/20 will-change-transform max-sm:w-32"
+                    style={{ opacity: 0, transform: 'scaleX(0)' }}
+                >
+                    <div
+                        ref={barRef}
+                        className="h-full w-full origin-left bg-[var(--brand-lime)] will-change-transform"
+                        style={{ transform: 'scaleX(0)' }}
+                    />
                 </div>
-            </div>
-
-            <div className="divider absolute top-0 left-1/2 origin-top w-px h-full bg-white -translate-x-1/2 scale-y-0 will-change-transform"></div>
-
-            <div className="counter absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[2]">
-                <h1 ref={countTextRef} className="font-header text-[12rem] max-md:text-[8rem] max-sm:text-[5rem] font-normal text-white will-change-transform">
-                    00
-                </h1>
             </div>
         </div>
     )
 }
 
 export default PageLoader
-
-
-

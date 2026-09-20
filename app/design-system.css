@@ -26,6 +26,10 @@
   --brand-primary-bright: #3B6B47;   /* mid green — gradient highlight      */
   --brand-primary-deep:   #16301F;   /* darkest green — gradient depth stop */
 
+  /* Yellow-green pulled from the leaf mark — accents on deep-green surfaces
+     (the preloader's progress rule) where cream would read too neutral. */
+  --brand-lime: #A7D82C;
+
   /* Warm neutral fill (image placeholders, instagram cards, section accents) */
   --brand-warm-bg: #efe9e2;
 
