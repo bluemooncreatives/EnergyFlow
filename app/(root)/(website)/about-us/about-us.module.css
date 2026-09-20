@@ -237,6 +237,14 @@
   will-change: transform;
 }
 
+/* Avatar stand-in: the placeholder art is small and square, so it is centred
+   at a modest size on the warm panel instead of being stretched to fill. */
+.profileImgPlaceholder :global(img) {
+  object-fit: contain;
+  padding: 22%;
+  opacity: 0.55;
+}
+
 /* Reversed row: image moves to the right, text to the left.
    Columns swap too so the image keeps the narrower track. */
 .profileReverse { grid-template-columns: 1.32fr 0.78fr; }

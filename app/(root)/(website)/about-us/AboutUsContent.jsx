@@ -22,16 +22,17 @@ if (typeof window !== "undefined") {
 }
 
 // ── Scroll-controlled middle image ──────────────────────────────────
-const SCROLL_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781947528/qcbfdwai0pmvv97khlcw.jpg";
+const SCROLL_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png";
 
 // Hero images (left thumb · center · right thumb)
-const HERO_LEFT_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783146225/DSCF5008_1_r7uftx.jpg";
-const HERO_CENTER_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783063101/WhatsApp_Image_2026-07-03_at_12.46.03_PM_uqte4t.jpg";
-const HERO_RIGHT_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781942605/x98cddrvoz82losytye7.jpg";
+const HERO_LEFT_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913710/Elegant_Dry_Fruit_Box.jpg";
+const HERO_CENTER_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913475/WhatsApp_Image_2026-09-20_at_7.39.30_PM.jpg";
+const HERO_RIGHT_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png";
 
-// Director portraits — kept separate from the hero images above so each can change independently.
-const DIRECTOR_ONE_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1781945835/einxusjo1pubrtkgfddc.jpg";
-const DIRECTOR_TWO_IMAGE = "https://res.cloudinary.com/darrsi9y2/image/upload/v1783063101/WhatsApp_Image_2026-07-03_at_12.46.03_PM_uqte4t.jpg";
+// Director portraits — neutral avatar placeholder until real photos are supplied.
+const PERSON_PLACEHOLDER = "/about/person-placeholder.png";
+const DIRECTOR_ONE_IMAGE = PERSON_PLACEHOLDER;
+const DIRECTOR_TWO_IMAGE = PERSON_PLACEHOLDER;
 
 /// Brand-story paragraphs shown beneath the statement.
 const STORY = [
@@ -307,7 +308,7 @@ const AboutUsContent = ({ products = [] }) => {
           <div className={`${styles.flankImage} ${styles.flankLeft}`} ref={flankLeftRef}>
             <Image
               src={HERO_LEFT_IMAGE}
-              alt="Energyflow detail"
+              alt="Assorted dry fruits gift box from Energyflow"
               fill
               sizes="130px"
               className="object-cover"
@@ -316,7 +317,7 @@ const AboutUsContent = ({ products = [] }) => {
           <div className={`${styles.flankImage} ${styles.flankRight}`} ref={flankRightRef}>
             <Image
               src={HERO_RIGHT_IMAGE}
-              alt="Energyflow detail"
+              alt="Premium Energyflow dry fruits hamper"
               fill
               sizes="110px"
               className="object-cover"
@@ -375,7 +376,7 @@ const AboutUsContent = ({ products = [] }) => {
         <img
           ref={scrollImgRef}
           src={SCROLL_IMAGE}
-          alt="Premium dry fruits, nuts and seeds from Energyflow"
+          alt="Premium dry fruits, nuts and seeds in an Energyflow gift box"
           className={styles.scrollImage}
           loading="lazy"
           decoding="async"
@@ -404,7 +405,13 @@ const AboutUsContent = ({ products = [] }) => {
                 person.reverse ? styles.profileReverse : ""
               }`}
             >
-              <div className={styles.profileImg}>
+              <div
+                className={`${styles.profileImg} ${
+                  person.image === PERSON_PLACEHOLDER
+                    ? styles.profileImgPlaceholder
+                    : ""
+                }`}
+              >
                 <Image
                   src={person.image}
                   alt={person.name}

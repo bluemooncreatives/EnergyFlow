@@ -14,15 +14,15 @@ gsap.registerPlugin(ScrollTrigger)
 
 const CONTENT = {
     leftImage: {
-        src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1783146225/DSCF5008_1_r7uftx.jpg',
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911947/file_00000000d82c8211bcfd587359eeba52.png',
         alt: 'Energyflow premium dry fruits and super foods',
     },
     smallImage: {
-        src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1779221853/mtonkotfj50dwoswlr2j.jpg',
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911945/270e856f021e3e06a3dd84d344bdc8d1.jpg.jpg',
         alt: 'Nuts and seeds from the Energyflow range',
     },
     bottomImage: {
-        src: 'https://res.cloudinary.com/darrsi9y2/image/upload/v1781947914/wbbpf3ivaxy7f8geenmb.jpg',
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911947/IMG_20260920_190814.jpg.jpg',
         alt: 'Inside the Energyflow dry fruits and super food store',
     },
     brandName: 'Energyflow',
