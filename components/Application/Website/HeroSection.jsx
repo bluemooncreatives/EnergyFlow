@@ -13,7 +13,7 @@ import styles from "./HeroSection.module.css";
 
 gsap.registerPlugin(useGSAP, CustomEase);
 
-const AUTO_SLIDE_MS = 6000;
+const AUTO_SLIDE_MS = 3000;
 const MAX_ACTIVE_SLIDES = 2;
 const DESKTOP_HEADLINE_STEP = 172;
 const MOBILE_TITLE_STEP = 160;
