@@ -52,7 +52,7 @@ export const Price = ({ price, mrp, className }) => {
  * The storefront product card — used by every product grid and rail.
  *
  * actions:
- *   "quick" — round add button beside the price + Buy now below (home grids, rails)
+ *   "quick" — Buy now + round add button beside the price (home grids, rails)
  *   "bar"   — full-width add button at the foot (deal cards)
  *   "full"  — Add to cart + Buy now pair (shop grid, related products)
  * gallery:  cycle through every product image with arrows + dots.
@@ -179,53 +179,60 @@ const ProductCard = ({
                 )}
 
                 <h3 className="text-[0.9375rem] font-medium leading-[1.3] tracking-[-0.005em] text-ink-strong">
-                    <Link href={href} title={name} className="ef-focus ef-clamp-2 min-h-[2.6em] rounded-sm transition-colors hover:text-brand-hover">
+                    <Link href={href} title={name} className="ef-focus ef-clamp-2 rounded-sm transition-colors hover:text-brand-hover">
                         {name}
                     </Link>
                 </h3>
 
-                <div className="mt-auto flex items-end justify-between gap-2 pt-1">
-                    <div className="flex min-w-0 flex-col gap-0.5">
+                {/* Price, with the quick actions beside it. On a narrow card the
+                    actions wrap onto their own row and Buy now stretches, so the
+                    label never has to shrink to an icon. */}
+                <div className="mt-auto flex flex-wrap items-end justify-between gap-x-2 gap-y-2.5">
+                    {/* basis-0: the price shrinks (MRP wraps under it) before the
+                        actions are pushed onto a new line on wide cards. */}
+                    <div className="flex min-w-0 flex-1 basis-0 flex-col gap-0.5">
                         {packSize && <span className="text-[12px] text-ink-muted">{packSize}</span>}
                         <Price price={price} mrp={mrp} />
                     </div>
 
                     {actions === 'quick' && (
-                        inCart ? (
-                            <Link
-                                href={WEBSITE_CART}
-                                aria-label={`${name} is in your cart. View cart`}
-                                title="In cart — view cart"
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-amber text-brand-deep shadow-elev-1 transition-transform hover:scale-105"
-                            >
-                                <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
-                            </Link>
-                        ) : (
+                        <div className="flex w-full items-center gap-2 @[14.5rem]/card:w-auto">
                             <button
                                 type="button"
-                                onClick={addToCart}
+                                onClick={buyNow}
                                 disabled={!canAdd}
-                                aria-label={addLabel}
-                                title={canAdd ? 'Add to cart' : 'Unavailable'}
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-elev-1 transition-[background-color,transform] hover:scale-105 hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-40"
+                                aria-label={buyLabel}
+                                title={canAdd ? 'Buy now' : 'Unavailable'}
+                                className="ef-focus flex h-10 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.03] hover:bg-[#F5C161] disabled:pointer-events-none disabled:opacity-40 @[14.5rem]/card:flex-none"
                             >
-                                <Plus className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
+                                <Zap className="size-3.5" aria-hidden="true" />
+                                Buy now
                             </button>
-                        )
+
+                            {inCart ? (
+                                <Link
+                                    href={WEBSITE_CART}
+                                    aria-label={`${name} is in your cart. View cart`}
+                                    title="In cart — view cart"
+                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-elev-1 transition-transform hover:scale-105"
+                                >
+                                    <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
+                                </Link>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={addToCart}
+                                    disabled={!canAdd}
+                                    aria-label={addLabel}
+                                    title={canAdd ? 'Add to cart' : 'Unavailable'}
+                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-elev-1 transition-[background-color,transform] hover:scale-105 hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-40"
+                                >
+                                    <Plus className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
+                                </button>
+                            )}
+                        </div>
                     )}
                 </div>
-
-                {actions === 'quick' && (
-                    <button
-                        type="button"
-                        onClick={buyNow}
-                        disabled={!canAdd}
-                        aria-label={buyLabel}
-                        className="ef-btn ef-btn--accent ef-btn--sm ef-btn--block mt-1"
-                    >
-                        <Zap aria-hidden="true" /> {canAdd ? 'Buy now' : 'Unavailable'}
-                    </button>
-                )}
 
                 {actions === 'bar' && (
                     inCart ? (
