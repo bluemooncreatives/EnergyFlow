@@ -19,8 +19,10 @@ import {
     Star,
     StarHalf,
     Truck,
+    Zap,
 } from 'lucide-react'
-import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from "@/routes/WebsiteRoute"
+import { WEBSITE_BUY_NOW, WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from "@/routes/WebsiteRoute"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link, { useLinkStatus } from "next/link"
 import dynamic from "next/dynamic"
@@ -79,6 +81,7 @@ const RatingStars = ({ value = 0, size = 'size-4' }) => (
 
 const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relatedProducts = [] }) => {
     const dispatch = useDispatch()
+    const router = useRouter()
     const cartStore = useSelector(store => store.cartStore)
 
     const media = variant?.media?.length ? variant.media : []
@@ -140,6 +143,13 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
             qty: qty,
         }))
         showToast('success', qty > 1 ? `${qty} added to cart.` : 'Product added into cart.')
+    }
+
+    // Buy now checks out just this variant — at the quantity chosen here, or the
+    // cart line's quantity once it is in the cart — and leaves the cart as is.
+    const handleBuyNow = () => {
+        if (!variant?._id) return
+        router.push(WEBSITE_BUY_NOW(variant._id, inCart ? cartQty : qty))
     }
 
     // In-cart stepper: + / − adjust the cart line live. Dropping below 1 removes
@@ -452,6 +462,17 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                     </Button>
                                 </div>
                             </div>
+                        )}
+
+                        {variant?._id && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleBuyNow}
+                                className="mt-3 h-12 w-full rounded-full border-brand text-[0.9375rem] font-medium text-brand hover:bg-brand hover:text-white"
+                            >
+                                <Zap className="size-4" aria-hidden="true" /> Buy now
+                            </Button>
                         )}
 
                         {inCart ? (

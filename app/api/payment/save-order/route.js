@@ -5,6 +5,7 @@ import { sendMail } from "@/lib/sendMail";
 import { zSchema } from "@/lib/zodSchema";
 import { isAuthenticated } from "@/lib/authentication";
 import OrderModel from "@/models/Order.model";
+import { amountDueNow, checkoutFingerprint, priceOrderLines, quoteCheckout, razorpayClient } from "@/lib/services/orderPricing";
 import UserModel from "@/models/User.model";
 import { MAX_CART_QTY } from "@/lib/cartConstants";
 import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils";
@@ -32,6 +33,7 @@ export async function POST(request) {
             razorpay_order_id: z.string().optional(),
             razorpay_signature: z.string().optional(),
             order_id: z.string().optional(),
+            couponCode: z.string().trim().toUpperCase().optional(),
             subtotal: z.number().nonnegative(),
             couponDiscountAmount: z.number().nonnegative(),
             totalAmount: z.number().nonnegative(),
@@ -68,53 +70,52 @@ export async function POST(request) {
             return response(false, 400, 'Payment method is required.')
         }
 
-        // Server is authoritative on money. Recompute the subtotal from the line items so
-        // the client cannot tamper with it. Coupon is the ONLY discount and is bounded to
-        // the subtotal, so the total can never go negative or below zero.
-        const subtotal = roundToTwo(
-            validatedData.products.reduce((sum, item) => sum + (item.sellingPrice * item.qty), 0)
-        )
-        const couponDiscountAmount = Math.min(roundToTwo(validatedData.couponDiscountAmount), subtotal)
-        const totalAmount = roundToTwo(subtotal - couponDiscountAmount)
-
-        // Reject if the client's submitted total disagrees with the server's computation.
-        if (Math.abs(roundToTwo(validatedData.totalAmount) - totalAmount) > 0.01) {
-            return response(false, 400, 'Order total mismatch. Please refresh your cart and try again.')
-        }
-
-        let partialPaymentPercentage = paymentMethod === 'partial'
-            ? Number(validatedData.partialPaymentPercentage || 0)
-            : 100
-
-        if (paymentMethod === 'partial' && ![30, 50].includes(partialPaymentPercentage)) {
-            return response(false, 400, 'Invalid partial payment percentage. Allowed values are 30 or 50.')
-        }
-
-        let expectedPaidAmount = 0
-        let expectedRemainingAmount = totalAmount
-        if (paymentMethod === 'full') {
-            expectedPaidAmount = totalAmount
-            expectedRemainingAmount = 0
-        } else if (paymentMethod === 'partial') {
-            expectedPaidAmount = Math.round((totalAmount * partialPaymentPercentage) / 100)
-            expectedRemainingAmount = roundToTwo(totalAmount - expectedPaidAmount)
-        }
-
-        const paidAmount = roundToTwo(validatedData.paidAmount ?? expectedPaidAmount)
-        const remainingAmount = roundToTwo(validatedData.remainingAmount ?? expectedRemainingAmount)
-
-        if (Math.abs(paidAmount - expectedPaidAmount) > 0.01 || Math.abs(remainingAmount - expectedRemainingAmount) > 0.01) {
-            return response(false, 400, 'Payment amount mismatch. Please review the selected payment mode and retry.')
-        }
-
         // The order belongs to the authenticated account that placed it.
         const resolvedUserId = auth.userId
 
-        let paymentVerification = paymentMethod === 'cod'
-        let orderId = validatedData.order_id || null
+        let lines
+        let subtotal
+        let couponDiscountAmount
+        let totalAmount
+        let paidAmount
+        let remainingAmount
+        let partialPaymentPercentage = 100
+        let paymentVerification = false
+        let orderId = null
         let paymentId = null
 
-        if (paymentMethod !== 'cod') {
+        if (paymentMethod === 'cod') {
+            // No money has moved yet, so the order is priced here from the
+            // catalogue and any drift sends the shopper back to review it.
+            const quote = await quoteCheckout({ products: validatedData.products, couponCode: validatedData.couponCode })
+            if (quote.unavailable.length || !quote.lines.length) {
+                return response(false, 409, 'Some items in your order are no longer available. Please review your order and try again.', { code: 'ITEM_UNAVAILABLE', unavailable: quote.unavailable })
+            }
+            if (quote.couponError) {
+                return response(false, 409, quote.couponError, { code: 'COUPON_INVALID' })
+            }
+            if (
+                quote.priceChanged ||
+                Math.abs(roundToTwo(validatedData.couponDiscountAmount) - quote.couponDiscountAmount) > 0.01 ||
+                Math.abs(roundToTwo(validatedData.totalAmount) - quote.totalAmount) > 0.01
+            ) {
+                return response(false, 409, 'Prices have changed since you started checkout. Please review the updated total and try again.', { code: 'PRICE_CHANGED' })
+            }
+
+            lines = quote.lines
+            subtotal = quote.subtotal
+            couponDiscountAmount = quote.couponDiscountAmount
+            totalAmount = quote.totalAmount
+            paidAmount = 0
+            remainingAmount = totalAmount
+            paymentVerification = true
+            orderId = validatedData.order_id || null
+        } else {
+            // Online payment: the shopper has ALREADY been charged by the time
+            // this runs, so nothing here may reject a genuine payment over a
+            // price that moved since. Instead the payment is proven to be for
+            // exactly this basket: get-order-id priced it server-side and stamped
+            // the Razorpay order with its fingerprint and the buyer's account.
             if (!hasRazorpayPayload) {
                 return response(false, 400, 'Missing payment verification fields.')
             }
@@ -128,13 +129,84 @@ export async function POST(request) {
                 return response(false, 400, 'Payment verification failed.')
             }
 
-            paymentVerification = true
             orderId = validatedData.razorpay_order_id
             paymentId = validatedData.razorpay_payment_id
+
+            subtotal = roundToTwo(validatedData.products.reduce((sum, item) => sum + (item.sellingPrice * item.qty), 0))
+            couponDiscountAmount = Math.min(roundToTwo(validatedData.couponDiscountAmount), subtotal)
+            totalAmount = roundToTwo(subtotal - couponDiscountAmount)
+            if (Math.abs(roundToTwo(validatedData.totalAmount) - totalAmount) > 0.01) {
+                return response(false, 400, 'Order total mismatch. Please contact support with your payment id.', { payment_id: paymentId })
+            }
+
+            if (paymentMethod === 'partial') {
+                partialPaymentPercentage = Number(validatedData.partialPaymentPercentage || 0)
+                if (![30, 50].includes(partialPaymentPercentage)) {
+                    return response(false, 400, 'Invalid partial payment percentage. Allowed values are 30 or 50.')
+                }
+            }
+            paidAmount = amountDueNow(totalAmount, paymentMethod, partialPaymentPercentage)
+            remainingAmount = roundToTwo(totalAmount - paidAmount)
+
+            try {
+                const razorpay = razorpayClient()
+                const [payment, razorpayOrder] = await Promise.all([
+                    razorpay.payments.fetch(paymentId),
+                    razorpay.orders.fetch(orderId),
+                ])
+                const expectedFingerprint = checkoutFingerprint({
+                    lines: validatedData.products,
+                    couponDiscountAmount,
+                    totalAmount,
+                    paidAmount,
+                })
+                const paidOk = payment.order_id === orderId &&
+                    payment.currency === 'INR' &&
+                    ['authorized', 'captured'].includes(payment.status) &&
+                    payment.amount === razorpayOrder.amount &&
+                    razorpayOrder.amount === Math.round(paidAmount * 100) &&
+                    razorpayOrder.notes?.user === String(resolvedUserId) &&
+                    razorpayOrder.notes?.checkout === expectedFingerprint
+                if (!paidOk) {
+                    return response(false, 400, 'This payment does not match your order. Please contact support with your payment id.', { payment_id: paymentId })
+                }
+                paymentVerification = true
+            } catch (error) {
+                // Razorpay unreachable: the signature is valid, so the shopper
+                // has paid. Keep the order, flagged for an admin to reconcile.
+                console.log('Razorpay lookup failed, saving order as unverified:', error)
+                paymentVerification = false
+            }
+
+            // Prices are the ones that were paid; names/MRP come from the
+            // catalogue where the item still exists.
+            const { lines: catalogue } = await priceOrderLines(validatedData.products)
+            const catalogueById = new Map(catalogue.map((line) => [line.variantId, line]))
+            lines = validatedData.products.map((item) => {
+                const known = catalogueById.get(item.variantId)
+                return {
+                    productId: item.productId,
+                    variantId: item.variantId,
+                    name: known?.name || item.name,
+                    qty: item.qty,
+                    mrp: known?.mrp ?? item.mrp,
+                    sellingPrice: item.sellingPrice,
+                }
+            })
         }
 
         if (!orderId) {
             return response(false, 400, 'Order id is missing.')
+        }
+
+        // Idempotent: a retried request (double submit, flaky network, handler
+        // firing twice) must not create a second order for the same payment.
+        const existingOrder = await OrderModel.findOne({ order_id: orderId }).select('user').lean()
+        if (existingOrder) {
+            if (String(existingOrder.user) !== String(resolvedUserId)) {
+                return response(false, 409, 'This order id is already in use.')
+            }
+            return response(true, 200, 'Order already placed.', { order_id: orderId, duplicate: true })
         }
 
         const paymentStatus = paymentMethod === 'cod'
@@ -155,7 +227,9 @@ export async function POST(request) {
             pincode: validatedData.pincode,
             landmark: validatedData.landmark,
             ordernote: validatedData.ordernote,
-            products: validatedData.products,
+            products: lines.map(({ productId, variantId, name, qty, mrp, sellingPrice }) => ({
+                productId, variantId, name, qty, mrp, sellingPrice
+            })),
             couponDiscountAmount,
             totalAmount,
             subtotal,
@@ -198,7 +272,7 @@ export async function POST(request) {
                 name: validatedData.name,
                 order_id: orderId,
                 orderDetailsUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/order-details/${orderId}`,
-                items: validatedData.products.map((p) => ({
+                items: lines.map((p) => ({
                     name: p.name,
                     qty: p.qty,
                     sellingPrice: p.sellingPrice,
@@ -232,7 +306,7 @@ export async function POST(request) {
                 ? `Order placed! Paid ${paidAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}. Remaining ${remainingAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })} on delivery.`
                 : 'Order placed successfully!'
 
-        return response(true, 200, successMessage)
+        return response(true, 200, successMessage, { order_id: orderId })
 
     } catch (error) {
         return catchError(error)

@@ -1,18 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { MAX_CART_QTY, MIN_CART_QTY } from "@/lib/cartConstants";
+import { clampQty } from "@/lib/cartConstants";
 
 const initialState = {
     count: 0,
     products: []
-}
-
-// Coerce any incoming quantity into the allowed [MIN, MAX] band. Guards against
-// NaN / undefined / negative / over-cap values arriving from the UI or from a
-// stale persisted (localStorage) cart.
-const clampQty = (value) => {
-    const n = Math.floor(Number(value))
-    if (!Number.isFinite(n)) return MIN_CART_QTY
-    return Math.min(MAX_CART_QTY, Math.max(MIN_CART_QTY, n))
 }
 
 export const cartReducer = createSlice({

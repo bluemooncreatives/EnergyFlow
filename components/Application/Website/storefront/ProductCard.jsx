@@ -3,7 +3,7 @@
 import { memo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, ChevronLeft, ChevronRight, Eye, Plus, ShoppingBag, Star } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Eye, Plus, ShoppingBag, Star, Zap } from 'lucide-react'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useCartProduct } from '@/hooks/useCartProduct'
@@ -52,7 +52,7 @@ export const Price = ({ price, mrp, className }) => {
  * The storefront product card — used by every product grid and rail.
  *
  * actions:
- *   "quick" — round add button beside the price (home grids, rails)
+ *   "quick" — round add button beside the price + Buy now below (home grids, rails)
  *   "bar"   — full-width add button at the foot (deal cards)
  *   "full"  — Add to cart + Buy now pair (shop grid, related products)
  * gallery:  cycle through every product image with arrows + dots.
@@ -67,7 +67,7 @@ const ProductCard = ({
     className,
     children,
 }) => {
-    const { variant, inCart, canAdd, addToCart } = useCartProduct(product)
+    const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
     const [imgIndex, setImgIndex] = useState(0)
 
     if (!product) return null
@@ -94,6 +94,7 @@ const ProductCard = ({
     }
 
     const addLabel = canAdd ? `Add ${name} to cart` : `${name} is currently unavailable`
+    const buyLabel = canAdd ? `Buy ${name} now` : `${name} is currently unavailable`
 
     return (
         <article className={cn('ef-card ef-card--interactive group/card @container/card h-full', className)}>
@@ -214,6 +215,18 @@ const ProductCard = ({
                     )}
                 </div>
 
+                {actions === 'quick' && (
+                    <button
+                        type="button"
+                        onClick={buyNow}
+                        disabled={!canAdd}
+                        aria-label={buyLabel}
+                        className="ef-btn ef-btn--accent ef-btn--sm ef-btn--block mt-1"
+                    >
+                        <Zap aria-hidden="true" /> {canAdd ? 'Buy now' : 'Unavailable'}
+                    </button>
+                )}
+
                 {actions === 'bar' && (
                     inCart ? (
                         <Link href={WEBSITE_CART} className="ef-btn ef-btn--outline ef-btn--sm ef-btn--block mt-2">
@@ -249,9 +262,15 @@ const ProductCard = ({
                                 <ShoppingBag aria-hidden="true" /> Add to cart
                             </button>
                         )}
-                        <Link href={href} className="ef-btn ef-btn--primary ef-btn--sm ef-btn--block" aria-label={`Buy ${name}`}>
+                        <button
+                            type="button"
+                            onClick={buyNow}
+                            disabled={!canAdd}
+                            aria-label={buyLabel}
+                            className="ef-btn ef-btn--primary ef-btn--sm ef-btn--block"
+                        >
                             Buy now
-                        </Link>
+                        </button>
                     </div>
                 )}
 

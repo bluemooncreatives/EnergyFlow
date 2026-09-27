@@ -1,13 +1,15 @@
 'use client'
 
 import { useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import { addIntoCart } from '@/store/reducer/cartReducer'
 import { showToast } from '@/lib/showToast'
 import { useHydrated } from '@/hooks/useHydrated'
+import { WEBSITE_BUY_NOW } from '@/routes/WebsiteRoute'
 
-// One place for "add this card's product to the cart". Storefront cards quick-add
+// One place for a card's purchase actions. Storefront cards quick-add
 // the product's default (cheapest) variant — the cart keys lines on variantId, so
 // a product without a variant cannot be added and `canAdd` is false.
 //
@@ -15,6 +17,7 @@ import { useHydrated } from '@/hooks/useHydrated'
 // re-renders when ITS in-cart state flips, not on every cart change.
 export const useCartProduct = (product) => {
     const dispatch = useDispatch()
+    const router = useRouter()
     const variant = product?.defaultVariant || null
     const productId = product?._id
     const variantId = variant?._id
@@ -47,7 +50,19 @@ export const useCartProduct = (product) => {
         return true
     }, [dispatch, product, variant])
 
-    return { variant, inCart, canAdd: Boolean(variant), addToCart }
+    // Buy now opens a single-item checkout for this variant. The cart is left
+    // untouched: checkout prices the line itself, and guests are sent to
+    // sign-in and returned to the same buy-now checkout afterwards.
+    const buyNow = useCallback((event, qty = 1) => {
+        event?.preventDefault?.()
+        event?.stopPropagation?.()
+        if (!variant?._id) return false
+
+        router.push(WEBSITE_BUY_NOW(variant._id, qty))
+        return true
+    }, [router, variant])
+
+    return { variant, inCart, canAdd: Boolean(variant), addToCart, buyNow }
 }
 
 export default useCartProduct

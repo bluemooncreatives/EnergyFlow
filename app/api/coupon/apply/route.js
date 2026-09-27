@@ -35,7 +35,10 @@ export async function POST(request) {
         }
 
 
-        return response(true, 200, 'Coupon applied successfully.', { discountPercentage: couponData.discountPercentage })
+        return response(true, 200, 'Coupon applied successfully.', {
+            discountPercentage: couponData.discountPercentage,
+            minShoppingAmount: couponData.minShoppingAmount,
+        })
 
 
     } catch (error) {
