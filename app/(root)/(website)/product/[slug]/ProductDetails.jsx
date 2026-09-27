@@ -33,6 +33,7 @@ import { addIntoCart, increaseQuantity, decreaseQuantity, removeFromCart } from 
 import { showToast } from "@/lib/showToast"
 import { Button } from "@/components/ui/button"
 import ProductBox from "@/components/Application/Website/ProductBox"
+import { formatINR } from "@/components/Application/Website/storefront/format"
 import LazyHydrate from "@/components/Application/LazyHydrate"
 
 // Split the heavy client-only islands out of the page's hydration chunk.
@@ -157,7 +158,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
         dispatch(decreaseQuantity(cartKey))
     }
 
-    const inr = (n) => Number(n || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
+    const inr = (n) => formatINR(Number(n || 0))
     const hasDiscount = variant?.mrp > variant?.sellingPrice
     const shortDescription = htmlToText(product?.description)
 
@@ -312,9 +313,11 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                             onClick={scrollToReviews}
                             className="mt-3 flex w-fit items-center gap-2 text-left"
                         >
-                            <RatingStars value={ratingAvg} />
-                            <span className="text-sm text-muted-foreground underline-offset-4 hover:underline">
-                                {ratingAvg > 0 ? `${ratingAvg} · ` : ''}{reviewCount} {reviewCount === 1 ? 'Review' : 'Reviews'}
+                            {reviewCount > 0 && <RatingStars value={ratingAvg} />}
+                            <span className="text-sm text-ink-muted underline-offset-4 hover:underline">
+                                {reviewCount > 0
+                                    ? `${ratingAvg > 0 ? `${ratingAvg} · ` : ''}${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'}`
+                                    : 'No reviews yet · be the first'}
                             </span>
                         </button>
 
@@ -483,7 +486,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                 <section className="mt-[var(--section-space)]">
                     <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
                         <span className="ef-eyebrow">The Details</span>
-                        <h2 className="ef-title">
+                        <h2 className="ef-title ef-title--md">
                             Product details
                         </h2>
                     </div>
@@ -497,7 +500,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                 <section className="mt-[var(--section-space)]">
                     <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
                         <span className="ef-eyebrow">Good To Know</span>
-                        <h2 className="ef-title">
+                        <h2 className="ef-title ef-title--md">
                             Shipping &amp; returns
                         </h2>
                     </div>
@@ -531,7 +534,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                     <section className="mt-[var(--section-space)]">
                         <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
                             <span className="ef-eyebrow">Curated For You</span>
-                            <h2 className="ef-title">
+                            <h2 className="ef-title ef-title--md">
                                 You may also like
                             </h2>
                         </div>

@@ -47,6 +47,9 @@
 .copy {
     grid-area: copy;
     display: grid;
+    /* minmax(0, …) so the widest slide's nowrap eyebrow can't stretch the
+       column past the viewport on phones. */
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
 }
 
@@ -56,6 +59,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: clamp(1rem, 2svh, 1.5rem);
+    min-width: 0;
     max-width: 38rem;
 }
 
@@ -339,7 +343,27 @@
     .tabNum { opacity: 1; }
     .tabLabel { display: none; }
     .tab { gap: 0.5rem; }
-    .ctaRow > a:first-child { flex: 1 1 auto; }
+
+    /* Long eyebrows ("Festive & Corporate Hampers") are wider than a small
+       phone at full tracking: tighten first, wrap as the last resort. */
+    .slide :global(.ef-eyebrow) {
+        max-width: 100%;
+        letter-spacing: 0.08em;
+        white-space: normal;
+        line-height: 1.25;
+    }
+
+    .headline { letter-spacing: -0.04em; }
+
+    /* Full-width primary action, secondary link centred beneath it. */
+    .ctaRow {
+        align-self: stretch;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .ctaRow > a:first-child { width: 100%; }
+    .ctaRow > a:last-child { align-self: center; }
 }
 
 /* Short screens (landscape phones, small laptops): tighten, drop the

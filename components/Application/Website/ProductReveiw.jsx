@@ -136,7 +136,7 @@ const ProductReveiw = ({ productId }) => {
         <div className="rounded-[var(--radius-tile)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
             <div className="flex flex-col items-start gap-3 border-b border-line-soft px-5 py-5 lg:px-8 lg:py-6">
                 <span className="ef-eyebrow">What shoppers say</span>
-                <h2 className="ef-title">
+                <h2 className="ef-title ef-title--md">
                     Ratings &amp; <span className="ef-title__accent">reviews</span>
                 </h2>
             </div>

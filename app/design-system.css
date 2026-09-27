@@ -403,10 +403,10 @@
   --input-py:      0.25rem;
 
   /* ── Website form fields (checkout, contact, etc.) ── */
-  --form-field-height:        2.25rem;   /* 36px — slightly taller than admin inputs */
-  --form-field-px:            0.75rem;   /* 12px horizontal padding                  */
+  --form-field-height:        2.75rem;   /* 44px — storefront touch target           */
+  --form-field-px:            0.875rem;  /* 14px horizontal padding                  */
   --form-field-py:            0.5rem;    /*  8px vertical padding                    */
-  --form-field-radius:        var(--radius-sm);                           /* 4px      */
+  --form-field-radius:        var(--radius-well);                         /* 14px — pairs with pill CTAs */
   --form-field-border:        color-mix(in srgb, var(--brand-ink-soft) 40%, transparent);  /* ink-soft/40 */
   --form-field-border-hover:  var(--brand-ink-soft);                                       /* full on hover */
   --form-field-placeholder:   color-mix(in srgb, var(--brand-primary) 35%, transparent);  /* brand green/35 */
@@ -628,7 +628,7 @@ body {
   font-family:      var(--font-body);
   font-weight:      var(--weight-regular);
   color:            var(--foreground);
-  background-color: transparent;
+  background-color: var(--surface-card);
   border:           1px solid var(--form-field-border);
   border-radius:    var(--form-field-radius);
   outline:          none;
@@ -858,6 +858,10 @@ body {
     color: var(--ink-strong);
     text-wrap: balance;
   }
+  /* Mid-size title for sections inside a page that already has a large <h1>
+     (product details, reviews) — keeps the heading hierarchy the right way up. */
+  .ef-title--md { font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem); letter-spacing: -0.025em; }
+
   /* The accent half of a two-tone title ("Popular *picks*") */
   .ef-title__accent { color: var(--brand-primary-bright); }
   .ef-section--inverse .ef-title,

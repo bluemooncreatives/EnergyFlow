@@ -39,7 +39,7 @@ const SLIDES = [
     alt: "A bowl of almonds, cashews, walnuts and pistachios",
     tint: "var(--tint-sage)",
     badge: { Icon: Leaf, text: "Handpicked & graded" },
-    cta: { label: "Shop dry fruits", href: shopCategory("dry-fruits-and-nuts") },
+    cta: { label: "Shop dry fruits", href: shopCategory("dry-fruits-and-nuts"), requires: "dry-fruits-and-nuts", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
     secondary: { label: "See bestsellers", href: `${WEBSITE_SHOP}?bestseller=true` },
   },
   {
@@ -52,8 +52,8 @@ const SLIDES = [
     alt: "A bowl of seeds, berries and super foods",
     tint: "var(--tint-pistachio)",
     badge: { Icon: Sprout, text: "Chia · Flax · Pumpkin" },
-    cta: { label: "Shop superfoods", href: shopCategory("seeds-and-superfoods") },
-    secondary: { label: "Browse all products", href: WEBSITE_SHOP },
+    cta: { label: "Shop superfoods", href: shopCategory("seeds-and-superfoods"), requires: "seeds-and-superfoods", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
+    secondary: { label: "Browse all products", href: WEBSITE_SHOP, alt: { label: "Ask about superfoods", href: "/contact" } },
   },
   {
     id: 3,
@@ -66,7 +66,7 @@ const SLIDES = [
     tint: "var(--tint-almond)",
     badge: { Icon: Gift, text: "Custom & bulk orders" },
     cta: { label: "Plan a gift order", href: "/contact" },
-    secondary: { label: "Browse gift boxes", href: shopCategory("gift-boxes") },
+    secondary: { label: "Browse gift boxes", href: shopCategory("gift-boxes"), requires: "gift-boxes", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
   },
   {
     id: 4,
@@ -78,12 +78,24 @@ const SLIDES = [
     alt: "A bowl of fruit jellies and chocolate coated treats",
     tint: "var(--tint-berry)",
     badge: { Icon: Cherry, text: "Made with real fruit" },
-    cta: { label: "Shop healthy treats", href: shopCategory("healthy-candies-and-sweets") },
-    secondary: { label: "Browse all products", href: WEBSITE_SHOP },
+    cta: { label: "Shop healthy treats", href: shopCategory("healthy-candies-and-sweets"), requires: "healthy-candies-and-sweets", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
+    secondary: { label: "Browse all products", href: WEBSITE_SHOP, alt: { label: "Ask about treats", href: "/contact" } },
   },
 ];
 
 const TOTAL = SLIDES.length;
+
+// A link that `requires` a category swaps to its `fallback` while that
+// category has no products, so no hero button opens an empty results page.
+// If both buttons would then point at the same place, the secondary uses its
+// `alt`. With no availability data (fetch failed) links are left as authored.
+const resolveLinks = (slide, availability) => {
+  const live = (link) => !availability || !link.requires || availability.categories?.includes(link.requires);
+  const cta = live(slide.cta) ? slide.cta : slide.cta.fallback;
+  let secondary = live(slide.secondary) ? slide.secondary : slide.secondary.fallback;
+  if (secondary.href === cta.href && slide.secondary.alt) secondary = slide.secondary.alt;
+  return { cta, secondary };
+};
 const pad = (n) => String(n).padStart(2, "0");
 
 // Orbit "dial": the active thumb sits at 9 o'clock, upcoming slides wait
@@ -110,7 +122,7 @@ const LeafShape = () => (
 
 const HIDDEN = { opacity: 0, visibility: "hidden" };
 
-const HeroSection = () => {
+const HeroSection = ({ availability = null }) => {
   const rootRef = useRef(null);
   const discRef = useRef(null);
   const fillsRef = useRef([]);
@@ -408,6 +420,7 @@ const HeroSection = () => {
             <div className={styles.copy} id="hero-slides" aria-live={playing ? "off" : "polite"} {...hoverProps}>
               {SLIDES.map((slide, i) => {
                 const words = slide.headline.split(" ");
+                const { cta, secondary } = resolveLinks(slide, availability);
                 const isActive = i === active;
                 return (
                   <div
@@ -444,12 +457,12 @@ const HeroSection = () => {
                     <p data-anim className={styles.writeup}>{slide.writeup}</p>
 
                     <div data-anim className={styles.ctaRow}>
-                      <Link href={slide.cta.href} className="ef-btn ef-btn--primary ef-btn--lg">
-                        {slide.cta.label}
+                      <Link href={cta.href} className="ef-btn ef-btn--primary ef-btn--lg">
+                        {cta.label}
                         <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
                       </Link>
-                      <Link href={slide.secondary.href} className="ef-link">
-                        {slide.secondary.label}
+                      <Link href={secondary.href} className="ef-link">
+                        {secondary.label}
                         <ArrowRight aria-hidden="true" />
                       </Link>
                     </div>

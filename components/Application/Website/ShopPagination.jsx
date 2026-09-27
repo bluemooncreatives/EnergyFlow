@@ -1,6 +1,7 @@
 'use client'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useHydrated } from '@/hooks/useHydrated'
 
 const DOTS = 'dots'
 
@@ -34,6 +35,10 @@ const getPageItems = (current, total, siblings = 1) => {
 }
 
 const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, siblings = 1 }) => {
+    // React Query can report a fetch in flight during SSR but not on the first
+    // client render; only reflect it once hydrated so the markup matches.
+    const hydrated = useHydrated()
+    const busy = hydrated && disabled
     // Nothing to paginate through.
     if (!totalPages || totalPages <= 1) return null
 
@@ -43,7 +48,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
     const items = getPageItems(current, totalPages, siblings)
 
     const goTo = (target) => {
-        if (disabled) return
+        if (busy) return
         const clamped = Math.min(Math.max(target, 1), totalPages)
         if (clamped !== current) onPageChange(clamped - 1)
     }
@@ -58,7 +63,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
         'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-brand hover:text-white'
 
     return (
-        <nav role="navigation" aria-label="Pagination" aria-busy={disabled || undefined} className="flex items-center justify-center gap-1.5">
+        <nav role="navigation" aria-label="Pagination" aria-busy={busy || undefined} className="flex items-center justify-center gap-1.5">
             <button
                 type="button"
                 aria-label="Go to previous page"

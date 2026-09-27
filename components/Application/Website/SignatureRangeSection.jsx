@@ -22,6 +22,8 @@ const RANGES = [
         copy: 'Curd from A2 Gir cow milk, hand-churned and slow-simmered the traditional way. Grainy, aromatic and deeply rich.',
         cta: 'Shop ghee',
         href: `${WEBSITE_SHOP}?q=ghee`,
+        term: 'ghee',
+        enquire: 'Enquire about ghee',
         tint: 'var(--tint-honey)',
         Art: GheeJar,
         image: null,
@@ -33,6 +35,8 @@ const RANGES = [
         copy: 'Pressed at low temperature. Never refined, bleached or deodorised.',
         cta: 'Shop oils',
         href: `${WEBSITE_SHOP}?q=oil`,
+        term: 'oil',
+        enquire: 'Enquire about oils',
         tint: 'var(--tint-pistachio)',
         Art: OilBottle,
         image: null,
@@ -44,25 +48,36 @@ const RANGES = [
         copy: 'Chocolate and dry fruit boxes for Diwali, weddings and teams.',
         cta: 'Shop gifts',
         href: `${WEBSITE_SHOP}?q=chocolate`,
+        term: 'chocolate',
+        enquire: 'Plan a gift order',
         tint: 'var(--tint-almond)',
         Art: ChocolateBox,
         image: null,
     },
 ]
 
-const RangeTile = ({ range, featured }) => {
+// While a range has nothing in the catalogue yet, its tile becomes an enquiry
+// (these are the lines the brand leads with, so interest is worth capturing)
+// rather than a search that returns no results.
+const resolveLink = (range, availability) =>
+    !availability?.terms || availability.terms[range.term] !== false
+        ? { href: range.href, label: range.cta }
+        : { href: '/contact', label: range.enquire }
+
+const RangeTile = ({ range, featured, availability }) => {
     const { Art } = range
+    const link = resolveLink(range, availability)
 
     return (
         <Link
-            href={range.href}
+            href={link.href}
             data-reveal
             className={cn(
                 'ef-tile ef-focus group/tile @container/tile flex min-h-[15rem] flex-col p-6 sm:p-8',
                 featured ? 'lg:row-span-2 lg:min-h-[34rem] lg:p-10' : 'lg:min-h-0'
             )}
             style={{ background: range.tint }}
-            aria-label={`${range.title} — ${range.cta}`}
+            aria-label={`${range.title} — ${link.label}`}
         >
             {/* soft light pooling behind the art */}
             <span
@@ -89,7 +104,7 @@ const RangeTile = ({ range, featured }) => {
                 <span className="flex size-10 items-center justify-center rounded-full bg-brand text-white transition-transform duration-300 group-hover/tile:rotate-45 motion-reduce:transition-none">
                     <ArrowUpRight className="size-[1.1rem]" aria-hidden="true" />
                 </span>
-                {range.cta}
+                {link.label}
             </span>
 
             <div
@@ -113,7 +128,7 @@ const RangeTile = ({ range, featured }) => {
     )
 }
 
-const SignatureRangeSection = () => {
+const SignatureRangeSection = ({ availability = null }) => {
     const sectionRef = useRef(null)
     useReveal(sectionRef)
 
@@ -129,7 +144,7 @@ const SignatureRangeSection = () => {
 
             <div className="grid gap-[var(--grid-gap)] lg:grid-cols-[1.15fr_1fr] lg:grid-rows-2">
                 {RANGES.map((range, i) => (
-                    <RangeTile key={range.key} range={range} featured={i === 0} />
+                    <RangeTile key={range.key} range={range} featured={i === 0} availability={availability} />
                 ))}
             </div>
         </Section>

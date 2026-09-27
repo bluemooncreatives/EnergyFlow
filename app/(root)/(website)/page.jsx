@@ -8,6 +8,7 @@ import CategoryArchiveSection from '@/components/Application/Website/CategoryArc
 import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
 import DailyBestSellsSection from '@/components/Application/Website/DailyBestSellsSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
+import { getStorefrontAvailability } from '@/lib/services/categoryService'
 
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
 // so they don't block parsing and hydration of the above-fold critical path.
@@ -57,7 +58,11 @@ const websiteSchema = {
     },
 }
 
-const Home = () => {
+const Home = async () => {
+    // Which categories / spotlight terms have stock, so hero and signature CTAs
+    // never lead to an empty page. A failed lookup leaves links as authored.
+    const availability = await getStorefrontAvailability().catch(() => null)
+
     return (
         <>
             <script
@@ -65,7 +70,7 @@ const Home = () => {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
             />
             <section>
-                <HeroSection />
+                <HeroSection availability={availability} />
             </section>
             {/* The hero is 100svh, so everything below is below the fold.
                 LazyHydrate keeps each section's server HTML in the document but
@@ -79,7 +84,7 @@ const Home = () => {
                 Section tones alternate page / sunken; data-driven sections
                 that render nothing simply drop out of the rhythm. */}
             <LazyHydrate>
-                <SignatureRangeSection />
+                <SignatureRangeSection availability={availability} />
             </LazyHydrate>
 
             <LazyHydrate>

@@ -7,7 +7,8 @@ import { useGSAP } from "@gsap/react";
 import CustomEase from "gsap/CustomEase";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import SplitType from "@/lib/SplitType/index";
-import ShopAllButton from "@/components/Application/Website/ShopAllButton";
+import StoreButton from "@/components/Application/Website/storefront/StoreButton";
+import SectionHeader from "@/components/Application/Website/storefront/SectionHeader";
 import ProductBox from "@/components/Application/Website/ProductBox";
 import styles from "./about-us.module.css";
 
@@ -434,12 +435,7 @@ const AboutUsContent = ({ products = [] }) => {
 
           {/* CTA — shared website button for consistent styling */}
           <div className={styles.ctaWrap}>
-            <ShopAllButton
-              label="Get in touch"
-              href="/contact"
-              colorScheme="dark-red"
-              radius="sm"
-            />
+            <StoreButton href="/contact" arrow>Get in touch</StoreButton>
           </div>
         </div>
       </div>
@@ -448,16 +444,9 @@ const AboutUsContent = ({ products = [] }) => {
       {products.length > 0 && (
         <div className={styles.inner}>
           <section className={styles.related}>
-            <div className="mb-8 text-center lg:mb-10">
-              <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                Curated For You
-              </p>
-              <h2 className="mt-1.5 font-neue text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]">
-                You May Also Like
-              </h2>
-            </div>
+            <SectionHeader eyebrow="Curated for you" title="You may" accent="also like" align="center" />
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+            <div className="grid grid-cols-2 gap-[var(--grid-gap)] sm:grid-cols-3 lg:grid-cols-4">
               {products.map((item) => (
                 <ProductBox key={item._id} product={item} />
               ))}

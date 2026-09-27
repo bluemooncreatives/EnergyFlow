@@ -6,7 +6,7 @@
 
 .page {
   /* Local page palette — mapped to the global homepage design tokens */
-  --about-bg:          var(--background);        /* white page surface        */
+  --about-bg:          var(--surface-page);      /* storefront ivory canvas    */
   --about-fg:          var(--foreground);        /* near-black headings        */
   --about-muted:       var(--text-body);         /* #4a4a4a body copy          */
   --about-line:        var(--border);            /* light hairline rules       */

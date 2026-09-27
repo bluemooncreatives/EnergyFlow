@@ -1,3 +1,6 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
 
 // Content-Security-Policy scoped to the third parties this app actually uses:
 // Razorpay checkout (script/frame/connect), Cloudinary images (res.cloudinary.com)
@@ -40,6 +43,12 @@ const nextConfig = {
     // react-pdf relies on native-ish deps (fontkit, yoga-layout wasm) that must not
     // be bundled — keep it external so it runs correctly in the Node server runtime.
     serverExternalPackages: ['@react-pdf/renderer'],
+    // The parent folder holds several projects. Pin the workspace root to this
+    // app so a lockfile anywhere above it can't make Turbopack infer the wrong
+    // root (which breaks module resolution and HMR caching).
+    turbopack: {
+        root: path.dirname(fileURLToPath(import.meta.url)),
+    },
     experimental: {
         optimizePackageImports: ['lucide-react', 'gsap', '@gsap/react', 'react-icons', 'radix-ui'],
     },
