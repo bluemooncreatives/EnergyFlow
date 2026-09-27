@@ -383,35 +383,6 @@
     .stageWrap { padding-block: calc(var(--stage) * 0.12 + 0.5rem); }
 }
 
-@media (max-width: 639px) {
-    /* On phones the dial keeps its arc but drops the thumbs — tiny moving
-       targets next to the tab bar would only compete with it. */
-    .arm { display: none; }
-    .tabNum { opacity: 1; }
-    .tabLabel { display: none; }
-    .tab { gap: 0.5rem; }
-
-    /* Long eyebrows ("Festive & Corporate Hampers") can be wider than a
-       small phone: let them wrap rather than overflow. */
-    .slide :global(.ef-eyebrow) {
-        max-width: 100%;
-        white-space: normal;
-        line-height: 1.25;
-    }
-
-    .headline { letter-spacing: -0.04em; }
-
-    /* Full-width primary action, secondary link centred beneath it. */
-    .ctaRow {
-        align-self: stretch;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
-    }
-    .ctaRow > a:first-child { width: 100%; }
-    .ctaRow > a:last-child { align-self: center; }
-}
-
 /* Short screens (landscape phones, small laptops): tighten, drop the
    paragraph on the smallest heights rather than overlapping anything. */
 @media (max-height: 700px) and (max-width: 1023px) {
@@ -427,6 +398,130 @@
     .hero { --stage: min(36vw, 52svh, 15rem); }
     .writeup { display: none; }
     .headline { font-size: clamp(2rem, 7svh + 1rem, 3rem); }
+}
+
+/* The phone write-up is a shorter, two-line version of the slide copy. */
+.writeupShort { display: none; }
+
+/* ── Phones: a composition of their own ──────────────────────────
+   Centred to sit under the dial, a larger plate as the focal point, and
+   type / controls sized to the rest of the mobile UI. Declared after the
+   short-screen rules above so it wins for every phone height. */
+@media (max-width: 639px) {
+    .hero { --stage: min(74vw, 36svh, 19rem); }
+
+    .inner {
+        padding-top: 5.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .layout {
+        gap: 1.25rem;
+        align-content: center;
+    }
+
+    /* The dial: no thumbs (tiny moving targets beside the tab bar), a
+       tighter orbit so it barely spills past the plate, smaller leaves. */
+    .arm { display: none; }
+    .orbit { transform: scale(0.9); }
+    .stageWrap { padding-block: calc(var(--stage) * 0.06); }
+    .leaf { scale: 0.7; }
+
+    /* Badge centred on the plate's lower edge, sized like a mobile chip. */
+    .badge {
+        left: 0;
+        right: 0;
+        bottom: -3%;
+        width: max-content;
+        margin-inline: auto;
+        gap: 0.5rem;
+        padding: 0.3125rem 0.75rem 0.3125rem 0.3125rem;
+        font-size: 0.75rem;
+    }
+    .badgeIcon { width: 1.625rem; height: 1.625rem; }
+    .badgeIcon svg { width: 0.875rem; height: 0.875rem; }
+
+    /* Copy */
+    .slide {
+        max-width: none;
+        align-items: center;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    /* Long eyebrows ("Festive & Corporate Hampers") can be wider than a
+       small phone: let them wrap rather than overflow. */
+    .slide :global(.ef-eyebrow) {
+        max-width: 100%;
+        gap: 0.375rem;
+        padding: 0.375rem 0.625rem 0.375rem 0.5rem;
+        font-size: 0.6875rem;
+        line-height: 1.25;
+        white-space: normal;
+    }
+
+    .headline {
+        font-size: clamp(2rem, 1.2rem + 4.4vw, 2.5rem);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+    }
+
+    .writeup {
+        display: block;
+        max-width: 21rem;
+        overflow: visible;
+        font-size: 0.9375rem;
+        line-height: 1.55;
+    }
+    .writeupFull { display: none; }
+    .writeupShort { display: inline; }
+
+    /* Full-width primary action, secondary link centred beneath it. */
+    .ctaRow {
+        align-self: stretch;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.625rem;
+        margin-top: 0.25rem;
+    }
+    .ctaRow > a:first-child {
+        --btn-h: 2.875rem;
+        width: 100%;
+        padding-inline: 1.25rem;
+        font-size: 0.9375rem;
+    }
+    .ctaRow > a:last-child {
+        align-self: center;
+        font-size: 0.875rem;
+    }
+
+    /* Controls: numbered story bars and a compact pause button. */
+    .controls {
+        align-items: center;
+        margin-top: 1.25rem;
+    }
+    .tab {
+        gap: 0.375rem;
+        min-height: 2.25rem;
+    }
+    .tabNum { opacity: 1; }
+    .tabLabel { display: none; }
+    .playBtn {
+        width: 2.25rem;
+        height: 2.25rem;
+        align-self: center;
+    }
+    .playBtn svg { width: 0.875rem; height: 0.875rem; }
+}
+
+/* Short phones (≈ 640–700px tall): smaller dial and tighter rhythm so the
+   tab bar still lands on the first screen. */
+@media (max-width: 639px) and (max-height: 700px) {
+    .hero { --stage: min(64vw, 32svh, 15rem); }
+    .inner { padding-top: 5.25rem; }
+    .layout { gap: 0.875rem; }
+    .slide { gap: 0.625rem; }
+    .headline { font-size: 2rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

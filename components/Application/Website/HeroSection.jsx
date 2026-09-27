@@ -35,6 +35,7 @@ const SLIDES = [
     eyebrow: "Premium Dry Fruits & Nuts",
     headline: "Pure Nutrition",
     writeup: "Handpicked almonds, cashews, walnuts and pistachios. Sourced at their best, packed fresh and graded for taste you can trust.",
+    short: "Handpicked almonds, cashews, walnuts and pistachios, packed fresh.",
     plate: plateUrl("1789923296", "ChatGPT_Image_Sep_20_2026_09_57_51_PM"),
     alt: "A bowl of almonds, cashews, walnuts and pistachios",
     tint: "var(--tint-sage)",
@@ -48,6 +49,7 @@ const SLIDES = [
     eyebrow: "Seeds That Power Your Day",
     headline: "Super Foods",
     writeup: "Chia, flax, pumpkin and sunflower seeds alongside berries and super foods, chosen to make everyday nutrition effortless.",
+    short: "Chia, flax, pumpkin and sunflower seeds for effortless everyday nutrition.",
     plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_13_PM"),
     alt: "A bowl of seeds, berries and super foods",
     tint: "var(--tint-pistachio)",
@@ -61,6 +63,7 @@ const SLIDES = [
     eyebrow: "Festive & Corporate Hampers",
     headline: "Made To Gift",
     writeup: "Chocolate and dry fruit gift boxes, wrapped and ready for festivals, weddings, teams and every reason worth celebrating.",
+    short: "Chocolate and dry fruit gift boxes for festivals, weddings and teams.",
     plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_22_PM"),
     alt: "A festive gift box of chocolates and dry fruits",
     tint: "var(--tint-almond)",
@@ -74,6 +77,7 @@ const SLIDES = [
     eyebrow: "Healthy Candies & Treats",
     headline: "Everyday Good",
     writeup: "Guilt free candies and chewables made with real fruit and clean ingredients, so the sweet part of the day stays on your side.",
+    short: "Guilt free candies and chewables made with real fruit.",
     plate: plateUrl("1789923297", "ChatGPT_Image_Sep_20_2026_09_58_05_PM"),
     alt: "A bowl of fruit jellies and chocolate coated treats",
     tint: "var(--tint-berry)",
@@ -458,7 +462,11 @@ const HeroSection = ({ availability = null }) => {
                       ))}
                     </h2>
 
-                    <p data-anim className={styles.writeup}>{slide.writeup}</p>
+                    <p data-anim className={styles.writeup}>
+                      {/* Phones get a two-line version instead of a clamped one. */}
+                      <span className={styles.writeupFull}>{slide.writeup}</span>
+                      <span className={styles.writeupShort}>{slide.short}</span>
+                    </p>
 
                     <div data-anim className={styles.ctaRow}>
                       <Link href={cta.href} className="ef-btn ef-btn--primary ef-btn--lg">
