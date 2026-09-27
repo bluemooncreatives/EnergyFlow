@@ -8,52 +8,58 @@
 
 /* ────────────────────────────────────────────────────────────────
    1. BRAND COLORS
-   Four-colour harvest palette — paprika, saffron, olive, cream — plus
-   the shades derived from it. All component colors resolve to these.
-     Paprika  #BB3E00  primary: actions, links, active + focus states
-     Saffron  #F7AD45  highlight: badges, icon discs, promo actions
-     Olive    #7B6F19  nature: accent words, leaves, success states
-     Cream    #FFF1D7  canvas: page and warm fills
+   Four-colour palette — burnt brick, soft saffron, cocoa, warm ivory —
+   plus the shades derived from it. All component colors resolve to these.
+     Burnt Brick  #C84204  primary: actions, links, accent words, active states
+     Soft Saffron #FCEB8E  highlight FILL on dark surfaces / photos (too pale
+                           to carry meaning on the ivory canvas — use brick or
+                           --brand-gold there)
+     Cocoa        #643314  depth: dark bands, footer, sidebar, secondary actions
+     Warm Ivory   #FDF6F1  canvas
    ──────────────────────────────────────────────────────────────── */
 :root {
-  /* Paprika — the primary brand hue */
-  --brand-primary:       #BB3E00;   /* CTAs, links, logo, active states   */
-  --brand-primary-hover: #9E3400;   /* hover / pressed                   */
+  /* Burnt brick — the primary brand hue */
+  --brand-primary:       #C84204;   /* CTAs, links, logo, active states   */
+  --brand-primary-hover: #A83603;   /* hover / pressed                   */
 
   /* Neutral palette */
   --brand-ink:       #000000;   /* true black */
-  --brand-ink-soft:  #1F1806;   /* near-black body copy (olive-brown) */
+  --brand-ink-soft:  #2E1608;   /* near-black body copy (deep cocoa) */
   --brand-white:     #FFFFFF;   /* pure white */
-  --brand-cream:     #FFF1D7;   /* palette cream — canvas + warm fills */
+  --brand-cream:     #FDF6F1;   /* warm ivory — canvas + warm fills */
 
-  /* Olive — the palette's natural counterpart to paprika. "-bright" is the
-     accent used for headline accent words and leaves; "-deep" is the dark
+  /* Cocoa — the palette's depth colour. */
+  --brand-cocoa:      #643314;
+  --brand-cocoa-deep: #4A240E;
+  /* Headline accent words ("Super *Foods*") are brick; "-deep" is the dark
      ink for text on saffron and the depth stop of dark bands. */
-  --brand-olive:          #7B6F19;
-  --brand-olive-deep:     #4A4210;   /* dark bands, admin sidebar */
-  --brand-primary-bright: var(--brand-olive);
-  --brand-primary-deep:   #3A1A03;   /* text on saffron (7:1), deepest stop */
+  --brand-primary-bright: var(--brand-primary);
+  --brand-primary-deep:   #3F1F0B;   /* text on saffron (11:1) */
 
-  /* Accent on dark olive surfaces (the preloader's progress rule). */
-  --brand-lime: #F7AD45;
+  /* Legacy names from the previous palette — now cocoa. */
+  --brand-olive:      var(--brand-cocoa);
+  --brand-olive-deep: var(--brand-cocoa);
+
+  /* Accent on dark cocoa surfaces (the preloader's progress rule). */
+  --brand-lime: #FCEB8E;
 
   /* Warm neutral fill (image placeholders, instagram cards, section accents) */
-  --brand-warm-bg: #F7E4C0;
+  --brand-warm-bg: #F6E6D8;
 
   /* Body copy — softer than ink, darker than muted */
-  --text-body: #5B4D33;
+  --text-body: #5C3D28;
 
-  /* Saffron — the promotional highlight. Use the fill for badges, icon
-     discs and accent CTAs; use -ink whenever the accent is TEXT on a light
-     surface (the fill fails contrast there). */
-  --brand-amber:       #F7AD45;
-  --brand-amber-hover: #F9BE68;
-  --brand-amber-soft:  #FDE6C2;
-  --brand-amber-ink:   #8A4B00;   /* 6.4:1 on --surface-page */
+  /* Soft saffron — the highlight fill. Pair with --brand-primary-deep text.
+     --brand-gold is the deeper saffron for things that must read on a light
+     surface (star ratings); -ink is saffron-family TEXT on light surfaces. */
+  --brand-amber:       #FCEB8E;
+  --brand-amber-hover: #F9E06A;
+  --brand-amber-soft:  #FEF6CC;
+  --brand-amber-ink:   #8A5300;   /* 6.4:1 on ivory */
+  --brand-gold:        #E3A21A;
 
-  /* Success — olive, so savings / delivered / verified states stay inside
-     the palette instead of a stock green. */
-  --success: #6B6014;             /* 5.5:1 on cream */
+  /* Success — cocoa, so savings / delivered / verified stay in-palette. */
+  --success: #643314;             /* 9.9:1 on ivory */
 
   /* ── Legacy aliases (kept for backward-compat with existing components) ── */
   --dark-red:   var(--brand-primary);
@@ -65,7 +71,7 @@
 }
 
 .dark {
-  --success: #CDBB4E;
+  --success: #E8B98F;
 }
 
 
@@ -75,50 +81,50 @@
    storefront). The admin panel re-maps them in admin.css.
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --background:          #FFF1D7;
-  --foreground:          #2B2008;
-  --card:                #FFFAF0;
-  --card-foreground:     #2B2008;
-  --popover:             #FFFAF0;
-  --popover-foreground:  #2B2008;
-  --primary:             #BB3E00;
+  --background:          #FDF6F1;
+  --foreground:          #2E1608;
+  --card:                #FFFCFA;
+  --card-foreground:     #2E1608;
+  --popover:             #FFFCFA;
+  --popover-foreground:  #2E1608;
+  --primary:             #C84204;
   --primary-foreground:  #FFFFFF;
-  --secondary:           #F9E6C2;
-  --secondary-foreground:#2B2008;
-  --muted:               #F8E9CC;
-  --muted-foreground:    #76664A;
-  --accent:              #FBE3BA;
-  --accent-foreground:   #2B2008;
-  --destructive:         #A11D2B;   /* crimson — distinct from paprika */
-  --border:              #EAD7B0;
-  --input:               #E3CEA3;
-  --ring:                #BB3E00;
+  --secondary:           #F6E6D8;
+  --secondary-foreground:#2E1608;
+  --muted:               #F7EBE1;
+  --muted-foreground:    #86654E;
+  --accent:              #FEF6CC;
+  --accent-foreground:   #2E1608;
+  --destructive:         #A11D2B;   /* crimson — distinct from brick */
+  --border:              #EBD9CA;
+  --input:               #E2CBB8;
+  --ring:                #C84204;
 }
 
 
 /* ────────────────────────────────────────────────────────────────
    3. SEMANTIC COLORS — Dark Mode
-   Dark olive-brown base; paprika brightened so it holds contrast.
+   Dark cocoa base; brick brightened so it holds contrast.
    ──────────────────────────────────────────────────────────────── */
 .dark {
-  --background:           #15110A;
-  --foreground:           #FFF1D7;
-  --card:                 #1F190C;
-  --card-foreground:      #FFF1D7;
-  --popover:              #1F190C;
-  --popover-foreground:   #FFF1D7;
-  --primary:              #E86A2C;
-  --primary-foreground:   #15110A;
-  --secondary:            #2A2310;
-  --secondary-foreground: #FFF1D7;
-  --muted:                #241E0E;
-  --muted-foreground:     #BFAF8C;
-  --accent:               #332A12;
-  --accent-foreground:    #FFF1D7;
+  --background:           #1A0E06;
+  --foreground:           #FDF6F1;
+  --card:                 #24140A;
+  --card-foreground:      #FDF6F1;
+  --popover:              #24140A;
+  --popover-foreground:   #FDF6F1;
+  --primary:              #EC6A2C;
+  --primary-foreground:   #1A0E06;
+  --secondary:            #2F1B0E;
+  --secondary-foreground: #FDF6F1;
+  --muted:                #2A180C;
+  --muted-foreground:     #C8A993;
+  --accent:               #3A2212;
+  --accent-foreground:    #FDF6F1;
   --destructive:          #E5484D;
-  --border:               rgb(255 241 215 / 12%);
-  --input:                rgb(255 241 215 / 16%);
-  --ring:                 #E86A2C;
+  --border:               rgb(253 246 241 / 12%);
+  --input:                rgb(253 246 241 / 16%);
+  --ring:                 #EC6A2C;
 }
 
 
@@ -126,19 +132,19 @@
    4. DATA-VIZ COLORS (Charts)
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --chart-1: #BB3E00;   /* paprika */
-  --chart-2: #F7AD45;   /* saffron */
-  --chart-3: #7B6F19;   /* olive   */
-  --chart-4: #4A4210;   /* deep olive */
-  --chart-5: #E0885A;   /* light paprika */
+  --chart-1: #C84204;   /* burnt brick */
+  --chart-2: #E3A21A;   /* saffron, deepened to read on white */
+  --chart-3: #643314;   /* cocoa */
+  --chart-4: #E58A5A;   /* light brick */
+  --chart-5: #A06A45;   /* light cocoa */
 }
 
 .dark {
-  --chart-1: #E86A2C;
-  --chart-2: #F7AD45;
-  --chart-3: #B5A33A;
-  --chart-4: #8A7C24;
-  --chart-5: #F29A6B;
+  --chart-1: #EC6A2C;
+  --chart-2: #FCEB8E;
+  --chart-3: #C08A62;
+  --chart-4: #F29A6B;
+  --chart-5: #8E5A38;
 }
 
 
@@ -146,25 +152,25 @@
    5. SIDEBAR COLORS
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --sidebar:                    #4A4210;
-  --sidebar-foreground:         #FFF1D7;
-  --sidebar-primary:            #BB3E00;
+  --sidebar:                    #643314;
+  --sidebar-foreground:         #FDF6F1;
+  --sidebar-primary:            #C84204;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent:             #5A5114;
-  --sidebar-accent-foreground:  #FFF1D7;
-  --sidebar-border:             #5A5114;
-  --sidebar-ring:               #F7AD45;
+  --sidebar-accent:             #7A4220;
+  --sidebar-accent-foreground:  #FDF6F1;
+  --sidebar-border:             #7A4220;
+  --sidebar-ring:               #FCEB8E;
 }
 
 .dark {
-  --sidebar:                    #100D07;
-  --sidebar-foreground:         #FFF1D7;
-  --sidebar-primary:            #E86A2C;
-  --sidebar-primary-foreground: #15110A;
-  --sidebar-accent:             #2A2310;
-  --sidebar-accent-foreground:  #FFF1D7;
-  --sidebar-border:             #2A2310;
-  --sidebar-ring:               #F7AD45;
+  --sidebar:                    #120904;
+  --sidebar-foreground:         #FDF6F1;
+  --sidebar-primary:            #EC6A2C;
+  --sidebar-primary-foreground: #1A0E06;
+  --sidebar-accent:             #2F1B0E;
+  --sidebar-accent-foreground:  #FDF6F1;
+  --sidebar-border:             #2F1B0E;
+  --sidebar-ring:               #FCEB8E;
 }
 
 
@@ -320,8 +326,8 @@
   --shadow-xl:         0 20px 25px rgba(0, 0, 0, 0.08),
                        0 10px 10px rgba(0, 0, 0, 0.03);
   --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --shadow-brand:      0 12px 32px rgba(74, 50, 10, 0.14);
-  --shadow-focus:      0 0 0 3px rgb(187 62 0 / 0.35);
+  --shadow-brand:      0 12px 32px rgba(100, 51, 20, 0.14);
+  --shadow-focus:      0 0 0 3px rgb(200 66 4 / 0.35);
 }
 
 
@@ -454,29 +460,30 @@
   --filter-scrollbar-size:  6px;
 
   /* ── Page header ── */
-  --header-bg:      rgb(255 250 240 / 0.9);
-  --header-blur-bg: rgb(255 250 240 / 0.8);
-  --header-border:  rgb(74 50 10 / 0.2);
+  --header-bg:      rgb(255 252 250 / 0.9);
+  --header-blur-bg: rgb(255 252 250 / 0.8);
+  --header-border:  rgb(100 51 20 / 0.2);
 
   /* ── Brand panel gradients ──
      Layered radial glow that adds depth to a flat brand fill. Built from
      fixed shades so each stays on-palette:
-       --brand-panel-gradient  paprika (marquee, auth, promo tiles, loader)
-       --olive-panel-gradient  deep olive (benefits band, footer)        */
+       --brand-panel-gradient  burnt brick (marquee, auth, promo tiles, loader)
+       --olive-panel-gradient  cocoa (benefits band, footer) — legacy name  */
   --brand-panel-gradient:
-    radial-gradient(66% 112% at  6% 100%, rgb(158 52 0 / 0.88), transparent 78%),
-    radial-gradient(56% 102% at 22% 100%, rgb(212 86 26 / 0.70), transparent 80%),
-    radial-gradient(48%  96% at 42% 100%, rgb(158 52 0 / 0.82), transparent 82%),
-    radial-gradient(44%  92% at 64% 100%, rgb(122 40 0 / 0.76), transparent 84%),
-    radial-gradient(42%  88% at 86% 100%, rgb(187 62 0 / 0.68), transparent 86%),
-    linear-gradient(0deg, rgb(255 241 215 / 0.06), transparent 62%);
+    radial-gradient(66% 112% at  6% 100%, rgb(168 54 3 / 0.88), transparent 78%),
+    radial-gradient(56% 102% at 22% 100%, rgb(224 98 42 / 0.70), transparent 80%),
+    radial-gradient(48%  96% at 42% 100%, rgb(168 54 3 / 0.82), transparent 82%),
+    radial-gradient(44%  92% at 64% 100%, rgb(126 40 2 / 0.76), transparent 84%),
+    radial-gradient(42%  88% at 86% 100%, rgb(200 66 4 / 0.68), transparent 86%),
+    linear-gradient(0deg, rgb(253 246 241 / 0.06), transparent 62%);
   --olive-panel-gradient:
-    radial-gradient(66% 112% at  6% 100%, rgb(90 81 20 / 0.88), transparent 78%),
-    radial-gradient(56% 102% at 22% 100%, rgb(123 111 25 / 0.55), transparent 80%),
-    radial-gradient(48%  96% at 42% 100%, rgb(90 81 20 / 0.82), transparent 82%),
-    radial-gradient(44%  92% at 64% 100%, rgb(52 46 11 / 0.76), transparent 84%),
-    radial-gradient(42%  88% at 86% 100%, rgb(74 66 16 / 0.68), transparent 86%),
-    linear-gradient(0deg, rgb(255 241 215 / 0.05), transparent 62%);
+    radial-gradient(66% 112% at  6% 100%, rgb(124 69 32 / 0.85), transparent 78%),
+    radial-gradient(56% 102% at 22% 100%, rgb(142 85 48 / 0.50), transparent 80%),
+    radial-gradient(48%  96% at 42% 100%, rgb(124 69 32 / 0.80), transparent 82%),
+    radial-gradient(44%  92% at 64% 100%, rgb(74 36 14 / 0.76), transparent 84%),
+    radial-gradient(42%  88% at 86% 100%, rgb(100 51 20 / 0.68), transparent 86%),
+    linear-gradient(0deg, rgb(253 246 241 / 0.05), transparent 62%);
+  --cocoa-panel-gradient: var(--olive-panel-gradient);
 
   /* Back-compat alias — auth pages still reference this name */
   --auth-panel-gradient: var(--brand-panel-gradient);
@@ -758,38 +765,38 @@ body {
 
 /* ================================================================
    22. STOREFRONT TOKENS
-   The public website's visual language: a cream canvas, warm-white
-   cards, harvest tints, paprika actions, olive accents and a saffron
-   highlight. Everything below the hero, the shop grid and any
+   The public website's visual language: a warm-ivory canvas, soft
+   cards, harvest tints, burnt-brick actions, cocoa depth and a soft
+   saffron highlight. Everything below the hero, the shop grid and any
    new storefront page should build from these — never from raw hex.
    ================================================================ */
 :root {
   /* ── Surfaces ── */
-  --surface-page:    #FFF1D7;   /* palette cream — the canvas                    */
-  --surface-sunken:  #F9E5BE;   /* deeper cream — alternate section band        */
-  --surface-card:    #FFFAF0;   /* warm white — cards, tiles, accordion rows    */
-  --surface-well:    #F8E6C4;   /* image wells behind product photos            */
-  --surface-inverse: var(--brand-olive-deep);   /* deep-olive bands            */
+  --surface-page:    #FDF6F1;   /* warm ivory — the canvas                      */
+  --surface-sunken:  #F7E9DD;   /* deeper ivory — alternate section band        */
+  --surface-card:    #FFFCFA;   /* cards, tiles, accordion rows                  */
+  --surface-well:    #F6E8DC;   /* image wells behind product photos            */
+  --surface-inverse: var(--brand-cocoa);   /* cocoa bands                       */
 
   /* ── Ink ── */
-  --ink-strong: #2B2008;   /* headings — olive-brown black (13:1 on cream) */
-  --ink-body:   #5B4D33;   /* paragraphs (7:1)                              */
-  --ink-muted:  #76664A;   /* meta, captions (4.9:1 on cream)               */
-  --ink-on-inverse:       #FFF1D7;
-  --ink-on-inverse-muted: rgb(255 241 215 / 0.76);
+  --ink-strong: #2E1608;   /* headings — deep cocoa (16:1 on ivory) */
+  --ink-body:   #5C3D28;   /* paragraphs (9:1)                     */
+  --ink-muted:  #86654E;   /* meta, captions (5:1 on ivory)        */
+  --ink-on-inverse:       #FDF6F1;
+  --ink-on-inverse-muted: rgb(253 246 241 / 0.76);
 
   /* ── Lines ── */
-  --line-soft:   rgb(74 50 10 / 0.10);
-  --line-strong: rgb(74 50 10 / 0.18);
+  --line-soft:   rgb(100 51 20 / 0.10);
+  --line-strong: rgb(100 51 20 / 0.18);
 
-  /* ── Harvest tints (category tiles, bento cards, hero discs) — drawn
-        from the palette, light enough to sit on the cream canvas. ── */
-  --tint-pistachio: #ECE6BF;   /* olive      */
-  --tint-almond:    #FADCC4;   /* paprika    */
-  --tint-honey:     #FDE3B6;   /* saffron    */
-  --tint-sage:      #E4DEB4;   /* olive, deeper */
-  --tint-berry:     #F7D2BE;   /* paprika, deeper */
-  --tint-oat:       #F2E2C4;   /* cream, deeper */
+  /* ── Harvest tints (category tiles, bento cards, hero discs, photo mats)
+        — drawn from the palette, light enough for the ivory canvas. ── */
+  --tint-pistachio: #FDF1B8;   /* saffron        */
+  --tint-almond:    #F9DDCC;   /* brick          */
+  --tint-honey:     #FEF4C6;   /* saffron, light */
+  --tint-sage:      #EEDDCE;   /* cocoa          */
+  --tint-berry:     #F6D2BF;   /* brick, deeper  */
+  --tint-oat:       #F3E5D9;   /* ivory, deeper  */
 
   /* ── Layout ── */
   --container-max:  1440px;
@@ -803,10 +810,10 @@ body {
   --radius-tile:    1.125rem; /* 18px promo tiles, bands         */
   --radius-well:    0.625rem; /* 10px image well inside a card   */
 
-  /* ── Elevation (warm-brown tinted, never grey) ── */
-  --elev-1: 0 1px 2px rgb(74 50 10 / 0.06), 0 1px 1px rgb(74 50 10 / 0.04);
-  --elev-2: 0 14px 34px -12px rgb(74 50 10 / 0.20), 0 4px 10px -4px rgb(74 50 10 / 0.07);
-  --elev-3: 0 28px 60px -20px rgb(74 50 10 / 0.30);
+  /* ── Elevation (cocoa-tinted, never grey) ── */
+  --elev-1: 0 1px 2px rgb(100 51 20 / 0.06), 0 1px 1px rgb(100 51 20 / 0.04);
+  --elev-2: 0 14px 34px -12px rgb(100 51 20 / 0.20), 0 4px 10px -4px rgb(100 51 20 / 0.07);
+  --elev-3: 0 28px 60px -20px rgb(100 51 20 / 0.30);
 
   /* ── Storefront type scale ── */
   --type-display: clamp(2rem, 1.25rem + 2.9vw, 3.5rem);   /* section titles */
@@ -872,7 +879,7 @@ body {
     width: 0.4rem;
     height: 0.4rem;
     border-radius: 9999px;
-    background: var(--brand-amber);
+    background: var(--brand-primary);
     flex-shrink: 0;
   }
   .ef-section--inverse .ef-eyebrow,
@@ -881,6 +888,8 @@ body {
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
     color: var(--ink-on-inverse);
   }
+  .ef-section--inverse .ef-eyebrow::before,
+  .ef-on-inverse .ef-eyebrow::before { background: var(--brand-amber); }
 
   .ef-title {
     margin: 0;
@@ -954,7 +963,7 @@ body {
   .ef-btn--primary:hover { background: var(--brand-primary-hover); box-shadow: var(--elev-2); }
 
   .ef-btn--accent       { background: var(--brand-amber); color: var(--brand-primary-deep); }
-  .ef-btn--accent:hover { background: var(--brand-amber-hover); box-shadow: 0 14px 30px -12px rgb(247 173 69 / 0.6); }
+  .ef-btn--accent:hover { background: var(--brand-amber-hover); box-shadow: 0 14px 30px -12px rgb(252 235 142 / 0.55); }
 
   .ef-btn--outline       { background: transparent; border-color: var(--line-strong); color: var(--brand-primary); }
   .ef-btn--outline:hover { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--brand-white); }

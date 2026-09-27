@@ -162,6 +162,9 @@
   --color-brand-deep:      var(--brand-primary-deep);
   --color-olive:           var(--brand-olive);
   --color-olive-deep:      var(--brand-olive-deep);
+  --color-cocoa:           var(--brand-cocoa);
+  --color-cocoa-deep:      var(--brand-cocoa-deep);
+  --color-gold:            var(--brand-gold);
   --color-amber:           var(--brand-amber);
   --color-amber-soft:      var(--brand-amber-soft);
   --color-amber-ink:       var(--brand-amber-ink);

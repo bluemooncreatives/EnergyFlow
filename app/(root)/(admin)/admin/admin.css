@@ -1,44 +1,44 @@
 /* Admin-only theme overrides — imported only by the admin layout,
    not loaded on website pages. */
-/* Harvest palette for the admin panel — paprika actions, saffron highlights,
-   olive accents on a light cream canvas; a deep-olive sidebar. Dark mode
-   keeps the same roles on an olive-brown base with brightened hues. */
+/* Brand palette for the admin panel — burnt-brick actions, cocoa accents and
+   saffron highlights on a warm-ivory canvas; a cocoa sidebar. Dark mode keeps
+   the same roles on a dark cocoa base with brightened hues. */
 .admin-theme {
   --radius: 0.3rem;
   --admin-shell-radius: 6px;
-  --background: #FFF8EC;
-  --foreground: #2B2008;
+  --background: #FFFAF6;
+  --foreground: #2E1608;
   --card: #FFFFFF;
-  --card-foreground: #2B2008;
+  --card-foreground: #2E1608;
   --popover: #FFFFFF;
-  --popover-foreground: #2B2008;
-  --primary: #BB3E00;
+  --popover-foreground: #2E1608;
+  --primary: #C84204;
   --primary-foreground: #FFFFFF;
-  --secondary: #FBEBCB;
-  --secondary-foreground: #2B2008;
-  --muted: #FBF0DA;
-  --muted-foreground: #76664A;
-  --accent: #7B6F19;
+  --secondary: #F6E6D8;
+  --secondary-foreground: #2E1608;
+  --muted: #FAF0E8;
+  --muted-foreground: #86654E;
+  --accent: #643314;
   --accent-foreground: #FFFFFF;
   --destructive: #A11D2B;
   --destructive-foreground: #FFFFFF;
-  --success: #6B6014;
-  --border: #EEDFC0;
-  --input: #E6D3AC;
-  --ring: #BB3E00;
-  --chart-1: #BB3E00;
-  --chart-2: #F7AD45;
-  --chart-3: #7B6F19;
-  --chart-4: #4A4210;
-  --chart-5: #E0885A;
-  --sidebar: #4A4210;
-  --sidebar-foreground: #FFF1D7;
-  --sidebar-primary: #BB3E00;
+  --success: #643314;
+  --border: #EFDFD2;
+  --input: #E6D1BF;
+  --ring: #C84204;
+  --chart-1: #C84204;
+  --chart-2: #E3A21A;
+  --chart-3: #643314;
+  --chart-4: #E58A5A;
+  --chart-5: #A06A45;
+  --sidebar: #643314;
+  --sidebar-foreground: #FDF6F1;
+  --sidebar-primary: #C84204;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #5A5114;
+  --sidebar-accent: #7A4220;
   --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #5A5114;
-  --sidebar-ring: #F7AD45;
+  --sidebar-border: #7A4220;
+  --sidebar-ring: #FCEB8E;
   --font-sans: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
@@ -49,39 +49,39 @@
 
 .dark .admin-theme {
   --admin-shell-radius: 6px;
-  --background: #15110A;
-  --foreground: #FFF1D7;
-  --card: #1F190C;
-  --card-foreground: #FFF1D7;
-  --popover: #1F190C;
-  --popover-foreground: #FFF1D7;
-  --primary: #E86A2C;
-  --primary-foreground: #15110A;
-  --secondary: #2A2310;
-  --secondary-foreground: #FFF1D7;
-  --muted: #241E0E;
-  --muted-foreground: #BFAF8C;
-  --accent: #B5A33A;
-  --accent-foreground: #15110A;
+  --background: #1A0E06;
+  --foreground: #FDF6F1;
+  --card: #24140A;
+  --card-foreground: #FDF6F1;
+  --popover: #24140A;
+  --popover-foreground: #FDF6F1;
+  --primary: #EC6A2C;
+  --primary-foreground: #1A0E06;
+  --secondary: #2F1B0E;
+  --secondary-foreground: #FDF6F1;
+  --muted: #2A180C;
+  --muted-foreground: #C8A993;
+  --accent: #C08A62;
+  --accent-foreground: #1A0E06;
   --destructive: #E5484D;
   --destructive-foreground: #FFFFFF;
-  --success: #CDBB4E;
-  --border: #352C14;
-  --input: #3A3016;
-  --ring: #E86A2C;
-  --chart-1: #E86A2C;
-  --chart-2: #F7AD45;
-  --chart-3: #B5A33A;
-  --chart-4: #8A7C24;
-  --chart-5: #F29A6B;
-  --sidebar: #100D07;
-  --sidebar-foreground: #FFF1D7;
-  --sidebar-primary: #BB3E00;
+  --success: #E8B98F;
+  --border: #3A2415;
+  --input: #432918;
+  --ring: #EC6A2C;
+  --chart-1: #EC6A2C;
+  --chart-2: #FCEB8E;
+  --chart-3: #C08A62;
+  --chart-4: #F29A6B;
+  --chart-5: #8E5A38;
+  --sidebar: #120904;
+  --sidebar-foreground: #FDF6F1;
+  --sidebar-primary: #C84204;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2A2310;
-  --sidebar-accent-foreground: #FFF1D7;
-  --sidebar-border: #2A2310;
-  --sidebar-ring: #F7AD45;
+  --sidebar-accent: #2F1B0E;
+  --sidebar-accent-foreground: #FDF6F1;
+  --sidebar-border: #2F1B0E;
+  --sidebar-ring: #FCEB8E;
   --font-sans: 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
@@ -109,9 +109,9 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Olive scrollbar — admin panel only.
+   Cocoa scrollbar — admin panel only.
    Overrides the global 1px brand scrollbar from design-system.css.
-   The olive tone (--accent: #7B6F19 light / #B5A33A dark) is the same
+   The cocoa tone (--accent: #643314 light / #C08A62 dark) is the same
    accent used by the dashboard stat-card icons.
    The doubled `.admin-theme.admin-theme` bumps specificity above the
    `.thin-scrollbar` rule the sidebar content also carries.
