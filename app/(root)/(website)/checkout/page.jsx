@@ -780,7 +780,7 @@ const Checkout = () => {
                                         <div className='flex-1'>
                                             <div className='flex items-center gap-2'>
                                                 <p className='font-neue text-base font-semibold text-foreground'>Pay Online</p>
-                                                <span className='rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald-600'>Recommended</span>
+                                                <span className='rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal text-emerald-600'>Recommended</span>
                                             </div>
                                             <p className='mt-0.5 text-[11px] text-muted-foreground'>UPI, Cards, Net Banking & Wallets — secured by Razorpay</p>
                                         </div>
@@ -804,7 +804,7 @@ const Checkout = () => {
                                             <p className='font-neue text-base font-semibold text-foreground'>Cash on Delivery</p>
                                             <p className='mt-0.5 text-[11px] text-muted-foreground'>Pay in cash when your order arrives at your doorstep</p>
                                         </div>
-                                        <span className='rounded-full bg-muted/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground'>COD</span>
+                                        <span className='rounded-full bg-muted/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-normal text-muted-foreground'>COD</span>
                                     </label>
                                 </div>
                             </div>

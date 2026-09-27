@@ -113,7 +113,7 @@ const OrderDetails = async ({ params }) => {
                         >
                             <ArrowLeft className='size-3.5' /> Back to orders
                         </Link>
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] ${TONE[statusMeta.tone]}`}>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-normal ${TONE[statusMeta.tone]}`}>
                             <statusMeta.Icon className='size-3.5' /> {statusMeta.label}
                         </span>
                     </div>
@@ -295,7 +295,7 @@ const OrderDetails = async ({ params }) => {
                                         </div>
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='text-muted-foreground'>Status</span>
-                                            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] ${TONE[paymentStatusMeta.tone]}`}>
+                                            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal ${TONE[paymentStatusMeta.tone]}`}>
                                                 {paymentStatusMeta.label}
                                             </span>
                                         </div>

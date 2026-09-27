@@ -78,7 +78,7 @@ const EditorialCardsSection = () => {
                             />
                             <span aria-hidden="true" className="absolute inset-0 -z-10" style={{ background: card.overlay }} />
 
-                            <span className="absolute left-6 top-6 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-medium tracking-[0.12em] backdrop-blur-sm sm:left-7 sm:top-7">
+                            <span className="absolute left-6 top-6 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-medium tracking-normal backdrop-blur-sm sm:left-7 sm:top-7">
                                 {card.num}
                             </span>
 
