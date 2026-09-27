@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -108,8 +108,15 @@ const pad = (n) => String(n).padStart(2, "0");
 // previous one has just passed below; each change turns the dial one slot.
 // Angles are CSS rotations (clockwise from 3 o'clock; 180 = left).
 // Index: slot for the active slide, then +1, +2, and -1 (previous).
-const SLOT_ANGLES = [164, 196, 228, 132];
-const angleFor = (index, active) => SLOT_ANGLES[(index - active + TOTAL) % TOTAL];
+const SLOTS_DESKTOP = [164, 196, 228, 132];
+// Phones: the same dial turned a quarter, so the arc runs under the plate
+// (there is no room beside it in portrait) and the active thumb sits just
+// right of 6 o'clock.
+const SLOTS_PHONE = SLOTS_DESKTOP.map((angle) => angle - 90);
+const PHONE_QUERY = "(max-width: 639px)";
+const angleFor = (index, active, slots = SLOTS_DESKTOP) => slots[(index - active + TOTAL) % TOTAL];
+
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 // Four leaves, gently drifting, kept to the right half of the dial — clear
 // of the thumb arc on the left, the badge at the lower right and the orbit
@@ -152,6 +159,27 @@ const HeroSection = ({ availability = null }) => {
   // Reasons autoplay is held, besides the pause button.
   const holdRef = useRef({ hover: false, focus: false, offscreen: false, hidden: false });
   const pointerRef = useRef(null);
+  const slotsRef = useRef(SLOTS_DESKTOP);
+  const angleNow = (index, active) => angleFor(index, active, slotsRef.current);
+
+  // Pick the dial's slot set for the viewport before paint, and re-park the
+  // thumbs if the viewport crosses the phone breakpoint (rotation, resize).
+  useIsoLayoutEffect(() => {
+    const mq = window.matchMedia(PHONE_QUERY);
+    const apply = () => {
+      swapTlRef.current?.progress(1);
+      slotsRef.current = mq.matches ? SLOTS_PHONE : SLOTS_DESKTOP;
+      armsRef.current.forEach((arm, i) => {
+        if (!arm) return;
+        const a = angleFor(i, activeRef.current, slotsRef.current);
+        gsap.set(arm, { rotation: a });
+        gsap.set(thumbsRef.current[i], { rotation: -a });
+      });
+    };
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   // ── Loader handshake (unchanged behaviour: once per session) ──────
   useEffect(() => {
@@ -263,7 +291,7 @@ const HeroSection = ({ availability = null }) => {
 
       // Park the orbit thumbs on their slots.
       armsRef.current.forEach((arm, i) => {
-        const a = angleFor(i, activeRef.current);
+        const a = angleNow(i, activeRef.current);
         gsap.set(arm, { rotation: a });
         gsap.set(thumbsRef.current[i], { rotation: -a });
       });
@@ -317,7 +345,7 @@ const HeroSection = ({ availability = null }) => {
         gsap.set(inSlide.querySelectorAll("[data-word],[data-anim]"), { autoAlpha: 1, yPercent: 0, y: 0 });
         gsap.set(discRef.current, { backgroundColor: SLIDES[active].tint });
         armsRef.current.forEach((arm, i) => {
-          const a = angleFor(i, active);
+          const a = angleNow(i, active);
           gsap.set(arm, { rotation: a });
           gsap.set(thumbsRef.current[i], { rotation: -a });
         });
@@ -345,8 +373,8 @@ const HeroSection = ({ availability = null }) => {
       // back of the dial fades across instead of sweeping the long way.
       armsRef.current.forEach((arm, i) => {
         const thumb = thumbsRef.current[i];
-        const from = angleFor(i, prev);
-        const to = angleFor(i, active);
+        const from = angleNow(i, prev);
+        const to = angleNow(i, active);
         if (Math.abs(to - from) > 60) {
           tl.to(thumb, { autoAlpha: 0, scale: 0.6, duration: 0.25, ease: "power2.in" }, 0)
             .set(arm, { rotation: to }, 0.25)
@@ -443,11 +471,7 @@ const HeroSection = ({ availability = null }) => {
                     inert={!isActive}
                     style={i === 0 ? undefined : HIDDEN}
                   >
-                    <span data-anim className="ef-eyebrow">
-                      <span className="tabular-nums">{pad(i + 1)}</span>
-                      <span aria-hidden="true" className="opacity-40">/</span>
-                      {slide.eyebrow}
-                    </span>
+                    <span data-anim className="ef-eyebrow">{slide.eyebrow}</span>
 
                     <h2 className={styles.headline}>
                       {words.map((word, w) => (
@@ -512,7 +536,7 @@ const HeroSection = ({ availability = null }) => {
                   <div
                     key={slide.id}
                     className={styles.arm}
-                    style={{ transform: `rotate(${angleFor(i, 0)}deg)` }}
+                    style={{ "--slot-d": `${angleFor(i, 0)}deg`, "--slot-m": `${angleFor(i, 0, SLOTS_PHONE)}deg` }}
                     ref={(el) => { armsRef.current[i] = el; }}
                     aria-hidden="true"
                   >
@@ -520,7 +544,6 @@ const HeroSection = ({ availability = null }) => {
                       type="button"
                       tabIndex={-1}
                       className={cn(styles.thumb, i === active && styles.thumbActive)}
-                      style={{ transform: `rotate(${-angleFor(i, 0)}deg)` }}
                       ref={(el) => { thumbsRef.current[i] = el; }}
                       onClick={() => goTo(i)}
                     >

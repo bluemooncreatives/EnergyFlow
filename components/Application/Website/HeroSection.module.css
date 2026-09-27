@@ -163,16 +163,21 @@
    arm moves the thumb along the orbit, the thumb counter-rotates to stay
    upright. */
 .arm {
+    /* Initial slot from the component (--slot-d desktop, --slot-m phones);
+       GSAP takes over the transforms once the hero is live. */
+    --slot: var(--slot-d, 180deg);
     position: absolute;
     left: 50%;
     top: 50%;
     width: 0;
     height: 0;
+    transform: rotate(var(--slot));
     will-change: transform;
 }
 
 .thumb {
     --size: var(--thumb);
+    transform: rotate(calc(var(--slot) * -1));
     position: absolute;
     left: var(--orbit-r);
     top: 0;
@@ -403,125 +408,128 @@
 /* The phone write-up is a shorter, two-line version of the slide copy. */
 .writeupShort { display: none; }
 
-/* ── Phones: a composition of their own ──────────────────────────
-   Centred to sit under the dial, a larger plate as the focal point, and
-   type / controls sized to the rest of the mobile UI. Declared after the
-   short-screen rules above so it wins for every phone height. */
+/* ── Phones: the dial, turned a quarter ─────────────────────────────
+   Portrait has no room beside the plate, so the thumb arc runs under it
+   (SLOTS_PHONE in the component). Dial centred, compact centred copy with
+   one action, slim story bars below. Declared after the short-screen
+   rules above so it wins at every phone height. */
 @media (max-width: 639px) {
-    .hero { --stage: min(74vw, 36svh, 19rem); }
+    /* Full screen, like every other breakpoint. Dial, copy and story bars
+       stay together as one group centred in the space, so the bars sit
+       just under the action instead of on the bottom edge. */
+    .hero {
+        --stage: min(70vw, 36svh, 18rem);
+        --orbit-r: calc(var(--stage) * 0.62);
+        --thumb: 2.75rem;
+    }
+
+    .arm { --slot: var(--slot-m, 90deg); }
 
     .inner {
-        padding-top: 5.5rem;
-        padding-bottom: 1rem;
+        justify-content: center;
+        padding-top: 5.75rem;
+        padding-bottom: 1.25rem;
     }
 
     .layout {
-        gap: 1.25rem;
-        align-content: center;
+        flex: 0 0 auto;
+        grid-template-areas: "stage" "copy";
+        gap: 0.5rem;
     }
 
-    /* The dial: no thumbs (tiny moving targets beside the tab bar), a
-       tighter orbit so it barely spills past the plate, smaller leaves. */
-    .arm { display: none; }
-    .orbit { transform: scale(0.9); }
-    .stageWrap { padding-block: calc(var(--stage) * 0.06); }
-    .leaf { scale: 0.7; }
+    /* Room for the orbit spilling above the plate, and for the thumbs
+       hanging on its lower arc. */
+    .stageWrap {
+        padding: calc(var(--stage) * 0.12) 0 calc(var(--stage) * 0.12 + var(--thumb) * 0.8);
+    }
+    .thumbLabel { display: none; }
+    .leaf { scale: 0.65; }
 
-    /* Badge centred on the plate's lower edge, sized like a mobile chip. */
+    /* Badge on the plate's upper-left, clear of the thumb arc and leaves. */
     .badge {
-        left: 0;
-        right: 0;
-        bottom: -3%;
-        width: max-content;
-        margin-inline: auto;
-        gap: 0.5rem;
-        padding: 0.3125rem 0.75rem 0.3125rem 0.3125rem;
+        right: auto;
+        left: -16%;
+        top: 0;
+        bottom: auto;
+        gap: 0.4375rem;
+        padding: 0.25rem 0.625rem 0.25rem 0.25rem;
         font-size: 0.75rem;
     }
-    .badgeIcon { width: 1.625rem; height: 1.625rem; }
-    .badgeIcon svg { width: 0.875rem; height: 0.875rem; }
+    .badgeIcon { width: 1.5rem; height: 1.5rem; }
+    .badgeIcon svg { width: 0.8125rem; height: 0.8125rem; }
 
     /* Copy */
     .slide {
         max-width: none;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.625rem;
         text-align: center;
     }
 
-    /* Long eyebrows ("Festive & Corporate Hampers") can be wider than a
-       small phone: let them wrap rather than overflow. */
     .slide :global(.ef-eyebrow) {
         max-width: 100%;
-        gap: 0.375rem;
-        padding: 0.375rem 0.625rem 0.375rem 0.5rem;
-        font-size: 0.6875rem;
+        gap: 0.3125rem;
+        padding: 0.25rem 0.5rem 0.25rem 0.4375rem;
+        font-size: 0.625rem;
         line-height: 1.25;
         white-space: normal;
     }
+    .slide :global(.ef-eyebrow)::before { width: 0.3125rem; height: 0.3125rem; }
 
     .headline {
-        font-size: clamp(2rem, 1.2rem + 4.4vw, 2.5rem);
+        font-size: clamp(1.875rem, 1.1rem + 4vw, 2.25rem);
         line-height: 1.02;
         letter-spacing: -0.035em;
     }
 
     .writeup {
         display: block;
-        max-width: 21rem;
+        max-width: 19rem;
         overflow: visible;
-        font-size: 0.9375rem;
-        line-height: 1.55;
+        font-size: 0.875rem;
+        line-height: 1.5;
     }
     .writeupFull { display: none; }
     .writeupShort { display: inline; }
 
-    /* Full-width primary action, secondary link centred beneath it. */
+    /* One compact action sized to its label; the secondary link lives on
+       larger screens. */
     .ctaRow {
-        align-self: stretch;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.625rem;
-        margin-top: 0.25rem;
+        justify-content: center;
+        margin-top: 0.375rem;
     }
     .ctaRow > a:first-child {
-        --btn-h: 2.875rem;
-        width: 100%;
-        padding-inline: 1.25rem;
-        font-size: 0.9375rem;
-    }
-    .ctaRow > a:last-child {
-        align-self: center;
+        --btn-h: 2.75rem;
+        padding-inline: 1.375rem;
         font-size: 0.875rem;
     }
+    .ctaRow > a:last-child { display: none; }
 
-    /* Controls: numbered story bars and a compact pause button. */
+    /* Slim story bars. */
     .controls {
         align-items: center;
-        margin-top: 1.25rem;
+        gap: 0.75rem;
+        margin-top: 0.875rem;
     }
+    .tabs { gap: 0.375rem; }
     .tab {
-        gap: 0.375rem;
-        min-height: 2.25rem;
+        justify-content: center;
+        min-height: 1.75rem;
+        padding: 0;
     }
-    .tabNum { opacity: 1; }
-    .tabLabel { display: none; }
-    .playBtn {
-        width: 2.25rem;
-        height: 2.25rem;
-        align-self: center;
-    }
-    .playBtn svg { width: 0.875rem; height: 0.875rem; }
+    .tabText { display: none; }
+    /* No pause button on phones — the story bars run edge to edge. */
+    .playBtn { display: none; }
 }
 
-/* Short phones (≈ 640–700px tall): smaller dial and tighter rhythm so the
-   tab bar still lands on the first screen. */
+/* Short phones: a smaller dial so the whole hero fits the first screen. */
 @media (max-width: 639px) and (max-height: 700px) {
-    .hero { --stage: min(64vw, 32svh, 15rem); }
+    .hero {
+        --stage: min(60vw, 30svh, 14rem);
+        --thumb: 2.5rem;
+    }
     .inner { padding-top: 5.25rem; }
-    .layout { gap: 0.875rem; }
-    .slide { gap: 0.625rem; }
-    .headline { font-size: 2rem; }
+    .controls { margin-top: 0.625rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
