@@ -28,8 +28,8 @@ const MATS = [
 
 const rank = (n) => String(n).padStart(2, '0')
 
-// "Harvest tag" card: the photo sits in a tinted mat, a rank medallion
-// straddles the mat's edge, a discount reads as a round price sticker, and
+// "Harvest tag" card: the photo sits inset in the card, a rank medallion
+// straddles the photo's edge, a discount reads as a round price sticker, and
 // the actions sit below a notched, perforated line like a shop tag.
 const BestsellerCard = ({ product, position }) => {
     const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
@@ -41,19 +41,20 @@ const BestsellerCard = ({ product, position }) => {
     const off = discountPercent(mrp, price)
 
     return (
-        <article className="group/best relative flex h-full flex-col overflow-hidden rounded-card bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-elev-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-            {/* Photo in a tinted mat */}
+        <article className="group/best relative flex h-full flex-col overflow-hidden rounded-card bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+            {/* Photo inset by a single border; the tint shows behind transparent images */}
             <div className="relative p-2.5 pb-0">
-                <div className="rounded-well p-2" style={{ backgroundColor: MATS[(position - 1) % MATS.length] }}>
-                    <div className="relative aspect-square overflow-hidden rounded-[calc(var(--radius-well)-4px)] bg-surface-well">
-                        <Image
-                            src={image.secure_url}
-                            alt={image.alt || name}
-                            fill
-                            sizes="(max-width: 640px) 70vw, 280px"
-                            className="object-cover transition-transform duration-700 ease-out group-hover/best:scale-[1.05] motion-reduce:transition-none"
-                        />
-                    </div>
+                <div
+                    className="relative aspect-square overflow-hidden rounded-well"
+                    style={{ backgroundColor: MATS[(position - 1) % MATS.length] }}
+                >
+                    <Image
+                        src={image.secure_url}
+                        alt={image.alt || name}
+                        fill
+                        sizes="(max-width: 640px) 70vw, 288px"
+                        className="object-cover transition-transform duration-700 ease-out group-hover/best:scale-[1.05] motion-reduce:transition-none"
+                    />
                 </div>
 
                 {off > 0 && (
