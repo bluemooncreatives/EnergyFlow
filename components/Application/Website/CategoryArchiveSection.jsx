@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic'
-import { getHomeCategories } from '@/lib/services/categoryService'
+import { getCategoryShowcase } from '@/lib/services/categoryService'
 
-// Heavy GSAP/ScrollTrigger client logic is split into its own chunk so it does
-// not block parsing/hydration of the critical path.
-const ArchiveSectionClient = dynamic(() => import('./ArchiveSectionClient'))
+// GSAP-driven client logic is split into its own chunk so it does not block
+// parsing/hydration of the critical path.
+const CategoryShowcaseClient = dynamic(() => import('./CategoryShowcaseClient'))
 
 const WRITEUP =
     'Explore the full Energyflow range, category by category. Premium dry fruits and nuts for everyday ' +
@@ -21,24 +21,21 @@ const mapCategory = (category) => ({
     count: category.productCount || 0,
     previewImage: category.previewImage,
     alt: category.alt,
+    priceFrom: category.priceFrom,
+    maxDiscount: category.maxDiscount || 0,
+    products: category.products || [],
 })
 
 const CategoryArchiveSection = async () => {
-    const categories = await getHomeCategories()
+    const categories = await getCategoryShowcase()
 
     const items = (categories || []).map(mapCategory)
 
     // Nothing shoppable with an image yet: hide the section entirely rather than
-    // render an empty archive on the live storefront.
+    // render an empty showcase on the live storefront.
     if (items.length === 0) return null
 
-    return (
-        <ArchiveSectionClient
-            title="Categories"
-            writeup={WRITEUP}
-            items={items}
-        />
-    )
+    return <CategoryShowcaseClient items={items} writeup={WRITEUP} />
 }
 
 export default CategoryArchiveSection
