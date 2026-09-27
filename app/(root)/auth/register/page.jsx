@@ -91,7 +91,7 @@ const RegisterPage = () => {
 
                 <div className="relative z-20 bg-card p-8 text-card-foreground md:w-1/2 md:p-12">
                     <div className='mb-8 flex flex-col items-start'>
-                        <h1 className='font-header text-5xl text-foreground'>Create Account</h1>
+                        <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink-strong'>Create account</h1>
                         <p className='mt-2 text-[15px] leading-relaxed text-muted-foreground'>Enter your details below to set up your Energyflow profile.</p>
                     </div>
 
@@ -166,7 +166,7 @@ const RegisterPage = () => {
                             </div>
 
                             <div className='pt-1'>
-                                <ButtonLoading loading={loading} type="submit" text="Create Account" variant="brand" className="h-9 w-full rounded-sm text-base font-semibold uppercase cursor-pointer" />
+                                <ButtonLoading loading={loading} type="submit" text="Create Account" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
                             </div>
 
                             <div className='text-center text-sm'>

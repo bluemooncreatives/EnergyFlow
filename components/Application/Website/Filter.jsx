@@ -129,23 +129,23 @@ const Filter = ({ filters, showClearLink = true }) => {
 
 
     return (
-        <div className="space-y-6 text-sm font-neue">
+        <div className="space-y-5 text-sm font-neue">
             {hasFilters && showClearLink && (
-                <Button type="button" variant="link" className="h-auto w-fit p-0 text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground" asChild>
+                <Button type="button" variant="link" className="h-auto w-fit p-0 text-[0.875rem] font-medium text-brand underline-offset-4" asChild>
                     <Link href={WEBSITE_SHOP}>
-                        Clear Filters
+                        Clear all filters
                     </Link>
                 </Button>
             )}
 
-            <div className="space-y-2.5">
+            <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
                 <button
                     type="button"
                     onClick={handleBestsellerFilter}
                     aria-pressed={bestsellerOnly}
-                    className={`flex w-full items-center justify-center gap-2 border px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] transition ${bestsellerOnly
-                        ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white'
-                        : 'border-border/60 text-[var(--brand-ink)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]'}`}
+                    className={`ef-focus flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-[0.875rem] font-medium transition-colors ${bestsellerOnly
+                        ? 'bg-brand text-white'
+                        : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'}`}
                 >
                     <Crown className="size-4" />
                     Bestsellers
@@ -155,9 +155,9 @@ const Filter = ({ filters, showClearLink = true }) => {
                     type="button"
                     onClick={handleFreshlyArrivedFilter}
                     aria-pressed={freshlyArrivedOnly}
-                    className={`flex w-full items-center justify-center gap-2 border px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.18em] transition ${freshlyArrivedOnly
-                        ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white'
-                        : 'border-border/60 text-[var(--brand-ink)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]'}`}
+                    className={`ef-focus flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-[0.875rem] font-medium transition-colors ${freshlyArrivedOnly
+                        ? 'bg-brand text-white'
+                        : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'}`}
                 >
                     <Sparkles className="size-4" />
                     Freshly Arrived
@@ -169,8 +169,8 @@ const Filter = ({ filters, showClearLink = true }) => {
                 defaultValue={['category', 'size', 'price']}
                 className="space-y-4"
             >
-                <AccordionItem value="category" className="border-b border-border/60">
-                    <AccordionTrigger className="group flex w-full items-center justify-between py-2 text-base font-semibold text-[var(--brand-primary)] hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
+                <AccordionItem value="category" className="border-b border-line-soft">
+                    <AccordionTrigger className="group flex w-full items-center justify-between py-3 text-[0.9375rem] font-medium text-ink-strong hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
                         <span>Categories</span>
                         <span className="relative flex size-4 items-center justify-center">
                             <Plus className="absolute size-4 transition-all duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
@@ -192,7 +192,7 @@ const Filter = ({ filters, showClearLink = true }) => {
                                     <li key={category._id}>
                                         <label
                                             htmlFor={categoryId}
-                                            className={`flex cursor-pointer items-center gap-3 px-1 py-1.5 text-[13px] transition ${active ? 'font-medium text-[var(--brand-primary-hover)]' : 'font-semibold text-[var(--brand-ink)] hover:text-[var(--brand-primary-hover)]'}`}
+                                            className={`flex cursor-pointer items-center gap-3 px-1 py-1.5 text-[0.875rem] transition-colors ${active ? 'font-medium text-brand' : 'text-ink-body hover:text-brand'}`}
                                         >
                                             <Checkbox
                                                 id={categoryId}
@@ -208,8 +208,8 @@ const Filter = ({ filters, showClearLink = true }) => {
                     </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="size" className="border-b border-border/60">
-                    <AccordionTrigger className="group flex w-full items-center justify-between py-2 text-base font-semibold text-[var(--brand-primary)] hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
+                <AccordionItem value="size" className="border-b border-line-soft">
+                    <AccordionTrigger className="group flex w-full items-center justify-between py-3 text-[0.9375rem] font-medium text-ink-strong hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
                         <span>Pack Size</span>
                         <span className="relative flex size-4 items-center justify-center">
                             <Plus className="absolute size-4 transition-all duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
@@ -231,7 +231,7 @@ const Filter = ({ filters, showClearLink = true }) => {
                                     <li key={`${size}-${index}`}>
                                         <label
                                             htmlFor={sizeId}
-                                            className={`flex cursor-pointer items-center gap-2 px-1 py-1.5 text-[13px] transition ${active ? 'font-semibold text-[var(--brand-primary-hover)]' : 'font-semibold text-[var(--brand-ink)] hover:text-[var(--brand-primary-hover)]'}`}
+                                            className={`flex cursor-pointer items-center gap-2 px-1 py-1.5 text-[0.875rem] transition-colors ${active ? 'font-medium text-brand' : 'text-ink-body hover:text-brand'}`}
                                         >
                                             <Checkbox
                                                 id={sizeId}
@@ -247,8 +247,8 @@ const Filter = ({ filters, showClearLink = true }) => {
                     </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="price" className="border-b border-border/60">
-                    <AccordionTrigger className="group flex w-full items-center justify-between py-2 text-base font-semibold text-[var(--brand-primary)] hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
+                <AccordionItem value="price" className="border-b-0">
+                    <AccordionTrigger className="group flex w-full items-center justify-between py-3 text-[0.9375rem] font-medium text-ink-strong hover:no-underline [&_[data-slot=accordion-trigger-icon]]:hidden">
                         <span>Price</span>
                         <span className="relative flex size-4 items-center justify-center">
                             <Plus className="absolute size-4 transition-all duration-200 group-data-[state=open]:rotate-90 group-data-[state=open]:opacity-0" />
@@ -263,11 +263,11 @@ const Filter = ({ filters, showClearLink = true }) => {
                             step={1}
                             onValueChange={handlePriceChange}
                         />
-                        <div className="grid grid-cols-2 gap-2 font-neue text-[11px] text-foreground/60">
-                            <div className="border border-border/60 px-2 py-2 text-center tracking-[0.04em]">
+                        <div className="grid grid-cols-2 gap-2 font-neue text-[0.8125rem] text-ink-body">
+                            <div className="rounded-full bg-surface-well px-2 py-2 text-center tabular-nums">
                                 {priceFilter.minPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                             </div>
-                            <div className="border border-border/60 px-2 py-2 text-center tracking-[0.04em]">
+                            <div className="rounded-full bg-surface-well px-2 py-2 text-center tabular-nums">
                                 {priceFilter.maxPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                             </div>
                         </div>

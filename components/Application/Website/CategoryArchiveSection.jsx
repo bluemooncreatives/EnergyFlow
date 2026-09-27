@@ -18,9 +18,9 @@ const mapCategory = (category) => ({
     id: `cat-${category.id}`,
     href: category.href,
     name: category.name,
-    metaLabel: category.collectionLabel,
-    secondaryLabel: String(category.year),
-    previewImage: category.previewImage
+    count: category.productCount || 0,
+    previewImage: category.previewImage,
+    alt: category.alt,
 })
 
 const CategoryArchiveSection = async () => {
@@ -36,7 +36,6 @@ const CategoryArchiveSection = async () => {
         <ArchiveSectionClient
             title="Categories"
             writeup={WRITEUP}
-            columns={{ name: 'Category', meta: 'Collection', secondary: 'Year' }}
             items={items}
         />
     )

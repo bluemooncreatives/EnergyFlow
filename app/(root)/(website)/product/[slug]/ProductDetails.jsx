@@ -54,7 +54,7 @@ const NavSpinner = () => {
     if (!pending) return null
     return (
         <span className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-[inherit] bg-background/70 backdrop-blur-[1px]">
-            <Loader2 className="size-4 animate-spin text-[var(--dark-red)]" />
+            <Loader2 className="size-4 animate-spin text-brand" />
         </span>
     )
 }
@@ -62,14 +62,14 @@ const NavSpinner = () => {
 // Renders 5 stars reflecting a real average (full / half / empty) instead of
 // a hard-coded 5-star row, so an unrated product shows empty stars.
 const RatingStars = ({ value = 0, size = 'size-4' }) => (
-    <div className="flex items-center gap-0.5 text-[var(--dark-red)]">
+    <div className="flex items-center gap-0.5 text-amber">
         {Array.from({ length: 5 }).map((_, i) => {
             const position = i + 1
             if (value >= position) {
-                return <Star key={i} className={cn(size, 'fill-[var(--dark-red)] text-[var(--dark-red)]')} />
+                return <Star key={i} className={cn(size, 'fill-amber text-amber')} />
             }
             if (value >= position - 0.5) {
-                return <StarHalf key={i} className={cn(size, 'fill-[var(--dark-red)] text-[var(--dark-red)]')} />
+                return <StarHalf key={i} className={cn(size, 'fill-amber text-amber')} />
             }
             return <Star key={i} className={cn(size, 'text-foreground/25')} />
         })}
@@ -168,8 +168,8 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
     }
 
     return (
-        <section className="website-gutter bg-[linear-gradient(180deg,rgba(62,0,13,0.03),transparent_18%)] py-8 lg:py-12">
-            <div className="w-full font-neue">
+        <section className="pb-[var(--section-space)] pt-[clamp(6.25rem,10vw,8rem)]">
+            <div className="ef-container font-neue">
 
                 <div className="mb-6 lg:mb-8">
                     <Breadcrumb>
@@ -202,7 +202,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                 <div className="grid items-start gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12 xl:gap-16">
 
                     {/* ── GALLERY ─────────────────────────────────────────── */}
-                    <div className="lg:sticky lg:top-6">
+                    <div className="lg:sticky lg:top-28">
                         <div className="flex flex-col-reverse gap-3 xl:flex-row xl:gap-4">
                             <div className="flex gap-3 overflow-x-auto pb-1 xl:max-h-[620px] xl:w-[84px] xl:flex-col xl:overflow-y-auto xl:pb-0 no-scrollbar">
                                 {media.length > 0 ? media.map((thumb, index) => (
@@ -212,10 +212,10 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                         onClick={() => setActiveIndex(index)}
                                         aria-label={`View image ${index + 1}`}
                                         className={cn(
-                                            'relative aspect-[4/5] w-[72px] shrink-0 overflow-hidden rounded-[var(--radius-sm)] border bg-[var(--product-card-bg)] transition xl:w-full',
+                                            'relative aspect-square w-[72px] shrink-0 overflow-hidden rounded-well border-2 bg-surface-well transition xl:w-full',
                                             index === activeIndex
-                                                ? 'border-[var(--dark-red)] ring-1 ring-[var(--dark-red)]/30'
-                                                : 'border-border/60 hover:border-foreground/40'
+                                                ? 'border-brand'
+                                                : 'border-transparent hover:border-line-strong'
                                         )}
                                     >
                                         <Image
@@ -231,7 +231,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                             </div>
 
                             <div className="group relative flex-1">
-                                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-lg)] border border-border/60 bg-[var(--product-card-bg)]">
+                                <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-tile)] bg-surface-well">
                                     {/* fetchPriority must be passed explicitly — in Next 15
                                         `priority` alone emits the preload but not
                                         fetchpriority="high", so the LCP request still queued
@@ -249,8 +249,8 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                     />
 
                                     {hasDiscount && (
-                                        <span className="absolute left-4 top-4 z-10 rounded-full bg-[var(--dark-red)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
-                                            -{variant.discountPercentage}%
+                                        <span className="ef-badge ef-badge--sale absolute left-4 top-4 z-10">
+                                            {variant.discountPercentage}% off
                                         </span>
                                     )}
 
@@ -278,7 +278,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                                         key={index}
                                                         className={cn(
                                                             'size-1.5 rounded-full transition-colors',
-                                                            index === activeIndex ? 'bg-[var(--dark-red)]' : 'bg-foreground/25'
+                                                            index === activeIndex ? 'bg-brand' : 'bg-foreground/25'
                                                         )}
                                                     />
                                                 ))}
@@ -295,15 +295,15 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         {product?.category?.name ? (
                             <Link
                                 href={`${WEBSITE_SHOP}?category=${encodeURIComponent(product.category.slug)}`}
-                                className="w-fit text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--dark-red)] transition-colors hover:text-[var(--dark-red-2)]"
+                                className="ef-eyebrow ef-focus w-fit transition-colors hover:text-brand-hover"
                             >
                                 {product.category.name}
                             </Link>
                         ) : (
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--dark-red)]">Energyflow</p>
+                            <p className="ef-eyebrow w-fit">Energyflow</p>
                         )}
 
-                        <h1 className="font-header mt-2 text-[1.75rem] leading-[1.1] tracking-[-0.02em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                        <h1 className="mt-4 text-[clamp(2rem,1.4rem+2vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink-strong">
                             {product?.name}
                         </h1>
 
@@ -319,11 +319,11 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         </button>
 
                         <div className="mt-5 flex flex-wrap items-end gap-3">
-                            <span className="text-[1.75rem] font-semibold leading-none text-foreground">{inr(variant?.sellingPrice)}</span>
+                            <span className="text-[1.875rem] font-semibold leading-none tracking-[-0.02em] text-ink-strong">{inr(variant?.sellingPrice)}</span>
                             {hasDiscount && (
                                 <>
                                     <span className="text-base leading-none text-muted-foreground line-through">{inr(variant?.mrp)}</span>
-                                    <span className="rounded-md bg-[var(--brand-cream)] px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--dark-red)]">
+                                    <span className="ef-badge ef-badge--sale">
                                         Save {inr(variant.mrp - variant.sellingPrice)}
                                     </span>
                                 </>
@@ -332,18 +332,18 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         <p className="mt-1.5 text-xs text-muted-foreground">Inclusive of all taxes</p>
 
                         {shortDescription && (
-                            <p className="mt-5 line-clamp-3 text-sm leading-relaxed text-[var(--text-body)]">
+                            <p className="mt-5 line-clamp-3 text-[0.9375rem] leading-relaxed text-ink-body">
                                 {shortDescription}
                             </p>
                         )}
 
-                        <div className="my-6 h-px w-full bg-border/60" />
+                        <div className="my-6 h-px w-full bg-line-soft" />
 
                         {/* Size */}
                         {sizes?.length > 0 && (
                             <div className="mb-6">
-                                <p className="mb-3 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                                    Pack Size: <span className="text-foreground">{variant?.size}</span>
+                                <p className="mb-3 text-[0.875rem] text-ink-muted">
+                                    Pack size: <span className="font-medium text-ink-strong">{variant?.size}</span>
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     {sizes.map((size) => {
@@ -354,10 +354,10 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                                 href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?size=${encodeURIComponent(size)}`}
                                                 aria-pressed={isSelected}
                                                 className={cn(
-                                                    'relative min-w-[44px] rounded-[var(--radius-sm)] border px-3.5 py-2 text-center text-sm font-medium transition',
+                                                    'ef-focus relative inline-flex h-11 min-w-[3.5rem] items-center justify-center rounded-full px-4 text-center text-[0.875rem] font-medium transition-colors',
                                                     isSelected
-                                                        ? 'border-[var(--dark-red)] bg-[var(--dark-red)] text-white'
-                                                        : 'border-border/70 hover:border-foreground/50 hover:bg-muted/40'
+                                                        ? 'bg-brand text-white'
+                                                        : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'
                                                 )}
                                             >
                                                 {size}
@@ -375,14 +375,14 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 type="button"
                                 variant="brand"
                                 disabled
-                                className="h-12 w-full rounded-[var(--radius-sm)] text-[12px] font-semibold uppercase tracking-[0.2em]"
+                                className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
                             >
                                 Unavailable
                             </Button>
                         ) : !inCart ? (
                             /* ── Not in cart: pick a quantity, then add ──────────── */
                             <div className="flex flex-row items-stretch gap-3">
-                                <div className="inline-flex h-12 shrink-0 items-center rounded-[var(--radius-sm)] border border-border/70">
+                                <div className="inline-flex h-12 shrink-0 items-center rounded-full bg-surface-well px-1">
                                     <button
                                         type="button"
                                         aria-label="Decrease quantity"
@@ -407,9 +407,9 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 <div className="flex-1">
                                     <ButtonLoading
                                         type="button"
-                                        text="Add To Cart"
+                                        text="Add to cart"
                                         variant="brand"
-                                        className="h-12 w-full rounded-[var(--radius-sm)] text-[12px] font-semibold uppercase tracking-[0.2em]"
+                                        className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
                                         onClick={handleAddToCart}
                                     />
                                 </div>
@@ -417,21 +417,21 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         ) : (
                             /* ── In cart: live stepper bound to the cart line ────── */
                             <div className="flex flex-row items-stretch gap-3">
-                                <div className="inline-flex h-12 shrink-0 items-center rounded-[var(--radius-sm)] border border-[var(--dark-red)]/40 bg-[var(--brand-cream)]/30">
+                                <div className="inline-flex h-12 shrink-0 items-center rounded-full bg-tint-honey px-1">
                                     <button
                                         type="button"
                                         aria-label={cartQty <= 1 ? 'Remove from cart' : 'Decrease quantity'}
-                                        className="flex h-full w-11 items-center justify-center text-[var(--dark-red)] transition hover:text-[var(--dark-red-2)]"
+                                        className="flex h-full w-11 items-center justify-center text-brand transition hover:text-brand-hover"
                                         onClick={handleCartDec}
                                     >
                                         <Minus className="size-4" />
                                     </button>
-                                    <span className="w-10 select-none text-center text-sm font-semibold tabular-nums text-[var(--dark-red)]">{cartQty}</span>
+                                    <span className="w-10 select-none text-center text-sm font-semibold tabular-nums text-brand">{cartQty}</span>
                                     <button
                                         type="button"
                                         aria-label="Increase quantity"
                                         disabled={cartQty >= MAX_QTY}
-                                        className="flex h-full w-11 items-center justify-center text-[var(--dark-red)] transition hover:text-[var(--dark-red-2)] disabled:cursor-not-allowed disabled:opacity-40"
+                                        className="flex h-full w-11 items-center justify-center text-brand transition hover:text-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
                                         onClick={handleCartInc}
                                     >
                                         <Plus className="size-4" />
@@ -441,11 +441,11 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 <div className="flex-1">
                                     <Button
                                         variant="brand"
-                                        className="h-12 w-full rounded-[var(--radius-sm)] text-[12px] font-semibold uppercase tracking-[0.2em]"
+                                        className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
                                         type="button"
                                         asChild
                                     >
-                                        <Link href={WEBSITE_CART}>Go To Cart</Link>
+                                        <Link href={WEBSITE_CART}>Go to cart</Link>
                                     </Button>
                                 </div>
                             </div>
@@ -463,11 +463,11 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
                             {[
                                 { icon: Truck, title: 'Free Shipping', sub: 'On all prepaid orders' },
-                                { icon: RefreshCw, title: 'Easy Returns', sub: '7-day return policy' },
+                                { icon: RefreshCw, title: 'Easy Returns', sub: 'Damaged or wrong items' },
                                 { icon: ShieldCheck, title: 'Secure Checkout', sub: '100% protected' },
                             ].map(({ icon: Icon, title, sub }) => (
-                                <div key={title} className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-border/50 bg-muted/20 px-3 py-2.5">
-                                    <Icon className="size-5 shrink-0 text-[var(--dark-red)]" strokeWidth={1.75} />
+                                <div key={title} className="flex items-center gap-3 rounded-card bg-surface-card px-3.5 py-3 shadow-[inset_0_0_0_1px_var(--line-soft)]">
+                                    <Icon className="size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
                                     <div className="leading-tight">
                                         <p className="text-[12px] font-semibold text-foreground">{title}</p>
                                         <p className="text-[11px] text-muted-foreground">{sub}</p>
@@ -480,43 +480,39 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                 </div>
 
                 {/* ── Full-width Product Details ───────────────────────── */}
-                <section className="mt-10 lg:mt-14">
-                    <div className="mb-6 lg:mb-8">
-                        <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                            The Details
-                        </p>
-                        <h2 className="mt-1.5 font-neue text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]">
-                            Product Details
+                <section className="mt-[var(--section-space)]">
+                    <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
+                        <span className="ef-eyebrow">The Details</span>
+                        <h2 className="ef-title">
+                            Product details
                         </h2>
                     </div>
                     <div
-                        className="w-full font-neue text-[0.95rem] font-normal leading-[1.85] text-[var(--text-body)] [&_a]:text-[var(--dark-red)] [&_a]:underline [&_li]:mb-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-4 [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:pl-5"
+                        className="ef-card w-full px-5 py-6 font-neue text-[0.9375rem] font-normal leading-[1.8] text-ink-body sm:px-8 [&_a]:text-brand [&_a]:underline [&_li]:mb-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-4 [&_strong]:font-semibold [&_strong]:text-foreground [&_ul]:list-disc [&_ul]:pl-5"
                         dangerouslySetInnerHTML={{ __html: decodeHTMLDeep(product?.description) }}
                     />
                 </section>
 
                 {/* ── Full-width Shipping & Returns ────────────────────── */}
-                <section className="mt-10 lg:mt-14">
-                    <div className="mb-6 lg:mb-8">
-                        <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                            Good To Know
-                        </p>
-                        <h2 className="mt-1.5 font-neue text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]">
-                            Shipping &amp; Returns
+                <section className="mt-[var(--section-space)]">
+                    <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
+                        <span className="ef-eyebrow">Good To Know</span>
+                        <h2 className="ef-title">
+                            Shipping &amp; returns
                         </h2>
                     </div>
-                    <dl className="w-full divide-y divide-border/50">
+                    <dl className="ef-card w-full divide-y divide-line-soft px-5 py-2 sm:px-7">
                         {[
                             { label: 'Delivery', text: 'Dispatched within 1–2 business days; delivered in 4–7 days.' },
                             { label: 'Shipping', text: 'Free shipping on all prepaid orders across India.' },
-                            { label: 'Returns', text: 'Easy 7-day returns on unused items with tags intact.' },
+                            { label: 'Returns', text: 'Damaged, incorrectly sealed or wrong items reported within 7 days are replaced or refunded. Opened food packs can only be returned for a genuine quality issue.' },
                             { label: 'Refunds', text: 'Processed to the original payment method within 5–7 business days.' },
                         ].map(({ label, text }) => (
-                            <div key={label} className="flex flex-col gap-1 py-4 first:pt-0 last:pb-0 sm:flex-row sm:gap-6">
-                                <dt className="shrink-0 pt-0.5 text-[0.625rem] font-semibold uppercase tracking-[0.22em] text-foreground/45 sm:w-24">
+                            <div key={label} className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-6">
+                                <dt className="shrink-0 pt-0.5 text-[0.875rem] font-medium text-ink-strong sm:w-28">
                                     {label}
                                 </dt>
-                                <dd className="font-neue text-[0.95rem] leading-[1.85] text-[var(--text-body)]">
+                                <dd className="font-neue text-[0.9375rem] leading-[1.75] text-ink-body">
                                     {text}
                                 </dd>
                             </div>
@@ -524,7 +520,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                     </dl>
                 </section>
 
-                <div id="reviews" className="mt-14 scroll-mt-24">
+                <div id="reviews" className="mt-[var(--section-space)] scroll-mt-28">
                     <LazyHydrate>
                         <ProductReveiw productId={product._id} />
                     </LazyHydrate>
@@ -532,18 +528,16 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
 
                 {/* ── You May Also Like ────────────────────────────────── */}
                 {relatedProducts.length > 0 && (
-                    <section className="mt-12 lg:mt-16">
-                        <div className="mb-8 lg:mb-10">
-                            <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                                Curated For You
-                            </p>
-                            <h2 className="mt-1.5 font-neue text-[clamp(1.6rem,3.4vw,2.6rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]">
-                                You May Also Like
+                    <section className="mt-[var(--section-space)]">
+                        <div className="mb-[var(--section-gap)] flex flex-col items-start gap-3">
+                            <span className="ef-eyebrow">Curated For You</span>
+                            <h2 className="ef-title">
+                                You may also like
                             </h2>
                         </div>
 
                         <LazyHydrate>
-                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+                            <div className="grid grid-cols-2 gap-[var(--grid-gap)] sm:grid-cols-3 lg:grid-cols-4">
                                 {relatedProducts.map((item) => (
                                     <ProductBox key={item._id} product={item} />
                                 ))}

@@ -65,8 +65,8 @@ const ChangePasswordSection = ({ hasPassword = false, onPasswordSet }) => {
     }
 
     return (
-        <div className="rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background">
-            <div className="flex items-center gap-2 border-b border-[var(--dark-red)]/20 px-5 py-4">
+        <div className="rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
+            <div className="flex items-center gap-2 border-b border-line-soft px-5 py-4">
                 <Lock className="size-4 text-[var(--brand-primary)]" />
                 <h2 className="text-lg font-semibold text-[var(--brand-primary)]">
                     {hasPassword ? 'Change Password' : 'Set a Password'}
@@ -75,7 +75,7 @@ const ChangePasswordSection = ({ hasPassword = false, onPasswordSet }) => {
 
             <div className="p-5 sm:p-6">
                 {!hasPassword && (
-                    <p className="mb-5 rounded-md border border-[var(--dark-red)]/15 bg-[var(--brand-warm-bg)]/40 px-4 py-3 text-sm text-foreground/70">
+                    <p className="mb-5 rounded-md border border-line-soft bg-surface-well/70 px-4 py-3 text-sm text-foreground/70">
                         Your account currently signs in with Google. Set a password to also be able to log in with your email and password.
                     </p>
                 )}

@@ -43,12 +43,12 @@ const socialLinks = [
 
 const LinkColumn = ({ title, links }) => (
     <div className='footer-col'>
-        <h3 className='text-2xl font-semibold text-white mb-6'>{title}</h3>
+        <h3 className='mb-5 text-[12px] font-medium uppercase tracking-[0.14em] text-white/55'>{title}</h3>
         <nav aria-label={`${title} links`}>
-            <ul className='space-y-2'>
+            <ul className='space-y-2.5'>
                 {links.map(({ label, href }) => (
                     <li key={`${title}-${label}`}>
-                        <Link href={href} className='text-white/70 hover:text-[var(--brand-cream)] transition-colors'>
+                        <Link href={href} className='text-[0.9375rem] text-white/80 transition-colors hover:text-[var(--brand-amber)]'>
                             {label}
                         </Link>
                     </li>
@@ -116,7 +116,7 @@ const Footer = ({ categoryLinks = [] }) => {
                         </p>
                         <Link
                             href={`mailto:${CONTACT_EMAIL}`}
-                            className='footer-email inline-block border-b border-white/30 pb-3 font-semibold tracking-tight text-[clamp(1.25rem,4.8vw,2.6rem)] leading-none hover:text-[var(--brand-cream)] transition-colors break-all'
+                            className='footer-email inline-block border-b border-white/30 pb-3 font-medium tracking-[-0.03em] text-[clamp(1.25rem,4.8vw,2.6rem)] leading-none hover:text-[var(--brand-cream)] transition-colors break-all'
                         >
                             {CONTACT_EMAIL}
                         </Link>
@@ -124,41 +124,49 @@ const Footer = ({ categoryLinks = [] }) => {
 
                     {/* Get Started CTA card */}
                     <div className='shrink-0'>
-                        <div className='footer-cta bg-[var(--brand-cream)] rounded-sm p-5 w-56'>
-                            <p className='text-[var(--brand-ink)] text-xl font-semibold mb-10'>Get Started</p>
+                        <div className='footer-cta w-full rounded-[var(--radius-card)] bg-[var(--brand-cream)] p-5 sm:w-64'>
+                            <p className='mb-1 text-xl font-medium tracking-[-0.01em] text-[var(--ink-strong)]'>Get Started</p>
+                            <p className='mb-6 text-[0.875rem] leading-snug text-[var(--ink-body)]'>Ghee, oils, dry fruits and gifts, delivered across India.</p>
                             <Link
                                 href={WEBSITE_SHOP}
-                                className='flex items-center justify-between bg-[var(--brand-primary)] text-white rounded-sm pl-5 pr-4 py-3 hover:bg-[var(--brand-primary-hover)] transition-colors'
+                                className='ef-btn ef-btn--primary ef-btn--block justify-between'
                             >
-                                <span className='text-sm'>Go</span>
-                                <ArrowRight className='size-4' />
+                                <span>Shop now</span>
+                                <ArrowRight className='ef-btn__arrow' aria-hidden='true' />
                             </Link>
                         </div>
                     </div>
                 </div>
 
                 {/* ───── Middle row: link columns + contact / office ───── */}
-                <div className='footer-cols grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mt-14'>
+                <div className='footer-cols mt-14 grid grid-cols-2 gap-x-8 gap-y-12 border-t border-white/10 pt-12 lg:grid-cols-4'>
                     <LinkColumn title='Categories' links={categories} />
                     <LinkColumn title='Useful Links' links={usefulLinks} />
                     <LinkColumn title='Help Center' links={helpLinks} />
 
                     {/* Office / Contact */}
                     <div className='footer-col lg:text-right'>
-                        <h3 className='text-2xl font-semibold text-white mb-6'>Office</h3>
-                        <ul className='space-y-2 text-white/70'>
+                        <h3 className='mb-5 text-[12px] font-medium uppercase tracking-[0.14em] text-white/55'>Office</h3>
+                        <ul className='space-y-2.5 text-[0.9375rem] text-white/80'>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <MapPin className='size-5 shrink-0 lg:order-2' />
                                 <span>Pune, Maharashtra 411047</span>
                             </li>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <Mail className='size-5 shrink-0 lg:order-2' />
-                                <Link href={`mailto:${CONTACT_EMAIL}`} className='hover:text-[var(--brand-cream)] transition-colors'>Email Us</Link>
+                                <Link href={`mailto:${CONTACT_EMAIL}`} className='transition-colors hover:text-[var(--brand-amber)]'>Email Us</Link>
                             </li>
-                            <li className='flex lg:justify-end items-center gap-4'>
+                            <li className='flex items-center gap-2 pt-2 lg:justify-end'>
                                 {socialLinks.map(({ label, href, Icon }) => (
-                                    <Link key={label} href={href} target='_blank' rel='noopener noreferrer' aria-label={`Energyflow on ${label}`}>
-                                        <Icon className='size-5 text-white/70 hover:text-[var(--brand-cream)] transition-colors' />
+                                    <Link
+                                        key={label}
+                                        href={href}
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                        aria-label={`Energyflow on ${label}`}
+                                        className='flex size-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-[var(--brand-amber)] hover:bg-[var(--brand-amber)] hover:text-[var(--brand-primary-deep)]'
+                                    >
+                                        <Icon className='size-[1.1rem]' aria-hidden='true' />
                                     </Link>
                                 ))}
                             </li>

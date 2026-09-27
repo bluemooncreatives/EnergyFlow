@@ -102,14 +102,14 @@ const OrderDetails = async ({ params }) => {
         <div className='font-neue'>
             <WebsiteBreadcrumb props={breadcrumb} />
 
-            <section className='website-gutter py-10 lg:py-14'>
+            <section className='ef-container py-10 lg:py-14'>
                 <div className='mx-auto w-full max-w-5xl'>
 
                     {/* ── Top bar ── */}
                     <div className='mb-6 flex flex-wrap items-center justify-between gap-4'>
                         <Link
                             href={USER_ORDERS}
-                            className='inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground'
+                            className='inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-foreground'
                         >
                             <ArrowLeft className='size-3.5' /> Back to orders
                         </Link>
@@ -119,14 +119,14 @@ const OrderDetails = async ({ params }) => {
                     </div>
 
                     {/* ── Header card ── */}
-                    <div className='overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm'>
-                        <div className='flex flex-col gap-4 border-b border-border/60 bg-[var(--brand-warm-bg)]/40 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6'>
+                    <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
+                        <div className='flex flex-col gap-4 border-b border-border/60 bg-surface-well/70 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6'>
                             <div className='flex min-w-0 items-start gap-3'>
-                                <div className='flex size-11 flex-shrink-0 items-center justify-center rounded-full bg-[var(--dark-red)] text-white'>
+                                <div className='flex size-11 flex-shrink-0 items-center justify-center rounded-full bg-brand text-white'>
                                     <ShoppingBag className='size-5' />
                                 </div>
                                 <div className='min-w-0'>
-                                    <h1 className='break-all text-base font-semibold uppercase tracking-[0.02em] text-foreground sm:text-lg'>
+                                    <h1 className='break-all text-lg font-medium tracking-[-0.01em] text-ink-strong sm:text-xl'>
                                         Order #{orderData?.order_id}
                                     </h1>
                                     {placedOn && (
@@ -153,12 +153,12 @@ const OrderDetails = async ({ params }) => {
                         <div className='min-w-0 space-y-6'>
 
                             {/* Items */}
-                            <div className='overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm'>
+                            <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                 <div className='flex items-center justify-between border-b border-border/60 px-5 py-4'>
-                                    <h2 className='flex items-center gap-2 text-base font-semibold uppercase tracking-[0.04em]'>
-                                        <Package className='size-[18px] text-[var(--dark-red)]' /> Items
+                                    <h2 className='flex items-center gap-2 text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>
+                                        <Package className='size-[18px] text-brand' /> Items
                                     </h2>
-                                    <span className='rounded-full bg-muted/60 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>
+                                    <span className='rounded-full bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
                                         {itemCount} {itemCount === 1 ? 'item' : 'items'}
                                     </span>
                                 </div>
@@ -177,11 +177,11 @@ const OrderDetails = async ({ params }) => {
                                             const lineTotal = (product?.sellingPrice || 0) * (product?.qty || 0)
                                             const lineMrp = (product?.mrp || product?.sellingPrice || 0) * (product?.qty || 0)
                                             const nameNode = slug
-                                                ? <Link href={WEBSITE_PRODUCT_DETAILS(slug)} className='transition-colors hover:text-[var(--dark-red)]'>{name}</Link>
+                                                ? <Link href={WEBSITE_PRODUCT_DETAILS(slug)} className='transition-colors hover:text-brand'>{name}</Link>
                                                 : name
                                             return (
                                                 <div key={product?.variantId?._id || product?._id || idx} className='flex gap-4 p-5'>
-                                                    <div className='relative h-[96px] w-[72px] flex-shrink-0 overflow-hidden rounded-md border border-border/40'>
+                                                    <div className='relative h-[96px] w-[72px] flex-shrink-0 overflow-hidden rounded-well'>
                                                         <Image src={media} fill sizes='72px' alt={name} className='object-cover object-center' />
                                                     </div>
                                                     <div className='flex min-w-0 flex-1 flex-col'>
@@ -189,7 +189,7 @@ const OrderDetails = async ({ params }) => {
                                                             {nameNode}
                                                         </h4>
                                                         {size && (
-                                                            <span className='mt-1.5 w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground'>
+                                                            <span className='mt-1.5 w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
                                                                 {size}
                                                             </span>
                                                         )}
@@ -213,10 +213,10 @@ const OrderDetails = async ({ params }) => {
                             </div>
 
                             {/* Shipping address */}
-                            <div className='overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm'>
+                            <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                 <div className='flex items-center gap-2 border-b border-border/60 px-5 py-4'>
-                                    <MapPin className='size-[18px] text-[var(--dark-red)]' />
-                                    <h2 className='text-base font-semibold uppercase tracking-[0.04em]'>Shipping Address</h2>
+                                    <MapPin className='size-[18px] text-brand' />
+                                    <h2 className='text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>Shipping Address</h2>
                                 </div>
                                 <div className='px-5 py-5'>
                                     <p className='text-sm font-semibold text-foreground'>{orderData?.name}</p>
@@ -229,7 +229,7 @@ const OrderDetails = async ({ params }) => {
                                     </div>
                                     {orderData?.ordernote && (
                                         <div className='mt-4 rounded-lg border border-border/50 bg-muted/30 px-3 py-2.5'>
-                                            <p className='text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground'>Order Note</p>
+                                            <p className='text-[0.75rem] font-medium text-ink-muted'>Order Note</p>
                                             <p className='mt-1 text-[13px] text-foreground'>{orderData.ordernote}</p>
                                         </div>
                                     )}
@@ -242,9 +242,9 @@ const OrderDetails = async ({ params }) => {
                             <div className='space-y-4 lg:sticky lg:top-6'>
 
                                 {/* Payment summary */}
-                                <div className='overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm'>
+                                <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                     <div className='border-b border-border/60 px-5 py-4'>
-                                        <h2 className='text-base font-semibold uppercase tracking-[0.04em]'>Order Summary</h2>
+                                        <h2 className='text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>Order Summary</h2>
                                     </div>
 
                                     <div className='space-y-2.5 px-5 py-4'>
@@ -308,7 +308,7 @@ const OrderDetails = async ({ params }) => {
                                         {orderData?.remainingAmount > 0 && (
                                             <div className='flex items-center justify-between text-sm'>
                                                 <span className='text-muted-foreground'>{paymentMethod === 'cod' ? 'Pay on delivery' : 'Remaining'}</span>
-                                                <span className='font-semibold text-[var(--dark-red)]'>{fmt(orderData.remainingAmount)}</span>
+                                                <span className='font-semibold text-brand'>{fmt(orderData.remainingAmount)}</span>
                                             </div>
                                         )}
                                         {orderData?.payment_id && (
@@ -324,7 +324,7 @@ const OrderDetails = async ({ params }) => {
                                         <OrderDetailActions orderId={orderData?.order_id} />
                                         <Link
                                             href={WEBSITE_SHOP}
-                                            className='inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm bg-[var(--dark-red)] text-[12px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-[var(--dark-red-2)]'
+                                            className='inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-brand text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-hover'
                                         >
                                             Continue Shopping <ChevronRight className='size-4' />
                                         </Link>
@@ -334,9 +334,9 @@ const OrderDetails = async ({ params }) => {
                                 {/* Help */}
                                 <Link
                                     href='/contact'
-                                    className='flex items-center gap-3 rounded-2xl border border-border/60 bg-background px-5 py-4 shadow-sm transition-colors hover:border-[var(--dark-red)]/40'
+                                    className='flex items-center gap-3 rounded-2xl border border-border/60 bg-background px-5 py-4 shadow-sm transition-colors hover:border-brand/40'
                                 >
-                                    <span className='flex size-9 flex-shrink-0 items-center justify-center rounded-full bg-[var(--brand-cream)]/60 text-[var(--dark-red)]'>
+                                    <span className='flex size-9 flex-shrink-0 items-center justify-center rounded-full bg-tint-honey text-brand'>
                                         <Headset className='size-[18px]' />
                                     </span>
                                     <div className='flex-1'>

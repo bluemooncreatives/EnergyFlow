@@ -41,7 +41,7 @@ const Cart = () => {
             <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center rounded-md px-1.5 py-1.5 transition hover:bg-muted/40 sm:px-2.5 sm:py-2">
                 <ShoppingCart className="h-4 w-4 text-foreground sm:h-5 sm:w-5" strokeWidth={1.75} />
                 {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--dark-red)] px-1 text-[9px] font-semibold text-white tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-white tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
                         {cartCount}
                     </span>
                 )}
@@ -53,11 +53,11 @@ const Cart = () => {
                 {/* Header */}
                 <SheetHeader className="flex-shrink-0 border-b border-border/50 px-5 py-4 sm:px-6 sm:py-5">
                     <div className="flex items-center justify-between pr-8">
-                        <SheetTitle className="font-header text-2xl leading-none tracking-wide text-[var(--brand-primary)] sm:font-neue sm:text-xl sm:font-semibold sm:leading-normal sm:tracking-[0.01em] sm:text-foreground">
-                            My Cart
+                        <SheetTitle className="font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong">
+                            Your cart
                         </SheetTitle>
                         {cartCount > 0 && (
-                            <span className="rounded-full bg-[var(--brand-cream)]/60 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--brand-primary)] sm:bg-muted/60 sm:text-muted-foreground">
+                            <span className="rounded-full bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand">
                                 {cartCount} {cartCount === 1 ? 'item' : 'items'}
                             </span>
                         )}
@@ -69,10 +69,10 @@ const Cart = () => {
                 <div className="no-scrollbar flex-1 overflow-y-auto px-5 py-5">
                     {cart.count === 0 ? (
                         <div className="flex flex-col items-center rounded-lg border border-border/60 bg-background px-6 py-12 text-center shadow-sm sm:py-14">
-                            <div className="flex size-16 items-center justify-center rounded-full bg-[var(--brand-cream)]/50 text-[var(--brand-primary)]">
+                            <div className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-[var(--brand-primary)]">
                                 <ShoppingCartIcon className="size-8" strokeWidth={1.5} />
                             </div>
-                            <h3 className="font-header mt-5 text-2xl leading-none tracking-wide text-[var(--brand-primary)] sm:font-neue sm:text-xl sm:font-semibold sm:leading-normal sm:tracking-normal sm:text-foreground">
+                            <h3 className="font-neue mt-5 text-xl font-medium tracking-[-0.01em] text-ink-strong">
                                 Your cart is empty
                             </h3>
                             <p className="font-neue mt-2.5 max-w-[220px] text-sm text-muted-foreground">
@@ -110,11 +110,11 @@ const Cart = () => {
                                         <h4 className="line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground">
                                             {product.name}
                                         </h4>
-                                        <span className="w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                                        <span className="w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
                                             {product.size}
                                         </span>
                                         <div className="flex items-center justify-between">
-                                            <span className="rounded-xs bg-[var(--dark-red)]/10 px-1.5 py-0.5 font-neue text-[10px] font-semibold text-[var(--dark-red)]">
+                                            <span className="rounded-xs bg-brand/10 px-1.5 py-0.5 font-neue text-[10px] font-semibold text-brand">
                                                 ×{product.qty}
                                             </span>
                                             <span className="font-neue text-[14px] font-semibold text-foreground">
@@ -124,7 +124,8 @@ const Cart = () => {
                                         <button
                                             type="button"
                                             onClick={() => dispatch(removeFromCart({ productId: product.productId, variantId: product.variantId }))}
-                                            className="w-fit cursor-pointer text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/50 transition-colors hover:text-[var(--dark-red)]"
+                                            className="ef-focus w-fit cursor-pointer rounded-sm text-[0.8125rem] text-ink-muted transition-colors hover:text-destructive"
+                                            aria-label={`Remove ${product.name} from cart`}
                                         >
                                             Remove
                                         </button>

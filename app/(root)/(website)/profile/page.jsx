@@ -136,10 +136,10 @@ const Profile = () => {
             <WebsiteBreadcrumb props={breadCrumbData} />
             <UserPanelLayout>
               <div className="space-y-6">
-                <div className="rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background">
+                <div className="rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
 
                     {/* Section header */}
-                    <div className="flex items-center gap-2 border-b border-[var(--dark-red)]/20 px-5 py-4">
+                    <div className="flex items-center gap-2 border-b border-line-soft px-5 py-4">
                         <User className="size-4 text-[var(--brand-primary)]" />
                         <h2 className="text-lg font-semibold text-[var(--brand-primary)]">
                             My Profile
@@ -160,9 +160,9 @@ const Profile = () => {
                                             {({ getRootProps, getInputProps }) => (
                                                 <div {...getRootProps()}>
                                                     <input {...getInputProps()} />
-                                                    <Avatar className="w-28 h-28 relative group border-2 border-[var(--dark-red)]/40 transition-all duration-200 hover:border-[var(--dark-red)]">
+                                                    <Avatar className="w-28 h-28 relative group border-2 border-brand/40 transition-all duration-200 hover:border-brand">
                                                         <AvatarImage src={preview ? preview : userIcon.src} />
-                                                        <div className='absolute z-50 w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center border-2 border-[var(--dark-red)] rounded-full group-hover:flex hidden cursor-pointer bg-black/20'>
+                                                        <div className='absolute z-50 w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center border-2 border-brand rounded-full group-hover:flex hidden cursor-pointer bg-black/20'>
                                                             <Camera className='size-4 text-white' />
                                                         </div>
                                                     </Avatar>

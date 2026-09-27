@@ -1,181 +1,109 @@
 'use client'
 
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useReveal } from '@/hooks/useReveal'
+import { cn } from '@/lib/utils'
+import Section from './storefront/Section'
+import SectionHeader from './storefront/SectionHeader'
 
 const CARDS = [
     {
         num: '01',
         heading: 'Our Story',
         description: 'From a single dry fruits and super food store to a growing retail network, built on sourcing we stand behind.',
-        cta: 'Discover More',
+        cta: 'Discover more',
         href: '/about-us',
         image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/IMG_20260920_155108.jpg.jpg',
-        overlay: 'bg-gradient-to-t from-black/80 via-black/30 to-black/10',
+        overlay: 'linear-gradient(0deg, rgb(10 20 13 / 0.88) 0%, rgb(10 20 13 / 0.35) 45%, rgb(10 20 13 / 0.05) 75%)',
     },
     {
         num: '02',
         heading: 'Shop Now',
         description: 'Dry fruits, nuts, seeds, super foods, millets, cold pressed oils and ghee. Your whole healthy pantry in one place.',
-        cta: 'Shop Collection',
+        cta: 'Shop collection',
         href: WEBSITE_SHOP,
         image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789636906/WhatsApp_Image_2026-09-17_at_2.50.29_PM_jkfnws.jpg',
-        overlay: 'bg-gradient-to-t from-[var(--dark-red)]/90 via-[var(--dark-red)]/25 to-transparent',
+        overlay: 'linear-gradient(0deg, rgb(22 48 31 / 0.96) 0%, rgb(22 48 31 / 0.72) 42%, rgb(22 48 31 / 0.15) 78%)',
     },
     {
         num: '03',
         heading: 'Bulk & Gifting',
         description: 'Corporate hampers, festive gift boxes and bulk orders, put together to suit your budget and branding.',
-        cta: 'Get In Touch',
+        cta: 'Get in touch',
         href: '/contact',
-        image:'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png',
-        overlay: 'bg-gradient-to-t from-black/85 via-black/35 to-black/10',
+        image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png',
+        overlay: 'linear-gradient(0deg, rgb(10 20 13 / 0.9) 0%, rgb(10 20 13 / 0.4) 50%, rgb(10 20 13 / 0.05) 80%)',
     },
 ]
 
 const EditorialCardsSection = () => {
     const sectionRef = useRef(null)
-    const headerRef = useRef(null)
-    const ruleRef = useRef(null)
-    const cardRefs = useRef([])
-    const imgRefs = useRef([])
-
-    useGSAP(() => {
-        gsap.fromTo(
-            headerRef.current,
-            { autoAlpha: 0, y: 40 },
-            {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.9,
-                ease: 'power4.out',
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-
-        gsap.fromTo(
-            ruleRef.current,
-            { scaleX: 0, transformOrigin: 'left center' },
-            {
-                scaleX: 1,
-                duration: 1.2,
-                ease: 'expo.inOut',
-                delay: 0.12,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-
-        gsap.fromTo(
-            cardRefs.current,
-            { autoAlpha: 0, y: 50, scale: 0.97 },
-            {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.95,
-                ease: 'power4.out',
-                stagger: 0.1,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 72%', once: true },
-            }
-        )
-    }, { scope: sectionRef })
-
-    const handleEnter = (i) => {
-        if (!imgRefs.current[i]) return
-        gsap.to(imgRefs.current[i], { scale: 1.07, duration: 0.7, ease: 'power2.out', overwrite: true })
-    }
-
-    const handleLeave = (i) => {
-        if (!imgRefs.current[i]) return
-        gsap.to(imgRefs.current[i], { scale: 1, duration: 0.7, ease: 'power2.out', overwrite: true })
-    }
+    useReveal(sectionRef)
 
     return (
-        <section ref={sectionRef} className="website-gutter bg-background pt-[clamp(1.25rem,2.5vw,2rem)] pb-[clamp(2rem,4vw,3.5rem)]">
+        <Section ref={sectionRef} tone="sunken" aria-labelledby="editorial-title">
+            <SectionHeader
+                id="editorial-title"
+                eyebrow="Explore more"
+                title="The full"
+                accent="picture"
+                description="Where we come from, what we stock and how we can help you gift."
+            />
 
-            {/* section header */}
-            <div ref={headerRef} className="mb-4 flex items-end justify-between lg:mb-6">
-                <div>
-                    <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                        Explore More
-                    </p>
-                    <h2 className="mt-1.5 font-neue text-[clamp(1.8rem,4.8vw,3.8rem)] font-medium uppercase text-[var(--dark-red-2)]">
-                        The Full Picture
-                    </h2>
-                </div>
-                <span className="hidden text-[0.68rem] font-semibold uppercase text-muted-foreground sm:block">
-                    Story · Shop · Connect
-                </span>
-            </div>
+            {/* Bento: the story card runs tall on the left, the other two stack. */}
+            <div className="grid gap-[var(--grid-gap)] sm:grid-cols-2 lg:grid-cols-[1.35fr_1fr] lg:grid-rows-[repeat(2,minmax(17rem,1fr))]">
+                {CARDS.map((card, i) => {
+                    const featured = i === 0
+                    return (
+                        <Link
+                            key={card.num}
+                            href={card.href}
+                            data-reveal
+                            className={cn(
+                                'ef-tile ef-focus group/ed relative flex min-h-[22rem] flex-col justify-end p-6 text-white sm:p-7',
+                                featured && 'sm:col-span-2 lg:col-span-1 lg:row-span-2 lg:p-10'
+                            )}
+                        >
+                            <Image
+                                src={card.image}
+                                alt=""
+                                fill
+                                quality={82}
+                                sizes={featured ? '(max-width: 1024px) 100vw, 56vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw'}
+                                className="-z-10 object-cover transition-transform duration-700 ease-out group-hover/ed:scale-[1.05] motion-reduce:transition-none"
+                            />
+                            <span aria-hidden="true" className="absolute inset-0 -z-10" style={{ background: card.overlay }} />
 
-            {/* animated rule */}
-            <div ref={ruleRef} className="mb-10 h-px w-full bg-foreground/10 lg:mb-12" />
-
-            {/* cards grid */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-                {CARDS.map((card, i) => (
-                    <Link
-                        key={card.num}
-                        href={card.href}
-                        ref={(el) => { cardRefs.current[i] = el }}
-                        onMouseEnter={() => handleEnter(i)}
-                        onMouseLeave={() => handleLeave(i)}
-                        className="group relative overflow-hidden rounded-xl"
-                        style={{ aspectRatio: '4/5' }}
-                    >
-                        {/* background image */}
-                        <Image
-                            ref={(el) => { imgRefs.current[i] = el }}
-                            src={card.image}
-                            alt={card.heading}
-                            fill
-                            quality={82}
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover will-change-transform"
-                        />
-
-                        {/* gradient overlay */}
-                        <div className={`absolute inset-0 ${card.overlay} transition-opacity duration-500`} />
-
-                        {/* content — bottom anchored */}
-                        <div className="absolute inset-x-0 bottom-0 p-6 lg:p-7">
-
-                            {/* number tag */}
-                            <p className="mb-3 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-white/50">
+                            <span className="absolute left-6 top-6 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-medium tracking-[0.12em] backdrop-blur-sm sm:left-7 sm:top-7">
                                 {card.num}
-                            </p>
+                            </span>
 
-                            {/* heading */}
-                            <h3 className="font-neue text-[1.55rem] font-semibold uppercase leading-tight tracking-[0.03em] text-white lg:text-[1.7rem]">
-                                {card.heading}
-                            </h3>
-
-                            {/* divider */}
-                            <div className="my-3 h-px w-8 bg-white/30" />
-
-                            {/* description */}
-                            <p className="line-clamp-2 text-[0.8rem] leading-relaxed text-white/70">
-                                {card.description}
-                            </p>
-
-                            {/* CTA */}
-                            <div className="mt-5 inline-flex items-center gap-1.5 text-[0.7rem] font-semibold uppercase text-white/85 transition-colors duration-200 group-hover:text-white">
-                                {card.cta}
-                                <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                            </div>
-                        </div>
-                    </Link>
-                ))}
+                            <span className="flex max-w-md flex-col gap-3">
+                                <span
+                                    className={cn(
+                                        'font-medium leading-[1.05] tracking-[-0.03em]',
+                                        featured ? 'text-[clamp(1.75rem,1.2rem+2vw,3rem)]' : 'text-[clamp(1.5rem,1.2rem+1vw,2rem)]'
+                                    )}
+                                >
+                                    {card.heading}
+                                </span>
+                                <span className="text-[0.9375rem] leading-relaxed text-white/80">{card.description}</span>
+                                <span className="mt-2 inline-flex items-center gap-2 text-[0.9375rem] font-medium">
+                                    <span className="flex size-10 items-center justify-center rounded-full bg-white text-brand transition-transform duration-300 group-hover/ed:rotate-45 motion-reduce:transition-none">
+                                        <ArrowUpRight className="size-[1.1rem]" aria-hidden="true" />
+                                    </span>
+                                    {card.cta}
+                                </span>
+                            </span>
+                        </Link>
+                    )
+                })}
             </div>
-        </section>
+        </Section>
     )
 }
 

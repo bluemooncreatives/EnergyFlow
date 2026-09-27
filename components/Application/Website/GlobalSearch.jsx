@@ -392,7 +392,7 @@ const GlobalSearch = ({ open, setOpen, isLoggedIn = false }) => {
 
                                 {noResults && (
                                     <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-                                        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--brand-cream)]/50 text-[var(--brand-primary)]">
+                                        <div className="flex size-12 items-center justify-center rounded-full bg-tint-honey text-[var(--brand-primary)]">
                                             <PackageSearch className="size-6" strokeWidth={1.5} />
                                         </div>
                                         <p className="font-neue text-sm font-semibold text-foreground">

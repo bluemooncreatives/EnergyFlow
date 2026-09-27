@@ -153,6 +153,37 @@
   --color-sidebar-border:         var(--sidebar-border);
   --color-sidebar-ring:           var(--sidebar-ring);
 
+  /* Storefront palette (design-system.css §22) */
+  --color-surface-page:    var(--surface-page);
+  --color-surface-sunken:  var(--surface-sunken);
+  --color-surface-card:    var(--surface-card);
+  --color-surface-well:    var(--surface-well);
+  --color-ink-strong:      var(--ink-strong);
+  --color-ink-body:        var(--ink-body);
+  --color-ink-muted:       var(--ink-muted);
+  --color-line-soft:       var(--line-soft);
+  --color-line-strong:     var(--line-strong);
+  --color-brand:           var(--brand-primary);
+  --color-brand-hover:     var(--brand-primary-hover);
+  --color-brand-bright:    var(--brand-primary-bright);
+  --color-brand-deep:      var(--brand-primary-deep);
+  --color-amber:           var(--brand-amber);
+  --color-amber-soft:      var(--brand-amber-soft);
+  --color-amber-ink:       var(--brand-amber-ink);
+  --color-cream:           var(--brand-cream);
+  --color-tint-pistachio:  var(--tint-pistachio);
+  --color-tint-almond:     var(--tint-almond);
+  --color-tint-honey:      var(--tint-honey);
+  --color-tint-sage:       var(--tint-sage);
+  --color-tint-berry:      var(--tint-berry);
+  --color-tint-oat:        var(--tint-oat);
+  --radius-card:    var(--radius-card);
+  --radius-tile:    var(--radius-tile);
+  --radius-well:    var(--radius-well);
+  --shadow-elev-1:  var(--elev-1);
+  --shadow-elev-2:  var(--elev-2);
+  --shadow-elev-3:  var(--elev-3);
+
   /* Radius scale */
   --radius-sm:  var(--radius-sm);
   --radius-md:  var(--radius-md);

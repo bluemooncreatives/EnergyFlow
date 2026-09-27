@@ -6,7 +6,7 @@ import Sorting from '@/components/Application/Website/Sorting'
 // so ssr:false defers its Accordion/Checkbox/Slider/radix-ui chunk entirely.
 const Filter = dynamic(() => import('@/components/Application/Website/Filter'), { ssr: false })
 import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
     Sheet,
     SheetContent,
@@ -23,6 +23,8 @@ import ShopPagination from '@/components/Application/Website/ShopPagination'
 import { BrandButton, BrandOutlineButton } from '@/components/Application/Website/BrandButton'
 import Link from 'next/link'
 import { PackageSearch, RotateCcw, SlidersHorizontal, Store } from 'lucide-react'
+import PageHero from '@/components/Application/Website/storefront/PageHero'
+import StoreButton from '@/components/Application/Website/storefront/StoreButton'
 
 // Storefront shows a denser 5-row (2-col) grid on phones and a 3×3 grid on
 // larger screens. The server pre-renders the first page at the desktop size,
@@ -136,6 +138,30 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
     const showEmptyState = !isFetching && !error && total === 0
     const resultCount = error ? null : total
 
+    // The header names what is being browsed — a category, a search, a curated
+    // list — because the homepage hero and spotlight deep-link here filtered.
+    const heading = useMemo(() => {
+        const params = new URLSearchParams(searchParamString)
+        const q = params.get('q')?.trim()
+        const slugs = (params.get('category') || '').split(',').filter(Boolean)
+        const names = slugs
+            .map((slug) => initialFilters?.categories?.find((c) => c.slug === slug)?.name?.trim())
+            .filter(Boolean)
+        const base = [{ label: 'Shop', href: WEBSITE_SHOP }]
+
+        if (q) return { title: `Results for “${q}”`, eyebrow: 'Search', links: [...base, { label: 'Search' }] }
+        if (names.length === 1) return { title: names[0], eyebrow: 'Category', links: [...base, { label: names[0] }] }
+        if (names.length > 1) return { title: 'Selected categories', eyebrow: names.join(' · '), links: [...base, { label: 'Filtered' }] }
+        if (params.get('bestseller')) return { title: 'Bestsellers', eyebrow: 'Most reordered', links: [...base, { label: 'Bestsellers' }] }
+        if (params.get('freshlyArrived')) return { title: 'Freshly arrived', eyebrow: 'New in', links: [...base, { label: 'Freshly arrived' }] }
+        return {
+            title: 'Shop all',
+            eyebrow: 'The full pantry',
+            description: 'Dry fruits, seeds, ghee, cold pressed oils, chocolates and gift boxes, quality checked and delivered across India.',
+            links: [{ label: 'Shop' }],
+        }
+    }, [searchParamString, initialFilters])
+
     const handlePageChange = (nextPageIndex) => {
         setPage(nextPageIndex)
         requestAnimationFrame(() => {
@@ -145,28 +171,15 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
 
     return (
         <div>
-            <section className="relative isolate h-[172px] overflow-hidden sm:h-[180px] lg:h-[280px]">
-                <div className="absolute inset-0 bg-[var(--dark-red-2)]" />
-                <div className="absolute inset-x-0 top-14 z-10 flex justify-center sm:top-5 lg:top-6">
-                    <div
-                        className="pointer-events-none select-none font-neue font-semibold uppercase tracking-[0.02em] text-white/90"
-                        style={{
-                            fontSize: "clamp(7.5rem, 34vw, 30rem)",
-                            lineHeight: 0.78,
-                            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 100%)",
-                            maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 100%)",
-                            textShadow: "0 12px 32px rgba(0,0,0,0.18)",
-                        }}
-                        aria-hidden
-                    >
-                        Shop
-                    </div>
-                </div>
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-16 bg-gradient-to-b from-transparent via-background/50 to-background sm:h-36" />
-            </section>
+            <PageHero
+                title={heading.title}
+                eyebrow={heading.eyebrow}
+                description={heading.description}
+                links={heading.links}
+            />
 
-            <section className='website-gutter bg-background pt-4 pb-10 sm:py-10 lg:py-14'>
-                <div className="grid w-full gap-6 lg:grid-cols-[290px_1fr] lg:gap-8">
+            <section className='ef-section ef-section--page ef-section--tight'>
+                <div className="ef-container grid gap-6 lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-10">
                     {/* The aside shell always renders (CSS-hidden below lg) so the
                         sidebar column is occupied from the server-rendered first
                         paint — if it only mounted after hydration (isDesktop flips
@@ -174,8 +187,8 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                         column and jump right when the aside appeared, a large CLS.
                         Filter itself still mounts only on desktop so mobile never
                         downloads its chunk. */}
-                    <aside className='hidden w-full lg:block'>
-                        <div className='sticky top-6'>
+                    <aside className="hidden w-full lg:block">
+                        <div className='ef-card sticky top-28 p-5'>
                             {isDesktop && <Filter filters={initialFilters} />}
                         </div>
                     </aside>
@@ -236,48 +249,43 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                         <div ref={gridTopRef} className="scroll-mt-24" />
 
                         {error ? (
-                            <div className="mt-8 flex flex-col items-center rounded-lg border border-border/60 bg-background px-6 py-14 text-center shadow-sm">
-                                <h3 className="font-neue text-xl font-semibold text-destructive">Something went wrong</h3>
-                                <p className="font-neue mt-2 max-w-sm text-sm text-muted-foreground">
+                            <div className="ef-card mt-6 flex flex-col items-center gap-4 px-6 py-14 text-center">
+                                <h2 className="text-xl font-medium text-ink-strong">Something went wrong</h2>
+                                <p className="max-w-sm text-[0.9375rem] text-ink-body">
                                     We couldn&apos;t load products right now. Please try again.
                                 </p>
-                                <div className="mt-6 w-full max-w-xs">
-                                    <BrandButton type="button" onClick={() => refetch()}>
-                                        <RotateCcw className="mr-2 size-4" />Retry
-                                    </BrandButton>
-                                </div>
+                                <StoreButton onClick={() => refetch()}>
+                                    <RotateCcw aria-hidden="true" /> Try again
+                                </StoreButton>
                             </div>
                         ) : showSkeleton ? (
-                            <div className='grid grid-cols-2 gap-4 pt-7 md:grid-cols-3 md:gap-5 lg:gap-6'>
+                            <div className='grid grid-cols-2 gap-[var(--grid-gap)] pt-6 md:grid-cols-3'>
                                 {Array.from({ length: pageSize }).map((_, index) => (
                                     <ProductBoxSkeleton key={index} />
                                 ))}
                             </div>
                         ) : showEmptyState ? (
-                            <div className="mt-8 flex flex-col items-center rounded-lg border border-border/60 bg-background px-6 py-14 text-center shadow-sm">
-                                <div className="flex size-16 items-center justify-center rounded-full bg-[var(--brand-cream)]/50 text-[var(--brand-primary)]">
-                                    <PackageSearch className="size-8" strokeWidth={1.5} />
-                                </div>
-                                <h3 className="font-neue mt-5 text-xl font-semibold">No Products Found</h3>
-                                <p className="font-neue mt-2 max-w-sm text-sm text-muted-foreground">
+                            <div className="ef-card mt-6 flex flex-col items-center gap-4 px-6 py-14 text-center" style={{ borderRadius: 'var(--radius-tile)' }}>
+                                <span className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-brand">
+                                    <PackageSearch className="size-7" strokeWidth={1.5} aria-hidden="true" />
+                                </span>
+                                <h2 className="text-2xl font-medium tracking-[-0.02em] text-ink-strong">
+                                    {searchParams.size > 0 ? 'Nothing here just yet' : 'No products yet'}
+                                </h2>
+                                <p className="max-w-md text-[0.9375rem] leading-relaxed text-ink-body">
                                     {searchParams.size > 0
-                                        ? 'No products match your current filters. Try clearing them or browse the full collection.'
+                                        ? 'We are still stocking this part of the range. Browse the full collection, or ask us about bulk and gifting orders.'
                                         : 'There are no products to show right now. Please check back soon.'}
                                 </p>
-                                <div className="mt-6 w-full max-w-xs">
-                                    <BrandButton asChild>
-                                        <Link href={WEBSITE_SHOP}>
-                                            {searchParams.size > 0 ? (
-                                                <><RotateCcw className="mr-2 size-4" />Clear Filters</>
-                                            ) : (
-                                                <><Store className="mr-2 size-4" />Browse Shop</>
-                                            )}
-                                        </Link>
-                                    </BrandButton>
+                                <div className="mt-2 flex flex-wrap justify-center gap-3">
+                                    <StoreButton href={WEBSITE_SHOP} arrow>
+                                        {searchParams.size > 0 ? <><RotateCcw aria-hidden="true" /> Browse everything</> : <><Store aria-hidden="true" /> Browse shop</>}
+                                    </StoreButton>
+                                    {searchParams.size > 0 && <StoreButton href="/contact" variant="outline">Ask about it</StoreButton>}
                                 </div>
                             </div>
                         ) : (
-                            <div className='grid grid-cols-2 gap-4 pt-7 md:grid-cols-3 md:gap-5 lg:gap-6'>
+                            <div className='grid grid-cols-2 gap-[var(--grid-gap)] pt-6 md:grid-cols-3'>
                                 {products.map((product, index) => (
                                     <ProductBox key={product._id} product={product} priority={index < 3} />
                                 ))}
@@ -294,7 +302,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                                     siblings={isMobile ? 0 : 1}
                                 />
                                 {total > 0 && (
-                                    <p className="font-neue text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                                    <p className="text-[0.8125rem] text-ink-muted">
                                         Page {Math.min(page + 1, totalPages)} of {totalPages} · {total} {total === 1 ? 'item' : 'items'}
                                     </p>
                                 )}

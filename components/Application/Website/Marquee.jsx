@@ -133,12 +133,13 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
     return (
         <section
             ref={containerRef}
-            className='marquee-shell relative overflow-hidden bg-[var(--brand-primary)] px-3 py-5 text-[var(--brand-cream)] shadow-[0_16px_36px_rgba(62,0,13,0.18)] sm:mx-0 sm:rounded-none sm:border-0 sm:px-0 sm:py-8 sm:shadow-none'
+            className='marquee-shell relative overflow-hidden bg-[var(--brand-primary)] py-4 text-[var(--brand-cream)] sm:py-5'
+            aria-label={text}
         >
-            <div className='marquee__inner' ref={innerRef}>
+            <div className='marquee__inner' ref={innerRef} aria-hidden='true'>
                 {Array.from({ length: repeatCount }).map((_, index) => (
                     <div key={index} className='marquee__part flex items-center flex-shrink-0 px-1 whitespace-nowrap'>
-                        <span className='marquee__label font-semibold uppercase whitespace-nowrap'>
+                        <span className='marquee__label whitespace-nowrap'>
                             {text}
                         </span>
                         <div
@@ -154,6 +155,7 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
             <style jsx>{`
                 .marquee-shell {
                     isolation: isolate;
+                    background-image: var(--brand-panel-gradient);
                 }
                 .marquee__inner {
                     display: flex;
@@ -163,26 +165,31 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
                     will-change: transform;
                 }
                 .marquee__label {
-                    font-size: 1.5rem;
-                    letter-spacing: 0.04em;
+                    font-size: 1.25rem;
+                    font-weight: 500;
+                    letter-spacing: -0.01em;
                     line-height: 1;
+                    text-transform: capitalize;
                 }
                 .marquee__part {
                     display: flex;
                     align-items: center;
                     flex-shrink: 0;
-                    padding: 0 4px;
+                    padding: 0 2px;
                 }
                 .arrow {
-                    width: 60px;
-                    height: 80px;
-                    margin: 0 1em;
+                    width: 36px;
+                    height: 36px;
+                    margin: 0 1.25rem;
+                    padding: 8px;
+                    border-radius: 9999px;
+                    background: var(--brand-amber);
+                    color: var(--brand-primary-deep);
                     transform: rotate(45deg);
                     transition: transform 0.8s var(--ease-out-circ);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: currentColor;
                     flex-shrink: 0;
                 }
                 .arrow.active {
@@ -190,41 +197,18 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
                 }
                 @media (min-width: 640px) {
                     .marquee__label {
-                        font-size: 2.25rem;
-                        letter-spacing: 0.02em;
-                    }
-                }
-                @media (max-width: 639px) {
-                    .marquee-shell::before,
-                    .marquee-shell::after {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        bottom: 0;
-                        width: 1.1rem;
-                        z-index: 2;
-                        pointer-events: none;
-                    }
-                    .marquee-shell::before {
-                        left: 0;
-                        background: linear-gradient(90deg, var(--brand-primary) 35%, transparent);
-                    }
-                    .marquee-shell::after {
-                        right: 0;
-                        background: linear-gradient(270deg, var(--brand-primary) 35%, transparent);
-                    }
-                    .marquee__label {
-                        font-size: 1.25rem;
-                        letter-spacing: 0.05em;
-                    }
-                    .marquee__part {
-                        padding: 0 2px;
+                        font-size: 1.75rem;
+                        letter-spacing: -0.02em;
                     }
                     .arrow {
-                        width: 42px;
-                        height: 42px;
-                        margin: 0 0.7rem;
+                        width: 44px;
+                        height: 44px;
+                        padding: 10px;
+                        margin: 0 1.75rem;
                     }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .arrow { transition: none; }
                 }
             `}</style>
         </section>

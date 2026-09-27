@@ -36,6 +36,14 @@
   /* Body copy — softer than ink, darker than muted */
   --text-body: #4a4a4a;
 
+  /* Honey / saffron — the promotional accent. Pairs with the forest green the
+     way ghee, almonds and honey sit next to leaves. Use the fill for badges,
+     highlights and accent CTAs; use -ink whenever the accent is TEXT on a
+     light surface (the fill fails contrast there). */
+  --brand-amber:      #F2B544;
+  --brand-amber-soft: #FCEDCB;
+  --brand-amber-ink:  #9A5A0A;   /* 5.3:1 on --surface-page */
+
   /* ── Legacy aliases (kept for backward-compat with existing components) ── */
   --dark-red:   var(--brand-primary);
   --dark-red-2: var(--brand-primary-hover);
@@ -294,7 +302,7 @@
   --shadow-xl:         0 20px 25px rgba(0, 0, 0, 0.08),
                        0 10px 10px rgba(0, 0, 0, 0.03);
   --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --shadow-brand:      0 12px 32px rgba(142, 22, 22, 0.10);
+  --shadow-brand:      0 12px 32px rgba(30, 66, 41, 0.12);
   --shadow-focus:      0 0 0 3px oklch(0.708 0 0 / 50%);
 }
 
@@ -572,15 +580,7 @@ body {
 }
 
 
-/* ────────────────────────────────────────────────────────────────
-   18. GSAP ANIMATION HELPERS
-   Elements must start invisible; GSAP reveals them post-loader.
-   ──────────────────────────────────────────────────────────────── */
-.writeup-title,
-.writeup-desc {
-  opacity:      0;
-  will-change:  opacity, transform;
-}
+/* 18. (retired) GSAP helper classes for the old hero writeup track. */
 
 
 /* ────────────────────────────────────────────────────────────────
@@ -720,4 +720,331 @@ body {
 @keyframes shimmer {
   from { background-position: -200% 0; }
   to   { background-position:  200% 0; }
+}
+
+
+/* ================================================================
+   22. STOREFRONT TOKENS
+   The public website's visual language: warm ivory canvas, white
+   rounded cards, pastel produce tints, forest-green actions and a
+   honey accent. Everything below the hero, the shop grid and any
+   new storefront page should build from these — never from raw hex.
+   ================================================================ */
+:root {
+  /* ── Surfaces ── */
+  --surface-page:    #FBF8F2;   /* ivory canvas — continues the hero's warm white */
+  --surface-sunken:  #F4EEE4;   /* oat — alternate section band                  */
+  --surface-card:    #FFFFFF;   /* cards, tiles, accordion rows                   */
+  --surface-well:    #F3EFE8;   /* image wells behind product photos              */
+  --surface-inverse: var(--brand-primary);   /* deep-green bands               */
+
+  /* ── Ink ── */
+  --ink-strong: #14261A;   /* headings — green-black, warmer than pure black */
+  --ink-body:   #4A4F47;   /* paragraphs                                    */
+  --ink-muted:  #6B7268;   /* meta, captions (4.9:1 on ivory)               */
+  --ink-on-inverse:       #FFFFFF;
+  --ink-on-inverse-muted: rgb(255 255 255 / 0.74);
+
+  /* ── Lines ── */
+  --line-soft:   rgb(20 38 26 / 0.08);
+  --line-strong: rgb(20 38 26 / 0.16);
+
+  /* ── Produce tints (category tiles, bento cards) — cycle in this order ── */
+  --tint-pistachio: #E5EED7;
+  --tint-almond:    #F6E4D2;
+  --tint-honey:     #FBEDCB;
+  --tint-sage:      #DDE9E1;
+  --tint-berry:     #F4E0DE;
+  --tint-oat:       #EEE7DB;
+
+  /* ── Layout ── */
+  --container-max:  1440px;
+  --section-space:  clamp(3.5rem, 2rem + 5vw, 6.5rem);      /* vertical rhythm */
+  --section-gap:    clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem); /* header → body   */
+  --grid-gap:       clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
+
+  /* ── Radii ── */
+  --radius-control: 9999px;   /* buttons, chips                 */
+  --radius-card:    1.25rem;  /* 20px product cards, rows       */
+  --radius-tile:    1.75rem;  /* 28px promo tiles, bands        */
+  --radius-well:    0.875rem; /* 14px image well inside a card  */
+
+  /* ── Elevation (green-tinted, never grey) ── */
+  --elev-1: 0 1px 2px rgb(20 38 26 / 0.05), 0 1px 1px rgb(20 38 26 / 0.03);
+  --elev-2: 0 14px 34px -12px rgb(20 38 26 / 0.18), 0 4px 10px -4px rgb(20 38 26 / 0.06);
+  --elev-3: 0 28px 60px -20px rgb(20 38 26 / 0.28);
+
+  /* ── Storefront type scale ── */
+  --type-display: clamp(2rem, 1.25rem + 2.9vw, 3.5rem);   /* section titles */
+  --type-h3:      clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+  --type-lead:    clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --type-body:    0.9375rem;  /* 15px */
+  --type-small:   0.8125rem;  /* 13px */
+  --type-eyebrow: 0.75rem;    /* 12px */
+
+  /* ── Focus ── */
+  --focus-color: var(--brand-primary);
+}
+
+
+/* ================================================================
+   23. STOREFRONT COMPONENTS
+   Plain CSS classes inside the Tailwind `components` layer, so any
+   utility passed alongside them (e.g. `ef-btn w-full`) still wins.
+   React wrappers live in components/Application/Website/storefront.
+   ================================================================ */
+@layer components {
+
+  /* ── Layout ─────────────────────────────────────────────────── */
+  .ef-container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--website-gutter);
+  }
+
+  .ef-section {
+    position: relative;
+    padding-block: var(--section-space);
+  }
+  .ef-section--tight   { padding-block: calc(var(--section-space) * 0.6); }
+  .ef-section--page    { background: var(--surface-page); }
+  .ef-section--sunken  { background: var(--surface-sunken); }
+  .ef-section--inverse {
+    background: var(--surface-inverse);
+    color: var(--ink-on-inverse);
+    --focus-color: var(--brand-amber);
+  }
+
+  /* ── Section heading ───────────────────────────────────────── */
+  .ef-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4375rem 0.75rem 0.4375rem 0.625rem;
+    border-radius: var(--radius-control);
+    background: var(--surface-card);
+    box-shadow: inset 0 0 0 1px var(--line-soft);
+    font-size: var(--type-eyebrow);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    white-space: nowrap;
+  }
+  .ef-eyebrow::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background: var(--brand-amber);
+    flex-shrink: 0;
+  }
+  .ef-section--inverse .ef-eyebrow,
+  .ef-on-inverse .ef-eyebrow {
+    background: rgb(255 255 255 / 0.08);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16);
+    color: var(--ink-on-inverse);
+  }
+
+  .ef-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--type-display);
+    font-weight: var(--weight-medium);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: var(--ink-strong);
+    text-wrap: balance;
+  }
+  /* The accent half of a two-tone title ("Popular *picks*") */
+  .ef-title__accent { color: var(--brand-primary-bright); }
+  .ef-section--inverse .ef-title,
+  .ef-on-inverse .ef-title { color: var(--ink-on-inverse); }
+  .ef-section--inverse .ef-title__accent,
+  .ef-on-inverse .ef-title__accent { color: var(--brand-amber); }
+
+  .ef-lead {
+    margin: 0;
+    font-size: var(--type-lead);
+    line-height: 1.6;
+    color: var(--ink-body);
+    text-wrap: pretty;
+  }
+  .ef-section--inverse .ef-lead,
+  .ef-on-inverse .ef-lead { color: var(--ink-on-inverse-muted); }
+
+  /* ── Buttons ───────────────────────────────────────────────── */
+  .ef-btn {
+    --btn-h: 3rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: var(--btn-h);
+    padding-inline: 1.375rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    font-family: var(--font-body);
+    font-size: var(--type-body);
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color var(--duration-fast) var(--ease-in-out),
+                border-color var(--duration-fast) var(--ease-in-out),
+                color var(--duration-fast) var(--ease-in-out),
+                transform var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+  .ef-btn:active:not(:disabled) { transform: translateY(1px); }
+  .ef-btn:disabled,
+  .ef-btn[aria-disabled='true'] { opacity: 0.5; pointer-events: none; }
+  .ef-btn svg { width: 1.05em; height: 1.05em; flex-shrink: 0; }
+  .ef-btn__arrow { transition: transform var(--duration-normal) var(--ease-out); }
+  .ef-btn:hover .ef-btn__arrow { transform: translateX(3px); }
+
+  .ef-btn--sm    { --btn-h: 2.5rem; padding-inline: 1rem; font-size: var(--type-small); }
+  .ef-btn--lg    { --btn-h: 3.375rem; padding-inline: 1.75rem; }
+  .ef-btn--block { width: 100%; }
+
+  .ef-btn--primary       { background: var(--brand-primary); color: var(--brand-white); }
+  .ef-btn--primary:hover { background: var(--brand-primary-hover); box-shadow: var(--elev-2); }
+
+  .ef-btn--accent       { background: var(--brand-amber); color: var(--brand-primary-deep); }
+  .ef-btn--accent:hover { background: #F5C161; box-shadow: 0 14px 30px -12px rgb(242 181 68 / 0.6); }
+
+  .ef-btn--outline       { background: transparent; border-color: var(--line-strong); color: var(--brand-primary); }
+  .ef-btn--outline:hover { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--brand-white); }
+
+  .ef-btn--light       { background: var(--brand-white); color: var(--brand-primary); }
+  .ef-btn--light:hover { background: var(--brand-cream); }
+
+  .ef-btn--ghost-light       { background: transparent; border-color: rgb(255 255 255 / 0.35); color: var(--brand-white); }
+  .ef-btn--ghost-light:hover { background: rgb(255 255 255 / 0.12); border-color: rgb(255 255 255 / 0.6); }
+
+  /* Inline text link with an arrow — "View all", "Shop ghee" */
+  .ef-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-bottom: 2px;
+    font-size: var(--type-body);
+    font-weight: var(--weight-medium);
+    color: var(--brand-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size var(--duration-normal) var(--ease-out), color var(--duration-fast);
+  }
+  .ef-link:hover { background-size: 100% 1px; }
+  .ef-link svg { width: 1em; height: 1em; transition: transform var(--duration-normal) var(--ease-out); }
+  .ef-link:hover svg { transform: translateX(3px); }
+  .ef-section--inverse .ef-link,
+  .ef-on-inverse .ef-link { color: var(--brand-white); }
+
+  /* Round icon button — carousel arrows, quick actions */
+  .ef-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface-card);
+    color: var(--brand-primary);
+    cursor: pointer;
+    transition: background-color var(--duration-fast), color var(--duration-fast),
+                border-color var(--duration-fast), opacity var(--duration-fast);
+  }
+  .ef-icon-btn:hover:not(:disabled) { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--brand-white); }
+  .ef-icon-btn:disabled { opacity: 0.35; cursor: default; }
+  .ef-icon-btn svg { width: 1.125rem; height: 1.125rem; }
+
+  /* ── Chips & badges ────────────────────────────────────────── */
+  .ef-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 1.625rem;
+    padding-inline: 0.625rem;
+    border-radius: var(--radius-control);
+    font-size: 0.75rem;
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .ef-badge--sale    { background: var(--brand-amber); color: var(--brand-primary-deep); }
+  .ef-badge--soft    { background: var(--surface-card); color: var(--brand-primary); box-shadow: var(--elev-1); }
+  .ef-badge--inverse { background: var(--brand-primary); color: var(--brand-white); }
+
+  /* ── Cards ─────────────────────────────────────────────────── */
+  .ef-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--surface-card);
+    border-radius: var(--radius-card);
+    box-shadow: inset 0 0 0 1px var(--line-soft);
+    transition: box-shadow var(--duration-normal) var(--ease-out),
+                transform var(--duration-normal) var(--ease-out);
+  }
+  .ef-card--interactive:hover {
+    box-shadow: inset 0 0 0 1px transparent, var(--elev-2);
+    transform: translateY(-3px);
+  }
+
+  .ef-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-tile);
+    isolation: isolate;
+  }
+
+  /* ── Focus (all storefront controls) ───────────────────────── */
+  .ef-btn:focus-visible,
+  .ef-link:focus-visible,
+  .ef-icon-btn:focus-visible,
+  .ef-focus:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 3px;
+  }
+
+  /* ── Horizontal rail (carousels) ───────────────────────────── */
+  .ef-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--rail-item, clamp(11.5rem, 44vw, 16.5rem));
+    gap: var(--grid-gap);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    /* room for the card hover lift + shadow so the scroller doesn't clip it */
+    padding-block: 0.5rem 1.75rem;
+    margin-block: -0.5rem -1.75rem;
+  }
+  .ef-rail::-webkit-scrollbar { display: none; }
+  .ef-rail > * { scroll-snap-align: start; }
+
+  .ef-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+/* Motion safety — storefront transitions collapse for users who ask. */
+@media (prefers-reduced-motion: reduce) {
+  .ef-btn, .ef-card, .ef-link, .ef-icon-btn, .ef-btn__arrow { transition: none !important; }
+  .ef-card--interactive:hover { transform: none; }
 }

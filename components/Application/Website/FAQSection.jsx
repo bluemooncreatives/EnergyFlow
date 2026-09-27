@@ -1,12 +1,11 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
-import { Plus } from 'lucide-react'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useId, useRef, useState } from 'react'
+import { MessageCircle, Plus } from 'lucide-react'
+import { useReveal } from '@/hooks/useReveal'
+import { cn } from '@/lib/utils'
+import Section from './storefront/Section'
+import StoreButton from './storefront/StoreButton'
 
 const FAQS = [
     {
@@ -75,84 +74,69 @@ const faqSchema = {
     })),
 }
 
-const FAQItem = ({ faq, isOpen, onToggle }) => (
-    <div className="border-b border-foreground/10">
-        <button
-            onClick={onToggle}
-            aria-expanded={isOpen}
-            className="flex w-full items-center justify-between gap-6 py-5 text-left"
-        >
-            <span className="font-neue text-[0.95rem] font-semibold uppercase tracking-[0.03em] text-[var(--dark-red-2)] lg:text-[1rem]">
-                {faq.q}
-            </span>
-            <Plus
-                className="size-4 flex-shrink-0 text-[var(--dark-red)] transition-transform duration-300"
-                style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}
-            />
-        </button>
+const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
+    const buttonId = `${baseId}-q${index}`
+    const panelId = `${baseId}-a${index}`
 
-        {/* grid-rows trick — no fixed max-height, no JS measurement */}
+    return (
         <div
-            className="grid transition-[grid-template-rows] duration-300 ease-in-out"
-            style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+            className={cn(
+                'rounded-card bg-surface-card transition-shadow duration-300',
+                isOpen ? 'shadow-elev-2' : 'shadow-[inset_0_0_0_1px_var(--line-soft)]'
+            )}
         >
-            <div className="overflow-hidden">
-                <p className="pb-5 pr-8 text-[0.84rem] leading-relaxed text-[var(--text-body)]">
-                    {faq.a}
-                </p>
+            <h3 className="m-0">
+                <button
+                    id={buttonId}
+                    type="button"
+                    onClick={onToggle}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="ef-focus flex w-full items-center justify-between gap-5 rounded-card px-5 py-4 text-left sm:px-6 sm:py-5"
+                >
+                    <span className="text-[0.9875rem] font-medium leading-snug text-ink-strong sm:text-[1.0625rem]">{faq.q}</span>
+                    <span
+                        aria-hidden="true"
+                        className={cn(
+                            'flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300',
+                            isOpen ? 'bg-brand text-white' : 'bg-surface-well text-brand'
+                        )}
+                    >
+                        <Plus
+                            className="size-4 transition-transform duration-300 motion-reduce:transition-none"
+                            style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)' }}
+                        />
+                    </span>
+                </button>
+            </h3>
+
+            {/* grid-rows trick — no fixed max-height, no JS measurement. The
+                answer stays in the DOM (hidden via `inert`) for crawlers. */}
+            <div
+                id={panelId}
+                role="region"
+                aria-labelledby={buttonId}
+                inert={!isOpen}
+                className="grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none"
+                style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+            >
+                <div className="overflow-hidden">
+                    <p className="px-5 pb-5 pr-14 text-[0.9375rem] leading-relaxed text-ink-body sm:px-6 sm:pb-6 sm:pr-16">
+                        {faq.a}
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
 const FAQSection = () => {
-    const [openIndex, setOpenIndex] = useState(null)
+    const [openIndex, setOpenIndex] = useState(0)
     const sectionRef = useRef(null)
-    const headerRef = useRef(null)
-    const ruleRef = useRef(null)
-    const itemRefs = useRef([])
+    const baseId = useId()
+    useReveal(sectionRef)
 
     const toggle = (i) => setOpenIndex((prev) => (prev === i ? null : i))
-
-    useGSAP(() => {
-        gsap.fromTo(
-            headerRef.current,
-            { autoAlpha: 0, y: 40 },
-            {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.9,
-                ease: 'power4.out',
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-
-        gsap.fromTo(
-            ruleRef.current,
-            { scaleX: 0, transformOrigin: 'left center' },
-            {
-                scaleX: 1,
-                duration: 1.2,
-                ease: 'expo.inOut',
-                delay: 0.12,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-
-        gsap.fromTo(
-            itemRefs.current,
-            { autoAlpha: 0, y: 50, scale: 0.97 },
-            {
-                autoAlpha: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.95,
-                ease: 'power4.out',
-                stagger: 0.1,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 72%', once: true },
-            }
-        )
-    }, { scope: sectionRef })
 
     return (
         <>
@@ -160,53 +144,51 @@ const FAQSection = () => {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            <section ref={sectionRef} className="website-gutter bg-background pt-[clamp(1.25rem,2.5vw,2rem)] pb-[clamp(2rem,4vw,3.5rem)]">
+            <Section ref={sectionRef} aria-labelledby="faq-title">
+                <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
 
-            {/* section header */}
-            <div ref={headerRef} className="mb-4 flex items-end justify-between lg:mb-6">
-                <div>
-                    <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                        Got Questions?
-                    </p>
-                    <h2 className="mt-1.5 font-neue text-[clamp(1.8rem,4.8vw,3.8rem)] font-medium uppercase text-[var(--dark-red-2)]">
-                        Frequently Asked
-                    </h2>
-                </div>
-                <span className="hidden text-[0.68rem] font-semibold uppercase text-muted-foreground sm:block">
-                    Freshness · Shipping · Gifting
-                </span>
-            </div>
+                    <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
+                        <div data-reveal className="flex flex-col items-start gap-4">
+                            <span className="ef-eyebrow">Got questions?</span>
+                            <h2 id="faq-title" className="ef-title">
+                                Frequently <span className="ef-title__accent">asked</span>
+                            </h2>
+                            <p className="ef-lead">Freshness, shipping, storage and gifting: the things people ask us most.</p>
+                        </div>
 
-            {/* animated rule */}
-            <div ref={ruleRef} className="mb-10 h-px w-full bg-foreground/10 lg:mb-14" />
-
-            {/* two-column grid on desktop */}
-            <div className="grid gap-x-16 lg:grid-cols-2">
-                {FAQS.map((faq, i) => (
-                    <div
-                        key={i}
-                        ref={(el) => { itemRefs.current[i] = el }}
-                    >
-                        <FAQItem
-                            faq={faq}
-                            isOpen={openIndex === i}
-                            onToggle={() => toggle(i)}
-                        />
+                        <div
+                            data-reveal
+                            className="ef-tile ef-on-inverse flex flex-col items-start gap-4 bg-brand p-6 text-white sm:p-7"
+                            style={{ backgroundImage: 'var(--brand-panel-gradient)', borderRadius: 'var(--radius-card)' }}
+                        >
+                            <span className="flex size-11 items-center justify-center rounded-full bg-amber text-brand-deep">
+                                <MessageCircle className="size-5" aria-hidden="true" />
+                            </span>
+                            <div className="flex flex-col gap-1.5">
+                                <p className="text-[1.25rem] font-medium tracking-[-0.01em]">Still have a question?</p>
+                                <p className="text-[0.9375rem] leading-relaxed text-white/75">
+                                    Bulk orders, gifting, store visits or anything else, our team will get back to you.
+                                </p>
+                            </div>
+                            <StoreButton href="/contact" variant="light" size="sm" arrow>Contact our team</StoreButton>
+                        </div>
                     </div>
-                ))}
-            </div>
 
-            {/* bottom hint */}
-            <p className="mt-10 text-center text-[0.78rem] text-muted-foreground lg:mt-14">
-                Still have a question?{' '}
-                <a
-                    href="/contact"
-                    className="font-semibold text-[var(--dark-red-2)] underline underline-offset-2 transition-opacity hover:opacity-70"
-                >
-                    Contact our team
-                </a>
-            </p>
-            </section>
+                    <div className="flex flex-col gap-3">
+                        {FAQS.map((faq, i) => (
+                            <div key={faq.q} data-reveal>
+                                <FAQItem
+                                    faq={faq}
+                                    index={i}
+                                    baseId={baseId}
+                                    isOpen={openIndex === i}
+                                    onToggle={() => toggle(i)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </Section>
         </>
     )
 }

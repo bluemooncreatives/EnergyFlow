@@ -23,7 +23,7 @@ const ReviewList = ({ review }) => {
                         {Array.from({ length: 5 }).map((_, index) => (
                             <Star
                                 key={index}
-                                className={`size-3.5 ${index < Number(review?.rating || 0) ? 'fill-[var(--dark-red)] text-[var(--dark-red)]' : 'text-foreground/20'}`}
+                                className={`size-3.5 ${index < Number(review?.rating || 0) ? 'fill-brand text-brand' : 'text-foreground/20'}`}
                             />
                         ))}
                     </div>

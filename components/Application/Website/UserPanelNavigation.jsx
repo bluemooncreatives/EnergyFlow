@@ -50,9 +50,9 @@ const UserPanelNavigation = () => {
     }
 
     return (
-        <div className="overflow-hidden rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background font-neue">
+        <div className="overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] font-neue">
             {/* User greeting */}
-            <div className="border-b border-[var(--dark-red)]/20 px-5 py-4">
+            <div className="border-b border-line-soft px-5 py-4">
                 {!hydrated ? (
                     // Auth state not resolved yet — show a skeleton instead of a
                     // misleading "User" placeholder that would flash before hydration.
@@ -65,9 +65,9 @@ const UserPanelNavigation = () => {
                     </div>
                 ) : (
                     <div className="flex items-center gap-3">
-                        <Avatar className="size-9 border border-[var(--dark-red)]/10">
+                        <Avatar className="size-9 border border-line-soft">
                             <AvatarImage src={user?.avatar?.url} alt={user?.name || 'User'} className="object-cover" />
-                            <AvatarFallback className="bg-[var(--dark-red)] font-neue text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
+                            <AvatarFallback className="bg-brand font-neue text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
                                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                             </AvatarFallback>
                         </Avatar>
@@ -93,7 +93,7 @@ const UserPanelNavigation = () => {
                                 <Link
                                     href={href}
                                     className={`group flex items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 transition-all duration-200 ${isActive
-                                        ? 'bg-[var(--dark-red)] text-white'
+                                        ? 'bg-brand text-white'
                                         : 'text-foreground/60 hover:bg-[var(--brand-warm-bg)] hover:text-[var(--brand-primary)]'
                                         }`}
                                 >
@@ -109,7 +109,7 @@ const UserPanelNavigation = () => {
             </nav>
 
             {/* Logout */}
-            <div className="border-t border-[var(--dark-red)]/20 p-2">
+            <div className="border-t border-line-soft p-2">
                 <button
                     type="button"
                     onClick={handleLogout}

@@ -1,22 +1,23 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-// Mirrors the ProductBox layout so the grid doesn't shift when real cards load.
+// Mirrors the storefront ProductCard ("full" actions) so the grid doesn't shift
+// when real cards load.
 const ProductBoxSkeleton = () => {
     return (
-        <div className="flex flex-col overflow-hidden rounded-[var(--radius)] border border-border/60 bg-background">
-            <Skeleton className="aspect-[4/5] w-full rounded-none" />
+        <div className="ef-card @container/card" aria-hidden="true">
+            <div className="p-2 pb-0 @[15rem]/card:p-2.5 @[15rem]/card:pb-0">
+                <Skeleton className="aspect-square w-full rounded-well bg-surface-well" />
+            </div>
 
-            <div className="flex flex-1 flex-col items-center gap-3 border-t border-border/60 px-3 py-3.5 sm:px-4 sm:py-5">
-                <Skeleton className="h-4 w-3/4" />
-
-                <div className="flex w-full flex-col items-center gap-2 sm:flex-row sm:justify-between">
-                    <Skeleton className="h-3 w-16" />
-                    <Skeleton className="h-4 w-20" />
-                </div>
-
-                <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
-                    <Skeleton className="h-9 w-full rounded-sm" />
-                    <Skeleton className="h-9 w-full rounded-sm" />
+            <div className="flex flex-1 flex-col gap-2 px-3 pb-3 pt-3 @[15rem]/card:px-4 @[15rem]/card:pb-4">
+                <Skeleton className="h-3 w-1/3 bg-surface-well" />
+                <Skeleton className="h-4 w-4/5 bg-surface-well" />
+                <Skeleton className="mb-1 h-4 w-1/2 bg-surface-well" />
+                <Skeleton className="h-3 w-12 bg-surface-well" />
+                <Skeleton className="h-5 w-20 bg-surface-well" />
+                <div className="mt-2 grid grid-cols-1 gap-2 @[17rem]/card:grid-cols-2">
+                    <Skeleton className="h-10 w-full rounded-full bg-surface-well" />
+                    <Skeleton className="h-10 w-full rounded-full bg-surface-well" />
                 </div>
             </div>
         </div>

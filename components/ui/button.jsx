@@ -19,10 +19,11 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         pill: "rounded-full border-current bg-transparent font-semibold uppercase tracking-[0em]",
+        // Storefront CTAs — pill shape and weight match the .ef-btn design-system class.
         brand:
-          "rounded-sm bg-[var(--dark-red)] text-white hover:bg-[var(--dark-red-2)] focus-visible:ring-[var(--dark-red)]/40",
+          "rounded-full bg-[var(--brand-primary)] font-medium text-white hover:bg-[var(--brand-primary-hover)] focus-visible:ring-[var(--brand-primary)]/40",
         "brand-outline":
-          "rounded-sm border border-[var(--dark-red)] bg-transparent text-[var(--dark-red)] hover:bg-[var(--dark-red)] hover:text-white focus-visible:ring-[var(--dark-red)]/40",
+          "rounded-full border border-[var(--line-strong)] bg-transparent font-medium text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white focus-visible:ring-[var(--brand-primary)]/40",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

@@ -5,161 +5,148 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { CustomEase } from "gsap/CustomEase";
+import { ArrowRight, Cherry, Gift, Leaf, Pause, Play, Sprout } from "lucide-react";
 
 import PageLoader from "./PageLoader";
 import { WEBSITE_SHOP } from "@/routes/WebsiteRoute";
+import { cn } from "@/lib/utils";
 import styles from "./HeroSection.module.css";
 
-gsap.registerPlugin(useGSAP, CustomEase);
+gsap.registerPlugin(useGSAP);
 
-const AUTO_SLIDE_MS = 3000;
-const MAX_ACTIVE_SLIDES = 2;
-// Fallback step heights, used only when a track is display:none at its
-// breakpoint and so measures 0. The live values come from the DOM (see
-// `stepOf`) so the CSS clamps can change without desyncing the tracks.
-const DESKTOP_HEADLINE_STEP = 172;
-const MOBILE_TITLE_STEP = 160;
-const WRITEUP_STEP = 176;
+// Long enough to read a headline, a line of copy and reach the button.
+const AUTO_MS = 6500;
+const SWIPE_PX = 48;
 const LOADER_SESSION_KEY = "energyflow_loader_seen";
 
-// Cloudinary serves the plate PNGs; f_auto,q_auto keeps them off the critical
-// path budget — the raw files are ~200KB at only 400px wide.
+// Cloudinary serves the plate PNGs; f_auto,q_auto keeps them light.
 const plateUrl = (version, id) =>
   `https://res.cloudinary.com/g5wdpcrr/image/upload/f_auto,q_auto,w_900/v${version}/${id}.png`;
 
+const shopCategory = (slug) => `${WEBSITE_SHOP}?category=${slug}`;
+
+// Three slides sell straight into the shop (filtered to their category); the
+// gifting slide leads to an enquiry instead, because hampers and corporate
+// orders are quoted, not carted — its shop link is the secondary action.
 const SLIDES = [
   {
     id: 1,
+    label: "Dry fruits",
+    eyebrow: "Premium Dry Fruits & Nuts",
     headline: "Pure Nutrition",
-    title: "Premium Dry Fruits & Nuts",
-    writeup: "Handpicked almonds, cashews, walnuts and pistachios. Sourced at their best, packed fresh, and graded for taste you can trust.",
+    writeup: "Handpicked almonds, cashews, walnuts and pistachios. Sourced at their best, packed fresh and graded for taste you can trust.",
     plate: plateUrl("1789923296", "ChatGPT_Image_Sep_20_2026_09_57_51_PM"),
-    alt: "Energyflow premium dry fruits and nuts including almonds, cashews, walnuts and pistachios",
+    alt: "A bowl of almonds, cashews, walnuts and pistachios",
+    tint: "var(--tint-sage)",
+    badge: { Icon: Leaf, text: "Handpicked & graded" },
+    cta: { label: "Shop dry fruits", href: shopCategory("dry-fruits-and-nuts") },
+    secondary: { label: "See bestsellers", href: `${WEBSITE_SHOP}?bestseller=true` },
   },
   {
     id: 2,
+    label: "Superfoods",
+    eyebrow: "Seeds That Power Your Day",
     headline: "Super Foods",
-    title: "Seeds That Power Your Day",
     writeup: "Chia, flax, pumpkin and sunflower seeds alongside berries and super foods, chosen to make everyday nutrition effortless.",
     plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_13_PM"),
-    alt: "Energyflow seeds, berries and super foods collection",
+    alt: "A bowl of seeds, berries and super foods",
+    tint: "var(--tint-pistachio)",
+    badge: { Icon: Sprout, text: "Chia · Flax · Pumpkin" },
+    cta: { label: "Shop superfoods", href: shopCategory("seeds-and-superfoods") },
+    secondary: { label: "Browse all products", href: WEBSITE_SHOP },
   },
   {
     id: 3,
+    label: "Gifting",
+    eyebrow: "Festive & Corporate Hampers",
     headline: "Made To Gift",
-    title: "Festive Gift Hampers",
-    writeup: "Curated chocolate and dry fruit gift boxes, wrapped and ready for festivals, weddings and every reason worth celebrating.",
+    writeup: "Chocolate and dry fruit gift boxes, wrapped and ready for festivals, weddings, teams and every reason worth celebrating.",
     plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_22_PM"),
-    alt: "Energyflow festive chocolate and dry fruit gift hamper box",
+    alt: "A festive gift box of chocolates and dry fruits",
+    tint: "var(--tint-almond)",
+    badge: { Icon: Gift, text: "Custom & bulk orders" },
+    cta: { label: "Plan a gift order", href: "/contact" },
+    secondary: { label: "Browse gift boxes", href: shopCategory("gift-boxes") },
   },
   {
     id: 4,
+    label: "Treats",
+    eyebrow: "Healthy Candies & Treats",
     headline: "Everyday Good",
-    title: "Healthy Candies & Treats",
     writeup: "Guilt free candies and chewables made with real fruit and clean ingredients, so the sweet part of the day stays on your side.",
     plate: plateUrl("1789923297", "ChatGPT_Image_Sep_20_2026_09_58_05_PM"),
-    alt: "Energyflow healthy fruit candies and chewable treats",
+    alt: "A bowl of fruit jellies and chocolate coated treats",
+    tint: "var(--tint-berry)",
+    badge: { Icon: Cherry, text: "Made with real fruit" },
+    cta: { label: "Shop healthy treats", href: shopCategory("healthy-candies-and-sweets") },
+    secondary: { label: "Browse all products", href: WEBSITE_SHOP },
   },
 ];
 
-const TOTAL_SLIDES = SLIDES.length;
+const TOTAL = SLIDES.length;
+const pad = (n) => String(n).padStart(2, "0");
 
-// Leaf drift presets — each leaf gets its own amplitude and period so the
-// group motion never visibly loops. Depth drives blur via the class.
+// Orbit "dial": the active thumb sits at 9 o'clock, upcoming slides wait
+// above it on the arc, the previous one has just passed below. Angles are
+// CSS rotations (clockwise from 3 o'clock; 180 = left, 210 = upper-left).
+const SLOT_ANGLES = [180, 212, 244, 148];
+const angleFor = (index, active) => SLOT_ANGLES[(index - active + TOTAL) % TOTAL];
+
+// Four leaves, gently drifting, placed clear of the orbit thumbs' path and
+// the badge. The two soft (blurred) ones are desktop-only.
 const LEAVES = [
-  { top: "6%", left: "58%", size: 58, rotate: -18, depth: "leafMid", dx: 26, dy: 34, spin: 16, dur: 7.5 },
-  { top: "22%", left: "88%", size: 44, rotate: 34, depth: "leafNear", dx: -22, dy: 28, spin: -14, dur: 9.2 },
-  { top: "52%", left: "54%", size: 40, rotate: 8, depth: "leafNear", dx: 20, dy: -26, spin: 20, dur: 8.1 },
-  { top: "68%", left: "76%", size: 52, rotate: -40, depth: "leafMid", dx: -28, dy: -22, spin: -18, dur: 10.4 },
-  { top: "38%", left: "70%", size: 72, rotate: 22, depth: "leafFar", dx: 18, dy: 30, spin: 12, dur: 11.6 },
-  { top: "84%", left: "62%", size: 36, rotate: -8, depth: "leafFar", dx: -16, dy: -30, spin: -22, dur: 6.8 },
+  { top: "-2%", left: "64%", size: 46, rotate: -24, soft: false, dx: 14, dy: 18, spin: 12, dur: 8 },
+  { top: "18%", left: "92%", size: 38, rotate: 38, soft: false, dx: -12, dy: 16, spin: -10, dur: 9.5 },
+  { top: "44%", left: "99%", size: 50, rotate: -40, soft: true, dx: -14, dy: -12, spin: -14, dur: 11 },
+  { top: "96%", left: "30%", size: 30, rotate: 10, soft: true, dx: 12, dy: -16, spin: 16, dur: 7.5 },
 ];
-
-// Mobile keeps only the three sharpest leaves — the blurred ones cost the
-// most to composite and read as noise at that size.
-const MOBILE_LEAF_COUNT = 3;
 
 const LeafShape = () => (
   <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-    <path
-      d="M58 6C58 6 40 4 26 14 12 24 6 40 6 58c0 0 18 2 32-8 14-10 20-26 20-44Z"
-      fill="currentColor"
-    />
+    <path d="M58 6C58 6 40 4 26 14 12 24 6 40 6 58c0 0 18 2 32-8 14-10 20-26 20-44Z" fill="currentColor" />
     <path d="M58 6 6 58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
   </svg>
 );
 
-const splitToChars = (text) =>
-  text.split(" ").flatMap((word, wordIndex, words) => {
-    const wordGroup = (
-      <span key={`word-${wordIndex}`} className="inline-block whitespace-nowrap">
-        {word.split("").map((char, charIndex) => (
-          <span
-            key={`${wordIndex}-${charIndex}`}
-            className="char inline-block"
-            style={{ transformOrigin: "50% 100%" }}
-          >
-            {char}
-          </span>
-        ))}
-      </span>
-    );
-    if (wordIndex < words.length - 1) {
-      return [
-        wordGroup,
-        <span
-          key={`sp-${wordIndex}`}
-          className="char inline-block"
-          style={{ transformOrigin: "50% 100%" }}
-        >
-          {" "}
-        </span>,
-      ];
-    }
-    return [wordGroup];
-  });
+const HIDDEN = { opacity: 0, visibility: "hidden" };
 
 const HeroSection = () => {
-  const sliderRef = useRef(null);
-  const sliderImagesRef = useRef(null);
-  const counterRef = useRef(null);
-  const mobileTitleTrackRef = useRef(null);
-  const headlineTrackRef = useRef(null);
-  const writeupTrackRef = useRef(null);
-  const indicatorsRef = useRef(null);
-  const previewsRef = useRef([]);
-  const progressBarsRef = useRef([]);
-  const blobRef = useRef(null);
+  const rootRef = useRef(null);
+  const discRef = useRef(null);
+  const fillsRef = useRef([]);
+  const armsRef = useRef([]);
+  const thumbsRef = useRef([]);
   const leavesRef = useRef([]);
-  const orbitPathRef = useRef(null);
-  const orbitThumbsRef = useRef([]);
+
+  const [active, setActive] = useState(0);
+  const [userPaused, setUserPaused] = useState(false);
+  const [canAutoplay, setCanAutoplay] = useState(false);
   const [loaderComplete, setLoaderComplete] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  // Chars are split client-side only so the server renders ~150 fewer DOM nodes,
-  // cutting hydration time. The loader covers the hero during the transition.
-  const [textSplit, setTextSplit] = useState(false);
 
-  useEffect(() => {
-    setTextSplit(true);
-  }, []);
+  const activeRef = useRef(0);
+  const prevRef = useRef(0);
+  const dirRef = useRef(1);
+  const swapTlRef = useRef(null);
+  const progressRef = useRef(null);
+  // Reasons autoplay is held, besides the pause button.
+  const holdRef = useRef({ hover: false, focus: false, offscreen: false, hidden: false });
+  const pointerRef = useRef(null);
 
+  // ── Loader handshake (unchanged behaviour: once per session) ──────
   useEffect(() => {
     try {
-      const hasSeenLoader = window.sessionStorage.getItem(LOADER_SESSION_KEY) === "1";
-      if (hasSeenLoader) {
+      if (window.sessionStorage.getItem(LOADER_SESSION_KEY) === "1") {
         setShowLoader(false);
         setLoaderComplete(true);
       }
     } catch {
-      // no-op
+      // storage blocked — the loader simply plays
     }
+    setCanAutoplay(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
-  const handleLoaderReady = useCallback(() => {
-    setLoaderComplete(true);
-  }, []);
-
+  const handleLoaderReady = useCallback(() => setLoaderComplete(true), []);
   const handleLoaderDone = useCallback(() => {
     try {
       window.sessionStorage.setItem(LOADER_SESSION_KEY, "1");
@@ -169,728 +156,415 @@ const HeroSection = () => {
     setShowLoader(false);
   }, []);
 
+  const goTo = useCallback((index, direction) => {
+    const next = (index + TOTAL) % TOTAL;
+    if (next === activeRef.current) return;
+    dirRef.current = direction ?? (next > activeRef.current ? 1 : -1);
+    activeRef.current = next;
+    setActive(next);
+  }, []);
+
+  // ── Autoplay: one progress tween per slide drives the tab fill ────
+  const syncPlayback = useCallback(() => {
+    const tween = progressRef.current;
+    if (!tween) return;
+    const h = holdRef.current;
+    const hold = userPaused || h.hover || h.focus || h.offscreen || h.hidden;
+    if (hold) tween.pause();
+    else tween.resume();
+  }, [userPaused]);
+
+  useEffect(() => {
+    // Completed segments stay full, upcoming ones empty — story style.
+    fillsRef.current.forEach((fill, i) => {
+      if (fill) gsap.set(fill, { scaleX: i < active ? 1 : 0 });
+    });
+    progressRef.current?.kill();
+    progressRef.current = null;
+
+    const fill = fillsRef.current[active];
+    if (!fill) return;
+    if (!loaderComplete || !canAutoplay) {
+      gsap.set(fill, { scaleX: canAutoplay ? 0 : 1 });
+      return;
+    }
+
+    progressRef.current = gsap.fromTo(
+      fill,
+      { scaleX: 0 },
+      {
+        scaleX: 1,
+        duration: AUTO_MS / 1000,
+        ease: "none",
+        paused: true,
+        onComplete: () => goTo(activeRef.current + 1, 1),
+      }
+    );
+    syncPlayback();
+
+    return () => progressRef.current?.kill();
+  }, [active, loaderComplete, canAutoplay, goTo, syncPlayback]);
+
+  useEffect(() => {
+    syncPlayback();
+  }, [userPaused, syncPlayback]);
+
+  // Hold autoplay while the hero is off screen or the tab is hidden.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(([entry]) => {
+      holdRef.current.offscreen = !entry.isIntersecting;
+      syncPlayback();
+    }, { threshold: 0.25 });
+    io.observe(root);
+    const onVisibility = () => {
+      holdRef.current.hidden = document.hidden;
+      syncPlayback();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [syncPlayback]);
+
+  const hold = (key, value) => {
+    holdRef.current[key] = value;
+    syncPlayback();
+  };
+
+  // ── Entrance + ambient motion ─────────────────────────────────────
   useGSAP(
     () => {
       if (!loaderComplete) return;
-
-      // Create the custom ease here — only needed when animations run (~3s after load)
-      CustomEase.create("hop2", "M0,0 C0.071,0.505 0.192,0.726 0.318,0.852 0.45,0.984 0.504,1 1,1");
-
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      let currentIndex = 0;
-      let indicatorRotation = 0;
-      let autoSlideId = 0;
-      let isAnimating = false;
-      let progressTween = null;
-      // Fraction along the dashed arc that thumb 0 sits at; the rest are
-      // spaced behind it. Advancing this by one step per swap is what makes
-      // the thumbs travel down the arc as the plate changes.
-      let orbitOffset = 0;
-
-      const createSlideElement = (slide) => {
-        const slideElement = document.createElement("div");
-        slideElement.className = `${styles.plate} img`;
-
-        const plateImage = document.createElement("img");
-        plateImage.src = slide.plate;
-        plateImage.alt = slide.alt;
-        plateImage.loading = "eager";
-        plateImage.decoding = "async";
-        plateImage.className = `${styles.plateImg} slide-visual will-change-transform`;
-        plateImage.style.transformOrigin = "center center";
-        slideElement.appendChild(plateImage);
-
-        return slideElement;
-      };
-
-      // ── Orbit thumbs ────────────────────────────────────────────
-      // An SVG <circle> path starts at 3 o'clock and runs clockwise, so
-      // length 0.25 is the bottom, 0.5 the left and 0.75 the top. Only the
-      // left arc crosses the visible canvas: 0.62 (upper-left) down through
-      // 0.5 (left) to 0.40 (lower-left). The span is negative because the
-      // thumbs travel DOWNWARD as slot increases, as in the reference —
-      // a positive span would walk them up and over the top of the circle.
-      const ORBIT_START = 0.62;
-      const ORBIT_SPAN = -0.22;
-
-      const placeOrbitThumbs = () => {
-        const path = orbitPathRef.current;
-        if (!path) return;
-
-        const total = path.getTotalLength();
-        const count = orbitThumbsRef.current.filter(Boolean).length;
-        if (!count || !total) return;
-
-        // getPointAtLength returns viewBox units (0–100). The SVG fills its
-        // square container, so one unit is one hundredth of the box width.
-        const box = path.ownerSVGElement?.getBoundingClientRect();
-        const unit = (box?.width ?? 0) / 100;
-        if (!unit) return;
-
-        orbitThumbsRef.current.forEach((thumb, index) => {
-          if (!thumb) return;
-          const slot = (index / count + orbitOffset) % 1;
-          const point = path.getPointAtLength((ORBIT_START + slot * ORBIT_SPAN) * total);
-          // Thumbs grow slightly as they descend the arc, matching the
-          // reference's sense of them coming toward the viewer.
-          const scale = 0.82 + slot * 0.3;
-          gsap.set(thumb, { x: point.x * unit, y: point.y * unit, scale });
-        });
-      };
-
-      const advanceOrbit = (duration) => {
-        const path = orbitPathRef.current;
-        if (!path) return;
-
-        const count = orbitThumbsRef.current.filter(Boolean).length;
-        if (!count) return;
-
-        gsap.to(
-          { t: orbitOffset },
-          {
-            t: orbitOffset + 1 / count,
-            duration,
-            ease: "power2.inOut",
-            onUpdate() {
-              orbitOffset = this.targets()[0].t % 1;
-              placeOrbitThumbs();
-            },
-          }
-        );
-      };
-
-      // Slow continuous creep at rest, so the arc is never fully static.
-      const startOrbitDrift = () => {
-        if (reduceMotion) return null;
-        const count = orbitThumbsRef.current.filter(Boolean).length;
-        if (!count) return null;
-
-        // Incremental rather than absolute, so a swap's advanceOrbit tween can
-        // move the same offset without the two fighting. deltaRatio keeps the
-        // creep rate identical on 60Hz and 120Hz displays.
-        const perFrame = 1 / (140 * 60);
-        const tick = () => {
-          orbitOffset = (orbitOffset + perFrame * gsap.ticker.deltaRatio()) % 1;
-          placeOrbitThumbs();
-        };
-        gsap.ticker.add(tick);
-        return { kill: () => gsap.ticker.remove(tick) };
-      };
-
-      // ── Leaf drift ──────────────────────────────────────────────
-      const startLeafDrift = () => {
-        if (reduceMotion) return;
-
-        leavesRef.current.forEach((leaf, index) => {
-          if (!leaf) return;
-          const preset = LEAVES[index];
-          gsap.to(leaf, {
-            x: preset.dx,
-            y: preset.dy,
-            rotate: `+=${preset.spin}`,
-            duration: preset.dur,
-            ease: "sine.inOut",
-            repeat: -1,
-            yoyo: true,
-            force3D: true,
-          });
-        });
-      };
-
-      const animateCharsForLine = (trackRef) => {
-        const activeLine = trackRef.current?.children[currentIndex];
-        if (!activeLine) return;
-
-        const chars = activeLine.querySelectorAll(".char");
-        gsap.fromTo(
-          chars,
-          { yPercent: 120, opacity: 0, rotateX: -90, scale: 0.8, force3D: true },
-          {
-            yPercent: 0,
-            opacity: 1,
-            rotateX: 0,
-            scale: 1,
-            duration: 0.85,
-            ease: "power4.out",
-            stagger: 0.022,
-            overwrite: true,
-            force3D: true,
-          }
-        );
-      };
-
-      const animateCharsOut = (trackRef, index) => {
-        const line = trackRef.current?.children[index];
-        if (!line) return;
-
-        const chars = line.querySelectorAll(".char");
-        gsap.to(chars, {
-          yPercent: -120,
-          opacity: 0,
-          rotateX: 60,
-          scale: 0.85,
-          duration: 0.5,
-          ease: "power3.in",
-          stagger: 0.012,
-          force3D: true,
-        });
-      };
-
-      const startProgressBar = () => {
-        if (progressTween) progressTween.kill();
-
-        progressBarsRef.current.forEach((bar) => {
-          if (bar) gsap.set(bar, { scaleX: 0 });
-        });
-
-        const activeBar = progressBarsRef.current[currentIndex];
-        if (!activeBar) return;
-
-        progressTween = gsap.fromTo(
-          activeBar,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            duration: AUTO_SLIDE_MS / 1000,
-            ease: "none",
-          }
-        );
-      };
-
-      const animateWriteupIn = (index) => {
-        const writeupBlock = writeupTrackRef.current?.children[index];
-        if (!writeupBlock) return;
-
-        const title = writeupBlock.querySelector(".writeup-title");
-        const desc = writeupBlock.querySelector(".writeup-desc");
-
-        if (title) {
-          gsap.fromTo(
-            title,
-            { yPercent: 40, opacity: 0, force3D: true },
-            { yPercent: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.15, force3D: true }
-          );
-        }
-        if (desc) {
-          gsap.fromTo(
-            desc,
-            { yPercent: 30, opacity: 0, force3D: true },
-            { yPercent: 0, opacity: 1, duration: 0.7, ease: "power3.out", delay: 0.3, force3D: true }
-          );
-        }
-      };
-
-      const animateWriteupOut = (index) => {
-        const writeupBlock = writeupTrackRef.current?.children[index];
-        if (!writeupBlock) return;
-
-        const title = writeupBlock.querySelector(".writeup-title");
-        const desc = writeupBlock.querySelector(".writeup-desc");
-
-        if (title) {
-          gsap.to(title, { yPercent: -30, opacity: 0, duration: 0.4, ease: "power2.in", force3D: true });
-        }
-        if (desc) {
-          gsap.to(desc, { yPercent: -20, opacity: 0, duration: 0.35, ease: "power2.in", force3D: true });
-        }
-      };
-
-      // ── Track stepping ──────────────────────────────────────────
-      // The three stacked text tracks scroll by exactly one slide height.
-      // That height is now fluid (the mobile title clamps against both vw and
-      // svh), so it is measured rather than hardcoded — otherwise a wrapped
-      // title on a 320px handset, or a landscape window, leaves the track
-      // parked between two slides.
-      const stepOf = (trackRef, fallback) => {
-        const firstSlide = trackRef.current?.children[0];
-        const height = firstSlide?.getBoundingClientRect().height ?? 0;
-        // A track hidden at this breakpoint measures 0; it isn't visible, so
-        // the fallback is only there to keep the transform sane.
-        return height > 1 ? height : fallback;
-      };
-
-      const TRACKS = [
-        [mobileTitleTrackRef, MOBILE_TITLE_STEP],
-        [headlineTrackRef, DESKTOP_HEADLINE_STEP],
-        [writeupTrackRef, WRITEUP_STEP],
-      ];
-
-      const syncTracks = (animate) => {
-        TRACKS.forEach(([trackRef, fallback]) => {
-          if (!trackRef.current) return;
-          const y = -stepOf(trackRef, fallback) * currentIndex;
-          if (animate) {
-            gsap.to(trackRef.current, { y, duration: 0.95, ease: "hop2", force3D: true });
-          } else {
-            gsap.set(trackRef.current, { y });
-          }
-        });
-      };
-
-      const updateTextAndCounter = (prevIndex) => {
-        gsap.to(counterRef.current, {
-          y: -20 * currentIndex,
-          duration: 0.95,
-          ease: "hop2",
-          force3D: true,
-        });
-
-        syncTracks(true);
-
-        if (prevIndex !== undefined && prevIndex !== currentIndex) {
-          animateCharsOut(mobileTitleTrackRef, prevIndex);
-          animateCharsOut(headlineTrackRef, prevIndex);
-          animateWriteupOut(prevIndex);
-        }
-
-        animateCharsForLine(mobileTitleTrackRef);
-        animateCharsForLine(headlineTrackRef);
-        animateWriteupIn(currentIndex);
-      };
-
-      const updateActivePreview = () => {
-        previewsRef.current.forEach((preview) => preview?.classList.remove("active"));
-        previewsRef.current[currentIndex]?.classList.add("active");
-      };
-
-      const cleanupSlides = () => {
-        const slides = sliderImagesRef.current?.querySelectorAll(".img");
-        if (!slides || slides.length <= MAX_ACTIVE_SLIDES) return;
-
-        const slideToRemove = slides[0];
-        slideToRemove.remove();
-      };
-
-      // ── Plate swap ──────────────────────────────────────────────
-      // Measured off the reference recording at 15fps:
-      //   outgoing  x 0 → +140%, scale 1 → 1.08, opacity 1 → 0   over 0.45s
-      //   incoming  x -60 → 0, scale 0.85 → 1, rotate -35 → 0    over 0.60s
-      // The incoming plate is inserted BEHIND the outgoing one and is already
-      // fully opaque — it is revealed as the outgoing plate slides clear,
-      // rather than crossfading in.
-      const animateSlide = (direction) => {
-        if (isAnimating) return false;
-
-        const currentSlide = sliderImagesRef.current?.lastElementChild;
-        if (!currentSlide || !sliderImagesRef.current) return false;
-
-        isAnimating = true;
-
-        const isRight = direction === "right";
-        const sign = isRight ? 1 : -1;
-
-        const nextSlide = createSlideElement(SLIDES[currentIndex]);
-        sliderImagesRef.current.insertBefore(nextSlide, currentSlide);
-
-        const outgoingVisual = currentSlide.querySelector(".slide-visual") || currentSlide;
-        const incomingVisual = nextSlide.querySelector(".slide-visual") || nextSlide;
-
-        gsap.set(incomingVisual, {
-          xPercent: -10 * sign,
-          scale: 0.85,
-          rotate: -35 * sign,
-          opacity: 1,
-          force3D: true,
-        });
-
-        const tl = gsap.timeline({
-          defaults: { force3D: true },
-          onComplete: () => {
-            isAnimating = false;
-          },
-        });
-
-        // Outgoing: slides clear of the stage, scaling up a touch as it goes.
-        tl.to(
-          outgoingVisual,
-          {
-            xPercent: 140 * sign,
-            scale: 1.08,
-            rotate: 12 * sign,
-            duration: 0.45,
-            ease: "power2.in",
-          },
-          0
-        ).to(
-          currentSlide,
-          {
-            opacity: 0,
-            duration: 0.3,
-            ease: "power1.in",
-          },
-          0.2
-        );
-
-        // Incoming: unwinds its rotation and settles to centre.
-        tl.to(
-          incomingVisual,
-          {
-            xPercent: 0,
-            scale: 1,
-            rotate: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          },
-          0.06
-        );
-
-        tl.call(
-          () => {
-            currentSlide.remove();
-            cleanupSlides();
-          },
-          null,
-          0.5
-        );
-
-        // Orbit thumbs step forward on the same beat as the plate swap.
-        advanceOrbit(0.6);
-
-        indicatorRotation += isRight ? -90 : 90;
-        gsap.to(indicatorsRef.current?.children, {
-          rotate: indicatorRotation,
-          duration: 0.95,
-          ease: "hop2",
-          force3D: true,
-        });
-
-        return true;
-      };
-
-      const goToSlide = (nextIndex, direction) => {
-        if (nextIndex === currentIndex || isAnimating) return false;
-
-        const prevIndex = currentIndex;
-        currentIndex = nextIndex;
-
-        const ok = animateSlide(direction);
-        if (!ok) {
-          currentIndex = prevIndex;
-          return false;
-        }
-
-        updateTextAndCounter(prevIndex);
-        updateActivePreview();
-        startProgressBar();
-        return true;
-      };
-
-      const clearAutoSlide = () => {
-        if (!autoSlideId) return;
-        window.clearInterval(autoSlideId);
-        autoSlideId = 0;
-      };
-
-      const startAutoSlide = () => {
-        clearAutoSlide();
-        autoSlideId = window.setInterval(() => {
-          const nextIndex = currentIndex === TOTAL_SLIDES - 1 ? 0 : currentIndex + 1;
-          goToSlide(nextIndex, "right");
-        }, AUTO_SLIDE_MS);
-      };
-
-      const handleClick = (event) => {
-        const clickTarget = event.target instanceof Element ? event.target : null;
-        if (!clickTarget) return;
-
-        if (clickTarget.closest(".slider-preview")) {
-          const clickedPreview = clickTarget.closest(".preview");
-          if (!clickedPreview) return;
-
-          const clickedIndex = previewsRef.current.indexOf(clickedPreview);
-          if (clickedIndex === -1) return;
-
-          const direction = clickedIndex < currentIndex ? "left" : "right";
-          if (goToSlide(clickedIndex, direction)) {
-            clearAutoSlide();
-            startAutoSlide();
-          }
-          return;
-        }
-
-        const sliderWidth = sliderRef.current?.clientWidth ?? 0;
-        const clickPosition = event.clientX;
-
-        if (clickPosition < sliderWidth / 2 && currentIndex !== 0) {
-          if (goToSlide(currentIndex - 1, "left")) {
-            clearAutoSlide();
-            startAutoSlide();
-          }
-        } else if (clickPosition > sliderWidth / 2 && currentIndex !== TOTAL_SLIDES - 1) {
-          if (goToSlide(currentIndex + 1, "right")) {
-            clearAutoSlide();
-            startAutoSlide();
-          }
-        }
-      };
-
-      // ── Entrance ────────────────────────────────────────────────
-      placeOrbitThumbs();
-
-      const intro = gsap.timeline({ defaults: { force3D: true } });
-
-      if (blobRef.current) {
-        intro.fromTo(
-          blobRef.current,
-          { scale: 0.9, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 1.4, ease: "power3.out" },
-          0
-        );
-      }
-
-      const initialPlate = sliderImagesRef.current?.querySelector(".slide-visual");
-      if (initialPlate) {
-        intro.fromTo(
-          initialPlate,
-          { scale: 0.8, rotate: -20, opacity: 0 },
-          { scale: 1, rotate: 0, opacity: 1, duration: 1.5, ease: "power3.out" },
-          0.1
-        );
-      }
-
-      const leafNodes = leavesRef.current.filter(Boolean);
-      if (leafNodes.length) {
-        intro.fromTo(
-          leafNodes,
-          { opacity: 0, scale: 0.6 },
-          { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out", stagger: 0.08 },
-          0.5
-        );
-      }
-
-      const orbitNodes = orbitThumbsRef.current.filter(Boolean);
-      if (orbitNodes.length) {
-        intro.from(orbitNodes, { opacity: 0, duration: 0.6, ease: "power2.out", stagger: 0.07 }, 0.7);
-      }
-
-      startLeafDrift();
-      const orbitDrift = startOrbitDrift();
-
-      // Rotating a handset, or the URL bar collapsing, changes every clamped
-      // height at once. Re-measure on the next frame (after layout settles)
-      // and re-park the tracks without animating, so the slide in view stays
-      // in view instead of sliding to a stale offset.
-      let resizeFrame = 0;
-      const handleResize = () => {
-        if (resizeFrame) cancelAnimationFrame(resizeFrame);
-        resizeFrame = requestAnimationFrame(() => {
-          resizeFrame = 0;
-          placeOrbitThumbs();
-          syncTracks(false);
-        });
-      };
-      window.addEventListener("resize", handleResize);
-      window.addEventListener("orientationchange", handleResize);
-
-      updateActivePreview();
-      updateTextAndCounter();
-      startProgressBar();
-      startAutoSlide();
-
-      sliderRef.current?.addEventListener("click", handleClick);
-
-      return () => {
-        sliderRef.current?.removeEventListener("click", handleClick);
-        window.removeEventListener("resize", handleResize);
-        window.removeEventListener("orientationchange", handleResize);
-        if (resizeFrame) cancelAnimationFrame(resizeFrame);
-        clearAutoSlide();
-        if (progressTween) progressTween.kill();
-        if (orbitDrift) orbitDrift.kill();
-      };
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const root = rootRef.current;
+
+      // Park the orbit thumbs on their slots.
+      armsRef.current.forEach((arm, i) => {
+        const a = angleFor(i, activeRef.current);
+        gsap.set(arm, { rotation: a });
+        gsap.set(thumbsRef.current[i], { rotation: -a });
+      });
+
+      if (reduce) return;
+
+      const first = root.querySelector('[data-slide="0"]');
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.fromTo(discRef.current, { scale: 0.86, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.1 }, 0)
+        .fromTo(root.querySelector('[data-plate="0"]'), { scale: 0.85, rotation: -24, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 1.3 }, 0.1)
+        .fromTo(first.querySelectorAll("[data-word]"), { yPercent: 110 }, { yPercent: 0, duration: 0.9, stagger: 0.08 }, 0.2)
+        .fromTo(first.querySelectorAll("[data-anim]"), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.35)
+        .fromTo(armsRef.current.map((a) => a?.firstElementChild).filter(Boolean), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.6, stagger: 0.07 }, 0.6)
+        .fromTo(root.querySelector('[data-badge="0"]'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.8)
+        .fromTo(leavesRef.current.filter(Boolean), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.8, stagger: 0.08 }, 0.5);
+
+      leavesRef.current.forEach((leaf, i) => {
+        if (!leaf) return;
+        const p = LEAVES[i];
+        gsap.to(leaf, { x: p.dx, y: p.dy, rotation: `+=${p.spin}`, duration: p.dur, ease: "sine.inOut", repeat: -1, yoyo: true });
+      });
     },
-    { scope: sliderRef, dependencies: [loaderComplete] }
+    { scope: rootRef, dependencies: [loaderComplete] }
   );
+
+  // ── Slide change: the dial turns ──────────────────────────────────
+  useGSAP(
+    () => {
+      const prev = prevRef.current;
+      if (prev === active) return;
+      prevRef.current = active;
+
+      // A swap requested mid-swap finishes the old one instantly first,
+      // so rapid clicks never leave two slides half-visible.
+      swapTlRef.current?.progress(1).kill();
+
+      const root = rootRef.current;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const dir = dirRef.current;
+      const $ = (sel) => root.querySelector(sel);
+      const outSlide = $(`[data-slide="${prev}"]`);
+      const inSlide = $(`[data-slide="${active}"]`);
+      const outPlate = $(`[data-plate="${prev}"]`);
+      const inPlate = $(`[data-plate="${active}"]`);
+      const outBadge = $(`[data-badge="${prev}"]`);
+      const inBadge = $(`[data-badge="${active}"]`);
+
+      if (reduce) {
+        gsap.set([outSlide, outPlate, outBadge], { autoAlpha: 0 });
+        gsap.set([inSlide, inPlate, inBadge], { autoAlpha: 1, clearProps: "transform" });
+        gsap.set(inSlide.querySelectorAll("[data-word],[data-anim]"), { autoAlpha: 1, yPercent: 0, y: 0 });
+        gsap.set(discRef.current, { backgroundColor: SLIDES[active].tint });
+        armsRef.current.forEach((arm, i) => {
+          const a = angleFor(i, active);
+          gsap.set(arm, { rotation: a });
+          gsap.set(thumbsRef.current[i], { rotation: -a });
+        });
+        return;
+      }
+
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      swapTlRef.current = tl;
+
+      // Copy: outgoing lifts away, incoming words rise from their masks.
+      tl.to(outSlide.querySelectorAll("[data-word],[data-anim]"), { autoAlpha: 0, y: -14, duration: 0.3, ease: "power2.in", stagger: 0.02 }, 0)
+        .set(outSlide, { autoAlpha: 0 })
+        .set(inSlide, { autoAlpha: 1 }, 0.28)
+        .fromTo(inSlide.querySelectorAll("[data-word]"), { autoAlpha: 1, y: 0, yPercent: 110 }, { yPercent: 0, duration: 0.85, stagger: 0.07 }, 0.3)
+        .fromTo(inSlide.querySelectorAll("[data-anim]"), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.07 }, 0.42);
+
+      // Plate: the old one turns away, the new one turns in — a lazy Susan.
+      tl.to(outPlate, { rotation: -28 * dir, scale: 0.9, autoAlpha: 0, duration: 0.55, ease: "power2.in" }, 0)
+        .fromTo(inPlate, { rotation: 28 * dir, scale: 0.9, autoAlpha: 0 }, { rotation: 0, scale: 1, autoAlpha: 1, duration: 1 }, 0.25)
+        .to(discRef.current, { backgroundColor: SLIDES[active].tint, duration: 0.9, ease: "power2.inOut" }, 0.1)
+        .to(outBadge, { autoAlpha: 0, y: 8, duration: 0.25, ease: "power2.in" }, 0)
+        .fromTo(inBadge, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.7);
+
+      // Orbit: every thumb steps one notch. The one wrapping round the
+      // back of the dial fades across instead of sweeping the long way.
+      armsRef.current.forEach((arm, i) => {
+        const thumb = thumbsRef.current[i];
+        const from = angleFor(i, prev);
+        const to = angleFor(i, active);
+        if (Math.abs(to - from) > 60) {
+          tl.to(thumb, { autoAlpha: 0, scale: 0.6, duration: 0.25, ease: "power2.in" }, 0)
+            .set(arm, { rotation: to }, 0.25)
+            .set(thumb, { rotation: -to }, 0.25)
+            .to(thumb, { autoAlpha: 1, scale: 1, duration: 0.4 }, 0.5);
+        } else {
+          tl.to(arm, { rotation: to, duration: 0.9, ease: "power2.inOut" }, 0.1)
+            .to(thumb, { rotation: -to, duration: 0.9, ease: "power2.inOut" }, 0.1);
+        }
+      });
+    },
+    { scope: rootRef, dependencies: [active] }
+  );
+
+  // ── Input ─────────────────────────────────────────────────────────
+  const onTabKeyDown = (event) => {
+    const keys = { ArrowRight: 1, ArrowLeft: -1, Home: "home", End: "end" };
+    const k = keys[event.key];
+    if (k === undefined) return;
+    event.preventDefault();
+    const next = k === "home" ? 0 : k === "end" ? TOTAL - 1 : (active + k + TOTAL) % TOTAL;
+    goTo(next, k === "home" ? -1 : k === "end" ? 1 : k);
+    event.currentTarget.querySelectorAll('[role="tab"]')[next]?.focus();
+  };
+
+  // Touch swipe (mouse drags are left alone so text stays selectable).
+  const onPointerDown = (event) => {
+    if (event.pointerType === "mouse") return;
+    pointerRef.current = { x: event.clientX, y: event.clientY };
+  };
+  const onPointerUp = (event) => {
+    const start = pointerRef.current;
+    pointerRef.current = null;
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    goTo(activeRef.current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  };
+
+  // Pause for keyboard focus only — a mouse click on a tab also focuses it,
+  // and that shouldn't freeze the slideshow until the next click elsewhere.
+  const onFocusCapture = (event) => {
+    if (event.target.matches?.(":focus-visible")) hold("focus", true);
+  };
+
+  // Hover pauses only over what is being read or operated — the hero fills
+  // the viewport, so a section-wide hover would stop autoplay almost always.
+  const hoverProps = {
+    onMouseEnter: () => hold("hover", true),
+    onMouseLeave: () => hold("hover", false),
+  };
+
+  const onBlurCapture = (event) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) hold("focus", false);
+  };
+
+  const playing = canAutoplay && !userPaused;
 
   return (
     <>
       {showLoader && <PageLoader onReady={handleLoaderReady} onComplete={handleLoaderDone} />}
-      <div
-        ref={sliderRef}
-        className={`${styles.hero} relative w-full`}
-        role="region"
-        aria-label="Hero image carousel"
+      <section
+        ref={rootRef}
+        className={styles.hero}
         aria-roledescription="carousel"
+        aria-label="Featured collections"
+        onFocusCapture={onFocusCapture}
+        onBlurCapture={onBlurCapture}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => { pointerRef.current = null; }}
       >
-        {/* Mint blob */}
-        <div ref={blobRef} className={styles.blob} aria-hidden="true" />
+        <h1 className="sr-only">Energyflow: premium dry fruits, nuts, seeds, super foods and gifts</h1>
 
-        {/* Dashed orbit + travelling thumbnails */}
-        <div className={styles.orbit} aria-hidden="true">
-          <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
-            <circle ref={orbitPathRef} className={styles.orbitPath} cx="50" cy="50" r="92" />
-          </svg>
-          {SLIDES.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={styles.orbitThumb}
-              ref={(element) => {
-                orbitThumbsRef.current[index] = element;
-              }}
-            >
-              <Image src={slide.plate} alt="" width={64} height={64} sizes="64px" />
+        <div className={cn("ef-container", styles.inner)}>
+          <div className={styles.layout}>
+            {/* ── Copy ── */}
+            <div className={styles.copy} id="hero-slides" aria-live={playing ? "off" : "polite"} {...hoverProps}>
+              {SLIDES.map((slide, i) => {
+                const words = slide.headline.split(" ");
+                const isActive = i === active;
+                return (
+                  <div
+                    key={slide.id}
+                    data-slide={i}
+                    id={`hero-slide-${i}`}
+                    className={styles.slide}
+                    role="tabpanel"
+                    aria-roledescription="slide"
+                    aria-label={`${i + 1} of ${TOTAL}: ${slide.label}`}
+                    aria-hidden={!isActive}
+                    inert={!isActive}
+                    style={i === 0 ? undefined : HIDDEN}
+                  >
+                    <span data-anim className="ef-eyebrow">
+                      <span className="tabular-nums">{pad(i + 1)}</span>
+                      <span aria-hidden="true" className="opacity-40">/</span>
+                      {slide.eyebrow}
+                    </span>
+
+                    <h2 className={styles.headline}>
+                      {words.map((word, w) => (
+                        <span key={w}>
+                          <span className={styles.mask}>
+                            <span data-word className={cn(styles.word, w === words.length - 1 && styles.accentWord)}>
+                              {word}
+                            </span>
+                          </span>
+                          {w < words.length - 1 && " "}
+                        </span>
+                      ))}
+                    </h2>
+
+                    <p data-anim className={styles.writeup}>{slide.writeup}</p>
+
+                    <div data-anim className={styles.ctaRow}>
+                      <Link href={slide.cta.href} className="ef-btn ef-btn--primary ef-btn--lg">
+                        {slide.cta.label}
+                        <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
+                      </Link>
+                      <Link href={slide.secondary.href} className="ef-link">
+                        {slide.secondary.label}
+                        <ArrowRight aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
 
-        {/* Plate stage */}
-        <div ref={sliderImagesRef} className={styles.stage}>
-          <div className={`${styles.plate} img`}>
-            <Image
-              src={SLIDES[0].plate}
-              alt={SLIDES[0].alt}
-              fill
-              priority
-              sizes="(max-width: 1023px) 72vw, 34vw"
-              className={`${styles.plateImg} slide-visual`}
-            />
-          </div>
-        </div>
+            {/* ── The dial ── */}
+            <div className={styles.stageWrap}>
+              <div className={styles.stage}>
+                <div ref={discRef} className={styles.disc} style={{ backgroundColor: SLIDES[0].tint }} aria-hidden="true" />
 
-        {/* Drifting leaves */}
-        <div className="pointer-events-none absolute inset-0 z-10" aria-hidden="true">
-          {LEAVES.map((leaf, index) => (
-            <div
-              key={index}
-              className={`${styles.leaf} ${styles[leaf.depth]} ${
-                index >= MOBILE_LEAF_COUNT ? "max-lg:hidden" : ""
-              }`}
-              style={{
-                top: leaf.top,
-                left: leaf.left,
-                width: leaf.size,
-                height: leaf.size,
-                transform: `rotate(${leaf.rotate}deg)`,
-              }}
-              ref={(element) => {
-                leavesRef.current[index] = element;
-              }}
-            >
-              <LeafShape />
-            </div>
-          ))}
-        </div>
+                <svg viewBox="0 0 100 100" className={styles.orbit} aria-hidden="true">
+                  <circle className={styles.orbitPath} cx="50" cy="50" r="62" />
+                </svg>
 
-        {/* Mobile title */}
-        <div className={`${styles.mobileTitleViewport} absolute left-1/2 top-1/2 z-20 w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden px-6 sm:px-8 lg:hidden`}>
-          <div ref={mobileTitleTrackRef} className="relative top-0 w-full will-change-transform">
-            {SLIDES.map((slide) => (
-              <div key={slide.id} className={`${styles.mobileTitleSlide} flex flex-col items-center justify-center`}>
-                <Link
-                  href={WEBSITE_SHOP}
-                  className={`${styles.mobileTitleLink} ${styles.mobileTitle} pointer-events-auto text-center font-medium transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  {textSplit ? splitToChars(slide.title) : slide.title}
-                </Link>
+                {SLIDES.map((slide, i) => (
+                  <div key={slide.id} data-plate={i} className={styles.plate} style={i === 0 ? undefined : HIDDEN}>
+                    <Image
+                      src={slide.plate}
+                      alt={i === active ? slide.alt : ""}
+                      fill
+                      priority={i === 0}
+                      loading={i === 0 ? undefined : "eager"}
+                      fetchPriority={i === 0 ? "high" : "low"}
+                      sizes="(max-width: 1023px) 64vw, 35rem"
+                      className={cn(styles.plateImg, i === 0 && "slide-visual")}
+                    />
+                  </div>
+                ))}
+
+                {/* Mouse shortcut only — the tab bar is the accessible control. */}
+                {SLIDES.map((slide, i) => (
+                  <div
+                    key={slide.id}
+                    className={styles.arm}
+                    style={{ transform: `rotate(${angleFor(i, 0)}deg)` }}
+                    ref={(el) => { armsRef.current[i] = el; }}
+                    aria-hidden="true"
+                  >
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      className={cn(styles.thumb, i === active && styles.thumbActive)}
+                      style={{ transform: `rotate(${-angleFor(i, 0)}deg)` }}
+                      ref={(el) => { thumbsRef.current[i] = el; }}
+                      onClick={() => goTo(i)}
+                    >
+                      <Image src={slide.plate} alt="" fill sizes="64px" />
+                    </button>
+                  </div>
+                ))}
+
+                {SLIDES.map(({ id, badge: { Icon, text } }, i) => (
+                  <span key={id} data-badge={i} className={styles.badge} style={i === 0 ? undefined : HIDDEN} aria-hidden="true">
+                    <span className={styles.badgeIcon}><Icon className="size-4" /></span>
+                    {text}
+                  </span>
+                ))}
+
+                {LEAVES.map((leaf, i) => (
+                  <div
+                    key={i}
+                    ref={(el) => { leavesRef.current[i] = el; }}
+                    className={cn(styles.leaf, leaf.soft && `${styles.leafSoft} max-lg:hidden`)}
+                    style={{ top: leaf.top, left: leaf.left, width: leaf.size, height: leaf.size, transform: `rotate(${leaf.rotate}deg)` }}
+                    aria-hidden="true"
+                  >
+                    <LeafShape />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
 
-        {/* Desktop headline */}
-        <div className="absolute bottom-24 left-18 z-20 hidden h-[172px] w-[68%] overflow-hidden lg:block">
-          <div ref={headlineTrackRef} className="relative top-0 will-change-transform">
-            {SLIDES.map((slide) => (
-              <Link
-                key={slide.id}
-                href={WEBSITE_SHOP}
-                className={`${styles.headlineLink} pointer-events-auto flex h-[172px] items-end pb-2 text-[clamp(4.5rem,10vw,8.5rem)] leading-[1.02] font-semibold tracking-[-0.03em] transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
-                onClick={(event) => event.stopPropagation()}
-              >
-                {textSplit ? splitToChars(slide.headline) : slide.headline}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop writeup */}
-        <div className="absolute left-18 top-28 z-20 hidden h-[176px] w-[440px] overflow-hidden lg:block">
-          <div ref={writeupTrackRef} className="relative top-0 will-change-transform">
-            {SLIDES.map((slide) => (
-              <Link
-                key={slide.id}
-                href={WEBSITE_SHOP}
-                className="pointer-events-auto flex h-[176px] flex-col gap-3 rounded-sm transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-primary)]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <p className={`${styles.writeupTitle} writeup-title text-[44px] font-medium leading-[46px]`}>
-                  {slide.title}
-                </p>
-                <p className={`${styles.writeupDesc} writeup-desc max-w-[380px] text-base font-medium leading-6`}>
-                  {slide.writeup}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Counter */}
-        <div
-          className={`${styles.counterDock} absolute left-1/2 z-20 flex h-6 -translate-x-1/2 gap-2 overflow-hidden`}
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <div className="flex-1">
-            <div ref={counterRef} className="relative top-0 will-change-transform">
-              {SLIDES.map((slide) => (
-                <p key={slide.id} className={`${styles.counter} leading-5`}>
-                  {slide.id}
-                </p>
+          {/* ── Controls ── */}
+          <div className={styles.controls} {...hoverProps}>
+            <div className={styles.tabs} role="tablist" aria-label="Choose a collection" onKeyDown={onTabKeyDown}>
+              {SLIDES.map((slide, i) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  role="tab"
+                  id={`hero-tab-${i}`}
+                  aria-selected={i === active}
+                  aria-controls={`hero-slide-${i}`}
+                  tabIndex={i === active ? 0 : -1}
+                  className={cn(styles.tab, "ef-focus")}
+                  onClick={() => goTo(i)}
+                >
+                  <span className={styles.track} aria-hidden="true">
+                    <span className={styles.fill} ref={(el) => { fillsRef.current[i] = el; }} />
+                  </span>
+                  <span className={styles.tabText}>
+                    <span className={styles.tabNum}>{pad(i + 1)}</span>
+                    <span className={styles.tabLabel}>{slide.label}</span>
+                  </span>
+                </button>
               ))}
             </div>
-          </div>
-          <div className="flex-1">
-            <p className={`${styles.counter} leading-5`}>&mdash;</p>
-          </div>
-          <div className="flex-1">
-            <p className={`${styles.counter} leading-5`}>{TOTAL_SLIDES}</p>
-          </div>
-        </div>
 
-        {/* Preview thumbnails with progress bars */}
-        <div
-          className={`slider-preview ${styles.previewDock} absolute right-8 z-20 flex w-[34%] gap-2.5 max-lg:right-1/2 max-lg:w-[92%] max-lg:translate-x-1/2 max-lg:gap-1.5`}
-          role="tablist"
-          aria-label="Slide thumbnails"
-        >
-          {SLIDES.map((slide, index) => (
-            <div
-              key={slide.id}
-              className={`preview ${styles.preview} relative flex-1 cursor-pointer overflow-hidden after:absolute after:inset-0 after:transition-colors after:duration-300 after:content-[''] ${
-                index === 0 ? "active" : ""
-              }`}
-              ref={(element) => {
-                previewsRef.current[index] = element;
-              }}
-            >
-              <Image
-                src={slide.plate}
-                alt={slide.alt}
-                fill
-                sizes="(max-width: 1024px) 24vw, 12vw"
-                className={styles.previewImg}
-              />
-              <div
-                ref={(element) => {
-                  progressBarsRef.current[index] = element;
-                }}
-                className={`${styles.progressBar} absolute bottom-0 left-0 z-10 h-[3px] w-full origin-left scale-x-0`}
-              />
-            </div>
-          ))}
+            {canAutoplay && (
+              <button
+                type="button"
+                className={cn("ef-icon-btn", styles.playBtn)}
+                onClick={() => setUserPaused((p) => !p)}
+                aria-label={userPaused ? "Play slideshow" : "Pause slideshow"}
+              >
+                {userPaused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
+              </button>
+            )}
+          </div>
         </div>
-
-        {/* Indicators */}
-        <div
-          ref={indicatorsRef}
-          className={`${styles.indicators} pointer-events-none absolute left-1/2 top-1/2 z-20 flex w-3/4 -translate-x-1/2 -translate-y-1/2 justify-between max-lg:w-[94%]`}
-        >
-          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform max-lg:text-[28px]`}>+</p>
-          <p className={`${styles.indicator} relative text-[40px] font-extralight will-change-transform max-lg:text-[28px]`}>+</p>
-        </div>
-      </div>
+      </section>
     </>
   );
 };

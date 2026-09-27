@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-const BASE = 'h-9 w-full rounded-sm text-base font-semibold uppercase'
+// Pill CTA sized to the storefront .ef-btn (44px touch target, sentence case).
+const BASE = 'h-11 w-full rounded-full text-[0.9375rem] font-medium'
 
 export const BrandButton = ({ className, ...props }) => (
     <Button

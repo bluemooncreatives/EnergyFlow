@@ -127,7 +127,7 @@ const LoginPage = () => {
                     {!otpEmail ? (
                         <>
                             <div className='mb-8 flex flex-col items-start'>
-                                <h1 className='font-header text-5xl text-foreground'>Sign In</h1>
+                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink-strong'>Sign in</h1>
                                 <p className='mt-2 text-left text-[15px] leading-relaxed text-muted-foreground'>Login into your account by filling out the form below.</p>
                             </div>
                             <Form {...form}>
@@ -171,14 +171,14 @@ const LoginPage = () => {
                                     </div>
 
                                     <div className='pt-1'>
-                                        <ButtonLoading loading={loading} type="submit" text="Login" variant="brand" className="h-9 w-full rounded-sm text-base font-semibold uppercase cursor-pointer" />
+                                        <ButtonLoading loading={loading} type="submit" text="Login" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
                                     </div>
 
                                     <div className="relative my-1">
                                         <div className="absolute inset-0 flex items-center">
                                             <span className="w-full border-t" />
                                         </div>
-                                        <div className="relative flex justify-center text-xs uppercase">
+                                        <div className="relative flex justify-center text-[0.8125rem]">
                                             <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
                                         </div>
                                     </div>

@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHydrated } from '@/hooks/useHydrated'
 import {
     BadgeCheck,
     Lock,
@@ -53,6 +54,7 @@ const Checkout = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const cart = useSelector(store => store.cartStore)
+    const hydrated = useHydrated()
     const authStore = useSelector(store => store.authStore)
     const [verifiedCartData, setVerifiedCartData] = useState([])
     const { data: getVerifiedCartData } = useFetch('/api/cart-verification', 'POST', { data: cart.products })
@@ -379,17 +381,17 @@ const Checkout = () => {
     // ── reusable bits ──────────────────────────────────────────────
     const SectionHeading = ({ step, icon: Icon, title, hint }) => (
         <div className="mb-5 flex items-center gap-3">
-            <span className="flex size-7 flex-shrink-0 items-center justify-center rounded-full bg-[var(--dark-red)] text-[12px] font-semibold text-white tabular-nums">
+            <span className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-brand text-[0.8125rem] font-semibold text-white tabular-nums">
                 {step}
             </span>
             <div className="flex flex-1 items-center gap-2">
-                <Icon className="size-[18px] text-[var(--dark-red)]" strokeWidth={1.75} />
-                <h2 className="font-neue text-base font-semibold uppercase tracking-[0.06em] text-foreground">
+                <Icon className="size-[18px] text-brand" strokeWidth={1.75} aria-hidden="true" />
+                <h2 className="font-neue text-[1.125rem] font-medium tracking-[-0.01em] text-ink-strong">
                     {title}
                 </h2>
             </div>
             {hint && (
-                <span className="hidden text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:block">
+                <span className="hidden text-[0.8125rem] text-ink-muted sm:block">
                     {hint}
                 </span>
             )}
@@ -421,8 +423,8 @@ const Checkout = () => {
                 <div className='fixed inset-0 z-[400] flex items-center justify-center bg-[var(--brand-ink)]/40 px-4 backdrop-blur-sm'>
                     <div className='flex w-full max-w-sm flex-col items-center gap-5 rounded-2xl border border-border/60 bg-background px-8 py-10 text-center shadow-xl'>
                         <div className='relative flex size-16 items-center justify-center'>
-                            <span className='absolute inset-0 animate-spin rounded-full border-[3px] border-[var(--dark-red)]/15 border-t-[var(--dark-red)]' />
-                            <Package className='size-6 text-[var(--dark-red)]' strokeWidth={1.75} />
+                            <span className='absolute inset-0 animate-spin rounded-full border-[3px] border-brand/15 border-t-brand' />
+                            <Package className='size-6 text-brand' strokeWidth={1.75} />
                         </div>
                         <div>
                             <h4 className='font-neue text-lg font-semibold text-foreground'>Confirming your order…</h4>
@@ -434,14 +436,25 @@ const Checkout = () => {
 
             <WebsiteBreadcrumb props={breadCrumb} />
 
-            {cart.count === 0
+            {/* The cart is restored from localStorage after hydration; until then
+                render a neutral placeholder so the server's empty cart and the
+                client's restored cart never produce two different trees. */}
+            {!hydrated
+                ? <section className='ef-section ef-section--tight' aria-busy='true'>
+                    <div className='ef-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]'>
+                        <div className='ef-card h-96 animate-pulse' />
+                        <div className='ef-card h-80 animate-pulse' />
+                    </div>
+                </section>
+                : cart.count === 0
                 ?
-                <section className='website-gutter py-20 lg:py-28'>
-                    <div className='mx-auto flex max-w-md flex-col items-center rounded-2xl border border-border/60 bg-background px-8 py-14 text-center shadow-sm'>
-                        <div className='flex size-16 items-center justify-center rounded-full bg-[var(--brand-cream)]/60 text-[var(--dark-red)]'>
+                <section className='ef-section ef-section--tight'>
+                    <div className='ef-container'>
+                    <div className='ef-card mx-auto max-w-md items-center px-8 py-14 text-center' style={{ borderRadius: 'var(--radius-tile)' }}>
+                        <div className='flex size-16 items-center justify-center rounded-full bg-tint-honey text-brand'>
                             <Truck className='size-8' strokeWidth={1.5} />
                         </div>
-                        <h4 className='font-neue mt-5 text-2xl font-semibold'>Your cart is empty</h4>
+                        <h2 className='font-neue mt-5 text-2xl font-medium tracking-[-0.02em] text-ink-strong'>Your cart is empty</h2>
                         <p className='font-neue mt-2 max-w-[260px] text-sm text-muted-foreground'>
                             There&apos;s nothing to check out yet. Discover pieces you&apos;ll love and come back to complete your order.
                         </p>
@@ -451,10 +464,11 @@ const Checkout = () => {
                             </BrandButton>
                         </div>
                     </div>
+                    </div>
                 </section>
                 :
-                <section className='website-gutter py-10 lg:py-14'>
-                    <div className='mx-auto grid w-full items-start gap-8 lg:grid-cols-[1fr_minmax(360px,420px)] lg:gap-10'>
+                <section className='ef-section ef-section--tight'>
+                    <div className='ef-container grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)] lg:gap-12'>
 
                         {/* ───────────────── LEFT: details + payment ───────────────── */}
                         <div className='min-w-0'>
@@ -593,12 +607,12 @@ const Checkout = () => {
                                         />
 
                                         {/* Save address back to profile for faster checkout next time */}
-                                        <label className='sm:col-span-2 flex cursor-pointer items-start gap-3 rounded-sm border border-border/60 p-3.5 transition-colors hover:border-border'>
+                                        <label className='sm:col-span-2 flex cursor-pointer items-start gap-3 rounded-card bg-surface-card p-4 shadow-[inset_0_0_0_1px_var(--line-soft)] transition-shadow hover:shadow-[inset_0_0_0_1px_var(--line-strong)]'>
                                             <input
                                                 type='checkbox'
                                                 checked={saveAddress}
                                                 onChange={(e) => setSaveAddress(e.target.checked)}
-                                                className='mt-0.5 size-4 flex-shrink-0 cursor-pointer accent-[var(--dark-red)]'
+                                                className='mt-0.5 size-4 flex-shrink-0 cursor-pointer accent-[var(--brand-primary)]'
                                             />
                                             <span className='text-[13px] text-muted-foreground'>
                                                 <span className='font-semibold text-foreground'>Save this address to my profile</span> for faster checkout next time.
@@ -613,7 +627,7 @@ const Checkout = () => {
                                 <SectionHeading step={3} icon={Wallet} title='Payment Method' hint='Choose how to pay' />
                                 <div className='space-y-3'>
                                     {/* Full / online */}
-                                    <label className={`flex cursor-pointer items-center gap-4 rounded-sm border p-4 transition-all ${paymentMethod === 'full' ? 'border-[var(--dark-red)] bg-[var(--dark-red)]/[0.04] shadow-sm' : 'border-border/60 hover:border-border'}`}>
+                                    <label className={`flex cursor-pointer items-center gap-4 rounded-card border p-4 transition-all ${paymentMethod === 'full' ? 'border-brand bg-brand/[0.04] shadow-sm' : 'border-border/60 hover:border-border'}`}>
                                         <input
                                             type="radio"
                                             name="paymentMethod"
@@ -622,8 +636,8 @@ const Checkout = () => {
                                             onChange={() => setPaymentMethod('full')}
                                             className="sr-only"
                                         />
-                                        <span className={`flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${paymentMethod === 'full' ? 'border-[var(--dark-red)]' : 'border-muted-foreground/40'}`}>
-                                            {paymentMethod === 'full' && <span className='size-2.5 rounded-full bg-[var(--dark-red)]' />}
+                                        <span className={`flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${paymentMethod === 'full' ? 'border-brand' : 'border-muted-foreground/40'}`}>
+                                            {paymentMethod === 'full' && <span className='size-2.5 rounded-full bg-brand' />}
                                         </span>
                                         <div className='flex-1'>
                                             <div className='flex items-center gap-2'>
@@ -632,11 +646,11 @@ const Checkout = () => {
                                             </div>
                                             <p className='mt-0.5 text-[11px] text-muted-foreground'>UPI, Cards, Net Banking & Wallets — secured by Razorpay</p>
                                         </div>
-                                        <span className='font-neue text-base font-semibold text-[var(--dark-red)]'>{fmt(totalAmount)}</span>
+                                        <span className='font-neue text-base font-semibold text-brand'>{fmt(totalAmount)}</span>
                                     </label>
 
                                     {/* COD */}
-                                    <label className={`flex cursor-pointer items-center gap-4 rounded-sm border p-4 transition-all ${paymentMethod === 'cod' ? 'border-[var(--dark-red)] bg-[var(--dark-red)]/[0.04] shadow-sm' : 'border-border/60 hover:border-border'}`}>
+                                    <label className={`flex cursor-pointer items-center gap-4 rounded-card border p-4 transition-all ${paymentMethod === 'cod' ? 'border-brand bg-brand/[0.04] shadow-sm' : 'border-border/60 hover:border-border'}`}>
                                         <input
                                             type="radio"
                                             name="paymentMethod"
@@ -645,8 +659,8 @@ const Checkout = () => {
                                             onChange={() => setPaymentMethod('cod')}
                                             className="sr-only"
                                         />
-                                        <span className={`flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${paymentMethod === 'cod' ? 'border-[var(--dark-red)]' : 'border-muted-foreground/40'}`}>
-                                            {paymentMethod === 'cod' && <span className='size-2.5 rounded-full bg-[var(--dark-red)]' />}
+                                        <span className={`flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 transition-colors ${paymentMethod === 'cod' ? 'border-brand' : 'border-muted-foreground/40'}`}>
+                                            {paymentMethod === 'cod' && <span className='size-2.5 rounded-full bg-brand' />}
                                         </span>
                                         <div className='flex-1'>
                                             <p className='font-neue text-base font-semibold text-foreground'>Cash on Delivery</p>
@@ -660,13 +674,13 @@ const Checkout = () => {
 
                         {/* ───────────────── RIGHT: order summary ───────────────── */}
                         <aside className='w-full'>
-                            <div className='space-y-4 lg:sticky lg:top-6'>
+                            <div className='space-y-4 lg:sticky lg:top-28'>
 
-                                <div className='overflow-hidden rounded-md border border-border/60 bg-background shadow-sm'>
+                                <div className='overflow-hidden rounded-[var(--radius-tile)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                     {/* header */}
-                                    <div className='flex items-center justify-between border-b border-border/60 px-5 py-4'>
-                                        <h2 className='font-neue text-lg font-semibold uppercase tracking-[0.04em]'>Order Summary</h2>
-                                        <span className='rounded-full bg-muted/60 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>
+                                    <div className='flex items-center justify-between border-b border-line-soft px-5 py-4 sm:px-6'>
+                                        <h2 className='font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong'>Order summary</h2>
+                                        <span className='rounded-full bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
                                             {cart.count} {cart.count === 1 ? 'item' : 'items'}
                                         </span>
                                     </div>
@@ -693,20 +707,20 @@ const Checkout = () => {
 
                                                     <div className='flex min-w-0 flex-1 flex-col'>
                                                         <div className='flex items-start justify-between gap-2'>
-                                                            <h4 className='line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground'>
+                                                            <h3 className='line-clamp-2 font-neue text-[0.875rem] font-medium leading-snug text-ink-strong'>
                                                                 <Link href={WEBSITE_PRODUCT_DETAILS(product.url)}>{product.name}</Link>
-                                                            </h4>
+                                                            </h3>
                                                             <button
                                                                 type='button'
                                                                 aria-label='Remove item'
                                                                 onClick={() => dispatch(removeFromCart({ productId: product.productId, variantId: product.variantId }))}
-                                                                className='flex-shrink-0 cursor-pointer text-muted-foreground/50 transition-colors hover:text-[var(--dark-red)]'
+                                                                className='flex-shrink-0 cursor-pointer text-muted-foreground/50 transition-colors hover:text-brand'
                                                             >
                                                                 <Trash2 className='size-4' />
                                                             </button>
                                                         </div>
 
-                                                        <span className='mt-1 w-fit rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground'>
+                                                        <span className='mt-1 w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
                                                             {product.size}
                                                         </span>
 
@@ -772,7 +786,7 @@ const Checkout = () => {
                                                             )}
                                                         />
                                                     </div>
-                                                    <ButtonLoading type="submit" text="Apply" className="h-9 shrink-0 rounded-sm px-5 cursor-pointer" loading={couponLoading} />
+                                                    <ButtonLoading type="submit" text="Apply" className="h-11 shrink-0 rounded-full px-6 cursor-pointer" loading={couponLoading} />
                                                 </form>
                                             </Form>
                                             :
@@ -784,7 +798,7 @@ const Checkout = () => {
                                                         <p className='font-neue text-sm font-semibold uppercase text-emerald-700'>{couponCode}</p>
                                                     </div>
                                                 </div>
-                                                <button type='button' onClick={removeCoupon} aria-label='Remove coupon' className='cursor-pointer text-muted-foreground transition-colors hover:text-[var(--dark-red)]'>
+                                                <button type='button' onClick={removeCoupon} aria-label='Remove coupon' className='cursor-pointer text-muted-foreground transition-colors hover:text-brand'>
                                                     <XCircle className='size-5' />
                                                 </button>
                                             </div>
@@ -829,7 +843,7 @@ const Checkout = () => {
                                         )}
 
                                         {/* payment split context */}
-                                        <div className='mt-1 rounded-lg bg-[var(--dark-red)]/[0.05] px-3 py-2'>
+                                        <div className='mt-1 rounded-card bg-tint-honey/60 px-3 py-2.5'>
                                             {paymentMethod === 'cod'
                                                 ? (
                                                     <div className='flex items-center justify-between text-[13px]'>
@@ -840,7 +854,7 @@ const Checkout = () => {
                                                 : (
                                                     <div className='flex items-center justify-between text-[13px]'>
                                                         <span className='text-muted-foreground'>Pay now</span>
-                                                        <span className='font-semibold text-[var(--dark-red)]'>{fmt(payableAmount)}</span>
+                                                        <span className='font-semibold text-brand'>{fmt(payableAmount)}</span>
                                                     </div>
                                                 )}
                                         </div>
@@ -853,11 +867,11 @@ const Checkout = () => {
                                             type="submit"
                                             text={ctaText}
                                             loading={placingOrder}
-                                            className="h-12 w-full rounded-sm bg-[var(--dark-red)] text-base font-semibold uppercase tracking-[0.04em] hover:bg-[var(--dark-red-2)] cursor-pointer"
+                                            className="h-12 w-full rounded-full bg-brand text-[0.9375rem] font-medium hover:bg-brand-hover cursor-pointer"
                                         />
                                         <Link
                                             href={WEBSITE_CART}
-                                            className='mt-3 flex items-center justify-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground'
+                                            className='mt-3 flex items-center justify-center gap-1.5 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-brand'
                                         >
                                             ← Edit cart
                                         </Link>
@@ -868,7 +882,7 @@ const Checkout = () => {
                                 <div className='grid grid-cols-3 gap-2.5'>
                                     {TRUST.map(({ Icon, label }) => (
                                         <div key={label} className='flex flex-col items-center gap-1.5 rounded-xl border border-border/50 bg-background px-2 py-3 text-center'>
-                                            <Icon className='size-5 text-[var(--dark-red)]' strokeWidth={1.6} />
+                                            <Icon className='size-5 text-brand' strokeWidth={1.6} />
                                             <span className='text-[10px] font-medium leading-tight text-muted-foreground'>{label}</span>
                                         </div>
                                     ))}

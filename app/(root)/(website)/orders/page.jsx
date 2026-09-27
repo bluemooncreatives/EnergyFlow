@@ -20,10 +20,10 @@ const Orders = () => {
         <div>
             <WebsiteBreadcrumb props={breadCrumbData} />
             <UserPanelLayout>
-                <div className="rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background">
+                <div className="rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
 
                     {/* Section header */}
-                    <div className="flex items-center gap-2 border-b border-[var(--dark-red)]/20 px-5 py-4">
+                    <div className="flex items-center gap-2 border-b border-line-soft px-5 py-4">
                         <Package className="size-4 text-[var(--brand-primary)]" />
                         <h2 className="text-lg font-semibold text-[var(--brand-primary)]">
                             My Orders
@@ -34,17 +34,17 @@ const Orders = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b border-[var(--dark-red)]/20 bg-[var(--brand-warm-bg)]/40">
-                                    <th className="px-5 py-3 text-left font-neue text-sm font-semibold uppercase tracking-[0.05em] text-muted-foreground">
+                                <tr className="border-b border-line-soft bg-surface-well/70">
+                                    <th className="px-5 py-3 text-left font-neue text-[0.8125rem] font-medium text-ink-muted">
                                         #
                                     </th>
-                                    <th className="px-5 py-3 text-left font-neue text-sm font-semibold uppercase tracking-[0.05em] text-muted-foreground text-nowrap">
+                                    <th className="px-5 py-3 text-left font-neue text-[0.8125rem] font-medium text-ink-muted text-nowrap">
                                         Order ID
                                     </th>
-                                    <th className="px-5 py-3 text-left font-neue text-sm font-semibold uppercase tracking-[0.05em] text-muted-foreground text-nowrap">
+                                    <th className="px-5 py-3 text-left font-neue text-[0.8125rem] font-medium text-ink-muted text-nowrap">
                                         Items
                                     </th>
-                                    <th className="px-5 py-3 text-left font-neue text-sm font-semibold uppercase tracking-[0.05em] text-muted-foreground">
+                                    <th className="px-5 py-3 text-left font-neue text-[0.8125rem] font-medium text-ink-muted">
                                         Amount
                                     </th>
                                 </tr>
@@ -52,7 +52,7 @@ const Orders = () => {
                             <tbody>
                                 {loading ? (
                                     Array.from({ length: 5 }).map((_, i) => (
-                                        <tr key={i} className="border-b border-[var(--dark-red)]/20">
+                                        <tr key={i} className="border-b border-line-soft">
                                             {Array.from({ length: 4 }).map((__, j) => (
                                                 <td key={j} className="px-5 py-3.5">
                                                     <span className="inline-block h-3.5 w-24 animate-pulse rounded bg-border/60" />
@@ -76,14 +76,14 @@ const Orders = () => {
                                     </tr>
                                 ) : (
                                     orders.map((order, i) => (
-                                        <tr key={order._id} className="border-b border-[var(--dark-red)]/20 transition-colors hover:bg-[var(--brand-warm-bg)]/30 last:border-0">
+                                        <tr key={order._id} className="border-b border-line-soft transition-colors hover:bg-surface-well/60 last:border-0">
                                             <td className="px-5 py-3.5 font-neue text-sm font-medium text-muted-foreground">
                                                 {i + 1}
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 <Link
                                                     href={WEBSITE_ORDER_DETAILS(order.order_id)}
-                                                    className="font-neue text-sm font-medium text-[var(--dark-red)] underline underline-offset-2 transition hover:text-[var(--dark-red-2)]"
+                                                    className="font-neue text-sm font-medium text-brand underline underline-offset-2 transition hover:text-brand-hover"
                                                 >
                                                     {order.order_id}
                                                 </Link>

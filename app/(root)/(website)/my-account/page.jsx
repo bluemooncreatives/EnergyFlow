@@ -14,7 +14,7 @@ const breadCrumbData = {
 }
 
 const StatCard = ({ icon: Icon, label, value, loading }) => (
-    <div className="group flex items-center justify-between gap-4 rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
+    <div className="group flex items-center justify-between gap-4 rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)]">
         <div>
             <p className="text-sm font-medium text-foreground/60">
                 {label}
@@ -27,7 +27,7 @@ const StatCard = ({ icon: Icon, label, value, loading }) => (
                 )}
             </p>
         </div>
-        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[var(--dark-red)] shadow-[var(--shadow-brand)]">
+        <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand shadow-[var(--shadow-brand)]">
             <Icon className="size-5 text-white" />
         </div>
     </div>
@@ -71,9 +71,9 @@ const MyAccount = () => {
                     </div>
 
                     {/* Recent Orders */}
-                    <div className="rounded-[var(--radius)] border border-[var(--dark-red)]/20 bg-background">
+                    <div className="rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
                         {/* Section header */}
-                        <div className="flex items-center justify-between border-b border-[var(--dark-red)]/20 px-5 py-4">
+                        <div className="flex items-center justify-between border-b border-line-soft px-5 py-4">
                             <div className="flex items-center gap-2">
                                 <Package className="size-4 text-[var(--brand-primary)]" />
                                 <h3 className="text-lg font-semibold text-[var(--brand-primary)]">
@@ -90,7 +90,7 @@ const MyAccount = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="border-b border-[var(--dark-red)]/20 bg-[var(--brand-warm-bg)]/40">
+                                    <tr className="border-b border-line-soft bg-surface-well/70">
                                         <th className="px-5 py-3 text-left text-sm font-semibold text-foreground/60">
                                             #
                                         </th>
@@ -108,7 +108,7 @@ const MyAccount = () => {
                                 <tbody>
                                     {loading ? (
                                         Array.from({ length: 3 }).map((_, i) => (
-                                            <tr key={i} className="border-b border-[var(--dark-red)]/20">
+                                            <tr key={i} className="border-b border-line-soft">
                                                 {Array.from({ length: 4 }).map((__, j) => (
                                                     <td key={j} className="px-5 py-3.5">
                                                         <span className="inline-block h-3.5 w-20 animate-pulse rounded bg-border/60" />
@@ -130,14 +130,14 @@ const MyAccount = () => {
                                         </tr>
                                     ) : (
                                         recentOrders.map((order, i) => (
-                                            <tr key={order._id} className="border-b border-border/60 transition-colors hover:bg-[var(--brand-warm-bg)]/30 last:border-0">
+                                            <tr key={order._id} className="border-b border-border/60 transition-colors hover:bg-surface-well/60 last:border-0">
                                                 <td className="px-5 py-3.5 text-sm font-medium text-foreground/60">
                                                     {i + 1}
                                                 </td>
                                                 <td className="px-5 py-3.5">
                                                     <Link
                                                         href={WEBSITE_ORDER_DETAILS(order.order_id)}
-                                                        className="text-sm font-medium text-[var(--dark-red)] underline underline-offset-2 transition hover:text-[var(--dark-red-2)]"
+                                                        className="text-sm font-medium text-brand underline underline-offset-2 transition hover:text-brand-hover"
                                                     >
                                                         {order.order_id}
                                                     </Link>
@@ -163,4 +163,4 @@ const MyAccount = () => {
 }
 
 export default MyAccount
-
+

@@ -98,7 +98,7 @@ const ContactPage = () => {
           <div className={styles.headingSpacer} />
           <div className={styles.headingRight}>
             <div className={styles.contactHeading}>
-              <h1 className="font-header">Contact</h1>
+              <h1>Get in <span>touch</span></h1>
             </div>
           </div>
         </div>

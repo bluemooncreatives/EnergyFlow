@@ -133,25 +133,23 @@ const ProductReveiw = ({ productId }) => {
 
 
     return (
-        <div className="mb-20 rounded-[var(--admin-shell-radius)] border border-border/60 bg-background shadow-sm">
-            <div className="border-b border-border/60 px-5 py-4 lg:px-6 lg:py-5">
-                <p className="text-[0.95rem] font-semibold uppercase text-[var(--dark-red)]/60">
-                    What Shoppers Say
-                </p>
-                <h2 className="mt-1 font-neue text-[clamp(1.4rem,2.6vw,2rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]">
-                    Rating &amp; Reviews
+        <div className="rounded-[var(--radius-tile)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]">
+            <div className="flex flex-col items-start gap-3 border-b border-line-soft px-5 py-5 lg:px-8 lg:py-6">
+                <span className="ef-eyebrow">What shoppers say</span>
+                <h2 className="ef-title">
+                    Ratings &amp; <span className="ef-title__accent">reviews</span>
                 </h2>
             </div>
-            <div className="p-5 lg:p-6">
+            <div className="p-5 lg:p-8">
                 <div className='flex justify-between flex-wrap items-center'>
                     <div className='md:w-1/2 w-full md:flex md:gap-10 md:mb-0 mb-5'>
                         <div className='md:w-[200px] w-full md:mb-0 mb-5'>
                             <h4 className='text-center text-8xl font-semibold'>{reviewCount?.averageRating ?? '0.0'}</h4>
-                            <div className='flex justify-center gap-1 text-[var(--dark-red)]'>
+                            <div className='flex justify-center gap-1 text-brand'>
                                 {Array.from({ length: 5 }).map((_, index) => (
                                     <Star
                                         key={index}
-                                        className={`size-4 ${index < Math.round(Number(reviewCount?.averageRating || 0)) ? 'fill-[var(--dark-red)] text-[var(--dark-red)]' : 'text-foreground/25'}`}
+                                        className={`size-4 ${index < Math.round(Number(reviewCount?.averageRating || 0)) ? 'fill-brand text-brand' : 'text-foreground/25'}`}
                                     />
                                 ))}
                             </div>
@@ -166,9 +164,9 @@ const ProductReveiw = ({ productId }) => {
 
                                 {[5, 4, 3, 2, 1].map(rating => (
                                     <div key={rating} className='flex items-center gap-2 mb-2'>
-                                        <div className='flex items-center gap-1 text-[var(--dark-red)]'>
+                                        <div className='flex items-center gap-1 text-brand'>
                                             <p className='w-3 text-foreground'>{rating}</p>
-                                            <Star className="size-3 fill-[var(--dark-red)] text-[var(--dark-red)]" />
+                                            <Star className="size-3 fill-brand text-brand" />
                                         </div>
                                         <Progress value={reviewCount?.percentage?.[rating] || 0} />
                                         <span className='w-6 text-sm text-muted-foreground'>{reviewCount?.rating?.[rating] || 0}</span>
@@ -183,15 +181,15 @@ const ProductReveiw = ({ productId }) => {
                     </div>
 
                     <div className='md:w-1/2 w-full md:text-end text-center'>
-                        <Button onClick={() => setIsReview(!isReview)} type="button" variant="outline" className="md:w-fit w-full rounded-md border-border/70 py-6 px-10 font-semibold uppercase tracking-[0.18em]">
+                        <Button onClick={() => setIsReview(!isReview)} type="button" variant="outline" className="md:w-fit w-full rounded-full border-line-strong h-12 px-10 font-medium">
                             Write Review
                         </Button>
                     </div>
                 </div>
 
                 {isReview &&
-                    <div className='my-6 rounded-[var(--radius)] border border-border/60 bg-muted/20 p-5 lg:p-6'>
-                        <h4 className='mb-1 font-neue text-[clamp(1.2rem,2.2vw,1.6rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]'>Write A Review</h4>
+                    <div className='my-6 rounded-[var(--radius-card)] bg-surface-sunken p-5 lg:p-6'>
+                        <h3 className='mb-1 font-neue text-[1.375rem] font-medium tracking-[-0.02em] text-ink-strong'>Write a review</h3>
 
                         {!auth
                             ?
@@ -214,7 +212,7 @@ const ProductReveiw = ({ productId }) => {
                                                 name="rating"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel className='mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground'>Your Rating</FormLabel>
+                                                        <FormLabel className='mb-1 text-[0.875rem] font-medium text-ink-strong-foreground'>Your Rating</FormLabel>
                                                         <FormControl>
                                                             <StarRatingField value={field.value} onChange={field.onChange} />
                                                         </FormControl>
@@ -229,7 +227,7 @@ const ProductReveiw = ({ productId }) => {
                                                 name="title"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel className='mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground'>Title</FormLabel>
+                                                        <FormLabel className='mb-1 text-[0.875rem] font-medium text-ink-strong-foreground'>Title</FormLabel>
                                                         <FormControl>
                                                             <Input type="text" placeholder="Sum up your review" {...field} />
                                                         </FormControl>
@@ -244,7 +242,7 @@ const ProductReveiw = ({ productId }) => {
                                                 name="review"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel className='mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted-foreground'>Review</FormLabel>
+                                                        <FormLabel className='mb-1 text-[0.875rem] font-medium text-ink-strong-foreground'>Review</FormLabel>
                                                         <FormControl>
                                                             <Textarea placeholder="Write your comment here..." className='min-h-28' {...field} />
                                                         </FormControl>
@@ -254,7 +252,7 @@ const ProductReveiw = ({ productId }) => {
                                             />
                                         </div>
 
-                                        <ButtonLoading loading={loading} type="submit" text="Submit Review" variant="brand" className="h-11 w-full cursor-pointer text-[11px] font-semibold uppercase tracking-[0.2em] sm:w-fit sm:px-10" />
+                                        <ButtonLoading loading={loading} type="submit" text="Submit Review" variant="brand" className="h-12 w-full cursor-pointer rounded-full text-[0.9375rem] font-medium sm:w-fit sm:px-10" />
 
                                     </form>
                                 </Form>
@@ -264,12 +262,12 @@ const ProductReveiw = ({ productId }) => {
                 }
 
 
-                <div className='mt-10 border-t border-border/60 pt-5'>
-                    <h5 className='font-neue text-[clamp(1.1rem,2vw,1.4rem)] font-medium uppercase leading-[1.1] text-[var(--dark-red-2)]'>{data?.pages[0]?.totalReview || 0} Reviews</h5>
+                <div className='mt-10 border-t border-line-soft pt-6'>
+                    <h3 className='font-neue text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong'>{data?.pages[0]?.totalReview || 0} {(data?.pages[0]?.totalReview || 0) === 1 ? 'review' : 'reviews'}</h3>
 
                     <div className='mt-10'>
                         {(data?.pages?.[0]?.totalReview ?? 0) === 0 && !isFetching && (
-                            <div className='rounded-md border border-dashed border-border/70 bg-muted/20 px-5 py-10 text-center'>
+                            <div className='rounded-[var(--radius-card)] bg-surface-well/70 px-5 py-10 text-center'>
                                 <Star className='mx-auto mb-3 size-7 text-foreground/25' />
                                 <p className='font-semibold text-foreground'>No reviews yet</p>
                                 <p className='mt-1 text-sm text-muted-foreground'>Be the first to share your thoughts on this product.</p>
@@ -285,7 +283,7 @@ const ProductReveiw = ({ productId }) => {
                         ))}
 
                         {hasNextPage &&
-                            <ButtonLoading text="Load More" type="button" loading={isFetching} onClick={fetchNextPage} variant="brand" className="h-10 text-[11px] font-semibold uppercase tracking-[0.2em]" />
+                            <ButtonLoading text="Load More" type="button" loading={isFetching} onClick={fetchNextPage} variant="brand" className="h-11 rounded-full px-6 text-[0.9375rem] font-medium" />
                         }
 
                     </div>

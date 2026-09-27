@@ -3,17 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useDispatch, useSelector } from 'react-redux'
-import { ArrowRight, Check, Plus, Star } from 'lucide-react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
-import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
-import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
-import { addIntoCart } from '@/store/reducer/cartReducer'
-import { showToast } from '@/lib/showToast'
-
-gsap.registerPlugin(ScrollTrigger)
+import { ArrowRight, Clock3 } from 'lucide-react'
+import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { useReveal } from '@/hooks/useReveal'
+import Section from './storefront/Section'
+import SectionHeader from './storefront/SectionHeader'
+import ProductCard from './storefront/ProductCard'
 
 const DEAL_BANNER = {
     title: 'Gift Boxes, Ready To Send',
@@ -23,17 +18,12 @@ const DEAL_BANNER = {
     href: WEBSITE_SHOP,
 }
 
-const formatPrice = (price) =>
-    typeof price === 'number'
-        ? price.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
-        : null
-
-// Every card in this rail shares one deadline, so one interval drives them all.
-// It runs to the end of the current month: the Product model carries no
-// per-product deal expiry to read, and a window of days is what the four-cell
-// layout is built to show. State starts null so the server HTML and the first
-// client render agree — a live clock rendered on the server mismatches on
-// hydration.
+// Every card in this rail shares one deadline, so one interval drives the one
+// countdown in the header. It runs to the end of the current month: the Product
+// model carries no per-product deal expiry to read. Rolling past midnight on the
+// 1st simply starts the next month's window. State starts null so the server
+// HTML and the first client render agree — a live clock rendered on the server
+// mismatches on hydration.
 const useDealCountdown = () => {
     const [remaining, setRemaining] = useState(null)
 
@@ -59,229 +49,115 @@ const useDealCountdown = () => {
     return remaining
 }
 
-const CountdownCell = ({ value, label }) => (
-    <div className="flex flex-1 flex-col items-center justify-center rounded-md border border-border px-1 py-2">
-        <span className="text-base font-semibold tabular-nums leading-tight text-foreground">{value}</span>
-        <span className="text-xs text-muted-foreground">{label}</span>
-    </div>
-)
+const pad = (n) => (n === undefined || n === null ? '--' : String(n).padStart(2, '0'))
 
-const Countdown = ({ remaining }) => (
-    <div className="flex w-full gap-2">
-        <CountdownCell value={remaining ? remaining.days : '--'} label="Days" />
-        <CountdownCell value={remaining ? remaining.hours : '--'} label="Hours" />
-        <CountdownCell value={remaining ? remaining.minutes : '--'} label="Mins" />
-        <CountdownCell value={remaining ? remaining.seconds : '--'} label="Sec" />
-    </div>
-)
+const Countdown = ({ remaining }) => {
+    const cells = [
+        { value: remaining?.days, label: 'days' },
+        { value: remaining?.hours, label: 'hrs' },
+        { value: remaining?.minutes, label: 'min' },
+        { value: remaining?.seconds, label: 'sec' },
+    ]
+
+    return (
+        <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-ink-body">
+                <Clock3 className="size-4 text-amber-ink" aria-hidden="true" />
+                Offer ends in
+            </span>
+            {/* The ticking digits are hidden from assistive tech (a per-second
+                live region would be unbearable); the summary label carries it. */}
+            <div
+                className="flex items-center gap-1.5"
+                role="timer"
+                aria-label={remaining ? `${remaining.days} days ${remaining.hours} hours left` : 'Loading offer timer'}
+            >
+                {cells.map((cell) => (
+                    <span
+                        key={cell.label}
+                        aria-hidden="true"
+                        className="flex min-w-[3.25rem] flex-col items-center rounded-xl bg-surface-card px-2 py-1.5 shadow-[inset_0_0_0_1px_var(--line-soft)]"
+                    >
+                        <span className="text-base font-semibold tabular-nums leading-tight text-ink-strong">{pad(cell.value)}</span>
+                        <span className="text-[10px] uppercase tracking-[0.1em] text-ink-muted">{cell.label}</span>
+                    </span>
+                ))}
+            </div>
+        </div>
+    )
+}
 
 const DailyBestSellsSectionClient = ({ products = [] }) => {
     const sectionRef = useRef(null)
-    const railRef = useRef(null)
-
     const remaining = useDealCountdown()
-
-    const dispatch = useDispatch()
-    const cartProducts = useSelector((store) => store.cartStore.products)
-
-    const isInCart = (product) => {
-        const variant = product?.defaultVariant
-        return variant
-            ? cartProducts.some((item) => item.productId === product._id && item.variantId === variant._id)
-            : false
-    }
-
-    const handleAddToCart = (e, product) => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        const variant = product?.defaultVariant
-        if (!variant) return
-
-        dispatch(addIntoCart({
-            productId: product._id,
-            variantId: variant._id,
-            name: product.name,
-            url: product.slug,
-            size: variant.size,
-            mrp: variant.mrp ?? product.mrp,
-            sellingPrice: variant.sellingPrice ?? product.sellingPrice,
-            media: product?.media?.[0]?.secure_url || imgPlaceholder.src,
-            qty: 1,
-        }))
-        showToast('success', 'Product added into cart.')
-    }
-
-    useGSAP(() => {
-        const columns = railRef.current?.children
-        if (!columns?.length) return
-
-        gsap.fromTo(columns,
-            { autoAlpha: 0, y: 40 },
-            {
-                autoAlpha: 1, y: 0,
-                duration: 0.8, ease: 'power3.out', stagger: 0.1,
-                scrollTrigger: { trigger: railRef.current, start: 'top 85%', once: true },
-            }
-        )
-    }, { scope: sectionRef, dependencies: [products.length] })
+    useReveal(sectionRef, [products.length])
 
     if (!products.length) return null
 
+    // On wide screens the banner plus however many deals exist (1–3) share one
+    // row, so a short deal list never leaves empty columns behind it.
+    const railStyle = { '--deal-cols': `minmax(0,1.15fr) repeat(${products.length}, minmax(0,1fr))` }
+    // Below xl the grid is two columns: the banner takes a full row only when
+    // that leaves the deal cards in complete pairs, so no card sits alone.
+    const bannerSpan = products.length % 2 === 0 ? 'col-span-2' : 'col-span-1'
+
     return (
-        <section ref={sectionRef} className="website-gutter py-8 lg:py-14">
-            <div className="website-content font-neue">
+        <Section ref={sectionRef} tone="sunken" aria-labelledby="deals-title">
+            <SectionHeader
+                id="deals-title"
+                eyebrow="Limited time"
+                title="Daily"
+                accent="best sells"
+                action={<Countdown remaining={remaining} />}
+            />
 
-                <h2 className="mb-6 font-header text-2xl uppercase tracking-[0.02em] text-[var(--brand-primary-hover)] sm:text-3xl">
-                    Daily Best Sells
-                </h2>
+            <div className="grid grid-cols-2 gap-[var(--grid-gap)] xl:grid-cols-(--deal-cols)" style={railStyle}>
+                {/* ── Deal banner ── */}
+                <Link
+                    href={DEAL_BANNER.href}
+                    data-reveal
+                    className={`ef-tile ef-focus ef-on-inverse group/deal relative ${bannerSpan} flex min-h-[15rem] flex-col justify-between gap-6 p-5 text-white sm:min-h-[22rem] sm:p-7 xl:col-span-1`}
+                >
+                    <Image
+                        src={DEAL_BANNER.image}
+                        alt={DEAL_BANNER.alt}
+                        fill
+                        quality={82}
+                        sizes="(max-width: 1280px) 50vw, 25vw"
+                        className="-z-10 object-cover transition-transform duration-700 ease-out group-hover/deal:scale-[1.04] motion-reduce:transition-none"
+                    />
+                    {/* The photograph is warm and light throughout, so the copy
+                        gets its own deep-green ground rather than sitting on it. */}
+                    <span
+                        aria-hidden="true"
+                        className="absolute inset-0 -z-10"
+                        style={{ background: 'linear-gradient(180deg, rgb(22 48 31 / 0.92) 0%, rgb(22 48 31 / 0.55) 42%, rgb(22 48 31 / 0.05) 75%)' }}
+                    />
 
-                <div ref={railRef} className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <span className="flex flex-col gap-2">
+                        <span className="text-[clamp(1.5rem,1.2rem+1vw,2rem)] font-medium leading-[1.08] tracking-[-0.025em]">
+                            {DEAL_BANNER.title}
+                        </span>
+                        <span className="text-[0.9375rem] text-white/80">{DEAL_BANNER.copy}</span>
+                    </span>
 
-                    {/* ── Deal banner ── */}
-                    <div className="relative min-h-[380px] overflow-hidden rounded-lg md:min-h-full">
-                        <Image
-                            src={DEAL_BANNER.image}
-                            alt={DEAL_BANNER.alt}
-                            fill
-                            quality={82}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                            className="object-cover"
+                    <span className="ef-btn ef-btn--accent ef-btn--sm self-start">
+                        Shop now <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
+                    </span>
+                </Link>
+
+                {/* ── Deal cards ── */}
+                {products.map((product) => (
+                    <div key={product._id} data-reveal className="min-w-0">
+                        <ProductCard
+                            product={product}
+                            actions="bar"
+                            sizes="(max-width: 1280px) 50vw, 25vw"
                         />
-
-                        {/* The photograph is warm and light throughout, so the copy needs
-                            its own dark ground rather than sitting straight on the image. */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/70 from-0% via-black/30 via-40% to-transparent to-72%" />
-
-                        <div className="absolute inset-x-0 top-0 flex flex-col gap-5 px-6 pt-8">
-                            <div className="flex flex-col gap-2">
-                                <h3 className="font-header text-xl leading-snug text-white sm:text-2xl">
-                                    {DEAL_BANNER.title}
-                                </h3>
-                                <p className="text-sm text-white/90">{DEAL_BANNER.copy}</p>
-                            </div>
-
-                            <div>
-                                <Link
-                                    href={DEAL_BANNER.href}
-                                    className="inline-flex items-center gap-x-2 rounded-md bg-[var(--brand-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[var(--brand-primary-hover)] focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40"
-                                >
-                                    <span>Shop Now</span>
-                                    <ArrowRight className="size-4" strokeWidth={2.5} />
-                                </Link>
-                            </div>
-                        </div>
                     </div>
-
-                    {/* ── Deal cards ── */}
-                    {products.map((product) => {
-                        const href = WEBSITE_PRODUCT_DETAILS(product.slug)
-                        const image = product?.media?.[0]
-                        const hasDiscount = product?.mrp > product?.sellingPrice
-                        const filledStars = Math.round(Number(product?.ratingAvg || 0))
-                        const inCart = isInCart(product)
-
-                        return (
-                            <div
-                                key={product._id}
-                                className="group relative flex flex-col break-words rounded-lg border border-border bg-background transition duration-300 hover:border-[var(--brand-primary)]/40 hover:shadow-[var(--shadow-card-hover)]"
-                            >
-                                <div className="flex flex-auto flex-col gap-3 p-4">
-                                    {/* Fixed image box: the source art varies in aspect ratio,
-                                        so the cards would otherwise each set their own height. */}
-                                    <Link
-                                        href={href}
-                                        aria-label={`View ${product?.name}`}
-                                        className="mb-3 block h-[200px] w-full"
-                                    >
-                                        <Image
-                                            src={image?.secure_url || imgPlaceholder.src}
-                                            alt={image?.alt || product?.name || 'Product'}
-                                            width={400}
-                                            height={400}
-                                            quality={82}
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                                            className="mx-auto h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                                        />
-                                    </Link>
-
-                                    {product?.category?.name && (
-                                        <Link
-                                            href={`${WEBSITE_SHOP}?category=${product.category.slug}`}
-                                            className="text-muted-foreground"
-                                        >
-                                            <small>{product.category.name}</small>
-                                        </Link>
-                                    )}
-
-                                    <div className="flex flex-col gap-2">
-                                        <h3 className="truncate text-base font-semibold text-foreground">
-                                            <Link href={href} title={product?.name}>{product?.name}</Link>
-                                        </h3>
-
-                                        <div className="flex items-center justify-between gap-2">
-                                            <div className="flex items-baseline gap-1.5">
-                                                <span className="font-semibold text-foreground">
-                                                    {formatPrice(product?.sellingPrice)}
-                                                </span>
-                                                {hasDiscount && (
-                                                    <span className="text-sm text-muted-foreground line-through">
-                                                        {formatPrice(product?.mrp)}
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <div className="flex items-center gap-1.5">
-                                                <span className="flex items-center">
-                                                    {Array.from({ length: 5 }).map((_, index) => (
-                                                        <Star
-                                                            key={index}
-                                                            className={`size-3.5 ${index < filledStars
-                                                                ? 'fill-[var(--brand-primary)] text-[var(--brand-primary)]'
-                                                                : 'text-foreground/20'}`}
-                                                        />
-                                                    ))}
-                                                </span>
-                                                <span className="text-sm text-muted-foreground">
-                                                    {product?.ratingAvg || 0}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Pushes the button and timer to the card foot so all
-                                        three line up regardless of name wrapping. */}
-                                    <div className="mt-auto flex flex-col gap-3 pt-1">
-                                        {inCart ? (
-                                            <Link
-                                                href={WEBSITE_CART}
-                                                className="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md border border-[var(--brand-primary)] px-3 py-2.5 text-sm font-semibold text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-primary)] hover:text-white"
-                                            >
-                                                <Check className="size-4" strokeWidth={3} />
-                                                <span>Go To Cart</span>
-                                            </Link>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={(e) => handleAddToCart(e, product)}
-                                                disabled={!product?.defaultVariant}
-                                                className="inline-flex w-full items-center justify-center gap-x-1.5 rounded-md bg-[var(--brand-primary)] px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-primary-hover)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--brand-primary)]/30 disabled:pointer-events-none disabled:opacity-50"
-                                            >
-                                                <Plus className="size-4" strokeWidth={3} />
-                                                <span>Add to Cart</span>
-                                            </button>
-                                        )}
-
-                                        <Countdown remaining={remaining} />
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })}
-
-                </div>
+                ))}
             </div>
-        </section>
+        </Section>
     )
 }
 

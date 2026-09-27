@@ -2,9 +2,12 @@
 
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
-import { useGSAP } from '@gsap/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Star } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Quote, Star } from 'lucide-react'
+import { useReveal } from '@/hooks/useReveal'
+import { cn } from '@/lib/utils'
+import Section from './storefront/Section'
+import { tintAt } from './storefront/format'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,48 +18,32 @@ const PAD = (n) => String(n).padStart(2, '0')
 // stray value never produces a broken row.
 const clampRating = (rating) => Math.max(0, Math.min(5, Math.round(Number(rating) || 0)))
 
+const initials = (name = '') =>
+    name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join('') || '•'
+
 const TestimonialClient = ({ testimonials = [] }) => {
     const TOTAL = testimonials.length
-    const autoplay = TOTAL > 1
 
     const [active, setActive] = useState(0)
+    // Autoplay needs more than one slide, and is off entirely for users who
+    // ask for reduced motion. Resolved after mount so SSR markup is stable.
+    const [autoplay, setAutoplay] = useState(false)
     const activeRef = useRef(0)
     const sectionRef = useRef(null)
-    const dividerRef = useRef(null)
-    const headerRef = useRef(null)
-    const bigQuoteRef = useRef(null)
     const contentRef = useRef(null)
     const progressRef = useRef(null)
     const progressTweenRef = useRef(null)
     const timerRef = useRef(null)
     const isAnimatingRef = useRef(false)
+    const pausedRef = useRef(false)
     const goToRef = useRef(null)
 
-    useGSAP(() => {
-        gsap.fromTo(
-            [headerRef.current, bigQuoteRef.current],
-            { autoAlpha: 0, y: 40 },
-            {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.9,
-                ease: 'power4.out',
-                stagger: 0.1,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-        gsap.fromTo(
-            dividerRef.current,
-            { scaleX: 0, transformOrigin: 'left center' },
-            {
-                scaleX: 1,
-                duration: 1.2,
-                ease: 'expo.inOut',
-                delay: 0.12,
-                scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true },
-            }
-        )
-    }, { scope: sectionRef })
+    useReveal(sectionRef)
+
+    useEffect(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        setAutoplay(TOTAL > 1 && !reduce)
+    }, [TOTAL])
 
     const startProgress = useCallback(() => {
         if (!progressRef.current) return
@@ -71,7 +58,7 @@ const TestimonialClient = ({ testimonials = [] }) => {
 
     const startTimer = useCallback(() => {
         clearInterval(timerRef.current)
-        if (!autoplay) return
+        if (!autoplay || pausedRef.current) return
         timerRef.current = setInterval(() => {
             goToRef.current?.((activeRef.current + 1) % TOTAL)
         }, AUTO_MS)
@@ -107,7 +94,7 @@ const TestimonialClient = ({ testimonials = [] }) => {
                         }
                     )
                 })
-                if (autoplay) startProgress()
+                if (autoplay && !pausedRef.current) startProgress()
             },
         })
     }, [startProgress, startTimer, autoplay])
@@ -126,119 +113,149 @@ const TestimonialClient = ({ testimonials = [] }) => {
         }
     }, [startProgress, startTimer, autoplay])
 
+    // Hovering or focusing the carousel holds the current review; leaving
+    // restarts the cycle from a full interval.
+    const pause = () => {
+        if (!autoplay || pausedRef.current) return
+        pausedRef.current = true
+        clearInterval(timerRef.current)
+        progressTweenRef.current?.pause()
+    }
+    const resume = (event) => {
+        if (!autoplay || !pausedRef.current) return
+        if (event?.type === 'blur' && event.currentTarget.contains(event.relatedTarget)) return
+        pausedRef.current = false
+        startProgress()
+        startTimer()
+    }
+
     // Defensive: never index past the array if the data shrank between renders.
     const item = testimonials[active] || testimonials[0]
     if (!item) return null
 
     const rating = clampRating(item.rating)
+    const multi = TOTAL > 1
 
     return (
-        <section ref={sectionRef} className="relative overflow-hidden bg-background website-gutter pt-20 lg:pt-28 pb-6 lg:pb-10">
+        <Section ref={sectionRef} aria-labelledby="reviews-title">
+            <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
 
-            {/* decorative large quote */}
-            <div
-                ref={bigQuoteRef}
-                aria-hidden
-                className="pointer-events-none absolute -top-6 left-2 select-none font-neue text-[16rem] leading-none text-[var(--dark-red)]/20 lg:left-6 lg:text-[20rem]"
-            >
-                &ldquo;
-            </div>
+                {/* ── Heading + controls ── */}
+                <div data-reveal className="flex flex-col items-start gap-4 lg:justify-between">
+                    <div className="flex flex-col items-start gap-4">
+                        <span className="ef-eyebrow">Customer reviews</span>
+                        <h2 id="reviews-title" className="ef-title">
+                            What they <span className="ef-title__accent">say</span>
+                        </h2>
+                        <p className="ef-lead max-w-sm">Real words from the people who stock their kitchens with us.</p>
+                    </div>
 
-            {/* header */}
-            <div ref={headerRef} className="relative mb-5 flex items-end justify-between">
-                <div>
-                    <p className="text-[1rem] font-semibold uppercase text-[var(--dark-red)]/50">
-                        Customer Reviews
-                    </p>
-                    <h2 className="mt-1.5 font-neue text-[clamp(1.8rem,4.8vw,3.8rem)] font-medium uppercase text-[var(--dark-red-2)]">
-                        What They Say
-                    </h2>
+                    {multi && (
+                        <div className="mt-2 flex w-full items-center justify-between gap-4 lg:mt-0">
+                            <span className="font-medium text-ink-strong" aria-live="polite">
+                                <span className="text-3xl tracking-[-0.02em] tabular-nums">{PAD(active + 1)}</span>
+                                <span className="text-sm text-ink-muted"> / {PAD(TOTAL)}</span>
+                            </span>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    aria-label="Previous review"
+                                    onClick={() => goTo((active - 1 + TOTAL) % TOTAL)}
+                                    className="ef-icon-btn"
+                                >
+                                    <ArrowLeft aria-hidden="true" />
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label="Next review"
+                                    onClick={() => goTo((active + 1) % TOTAL)}
+                                    className="ef-icon-btn"
+                                >
+                                    <ArrowRight aria-hidden="true" />
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
-                <span className="font-neue text-[var(--dark-red)]">
-                    <span className="text-2xl font-semibold sm:text-3xl">{PAD(active + 1)}</span>
-                    <span className="text-sm"> / {PAD(TOTAL)}</span>
-                </span>
-            </div>
 
-            {/* divider */}
-            <div ref={dividerRef} className="mb-10 h-px w-full bg-[var(--dark-red)]/20" />
+                {/* ── Review card ── */}
+                <div
+                    data-reveal
+                    className="ef-card overflow-hidden"
+                    style={{ borderRadius: 'var(--radius-tile)' }}
+                    onMouseEnter={pause}
+                    onMouseLeave={resume}
+                    onFocus={pause}
+                    onBlur={resume}
+                >
+                    <div className="relative flex flex-col gap-6 p-6 sm:p-10">
+                        <span className="flex size-12 items-center justify-center rounded-full bg-amber text-brand-deep">
+                            <Quote className="size-5 fill-current" aria-hidden="true" />
+                        </span>
 
-            {/* slide content */}
-            <div ref={contentRef} className="relative min-h-[200px] lg:min-h-[160px]">
-                <blockquote className="max-w">
-                    <p className="font-neue text-[1.3rem] font-medium leading-[1.7] tracking-[0.01em] text-[var(--dark-red)] sm:text-[1.55rem] lg:text-[1.7rem]">
-                        &ldquo;{item.review}&rdquo;
-                    </p>
-                </blockquote>
+                        <div ref={contentRef} className="flex min-h-[15rem] flex-col justify-between gap-8 sm:min-h-[13rem]">
+                            <blockquote className="m-0">
+                                <p className="text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] font-medium leading-[1.55] tracking-[-0.01em] text-ink-strong">
+                                    &ldquo;{item.review}&rdquo;
+                                </p>
+                            </blockquote>
 
-                <div className="mt-8 flex items-center gap-4">
-                    <span className="h-px w-7 shrink-0 bg-[var(--dark-red)]/35" />
-                    <div>
-                        <p className="text-[1rem] font-semibold uppercase tracking-[0.08em] text-[var(--dark-red)]/80">
-                            {item.name}
-                        </p>
-                        <div className="mt-1 flex gap-0.5">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <Star
-                                    key={i}
-                                    className={`size-3 ${i < rating ? 'fill-amber-500 text-amber-500' : 'fill-[var(--dark-red)]/20 text-[var(--dark-red)]/20'}`}
-                                />
-                            ))}
+                            <div className="flex items-center gap-3">
+                                <span
+                                    aria-hidden="true"
+                                    className="flex size-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-brand"
+                                    style={{ background: tintAt(active) }}
+                                >
+                                    {initials(item.name)}
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                    <p className="text-[0.9375rem] font-semibold text-ink-strong">{item.name}</p>
+                                    <div className="flex gap-0.5" role="img" aria-label={`${rating} out of 5 stars`}>
+                                        {Array.from({ length: 5 }).map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                aria-hidden="true"
+                                                className={cn('size-3.5', i < rating ? 'fill-amber text-amber' : 'fill-line-soft text-line-strong')}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {/* progress — only meaningful while autoplay cycles slides */}
+                    {autoplay && (
+                        <div className="h-1 w-full bg-surface-well" aria-hidden="true">
+                            <div ref={progressRef} className="h-full w-full origin-left scale-x-0 bg-brand" />
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* progress bar — only meaningful while autoplay cycles between slides */}
-            {autoplay && (
-                <div className="mt-10 h-px w-full bg-[var(--dark-red)]/10">
-                    <div ref={progressRef} className="h-full w-full origin-left bg-[var(--dark-red)]/35" />
+            {/* dot navigation — hidden when there is only a single testimonial */}
+            {multi && (
+                <div className="mt-6 flex flex-wrap justify-center lg:justify-end">
+                    {testimonials.map((t, i) => (
+                        <button
+                            key={i}
+                            type="button"
+                            aria-label={`Go to review ${i + 1}${t?.name ? ` by ${t.name}` : ''}`}
+                            aria-current={i === active ? 'true' : undefined}
+                            onClick={() => goTo(i)}
+                            className="ef-focus group flex h-8 min-w-8 items-center justify-center rounded-full px-1"
+                        >
+                            <span
+                                className={cn(
+                                    'h-1.5 rounded-full transition-all duration-300',
+                                    i === active ? 'w-6 bg-brand' : 'w-1.5 bg-line-strong group-hover:bg-ink-muted'
+                                )}
+                            />
+                        </button>
+                    ))}
                 </div>
             )}
-
-            {/* bottom nav — hidden when there is only a single testimonial */}
-            {autoplay && (
-                <div className="mt-5 flex items-center justify-between">
-                    <div className="flex items-center">
-                        {testimonials.map((_, i) => (
-                            <button
-                                key={i}
-                                type="button"
-                                aria-label={`Go to review ${i + 1}`}
-                                aria-current={i === active}
-                                onClick={() => goTo(i)}
-                                className="group flex h-6 min-w-6 items-center justify-center px-0.5"
-                            >
-                                <span
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                                        i === active ? 'w-6 bg-[var(--dark-red)]' : 'w-1.5 bg-[var(--dark-red)]/25 group-hover:bg-[var(--dark-red)]/45'
-                                    }`}
-                                />
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-2">
-                        <button
-                            type="button"
-                            aria-label="Previous review"
-                            onClick={() => goTo((active - 1 + TOTAL) % TOTAL)}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--dark-red)]/25 text-[var(--dark-red)]/55 transition hover:border-[var(--dark-red)]/60 hover:text-[var(--dark-red)]"
-                        >
-                            <ArrowLeft className="size-4" />
-                        </button>
-                        <button
-                            type="button"
-                            aria-label="Next review"
-                            onClick={() => goTo((active + 1) % TOTAL)}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--dark-red)]/25 text-[var(--dark-red)]/55 transition hover:border-[var(--dark-red)]/60 hover:text-[var(--dark-red)]"
-                        >
-                            <ArrowRight className="size-4" />
-                        </button>
-                    </div>
-                </div>
-            )}
-        </section>
+        </Section>
     )
 }
 

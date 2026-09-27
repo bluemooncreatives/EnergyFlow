@@ -48,17 +48,21 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
         if (clamped !== current) onPageChange(clamped - 1)
     }
 
+    // `disabled` attributes depend only on page bounds (identical on server and
+    // client). The in-flight fetch state is signalled with aria-busy and the
+    // guard in goTo — it can differ between SSR and the first client render,
+    // which previously caused a hydration attribute mismatch.
     const cell =
-        'inline-flex h-8 min-w-8 items-center justify-center rounded-sm border px-1.5 font-neue text-xs font-semibold transition-colors disabled:pointer-events-none disabled:opacity-40 sm:h-9 sm:min-w-9 sm:px-2 sm:text-[13px]'
+        'ef-focus inline-flex h-10 min-w-10 items-center justify-center rounded-full px-2 text-[0.875rem] font-medium tabular-nums transition-colors disabled:pointer-events-none disabled:opacity-35 aria-busy:cursor-progress'
     const idle =
-        'border-border/70 bg-background text-foreground hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]'
+        'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-brand hover:text-white'
 
     return (
-        <nav role="navigation" aria-label="Pagination" className="flex items-center justify-center gap-1 sm:gap-1.5">
+        <nav role="navigation" aria-label="Pagination" aria-busy={disabled || undefined} className="flex items-center justify-center gap-1.5">
             <button
                 type="button"
                 aria-label="Go to previous page"
-                disabled={disabled || current === 1}
+                disabled={current === 1}
                 onClick={() => goTo(current - 1)}
                 className={cn(cell, idle)}
             >
@@ -71,7 +75,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
                         <span
                             key={`dots-${index}`}
                             aria-hidden
-                            className="inline-flex h-8 min-w-6 items-center justify-center text-xs text-muted-foreground sm:h-9 sm:min-w-9 sm:text-[13px]"
+                            className="inline-flex h-10 min-w-6 items-center justify-center text-[0.875rem] text-ink-muted"
                         >
                             …
                         </span>
@@ -85,12 +89,11 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
                         type="button"
                         aria-label={`Go to page ${item}`}
                         aria-current={active ? 'page' : undefined}
-                        disabled={disabled}
                         onClick={() => goTo(item)}
                         className={cn(
                             cell,
                             active
-                                ? 'border-[var(--brand-primary)] bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-primary-hover)]'
+                                ? 'bg-brand text-white hover:bg-brand-hover'
                                 : idle
                         )}
                     >
@@ -102,7 +105,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
             <button
                 type="button"
                 aria-label="Go to next page"
-                disabled={disabled || current === totalPages}
+                disabled={current === totalPages}
                 onClick={() => goTo(current + 1)}
                 className={cn(cell, idle)}
             >

@@ -10,6 +10,7 @@ export const metadata = {
 
 const breadcrumb = {
     title: 'Terms & Conditions',
+    description: 'Last updated 20 June 2025 · Effective 20 June 2025',
     links: [
         { label: 'Terms & Conditions' },
     ]
@@ -17,10 +18,10 @@ const breadcrumb = {
 
 const Section = ({ number, title, children }) => (
     <div className='mt-10'>
-        <h2 className='text-lg lg:text-xl font-semibold text-[var(--dark-red-2)] mb-3'>
+        <h2 className='mb-3 text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong lg:text-[1.375rem]'>
             {number}. {title}
         </h2>
-        <div className='space-y-3 text-base lg:text-[17px] leading-relaxed text-gray-700'>
+        <div className='space-y-3 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
             {children}
         </div>
     </div>
@@ -30,19 +31,18 @@ const TermsAndConditions = () => {
     return (
         <div>
             <WebsiteBreadcrumb props={breadcrumb} />
-            <div className='website-gutter py-16 max-w-[1400px] mx-auto'>
+            <div className='ef-container py-[calc(var(--section-space)*0.6)]'>
+            <div className='mx-auto max-w-3xl rounded-[var(--radius-tile)] bg-surface-card px-5 py-8 shadow-[inset_0_0_0_1px_var(--line-soft)] sm:px-10 sm:py-12'>
 
                 {/* Header */}
-                <div className='border-b border-gray-200 pb-8'>
-                    <h1 className='text-3xl lg:text-4xl font-semibold mb-2'>Terms & Conditions</h1>
-                    <p className='text-sm text-gray-500'>Last Updated: June 20, 2025 &nbsp;|&nbsp; Effective Date: June 20, 2025</p>
-                    <p className='mt-5 text-base lg:text-[17px] leading-relaxed text-gray-700'>
+                <div className='border-b border-line-soft pb-8'>
+                    <p className='mt-5 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         Welcome to <strong>Energyflow</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). By accessing or placing an order on{' '}
                         <strong>energyflow.com</strong> (the &quot;Website&quot;), you agree to be legally bound by these Terms &amp; Conditions
                         (&quot;Terms&quot;). Please read them carefully before using our services. If you do not agree with any part of
                         these Terms, please discontinue use of the Website immediately.
                     </p>
-                    <p className='mt-3 text-base lg:text-[17px] leading-relaxed text-gray-700'>
+                    <p className='mt-3 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         These Terms apply to all visitors, customers, and other users of the Website regardless of their location.
                     </p>
                 </div>
@@ -53,11 +53,11 @@ const TermsAndConditions = () => {
                         <strong>Business Name:</strong> Energyflow<br />
                         <strong>Registered Address:</strong> Pune, Maharashtra 411047<br />
                         <strong>Email:</strong>{' '}
-                        <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>
+                        <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
                             energyflow.official@gmail.com
                         </a><br />
                         <strong>Phone:</strong>{' '}
-                        <a href="tel:+918237284906" className='text-[var(--dark-red-2)] underline underline-offset-2'>
+                        <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
                             +91 82372 84906
                         </a>
                     </p>
@@ -68,7 +68,7 @@ const TermsAndConditions = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>You must be at least 18 years old to create an account or make a purchase. Users between 13–17 may browse with verifiable parental or guardian consent and supervision.</li>
                         <li>By registering, you represent that all information you provide is accurate, current, and complete.</li>
-                        <li>You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately at <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>energyflow.official@gmail.com</a> if you suspect unauthorized access.</li>
+                        <li>You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> if you suspect unauthorized access.</li>
                         <li>We reserve the right to suspend or terminate accounts that violate these Terms or engage in fraudulent activity.</li>
                         <li>One account per person. Creating multiple accounts to abuse promotions or discounts is strictly prohibited.</li>
                     </ul>
@@ -127,7 +127,7 @@ const TermsAndConditions = () => {
                         <li>Opened or partially consumed packs cannot be returned, for reasons of hygiene and food safety. This does not affect your rights where a product is damaged, expired, incorrectly supplied, or otherwise not of satisfactory quality.</li>
                         <li>If a product arrives damaged, leaking, expired, or is not what you ordered, contact us within 48 hours of delivery with photographs of the pack, seal and batch details, and we will replace it or refund you in full.</li>
                         <li>Custom gift hampers and personalised or branded bulk orders cannot be returned unless they arrive defective or damaged.</li>
-                        <li>To initiate a return, contact us at <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>energyflow.official@gmail.com</a> with your order number and photos of the item.</li>
+                        <li>To initiate a return, contact us at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> with your order number and photos of the item.</li>
                         <li>Approved refunds are processed within 5–10 business days to the original payment method.</li>
                         <li>Return shipping costs are the customer&apos;s responsibility unless the return is due to our error (wrong item, defective product).</li>
                         <li>Exchanges are subject to stock availability. If the desired item is unavailable, a store credit or refund will be offered.</li>
@@ -167,13 +167,13 @@ const TermsAndConditions = () => {
                 <Section number="10" title="Privacy & Data Protection">
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>Our collection and use of your personal data is governed by our{' '}
-                            <Link href="/privacy-policy" className='text-[var(--dark-red-2)] underline underline-offset-2'>Privacy Policy</Link>,
+                            <Link href="/privacy-policy" className='text-brand underline underline-offset-2 hover:text-brand-hover'>Privacy Policy</Link>,
                             which forms part of these Terms.
                         </li>
                         <li>
                             <strong>GDPR (EU/EEA Customers):</strong> If you are located in the European Union or European Economic Area, you have the right to access,
                             rectify, erase, restrict, or port your personal data, and to withdraw consent at any time. To exercise these rights, contact us at{' '}
-                            <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>energyflow.official@gmail.com</a>.
+                            <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.
                         </li>
                         <li>
                             <strong>CCPA (California Customers):</strong> California residents have the right to know what personal information we collect, to request deletion,
@@ -235,7 +235,7 @@ const TermsAndConditions = () => {
                 {/* Section 16 */}
                 <Section number="16" title="Dispute Resolution">
                     <ul className='list-disc ps-6 space-y-2'>
-                        <li>We encourage you to contact us first at <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>energyflow.official@gmail.com</a> to resolve any dispute informally within 30 days.</li>
+                        <li>We encourage you to contact us first at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> to resolve any dispute informally within 30 days.</li>
                         <li>If informal resolution is unsuccessful, disputes shall be settled by binding arbitration under the Arbitration and Conciliation Act 1996 (India), with a sole arbitrator mutually agreed upon.</li>
                         <li>EU customers may also use the EU Online Dispute Resolution platform at <strong>ec.europa.eu/consumers/odr</strong>.</li>
                         <li>Class action waiver: You agree to resolve disputes on an individual basis and waive the right to participate in class action lawsuits to the extent permitted by applicable law.</li>
@@ -263,34 +263,35 @@ const TermsAndConditions = () => {
                 <Section number="19" title="Severability & Entire Agreement">
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions will continue in full force and effect.</li>
-                        <li>These Terms, together with our <Link href="/privacy-policy" className='text-[var(--dark-red-2)] underline underline-offset-2'>Privacy Policy</Link>, constitute the entire agreement between you and Energyflow regarding your use of the Website.</li>
+                        <li>These Terms, together with our <Link href="/privacy-policy" className='text-brand underline underline-offset-2 hover:text-brand-hover'>Privacy Policy</Link>, constitute the entire agreement between you and Energyflow regarding your use of the Website.</li>
                     </ul>
                 </Section>
 
                 {/* Contact */}
-                <div className='mt-12 border-t border-gray-200 pt-8'>
-                    <h2 className='text-lg lg:text-xl font-semibold text-[var(--dark-red-2)] mb-3'>Contact Us</h2>
-                    <p className='text-base lg:text-[17px] leading-relaxed text-gray-700'>
+                <div className='mt-12 border-t border-line-soft pt-8'>
+                    <h2 className='mb-3 text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong lg:text-[1.375rem]'>Contact Us</h2>
+                    <p className='text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         If you have any questions, concerns, or requests regarding these Terms &amp; Conditions, please reach out to us:
                     </p>
-                    <ul className='mt-4 space-y-2 text-base lg:text-[17px] text-gray-700'>
+                    <ul className='mt-4 space-y-2 text-base lg:text-[17px] text-ink-body'>
                         <li><strong>Email:</strong>{' '}
-                            <a href="mailto:energyflow.official@gmail.com" className='text-[var(--dark-red-2)] underline underline-offset-2'>
+                            <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
                                 energyflow.official@gmail.com
                             </a>
                         </li>
                         <li><strong>Phone:</strong>{' '}
-                            <a href="tel:+918237284906" className='text-[var(--dark-red-2)] underline underline-offset-2'>
+                            <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
                                 +91 82372 84906
                             </a>
                         </li>
                         <li><strong>Address:</strong> Energyflow, Pune, Maharashtra 411047</li>
                     </ul>
-                    <p className='mt-6 text-sm text-gray-500'>
+                    <p className='mt-6 text-sm text-ink-muted'>
                         Thank you for choosing Energyflow. We are committed to providing you with a safe, reliable, and enjoyable shopping experience.
                     </p>
                 </div>
 
+            </div>
             </div>
         </div>
     )

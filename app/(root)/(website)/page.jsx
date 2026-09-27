@@ -12,6 +12,7 @@ import Testimonial from '@/components/Application/Website/Testimonial'
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
 // so they don't block parsing and hydration of the above-fold critical path.
 const Marquee = dynamic(() => import('@/components/Application/Website/Marquee'))
+const SignatureRangeSection = dynamic(() => import('@/components/Application/Website/SignatureRangeSection'))
 const AboutUsSection = dynamic(() => import('@/components/Application/Website/AboutUsSection'))
 const EditorialCardsSection = dynamic(() => import('@/components/Application/Website/EditorialCardsSection'))
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
@@ -72,12 +73,17 @@ const Home = () => {
                 initial load only hydrates the hero + header. */}
             <Marquee text="freshly arrived" repeatCount={12} />
 
+            {/* Order follows the storefront flow: signature lines (ghee, oils,
+                gift chocolates) → browse by category → products → deals →
+                trust band → bestsellers → story → social proof → help.
+                Section tones alternate page / sunken; data-driven sections
+                that render nothing simply drop out of the rhythm. */}
             <LazyHydrate>
-                <CategoryArchiveSection />
+                <SignatureRangeSection />
             </LazyHydrate>
 
             <LazyHydrate>
-                <AboutUsSection />
+                <CategoryArchiveSection />
             </LazyHydrate>
 
             <LazyHydrate>
@@ -89,19 +95,23 @@ const Home = () => {
             </LazyHydrate>
 
             <LazyHydrate>
-                <Testimonial />
-            </LazyHydrate>
-
-            <LazyHydrate>
-                <EditorialCardsSection />
-            </LazyHydrate>
-
-            <LazyHydrate>
                 <BenefitsSection />
             </LazyHydrate>
 
             <LazyHydrate>
                 <BestsellersSection />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <AboutUsSection />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <Testimonial />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <EditorialCardsSection />
             </LazyHydrate>
 
             <LazyHydrate>
