@@ -98,19 +98,23 @@ const resolveLinks = (slide, availability) => {
 };
 const pad = (n) => String(n).padStart(2, "0");
 
-// Orbit "dial": the active thumb sits at 9 o'clock, upcoming slides wait
-// above it on the arc, the previous one has just passed below. Angles are
-// CSS rotations (clockwise from 3 o'clock; 180 = left, 210 = upper-left).
-const SLOT_ANGLES = [180, 212, 244, 148];
+// Orbit "dial": four evenly spaced slots (32° apart) on an arc centred on
+// 9 o'clock, so the group sits balanced beside the plate. The active thumb
+// takes the slot just below centre, the upcoming ones wait above it and the
+// previous one has just passed below; each change turns the dial one slot.
+// Angles are CSS rotations (clockwise from 3 o'clock; 180 = left).
+// Index: slot for the active slide, then +1, +2, and -1 (previous).
+const SLOT_ANGLES = [164, 196, 228, 132];
 const angleFor = (index, active) => SLOT_ANGLES[(index - active + TOTAL) % TOTAL];
 
-// Four leaves, gently drifting, placed clear of the orbit thumbs' path and
-// the badge. The two soft (blurred) ones are desktop-only.
+// Four leaves, gently drifting, kept to the right half of the dial — clear
+// of the thumb arc on the left, the badge at the lower right and the orbit
+// line itself. The two soft (blurred) ones are desktop-only.
 const LEAVES = [
-  { top: "-2%", left: "64%", size: 46, rotate: -24, soft: false, dx: 14, dy: 18, spin: 12, dur: 8 },
-  { top: "18%", left: "92%", size: 38, rotate: 38, soft: false, dx: -12, dy: 16, spin: -10, dur: 9.5 },
-  { top: "44%", left: "99%", size: 50, rotate: -40, soft: true, dx: -14, dy: -12, spin: -14, dur: 11 },
-  { top: "96%", left: "30%", size: 30, rotate: 10, soft: true, dx: 12, dy: -16, spin: 16, dur: 7.5 },
+  { top: "-4%", left: "66%", size: 44, rotate: -24, soft: false, dx: 12, dy: 14, spin: 12, dur: 8 },
+  { top: "18%", left: "93%", size: 36, rotate: 38, soft: false, dx: -10, dy: 14, spin: -10, dur: 9.5 },
+  { top: "50%", left: "99%", size: 44, rotate: -40, soft: true, dx: -10, dy: -12, spin: -14, dur: 11 },
+  { top: "99%", left: "72%", size: 28, rotate: 10, soft: true, dx: 10, dy: -8, spin: 16, dur: 7.5 },
 ];
 
 const LeafShape = () => (
@@ -512,7 +516,10 @@ const HeroSection = ({ availability = null }) => {
                       ref={(el) => { thumbsRef.current[i] = el; }}
                       onClick={() => goTo(i)}
                     >
-                      <Image src={slide.plate} alt="" fill sizes="64px" />
+                      <span className={styles.thumbImg}>
+                        <Image src={slide.plate} alt="" fill sizes="80px" />
+                      </span>
+                      <span className={styles.thumbLabel}>{slide.label}</span>
                     </button>
                   </div>
                 ))}

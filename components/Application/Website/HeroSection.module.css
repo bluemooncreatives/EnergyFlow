@@ -172,29 +172,70 @@
 }
 
 .thumb {
+    --size: var(--thumb);
     position: absolute;
     left: var(--orbit-r);
     top: 0;
-    width: var(--thumb);
-    height: var(--thumb);
-    margin: calc(var(--thumb) / -2) 0 0 calc(var(--thumb) / -2);
+    width: var(--size);
+    height: var(--size);
+    /* centred on the orbit point whatever its size */
+    margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
     padding: 0;
     border: 0;
     border-radius: 9999px;
     background: var(--surface-card);
-    box-shadow: 0 10px 22px -8px rgb(22 48 31 / 0.3);
+    box-shadow: 0 0 0 1px rgb(22 48 31 / 0.06), 0 10px 22px -8px rgb(22 48 31 / 0.3);
     cursor: pointer;
-    transition: box-shadow var(--duration-normal) var(--ease-out);
+    transition:
+        width var(--duration-normal) var(--ease-out),
+        height var(--duration-normal) var(--ease-out),
+        margin var(--duration-normal) var(--ease-out),
+        box-shadow var(--duration-normal) var(--ease-out);
 }
 
-.thumb img {
+.thumbImg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+}
+.thumbImg img {
     object-fit: contain;
     padding: 14%;
+    transition: transform var(--duration-normal) var(--ease-out);
+}
+.thumb:hover .thumbImg img { transform: scale(1.08); }
+
+/* The active slide's thumb is the dial's pointer: larger, ringed in amber. */
+.thumbActive {
+    --size: calc(var(--thumb) * 1.22);
+    box-shadow: 0 0 0 3px var(--brand-amber), 0 14px 28px -10px rgb(22 48 31 / 0.4);
 }
 
-.thumbActive {
-    box-shadow: 0 0 0 3px var(--brand-amber), 0 12px 26px -8px rgb(22 48 31 / 0.35);
+/* Hover label, to the right of the thumb (towards the plate). The thumb is
+   counter-rotated, so this always reads upright. */
+.thumbLabel {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 0.625rem);
+    padding: 0.3125rem 0.625rem;
+    border-radius: 9999px;
+    background: var(--brand-primary);
+    color: var(--brand-white);
+    font-size: 0.75rem;
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-4px, -50%);
+    pointer-events: none;
+    transition: opacity var(--duration-fast), transform var(--duration-fast) var(--ease-out);
 }
+.thumb:hover .thumbLabel {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+.thumbActive .thumbLabel { display: none; }
 
 .badge {
     position: absolute;
@@ -334,6 +375,12 @@
         font-size: 0.8125rem;
     }
     .badgeIcon { width: 1.875rem; height: 1.875rem; }
+}
+
+/* Tablet: the orbit (r = 62% of the stage) spills 12% past the stage on every
+   side. Reserve that room so the arc and thumbs never run into the copy. */
+@media (min-width: 640px) and (max-width: 1023px) {
+    .stageWrap { padding-block: calc(var(--stage) * 0.12 + 0.5rem); }
 }
 
 @media (max-width: 639px) {
