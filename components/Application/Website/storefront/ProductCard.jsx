@@ -52,7 +52,7 @@ export const Price = ({ price, mrp, className }) => {
  * The storefront product card — used by every product grid and rail.
  *
  * actions:
- *   "quick" — Buy now + round add button beside the price (home grids, rails)
+ *   "quick" — price, then a Buy now + round add button row (home grids, rails)
  *   "bar"   — full-width add button at the foot (deal cards)
  *   "full"  — Add to cart + Buy now pair (shop grid, related products)
  * gallery:  cycle through every product image with arrows + dots.
@@ -184,29 +184,32 @@ const ProductCard = ({
                     </Link>
                 </h3>
 
-                {/* Price, with the quick actions beside it. On a narrow card the
-                    actions wrap onto their own row and Buy now stretches, so the
-                    label never has to shrink to an icon. */}
-                <div className="mt-auto flex flex-wrap items-end justify-between gap-x-2 gap-y-2.5">
-                    {/* basis-0: the price shrinks (MRP wraps under it) before the
-                        actions are pushed onto a new line on wide cards. */}
-                    <div className="flex min-w-0 flex-1 basis-0 flex-col gap-0.5">
-                        {packSize && <span className="text-[12px] text-ink-muted">{packSize}</span>}
+                {/* Price, then the quick actions on their own row — the same
+                    structure on every card and at every width, so a long price
+                    (MRP shown) can never push the actions somewhere else. The
+                    block sits at the card foot so rows of cards line up. */}
+                <div className="mt-auto flex flex-col gap-2.5">
+                    <div className="flex min-w-0 items-center justify-between gap-2">
                         <Price price={price} mrp={mrp} />
+                        {packSize && (
+                            <span className="shrink-0 rounded-full bg-surface-well px-2 py-0.5 text-[11px] font-medium leading-4 text-ink-body">
+                                <span className="sr-only">Pack size </span>{packSize}
+                            </span>
+                        )}
                     </div>
 
                     {actions === 'quick' && (
-                        <div className="flex w-full items-center gap-2 @[14.5rem]/card:w-auto">
+                        <div className="flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={buyNow}
                                 disabled={!canAdd}
                                 aria-label={buyLabel}
                                 title={canAdd ? 'Buy now' : 'Unavailable'}
-                                className="ef-focus flex h-10 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.03] hover:bg-[#F5C161] disabled:pointer-events-none disabled:opacity-40 @[14.5rem]/card:flex-none"
+                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[#F5C161] disabled:pointer-events-none disabled:opacity-40"
                             >
-                                <Zap className="size-3.5" aria-hidden="true" />
-                                Buy now
+                                <Zap className="size-3.5 shrink-0" aria-hidden="true" />
+                                {canAdd ? 'Buy now' : 'Unavailable'}
                             </button>
 
                             {inCart ? (
