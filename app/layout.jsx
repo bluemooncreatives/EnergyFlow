@@ -77,7 +77,7 @@ export const metadata = {
     icon: '/favicon.ico',
   },
   other: {
-    'theme-color': '#FFF1D7',
+    'theme-color': '#FDF6F1',
   },
 };
 

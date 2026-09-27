@@ -74,7 +74,7 @@ const BestsellerCard = ({ product, position }) => {
             </div>
 
             <div className="flex flex-1 flex-col px-4 pb-4 pt-8">
-                <p className="text-[0.75rem] font-medium text-olive">
+                <p className="text-[0.75rem] font-medium text-cocoa">
                     Bestseller{variant?.size ? ` · ${variant.size}` : ''}
                 </p>
                 <h3 className="mt-1 text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">
@@ -102,7 +102,7 @@ const BestsellerCard = ({ product, position }) => {
                             onClick={buyNow}
                             disabled={!canAdd}
                             aria-label={canAdd ? `Buy ${name} now` : `${name} is currently unavailable`}
-                            className="ef-focus inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
+                            className="ef-focus inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-brand px-4 text-[0.8125rem] font-medium text-white transition-colors hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-40"
                         >
                             <Zap className="size-3.5" aria-hidden="true" /> {canAdd ? 'Buy now' : 'Unavailable'}
                         </button>
@@ -111,7 +111,7 @@ const BestsellerCard = ({ product, position }) => {
                                 href={WEBSITE_CART}
                                 aria-label={`${name} is in your cart. View cart`}
                                 title="In cart — view cart"
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-olive text-white"
+                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-white"
                             >
                                 <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
                             </Link>
@@ -122,7 +122,7 @@ const BestsellerCard = ({ product, position }) => {
                                 disabled={!canAdd}
                                 aria-label={canAdd ? `Add ${name} to cart` : `${name} is currently unavailable`}
                                 title="Add to cart"
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-40"
+                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-white transition-colors hover:bg-cocoa-deep disabled:pointer-events-none disabled:opacity-40"
                             >
                                 <Plus className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
                             </button>

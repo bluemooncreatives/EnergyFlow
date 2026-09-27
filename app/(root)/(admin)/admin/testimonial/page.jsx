@@ -48,7 +48,7 @@ const StarPicker = ({ value, onChange }) => (
       >
         <Star
           className={`size-6 transition-colors ${
-            n <= value ? 'fill-amber-500 text-amber-500' : 'fill-muted text-muted-foreground/40'
+            n <= value ? 'fill-gold text-gold' : 'fill-muted text-muted-foreground/40'
           }`}
         />
       </button>
@@ -323,7 +323,7 @@ const ShowTestimonials = () => {
                           key={i}
                           className={`size-3 ${
                             i < testimonial.rating
-                              ? 'fill-amber-500 text-amber-500'
+                              ? 'fill-gold text-gold'
                               : 'fill-muted text-muted-foreground/40'
                           }`}
                         />

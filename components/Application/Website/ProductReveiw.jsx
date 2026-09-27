@@ -30,10 +30,10 @@ const StarRatingField = ({ value = 0, onChange }) => {
                         key={star}
                         type='button'
                         onClick={() => onChange(star)}
-                        className='text-2xl text-amber-500 transition-transform hover:scale-110'
+                        className='text-2xl text-gold transition-transform hover:scale-110'
                         aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
                     >
-                        <Star className={`size-6 ${isFilled ? 'fill-amber-500 text-amber-500' : 'text-amber-500'}`} />
+                        <Star className={`size-6 ${isFilled ? 'fill-gold text-gold' : 'text-gold'}`} />
                     </button>
                 )
             })}

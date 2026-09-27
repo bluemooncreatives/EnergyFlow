@@ -4,26 +4,26 @@
    Email clients strip <style> custom-properties and external fonts,
    so every value here is a literal inline-able constant and every
    layout primitive is table-based with inline styles.
-   Brand tokens mirror the app's harvest palette (paprika primary, olive
-   accent on a cream ground) but are hard-coded because CSS vars don't
+   Brand tokens mirror the app's palette (burnt-brick primary, cocoa accent
+   on a warm-ivory ground) but are hard-coded because CSS vars don't
    survive in Gmail/Outlook/Apple Mail. Token KEYS are kept stable
    (oxblood / crimson / cream / warm) so every template keeps working
    unchanged — only the values change.
    ================================================================ */
 
-// ── Brand palette (cream + paprika + olive) ──
+// ── Brand palette (ivory + burnt brick + cocoa) ──
 export const BRAND = {
-    oxblood: "#BB3E00", // paprika — headings, footer, code, CTAs
-    crimson: "#7B6F19", // olive — links, eyebrow, active dots
-    cream: "#FFF1D7", // palette cream — header band + light text on the paprika footer
-    warm: "#FFF8EC", // light cream — page background + inset panels
-    ink: "#2B2008", // olive-brown near-black body copy
-    body: "#5B4D33", // --text-body
+    oxblood: "#C84204", // burnt brick — headings, footer, code, CTAs
+    crimson: "#643314", // cocoa — links, eyebrow, active dots
+    cream: "#FDF6F1", // warm ivory — header band + light text on the brick footer
+    warm: "#FFFAF6", // light ivory — page background + inset panels
+    ink: "#2E1608", // deep cocoa body copy
+    body: "#5C3D28", // --text-body
     white: "#FFFFFF",
-    border: "#EEDFC0", // soft cream hairline
-    borderStrong: "#E0CBA0",
-    muted: "#8A7A5C", // warm grey label
-    success: "#6B6014",
+    border: "#EFDFD2", // soft ivory hairline
+    borderStrong: "#E2CBB8",
+    muted: "#86654E", // warm grey label
+    success: "#643314",
     danger: "#A11D2B", // crimson — security warnings must still read as alerts
 };
 

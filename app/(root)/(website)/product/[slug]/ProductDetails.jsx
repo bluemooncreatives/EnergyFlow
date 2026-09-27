@@ -65,14 +65,14 @@ const NavSpinner = () => {
 // Renders 5 stars reflecting a real average (full / half / empty) instead of
 // a hard-coded 5-star row, so an unrated product shows empty stars.
 const RatingStars = ({ value = 0, size = 'size-4' }) => (
-    <div className="flex items-center gap-0.5 text-amber">
+    <div className="flex items-center gap-0.5 text-gold">
         {Array.from({ length: 5 }).map((_, i) => {
             const position = i + 1
             if (value >= position) {
-                return <Star key={i} className={cn(size, 'fill-amber text-amber')} />
+                return <Star key={i} className={cn(size, 'fill-gold text-gold')} />
             }
             if (value >= position - 0.5) {
-                return <StarHalf key={i} className={cn(size, 'fill-amber text-amber')} />
+                return <StarHalf key={i} className={cn(size, 'fill-gold text-gold')} />
             }
             return <Star key={i} className={cn(size, 'text-foreground/25')} />
         })}

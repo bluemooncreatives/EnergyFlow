@@ -15,11 +15,11 @@ const BRAND = {
     web: 'www.energyflow.com',
 }
 
-const BRAND_COLOR = '#BB3E00'   // paprika — matches --brand-primary
-const CREAM = '#FFF1D7'
-const INK = '#2B2008'
-const MUTE = '#8A7A5C'
-const GREEN = '#6B6014'          // olive — savings / success
+const BRAND_COLOR = '#C84204'   // burnt brick — matches --brand-primary
+const CREAM = '#FDF6F1'
+const INK = '#2E1608'
+const MUTE = '#86654E'
+const GREEN = '#643314'          // cocoa — savings / success
 
 const money = (n) =>
     'Rs. ' + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -92,7 +92,7 @@ const s = StyleSheet.create({
     grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 2, borderTopColor: INK, marginTop: 6, paddingTop: 8 },
     grandLabel: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
     grandVal: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
-    saved: { marginTop: 8, backgroundColor: '#F3EDCF', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
+    saved: { marginTop: 8, backgroundColor: '#FEF4C6', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
     payBox: { marginTop: 12, borderWidth: 1, borderColor: '#ececec', borderRadius: 4 },
     payRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, paddingHorizontal: 10 },
     payRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },

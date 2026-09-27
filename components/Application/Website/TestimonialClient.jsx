@@ -215,7 +215,7 @@ const TestimonialClient = ({ testimonials = [] }) => {
                                             <Star
                                                 key={i}
                                                 aria-hidden="true"
-                                                className={cn('size-3.5', i < rating ? 'fill-amber text-amber' : 'fill-line-soft text-line-strong')}
+                                                className={cn('size-3.5', i < rating ? 'fill-gold text-gold' : 'fill-line-soft text-line-strong')}
                                             />
                                         ))}
                                     </div>
