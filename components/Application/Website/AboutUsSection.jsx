@@ -295,7 +295,7 @@ const AboutUsSection = () => {
                 data-rise-group
                 className="m-0 text-[clamp(2.25rem,0.9rem+4vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.035em] text-ink-strong"
             >
-                <span data-rise className="block text-brand lg:pl-[calc(100%/12)]">
+                <span data-rise className="block text-fern lg:pl-[calc(100%/12)]">
                     {CONTENT.kicker}
                 </span>
                 <span className="block lg:grid lg:grid-cols-12 lg:gap-x-6">
@@ -399,7 +399,7 @@ const AboutUsSection = () => {
                                 className="max-w-[16ch] text-[clamp(1.125rem,0.9rem+0.8vw,1.5rem)] font-medium uppercase leading-[1.08] tracking-[-0.01em] text-ink-strong"
                             >
                                 {segments.map(([text, accent], j) => (
-                                    <span key={j} className={accent ? 'text-brand' : undefined}>{text}</span>
+                                    <span key={j} className={accent ? 'text-fern' : undefined}>{text}</span>
                                 ))}
                             </div>
                         </li>

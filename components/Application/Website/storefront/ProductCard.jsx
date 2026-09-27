@@ -206,7 +206,7 @@ const ProductCard = ({
                                 disabled={!canAdd}
                                 aria-label={buyLabel}
                                 title={canAdd ? 'Buy now' : 'Unavailable'}
-                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-brand px-4 text-[0.8125rem] font-medium text-white shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-40"
+                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-khaki px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
                             >
                                 <Zap className="size-3.5 shrink-0" aria-hidden="true" />
                                 {canAdd ? 'Buy now' : 'Unavailable'}
@@ -217,7 +217,7 @@ const ProductCard = ({
                                     href={WEBSITE_CART}
                                     aria-label={`${name} is in your cart. View cart`}
                                     title="In cart — view cart"
-                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-white shadow-elev-1 transition-transform hover:scale-105"
+                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-fern text-white shadow-elev-1 transition-transform hover:scale-105"
                                 >
                                     <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
                                 </Link>
@@ -228,7 +228,7 @@ const ProductCard = ({
                                     disabled={!canAdd}
                                     aria-label={addLabel}
                                     title={canAdd ? 'Add to cart' : 'Unavailable'}
-                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-white shadow-elev-1 transition-[background-color,transform] hover:scale-105 hover:bg-cocoa-deep disabled:pointer-events-none disabled:opacity-40"
+                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-pine text-white shadow-elev-1 transition-[background-color,transform] hover:scale-105 hover:bg-[var(--brand-pine-hover)] disabled:pointer-events-none disabled:opacity-40"
                                 >
                                     <Plus className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
                                 </button>

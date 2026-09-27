@@ -165,6 +165,10 @@
   --color-cocoa:           var(--brand-cocoa);
   --color-cocoa-deep:      var(--brand-cocoa-deep);
   --color-gold:            var(--brand-gold);
+  --color-pine:            var(--brand-pine);
+  --color-pine-deep:       var(--brand-pine-deep);
+  --color-fern:            var(--brand-fern);
+  --color-khaki:           var(--brand-khaki);
   --color-amber:           var(--brand-amber);
   --color-amber-soft:      var(--brand-amber-soft);
   --color-amber-ink:       var(--brand-amber-ink);

@@ -170,7 +170,7 @@ const FLOATER_ART = {
   goji: svg(<>
     <ellipse cx="32" cy="37" rx="13" ry="21" fill="#D4462B" />
     <ellipse cx="27" cy="29" rx="3" ry="7" fill="#F08A6A" />
-    <path d="M32 16c0-4 2-8 7-10" stroke="#643314" strokeWidth="3" strokeLinecap="round" />
+    <path d="M32 16c0-4 2-8 7-10" stroke="#1F5A45" strokeWidth="3" strokeLinecap="round" />
   </>),
   sunflowerSeed: svg(<>
     <path d="M32 4C24 14 20 28 22 42c1 10 5 18 10 18s9-8 10-18C44 28 40 14 32 4Z" fill="#2E2A26" />
@@ -182,14 +182,14 @@ const FLOATER_ART = {
   </>),
   // Gifting
   bow: svg(<>
-    <path d="M32 30C22 18 8 16 8 26s14 10 24 4Z" fill="#C84204" />
-    <path d="M32 30c10-12 24-14 24-4s-14 10-24 4Z" fill="#E0622A" />
-    <path d="M28 32l-8 22 8-4 4 6 2-24Z" fill="#A83603" /><path d="M36 32l8 22-8-4-4 6-2-24Z" fill="#C84204" />
-    <circle cx="32" cy="30" r="5" fill="#A83603" />
+    <path d="M32 30C22 18 8 16 8 26s14 10 24 4Z" fill="#1F5A45" />
+    <path d="M32 30c10-12 24-14 24-4s-14 10-24 4Z" fill="#2E7057" />
+    <path d="M28 32l-8 22 8-4 4 6 2-24Z" fill="#083A2F" /><path d="M36 32l8 22-8-4-4 6-2-24Z" fill="#1F5A45" />
+    <circle cx="32" cy="30" r="5" fill="#083A2F" />
   </>),
   sparkle: svg(<>
-    <path d="M32 4l6 20 20 8-20 8-6 20-6-20-20-8 20-8Z" fill="#F2C94C" />
-    <path d="M32 18l2.5 9.5L44 32l-9.5 2.5L32 44l-2.5-9.5L20 32l9.5-2.5Z" fill="#FCEB8E" />
+    <path d="M32 4l6 20 20 8-20 8-6 20-6-20-20-8 20-8Z" fill="#DCB25E" />
+    <path d="M32 18l2.5 9.5L44 32l-9.5 2.5L32 44l-2.5-9.5L20 32l9.5-2.5Z" fill="#F4E6C2" />
   </>),
   truffle: svg(<>
     <path d="M12 40l6 16h28l6-16c-10 6-30 6-40 0Z" fill="#E0A93E" />
@@ -197,27 +197,27 @@ const FLOATER_ART = {
     <path d="M17 28c7-6 23-6 30 0" stroke="#8A5530" strokeWidth="3.5" strokeLinecap="round" />
   </>),
   giftBox: svg(<>
-    <rect x="10" y="26" width="44" height="30" rx="4" fill="#C84204" />
-    <rect x="8" y="18" width="48" height="12" rx="3" fill="#E0622A" />
-    <rect x="28" y="18" width="8" height="38" fill="#F2C94C" />
-    <path d="M32 18c-4-8-14-10-14-4s10 4 14 4c4 0 14 2 14-4s-10-4-14 4Z" fill="#F2C94C" />
+    <rect x="10" y="26" width="44" height="30" rx="4" fill="#1F5A45" />
+    <rect x="8" y="18" width="48" height="12" rx="3" fill="#2E7057" />
+    <rect x="28" y="18" width="8" height="38" fill="#DCB25E" />
+    <path d="M32 18c-4-8-14-10-14-4s10 4 14 4c4 0 14 2 14-4s-10-4-14 4Z" fill="#DCB25E" />
   </>),
   // Treats
   jellyOrange: svg(<>
     <rect x="12" y="12" width="40" height="40" rx="10" fill="#F28C28" />
-    <rect x="12" y="12" width="40" height="14" rx="7" fill="#F2C94C" opacity="0.55" />
+    <rect x="12" y="12" width="40" height="14" rx="7" fill="#DCB25E" opacity="0.55" />
     {SUGAR}
   </>),
   cherry: svg(<>
-    <path d="M24 38c4-12 10-24 22-30M42 40c0-12 1-22 4-32" stroke="#643314" strokeWidth="3" strokeLinecap="round" />
-    <path d="M46 8c7 0 11 4 11 9-7 0-11-4-11-9Z" fill="#8A4B25" />
+    <path d="M24 38c4-12 10-24 22-30M42 40c0-12 1-22 4-32" stroke="#1F5A45" strokeWidth="3" strokeLinecap="round" />
+    <path d="M46 8c7 0 11 4 11 9-7 0-11-4-11-9Z" fill="#2E7057" />
     <circle cx="22" cy="46" r="11" fill="#C8202F" /><circle cx="42" cy="46" r="11" fill="#E03A3E" />
     <circle cx="18" cy="42" r="3" fill="#F28A8F" /><circle cx="38" cy="42" r="3" fill="#F7A3A6" />
   </>),
   candy: svg(<>
-    <path d="M18 32L5 21v22Z" fill="#C84204" /><path d="M46 32l13-11v22Z" fill="#C84204" />
-    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#F2C94C" />
-    <path d="M23 25l18 13M21 33l12 7M30 21l13 8" stroke="#FDF6F1" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M18 32L5 21v22Z" fill="#1F5A45" /><path d="M46 32l13-11v22Z" fill="#1F5A45" />
+    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#DCB25E" />
+    <path d="M23 25l18 13M21 33l12 7M30 21l13 8" stroke="#F7F0DD" strokeWidth="2.5" strokeLinecap="round" />
   </>),
   jellyGreen: svg(<>
     <rect x="12" y="12" width="40" height="40" rx="10" fill="#8FB63A" />

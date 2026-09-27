@@ -131,7 +131,7 @@ const DailyBestSellsSectionClient = ({ products = [] }) => {
                     <span
                         aria-hidden="true"
                         className="absolute inset-0 -z-10"
-                        style={{ background: 'linear-gradient(180deg, rgb(46 22 8 / 0.9) 0%, rgb(46 22 8 / 0.55) 42%, rgb(46 22 8 / 0.05) 75%)' }}
+                        style={{ background: 'linear-gradient(180deg, rgb(4 26 20 / 0.9) 0%, rgb(4 26 20 / 0.55) 42%, rgb(4 26 20 / 0.05) 75%)' }}
                     />
 
                     <span className="flex flex-col gap-2">

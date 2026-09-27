@@ -27,7 +27,7 @@ const CARDS = [
         cta: 'Shop collection',
         href: WEBSITE_SHOP,
         image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789636906/WhatsApp_Image_2026-09-17_at_2.50.29_PM_jkfnws.jpg',
-        overlay: 'linear-gradient(0deg, rgb(46 22 8 / 0.94) 0%, rgb(46 22 8 / 0.7) 42%, rgb(46 22 8 / 0.15) 78%)',
+        overlay: 'linear-gradient(0deg, rgb(4 26 20 / 0.94) 0%, rgb(4 26 20 / 0.7) 42%, rgb(4 26 20 / 0.15) 78%)',
     },
     {
         num: '03',
