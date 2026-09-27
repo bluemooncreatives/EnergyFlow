@@ -344,11 +344,10 @@
     .tabLabel { display: none; }
     .tab { gap: 0.5rem; }
 
-    /* Long eyebrows ("Festive & Corporate Hampers") are wider than a small
-       phone at full tracking: tighten first, wrap as the last resort. */
+    /* Long eyebrows ("Festive & Corporate Hampers") can be wider than a
+       small phone: let them wrap rather than overflow. */
     .slide :global(.ef-eyebrow) {
         max-width: 100%;
-        letter-spacing: 0.08em;
         white-space: normal;
         line-height: 1.25;
     }

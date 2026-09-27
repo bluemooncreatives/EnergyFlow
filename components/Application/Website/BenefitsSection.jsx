@@ -59,17 +59,20 @@ const BenefitsSection = () => {
                 />
 
                 <ul className="grid list-none grid-cols-1 gap-[var(--grid-gap)] p-0 sm:grid-cols-2 lg:grid-cols-4">
+                    {/* Icon beside the text while cards are wide (1–2 columns);
+                        stacked only in the narrow 4-up desktop row. Everything
+                        stays left-aligned to the same edge at every width. */}
                     {BENEFITS.map(({ Icon, title, description }) => (
                         <li
                             key={title}
                             data-reveal
-                            className="grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-1.5 rounded-card bg-white/[0.06] p-5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] sm:flex sm:flex-col sm:gap-4 sm:p-6 lg:p-7"
+                            className="grid grid-cols-[auto_minmax(0,1fr)] content-start gap-x-4 gap-y-1.5 rounded-card bg-white/[0.06] p-5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] transition-colors duration-300 hover:bg-white/[0.09] sm:gap-x-5 sm:p-6 lg:flex lg:flex-col lg:items-start lg:gap-0 lg:p-7"
                         >
-                            <span className="row-span-2 flex size-11 items-center justify-center rounded-full bg-amber text-brand-deep sm:size-12">
+                            <span className="row-span-2 flex size-11 shrink-0 items-center justify-center rounded-full bg-amber text-brand-deep sm:size-12 lg:mb-6">
                                 <Icon className="size-5" aria-hidden="true" />
                             </span>
-                            <h3 className="self-center text-[1.125rem] font-medium tracking-[-0.01em] text-white sm:text-[1.1875rem]">{title}</h3>
-                            <p className="text-[0.9375rem] leading-relaxed text-white/75">{description}</p>
+                            <h3 className="self-center text-[1.125rem] font-medium leading-snug tracking-[-0.01em] text-white sm:text-[1.1875rem] lg:mb-2 lg:self-start">{title}</h3>
+                            <p className="col-start-2 text-[0.9375rem] leading-relaxed text-white/75">{description}</p>
                         </li>
                     ))}
                 </ul>
