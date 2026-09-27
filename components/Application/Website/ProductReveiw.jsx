@@ -181,7 +181,7 @@ const ProductReveiw = ({ productId }) => {
                     </div>
 
                     <div className='md:w-1/2 w-full md:text-end text-center'>
-                        <Button onClick={() => setIsReview(!isReview)} type="button" variant="outline" className="md:w-fit w-full rounded-full border-line-strong h-12 px-10 font-medium">
+                        <Button onClick={() => setIsReview(!isReview)} type="button" variant="outline" className="md:w-fit w-full rounded-[var(--radius-control)] border-line-strong h-12 px-10 font-medium">
                             Write Review
                         </Button>
                     </div>
@@ -252,7 +252,7 @@ const ProductReveiw = ({ productId }) => {
                                             />
                                         </div>
 
-                                        <ButtonLoading loading={loading} type="submit" text="Submit Review" variant="brand" className="h-12 w-full cursor-pointer rounded-full text-[0.9375rem] font-medium sm:w-fit sm:px-10" />
+                                        <ButtonLoading loading={loading} type="submit" text="Submit Review" variant="brand" className="h-12 w-full cursor-pointer rounded-[var(--radius-control)] text-[0.9375rem] font-medium sm:w-fit sm:px-10" />
 
                                     </form>
                                 </Form>
@@ -283,7 +283,7 @@ const ProductReveiw = ({ productId }) => {
                         ))}
 
                         {hasNextPage &&
-                            <ButtonLoading text="Load More" type="button" loading={isFetching} onClick={fetchNextPage} variant="brand" className="h-11 rounded-full px-6 text-[0.9375rem] font-medium" />
+                            <ButtonLoading text="Load More" type="button" loading={isFetching} onClick={fetchNextPage} variant="brand" className="h-11 rounded-[var(--radius-control)] px-6 text-[0.9375rem] font-medium" />
                         }
 
                     </div>

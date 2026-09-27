@@ -337,7 +337,7 @@ const GlobalSearch = ({ open, setOpen, isLoggedIn = false }) => {
                                         <button
                                             type="button"
                                             onClick={() => refetch()}
-                                            className="inline-flex items-center gap-1.5 rounded-full border border-border/70 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
+                                            className="inline-flex items-center gap-1.5 rounded-[var(--radius-control)] border border-border/70 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
                                         >
                                             <RotateCcw className="size-3.5" /> Try again
                                         </button>

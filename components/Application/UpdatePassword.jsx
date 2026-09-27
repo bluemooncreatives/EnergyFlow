@@ -110,7 +110,7 @@ const UpdatePassword = ({ email }) => {
                             />
                         </div>
                         <div className='mb-3'>
-                            <ButtonLoading loading={loading} type="submit" text="Update Password" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
+                            <ButtonLoading loading={loading} type="submit" text="Update Password" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
                         </div>
                     </form>
                 </Form>

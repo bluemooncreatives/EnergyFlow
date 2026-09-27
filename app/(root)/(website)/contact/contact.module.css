@@ -181,7 +181,7 @@
   min-height: 3rem;
   background-color: var(--brand-primary);
   border: 1px solid var(--brand-primary);
-  border-radius: 9999px;
+  border-radius: var(--radius-control);
   color: var(--brand-white);
   cursor: pointer;
   font: inherit;

@@ -171,7 +171,7 @@ const LoginPage = () => {
                                     </div>
 
                                     <div className='pt-1'>
-                                        <ButtonLoading loading={loading} type="submit" text="Login" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
+                                        <ButtonLoading loading={loading} type="submit" text="Login" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
                                     </div>
 
                                     <div className="relative my-1">

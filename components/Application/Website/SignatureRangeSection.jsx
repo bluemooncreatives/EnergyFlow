@@ -121,7 +121,7 @@ const RangeTile = ({ range, featured, availability }) => {
                         <Image src={range.image} alt="" fill sizes="(max-width: 1024px) 45vw, 26rem" className="object-contain" />
                     </div>
                 ) : (
-                    <Art className="h-auto w-full drop-shadow-[0_18px_24px_rgba(20,38,26,0.12)]" />
+                    <Art className="h-auto w-full drop-shadow-[0_18px_24px_rgba(74,50,10,0.14)]" />
                 )}
             </div>
         </Link>

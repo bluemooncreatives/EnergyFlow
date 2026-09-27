@@ -16,8 +16,8 @@ const ProductBoxSkeleton = () => {
                 <Skeleton className="h-3 w-12 bg-surface-well" />
                 <Skeleton className="h-5 w-20 bg-surface-well" />
                 <div className="mt-2 grid grid-cols-1 gap-2 @[17rem]/card:grid-cols-2">
-                    <Skeleton className="h-10 w-full rounded-full bg-surface-well" />
-                    <Skeleton className="h-10 w-full rounded-full bg-surface-well" />
+                    <Skeleton className="h-10 w-full rounded-[var(--radius-control)] bg-surface-well" />
+                    <Skeleton className="h-10 w-full rounded-[var(--radius-control)] bg-surface-well" />
                 </div>
             </div>
         </div>

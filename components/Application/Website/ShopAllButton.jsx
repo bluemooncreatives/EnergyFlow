@@ -24,7 +24,7 @@ const ShopAllButton = ({
     const router  = useRouter()
 
     const { border, fill, hoverText } = SCHEMES[colorScheme] ?? SCHEMES.black
-    const radiusClass = radius === "sm" ? "rounded-sm" : radius === "md" ? "rounded-md" : "rounded-full"
+    const radiusClass = radius === "sm" ? "rounded-sm" : radius === "md" ? "rounded-md" : "rounded-[var(--radius-control)]"
 
     // Callback ref — runs gsap.set once on mount, no useEffect needed
     const setFill = (node) => {

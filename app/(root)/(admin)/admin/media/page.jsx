@@ -154,7 +154,7 @@ const MediaContent = () => {
                             ) : (
                                 <>
                                     <Button
-                                        className="bg-green-500 hover:bg-green-600 h-9"
+                                        className="bg-success hover:bg-success/90 h-9"
                                         onClick={() => handleDelete(selectedMedia, "RSD")}
                                         size="lg"
                                     >

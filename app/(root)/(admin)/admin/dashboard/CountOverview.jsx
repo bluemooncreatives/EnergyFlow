@@ -66,9 +66,9 @@ const CountOverview = () => {
                         <Card className={`border-l-4 hover:border-l-8`} style={{ borderLeftColor: `var(${card.chartVar})` }}> 
                                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                             <div className="flex items-center gap-2">
-                                                <CardTitle className={`text-sm font-medium`} style={{ color: `var(${card.chartVar})` }}>{card.title}</CardTitle>
+                                                <CardTitle className={`text-sm font-medium text-foreground`}>{card.title}</CardTitle>
                                             </div>
-                                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${card.chartVar})`, color: 'white' }} aria-hidden>
+                                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${card.chartVar})`, color: card.chartVar === '--chart-2' ? '#2B2008' : 'var(--background)' }} aria-hidden>
                                                 <card.icon className="h-4 w-4" />
                                             </span>
                                         </CardHeader>
@@ -76,7 +76,7 @@ const CountOverview = () => {
                                 <div className="text-4xl font-bold">{card.value}</div>
                                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
                                     {card.trend.isIncreased ? (
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-success/15 text-success">
                                                 <TrendingUp className="h-3 w-3" />
                                             </span>
                                         ) : (

@@ -59,7 +59,7 @@ const ContactDetail = ({ params }) => {
                   </span>
                 )}
                 {contact.isRead ? (
-                  <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300">
+                  <Badge className="bg-success/15 text-success hover:bg-success/15 dark:bg-success/20 dark:text-success">
                     Read
                   </Badge>
                 ) : (

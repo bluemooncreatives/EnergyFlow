@@ -264,10 +264,10 @@ const Filter = ({ filters, showClearLink = true }) => {
                             onValueChange={handlePriceChange}
                         />
                         <div className="grid grid-cols-2 gap-2 font-neue text-[0.8125rem] text-ink-body">
-                            <div className="rounded-full bg-surface-well px-2 py-2 text-center tabular-nums">
+                            <div className="rounded-[var(--radius-control)] bg-surface-well px-2 py-2 text-center tabular-nums">
                                 {priceFilter.minPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                             </div>
-                            <div className="rounded-full bg-surface-well px-2 py-2 text-center tabular-nums">
+                            <div className="rounded-[var(--radius-control)] bg-surface-well px-2 py-2 text-center tabular-nums">
                                 {priceFilter.maxPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
                             </div>
                         </div>

@@ -109,7 +109,7 @@ const FeaturedProductClient = ({ products = [] }) => {
         return (
             <section className="fp-section bg-background">
                 <div className="fp-container">
-                    <div className="text-center py-12 text-gray-400">
+                    <div className="text-center py-12 text-ink-muted">
                         No featured products available
                     </div>
                 </div>

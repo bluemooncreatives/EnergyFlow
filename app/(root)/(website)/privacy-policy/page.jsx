@@ -76,7 +76,7 @@ const PrivacyPolicy = () => {
                 <Section number="2" title="Information We Collect">
                     <p>We collect the following categories of personal information:</p>
 
-                    <p className='font-medium text-gray-800 mt-2'>a) Information You Provide Directly</p>
+                    <p className='font-medium text-ink-strong mt-2'>a) Information You Provide Directly</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Identity Data:</strong> Full name, username, or similar identifiers.</li>
                         <li><strong>Contact Data:</strong> Email address, phone number, billing address, and shipping address.</li>
@@ -86,14 +86,14 @@ const PrivacyPolicy = () => {
                         <li><strong>Communications:</strong> Messages, inquiries, or feedback you send us via contact forms, email, or chat.</li>
                     </ul>
 
-                    <p className='font-medium text-gray-800 mt-4'>b) Information Collected Automatically</p>
+                    <p className='font-medium text-ink-strong mt-4'>b) Information Collected Automatically</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Technical Data:</strong> IP address, browser type and version, operating system, device identifiers, and time zone.</li>
                         <li><strong>Usage Data:</strong> Pages visited, referring URLs, time spent on pages, links clicked, and browsing behavior on the Website.</li>
                         <li><strong>Cookie Data:</strong> Data collected through cookies and similar tracking technologies (see Section 5).</li>
                     </ul>
 
-                    <p className='font-medium text-gray-800 mt-4'>c) Information from Third Parties</p>
+                    <p className='font-medium text-ink-strong mt-4'>c) Information from Third Parties</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>Analytics providers (e.g., Google Analytics) may share aggregated behavioral data about Website visitors.</li>
                         <li>Payment processors may share transaction status and fraud-detection signals.</li>
@@ -191,7 +191,7 @@ const PrivacyPolicy = () => {
                 {/* Section 10 */}
                 <Section number="10" title="Your Rights">
 
-                    <p className='font-medium text-gray-800'>a) Rights for EU / EEA / UK Users (GDPR & UK GDPR)</p>
+                    <p className='font-medium text-ink-strong'>a) Rights for EU / EEA / UK Users (GDPR & UK GDPR)</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Right of Access:</strong> Request a copy of the personal data we hold about you.</li>
                         <li><strong>Right to Rectification:</strong> Request correction of inaccurate or incomplete data.</li>
@@ -203,7 +203,7 @@ const PrivacyPolicy = () => {
                         <li>You also have the right to lodge a complaint with your national data protection authority (e.g., ICO in the UK, or your EU supervisory authority).</li>
                     </ul>
 
-                    <p className='font-medium text-gray-800 mt-4'>b) Rights for California Users (CCPA / CPRA)</p>
+                    <p className='font-medium text-ink-strong mt-4'>b) Rights for California Users (CCPA / CPRA)</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Right to Know:</strong> Request disclosure of the categories and specific pieces of personal information we have collected about you.</li>
                         <li><strong>Right to Delete:</strong> Request deletion of personal information we have collected, subject to certain exceptions.</li>
@@ -212,7 +212,7 @@ const PrivacyPolicy = () => {
                         <li><strong>Right to Correct:</strong> Request correction of inaccurate personal information.</li>
                     </ul>
 
-                    <p className='font-medium text-gray-800 mt-4'>c) Rights for Indian Users (DPDP Act 2023)</p>
+                    <p className='font-medium text-ink-strong mt-4'>c) Rights for Indian Users (DPDP Act 2023)</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Right to Access:</strong> Request a summary of personal data held and its processing activities.</li>
                         <li><strong>Right to Correction & Erasure:</strong> Request correction of inaccurate data or erasure of data no longer necessary for its original purpose.</li>
@@ -220,7 +220,7 @@ const PrivacyPolicy = () => {
                         <li><strong>Right to Nominate:</strong> Nominate another individual to exercise rights on your behalf in the event of death or incapacity.</li>
                     </ul>
 
-                    <p className='font-medium text-gray-800 mt-4'>d) Rights for Australian Users (Privacy Act 1988)</p>
+                    <p className='font-medium text-ink-strong mt-4'>d) Rights for Australian Users (Privacy Act 1988)</p>
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>You have the right to access personal information we hold about you and to request corrections to inaccurate information.</li>
                         <li>You may lodge a complaint with the Office of the Australian Information Commissioner (OAIC) if you believe we have mishandled your data.</li>

@@ -57,7 +57,7 @@ const Cart = () => {
                             Your cart
                         </SheetTitle>
                         {cartCount > 0 && (
-                            <span className="rounded-full bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand">
+                            <span className="rounded-[var(--radius-control)] bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand">
                                 {cartCount} {cartCount === 1 ? 'item' : 'items'}
                             </span>
                         )}
@@ -110,7 +110,7 @@ const Cart = () => {
                                         <h4 className="line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground">
                                             {product.name}
                                         </h4>
-                                        <span className="w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
+                                        <span className="w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
                                             {product.size}
                                         </span>
                                         <div className="flex items-center justify-between">

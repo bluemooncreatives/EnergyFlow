@@ -52,7 +52,7 @@ const TONE = {
     amber: 'border-amber-500/30 bg-amber-500/10 text-amber-700',
     blue: 'border-blue-500/30 bg-blue-500/10 text-blue-700',
     indigo: 'border-indigo-500/30 bg-indigo-500/10 text-indigo-700',
-    emerald: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700',
+    emerald: 'border-success/30 bg-success/10 text-success',
     red: 'border-red-500/30 bg-red-500/10 text-red-700',
 }
 
@@ -113,7 +113,7 @@ const OrderDetails = async ({ params }) => {
                         >
                             <ArrowLeft className='size-3.5' /> Back to orders
                         </Link>
-                        <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-normal ${TONE[statusMeta.tone]}`}>
+                        <span className={`inline-flex items-center gap-1.5 rounded-[var(--radius-control)] border px-3 py-1 text-[11px] font-semibold uppercase tracking-normal ${TONE[statusMeta.tone]}`}>
                             <statusMeta.Icon className='size-3.5' /> {statusMeta.label}
                         </span>
                     </div>
@@ -158,7 +158,7 @@ const OrderDetails = async ({ params }) => {
                                     <h2 className='flex items-center gap-2 text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>
                                         <Package className='size-[18px] text-brand' /> Items
                                     </h2>
-                                    <span className='rounded-full bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
+                                    <span className='rounded-[var(--radius-control)] bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
                                         {itemCount} {itemCount === 1 ? 'item' : 'items'}
                                     </span>
                                 </div>
@@ -189,7 +189,7 @@ const OrderDetails = async ({ params }) => {
                                                             {nameNode}
                                                         </h4>
                                                         {size && (
-                                                            <span className='mt-1.5 w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
+                                                            <span className='mt-1.5 w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
                                                                 {size}
                                                             </span>
                                                         )}
@@ -255,18 +255,18 @@ const OrderDetails = async ({ params }) => {
                                         {mrpSavings > 0 && (
                                             <div className='flex items-center justify-between text-sm'>
                                                 <span className='text-muted-foreground'>Discount on MRP</span>
-                                                <span className='font-medium text-emerald-600'>- {fmt(mrpSavings)}</span>
+                                                <span className='font-medium text-success'>- {fmt(mrpSavings)}</span>
                                             </div>
                                         )}
                                         {orderData?.couponDiscountAmount > 0 && (
                                             <div className='flex items-center justify-between text-sm'>
                                                 <span className='text-muted-foreground'>Coupon discount</span>
-                                                <span className='font-medium text-emerald-600'>- {fmt(orderData.couponDiscountAmount)}</span>
+                                                <span className='font-medium text-success'>- {fmt(orderData.couponDiscountAmount)}</span>
                                             </div>
                                         )}
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='text-muted-foreground'>Shipping</span>
-                                            <span className='font-medium text-emerald-600'>FREE</span>
+                                            <span className='font-medium text-success'>FREE</span>
                                         </div>
 
                                         <div className='my-1 border-t border-dashed border-border/70' />
@@ -277,7 +277,7 @@ const OrderDetails = async ({ params }) => {
                                         </div>
 
                                         {totalSavings > 0 && (
-                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/[0.08] px-3 py-2 text-[13px] font-semibold text-emerald-700'>
+                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-success/[0.08] px-3 py-2 text-[13px] font-semibold text-success'>
                                                 <BadgeCheck className='size-4' />
                                                 You saved {fmt(totalSavings)} on this order
                                             </div>
@@ -295,7 +295,7 @@ const OrderDetails = async ({ params }) => {
                                         </div>
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='text-muted-foreground'>Status</span>
-                                            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal ${TONE[paymentStatusMeta.tone]}`}>
+                                            <span className={`rounded-[var(--radius-control)] border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal ${TONE[paymentStatusMeta.tone]}`}>
                                                 {paymentStatusMeta.label}
                                             </span>
                                         </div>
@@ -324,7 +324,7 @@ const OrderDetails = async ({ params }) => {
                                         <OrderDetailActions orderId={orderData?.order_id} />
                                         <Link
                                             href={WEBSITE_SHOP}
-                                            className='inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-brand text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-hover'
+                                            className='inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-hover'
                                         >
                                             Continue Shopping <ChevronRight className='size-4' />
                                         </Link>

@@ -192,7 +192,7 @@ const ProductCard = ({
                     <div className="flex min-w-0 items-center justify-between gap-2">
                         <Price price={price} mrp={mrp} />
                         {packSize && (
-                            <span className="shrink-0 rounded-full bg-surface-well px-2 py-0.5 text-[11px] font-medium leading-4 text-ink-body">
+                            <span className="shrink-0 rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[11px] font-medium leading-4 text-ink-body">
                                 <span className="sr-only">Pack size </span>{packSize}
                             </span>
                         )}
@@ -206,7 +206,7 @@ const ProductCard = ({
                                 disabled={!canAdd}
                                 aria-label={buyLabel}
                                 title={canAdd ? 'Buy now' : 'Unavailable'}
-                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[#F5C161] disabled:pointer-events-none disabled:opacity-40"
+                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-amber px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
                             >
                                 <Zap className="size-3.5 shrink-0" aria-hidden="true" />
                                 {canAdd ? 'Buy now' : 'Unavailable'}

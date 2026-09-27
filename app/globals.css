@@ -10,14 +10,6 @@
    Loaded here so Next.js can inject preload <link> tags via layout.jsx.
    ──────────────────────────────────────────────────────────────── */
 @font-face {
-  font-family: 'Felixti';
-  src: url('/assets/font/Felixti.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'PP Neue Montreal';
   src: url('/assets/font/PPNeueMontreal-Thin.woff2') format('woff2');
   font-weight: 200;
@@ -132,6 +124,7 @@
   --color-accent:                 var(--accent);
   --color-accent-foreground:      var(--accent-foreground);
   --color-destructive:            var(--destructive);
+  --color-success:                var(--success);
   --color-border:                 var(--border);
   --color-input:                  var(--input);
   --color-ring:                   var(--ring);
@@ -167,6 +160,8 @@
   --color-brand-hover:     var(--brand-primary-hover);
   --color-brand-bright:    var(--brand-primary-bright);
   --color-brand-deep:      var(--brand-primary-deep);
+  --color-olive:           var(--brand-olive);
+  --color-olive-deep:      var(--brand-olive-deep);
   --color-amber:           var(--brand-amber);
   --color-amber-soft:      var(--brand-amber-soft);
   --color-amber-ink:       var(--brand-amber-ink);

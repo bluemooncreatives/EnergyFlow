@@ -27,7 +27,7 @@ const CARDS = [
         cta: 'Shop collection',
         href: WEBSITE_SHOP,
         image: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789636906/WhatsApp_Image_2026-09-17_at_2.50.29_PM_jkfnws.jpg',
-        overlay: 'linear-gradient(0deg, rgb(22 48 31 / 0.96) 0%, rgb(22 48 31 / 0.72) 42%, rgb(22 48 31 / 0.15) 78%)',
+        overlay: 'linear-gradient(0deg, rgb(43 32 8 / 0.94) 0%, rgb(43 32 8 / 0.7) 42%, rgb(43 32 8 / 0.15) 78%)',
     },
     {
         num: '03',
@@ -78,7 +78,7 @@ const EditorialCardsSection = () => {
                             />
                             <span aria-hidden="true" className="absolute inset-0 -z-10" style={{ background: card.overlay }} />
 
-                            <span className="absolute left-6 top-6 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-medium tracking-normal backdrop-blur-sm sm:left-7 sm:top-7">
+                            <span className="absolute left-6 top-6 rounded-[var(--radius-control)] bg-white/15 px-3 py-1.5 text-[12px] font-medium tracking-normal backdrop-blur-sm sm:left-7 sm:top-7">
                                 {card.num}
                             </span>
 

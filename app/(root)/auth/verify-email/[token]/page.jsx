@@ -39,8 +39,8 @@ const EmailVerification = ({ params }) => {
     const ui = useMemo(() => {
         if (status === 'success') {
             return {
-                icon: <CheckCircle2 className="size-6 text-emerald-600 animate-[pulse_2.4s_ease-in-out_infinite]" />,
-                tone: 'text-emerald-600 ring-emerald-500/20 bg-emerald-500/10',
+                icon: <CheckCircle2 className="size-6 text-success animate-[pulse_2.4s_ease-in-out_infinite]" />,
+                tone: 'text-success ring-success/20 bg-success/10',
                 title: 'Email verified successfully',
                 description: 'You can now sign in to your account.',
                 cta: { label: 'Go to Login', href: WEBSITE_LOGIN },

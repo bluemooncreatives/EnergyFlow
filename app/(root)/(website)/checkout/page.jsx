@@ -465,7 +465,7 @@ const Checkout = () => {
                 },
 
                 "theme": {
-                    "color": "#1E4229"
+                    "color": "#BB3E00"
                 }
             }
 
@@ -780,7 +780,7 @@ const Checkout = () => {
                                         <div className='flex-1'>
                                             <div className='flex items-center gap-2'>
                                                 <p className='font-neue text-base font-semibold text-foreground'>Pay Online</p>
-                                                <span className='rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal text-emerald-600'>Recommended</span>
+                                                <span className='rounded-[var(--radius-control)] bg-success/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal text-success'>Recommended</span>
                                             </div>
                                             <p className='mt-0.5 text-[11px] text-muted-foreground'>UPI, Cards, Net Banking & Wallets — secured by Razorpay</p>
                                         </div>
@@ -804,7 +804,7 @@ const Checkout = () => {
                                             <p className='font-neue text-base font-semibold text-foreground'>Cash on Delivery</p>
                                             <p className='mt-0.5 text-[11px] text-muted-foreground'>Pay in cash when your order arrives at your doorstep</p>
                                         </div>
-                                        <span className='rounded-full bg-muted/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-normal text-muted-foreground'>COD</span>
+                                        <span className='rounded-[var(--radius-control)] bg-muted/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-normal text-muted-foreground'>COD</span>
                                     </label>
                                 </div>
                             </div>
@@ -819,11 +819,11 @@ const Checkout = () => {
                                     <div className='flex items-center justify-between border-b border-line-soft px-5 py-4 sm:px-6'>
                                         <h2 className='font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong'>Order summary</h2>
                                         {isBuyNow ? (
-                                            <span className='inline-flex items-center gap-1 rounded-full bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand'>
+                                            <span className='inline-flex items-center gap-1 rounded-[var(--radius-control)] bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand'>
                                                 <Zap className='size-3' aria-hidden='true' /> Buy now
                                             </span>
                                         ) : (
-                                            <span className='rounded-full bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
+                                            <span className='rounded-[var(--radius-control)] bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
                                                 {cart.count} {cart.count === 1 ? 'item' : 'items'}
                                             </span>
                                         )}
@@ -866,13 +866,13 @@ const Checkout = () => {
                                                             )}
                                                         </div>
 
-                                                        <span className='mt-1 w-fit rounded-full bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
+                                                        <span className='mt-1 w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body'>
                                                             {product.size}
                                                         </span>
 
                                                         <div className='mt-auto flex items-center justify-between pt-2.5'>
                                                             {/* quantity stepper */}
-                                                            <div className='flex items-center rounded-full border border-border/60'>
+                                                            <div className='flex items-center rounded-[var(--radius-control)] border border-border/60'>
                                                                 <Button
                                                                     type='button'
                                                                     variant='ghost'
@@ -936,16 +936,16 @@ const Checkout = () => {
                                                             )}
                                                         />
                                                     </div>
-                                                    <ButtonLoading type="submit" text="Apply" className="h-11 shrink-0 rounded-full px-6 cursor-pointer" loading={couponLoading} />
+                                                    <ButtonLoading type="submit" text="Apply" className="h-11 shrink-0 rounded-[var(--radius-control)] px-6 cursor-pointer" loading={couponLoading} />
                                                 </form>
                                             </Form>
                                             :
-                                            <div className='flex items-center justify-between rounded-lg border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-2.5'>
+                                            <div className='flex items-center justify-between rounded-lg border border-success/30 bg-success/[0.06] px-4 py-2.5'>
                                                 <div className='flex items-center gap-2.5'>
-                                                    <BadgeCheck className='size-5 text-emerald-600' />
+                                                    <BadgeCheck className='size-5 text-success' />
                                                     <div>
                                                         <p className='text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground'>Coupon applied</p>
-                                                        <p className='font-neue text-sm font-semibold uppercase text-emerald-700'>{couponCode}</p>
+                                                        <p className='font-neue text-sm font-semibold uppercase text-success'>{couponCode}</p>
                                                     </div>
                                                 </div>
                                                 <button type='button' onClick={removeCoupon} aria-label='Remove coupon' className='cursor-pointer text-muted-foreground transition-colors hover:text-brand'>
@@ -964,18 +964,18 @@ const Checkout = () => {
                                         {mrpSavings > 0 && (
                                             <div className='flex items-center justify-between text-sm'>
                                                 <span className='text-muted-foreground'>Discount on MRP</span>
-                                                <span className='font-medium text-emerald-600'>- {fmt(mrpSavings)}</span>
+                                                <span className='font-medium text-success'>- {fmt(mrpSavings)}</span>
                                             </div>
                                         )}
                                         {couponDiscountAmount > 0 && (
                                             <div className='flex items-center justify-between text-sm'>
                                                 <span className='text-muted-foreground'>Coupon discount</span>
-                                                <span className='font-medium text-emerald-600'>- {fmt(couponDiscountAmount)}</span>
+                                                <span className='font-medium text-success'>- {fmt(couponDiscountAmount)}</span>
                                             </div>
                                         )}
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='text-muted-foreground'>Shipping</span>
-                                            <span className='font-medium text-emerald-600'>FREE</span>
+                                            <span className='font-medium text-success'>FREE</span>
                                         </div>
 
                                         <div className='my-1 border-t border-dashed border-border/70' />
@@ -986,7 +986,7 @@ const Checkout = () => {
                                         </div>
 
                                         {(mrpSavings + couponDiscountAmount) > 0 && (
-                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/[0.08] px-3 py-2 text-[13px] font-semibold text-emerald-700'>
+                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-success/[0.08] px-3 py-2 text-[13px] font-semibold text-success'>
                                                 <BadgeCheck className='size-4' />
                                                 You&apos;re saving {fmt(mrpSavings + couponDiscountAmount)} on this order
                                             </div>
@@ -1017,7 +1017,7 @@ const Checkout = () => {
                                             type="submit"
                                             text={ctaText}
                                             loading={placingOrder}
-                                            className="h-12 w-full rounded-full bg-brand text-[0.9375rem] font-medium hover:bg-brand-hover cursor-pointer"
+                                            className="h-12 w-full rounded-[var(--radius-control)] bg-brand text-[0.9375rem] font-medium hover:bg-brand-hover cursor-pointer"
                                         />
                                         <Link
                                             href={isBuyNow ? WEBSITE_PRODUCT_DETAILS(buyLine?.url) : WEBSITE_CART}

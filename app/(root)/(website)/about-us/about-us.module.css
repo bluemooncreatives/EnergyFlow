@@ -8,7 +8,7 @@
   /* Local page palette — mapped to the global homepage design tokens */
   --about-bg:          var(--surface-page);      /* storefront ivory canvas    */
   --about-fg:          var(--foreground);        /* near-black headings        */
-  --about-muted:       var(--text-body);         /* #4a4a4a body copy          */
+  --about-muted:       var(--text-body);         /* warm body copy             */
   --about-line:        var(--border);            /* light hairline rules       */
   --about-accent:      var(--brand-primary-hover); /* green brand accent       */
   --about-accent-soft: color-mix(in srgb, var(--brand-primary-hover) 14%, transparent);
@@ -95,7 +95,7 @@
   letter-spacing: -0.04em;
   line-height: 0.8;
   font-size: clamp(4.5rem, 21vw, 17rem);
-  color: var(--brand-primary);   /* #1E4229 brand green */
+  color: var(--brand-primary);   /* paprika */
   /* sits below the mask until revealed */
   transform: translateY(110%);
   will-change: transform;

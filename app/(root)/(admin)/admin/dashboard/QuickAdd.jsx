@@ -40,10 +40,10 @@ const QuickAdd = () => {
                 <Link key={link.title} href={link.href}>
                     <Card style={{ borderLeftColor: `var(${link.chartVar})` }}>
                         <div className="flex flex-col">
-                            <div className="text-sm font-medium" style={{ color: `var(${link.chartVar})` }}>{link.title}</div>
+                            <div className="text-sm font-medium text-foreground">{link.title}</div>
                             <div className="text-xs text-muted-foreground mt-0.5">{link.description}</div>
                         </div>
-                        <span className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: 'white' }}>
+                        <span className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: link.chartVar === '--chart-2' ? '#2B2008' : 'var(--background)' }}>
                             <link.icon className="h-4 w-4" />
                         </span>
                     </Card>

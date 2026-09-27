@@ -15,11 +15,11 @@ const BRAND = {
     web: 'www.energyflow.com',
 }
 
-const BRAND_GREEN = '#1E4229'   // deep forest green — matches --brand-primary
-const CREAM = '#FFECD1'
-const INK = '#1A1A1A'
-const MUTE = '#8a8a8a'
-const GREEN = '#15803d'
+const BRAND_COLOR = '#BB3E00'   // paprika — matches --brand-primary
+const CREAM = '#FFF1D7'
+const INK = '#2B2008'
+const MUTE = '#8A7A5C'
+const GREEN = '#6B6014'          // olive — savings / success
 
 const money = (n) =>
     'Rs. ' + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -47,13 +47,13 @@ const s = StyleSheet.create({
     page: { paddingVertical: 40, paddingHorizontal: 44, fontFamily: 'Helvetica', fontSize: 9, color: INK, lineHeight: 1.5 },
 
     // header
-    head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 2, borderBottomColor: BRAND_GREEN, paddingBottom: 14 },
-    brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: BRAND_GREEN, letterSpacing: 1 },
+    head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 2, borderBottomColor: BRAND_COLOR, paddingBottom: 14 },
+    brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: BRAND_COLOR, letterSpacing: 1 },
     brandTag: { fontSize: 7.5, color: MUTE, marginTop: 2, letterSpacing: 0.5 },
     brandMeta: { fontSize: 7.5, color: '#6a6a6a', marginTop: 6 },
     invTitleWrap: { alignItems: 'flex-end' },
     invTitle: { fontSize: 16, fontFamily: 'Helvetica-Bold', color: INK, letterSpacing: 3 },
-    badge: { marginTop: 6, backgroundColor: CREAM, color: BRAND_GREEN, paddingVertical: 3, paddingHorizontal: 8, borderRadius: 8, fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1 },
+    badge: { marginTop: 6, backgroundColor: CREAM, color: BRAND_COLOR, paddingVertical: 3, paddingHorizontal: 8, borderRadius: 8, fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1 },
 
     // meta
     meta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
@@ -67,7 +67,7 @@ const s = StyleSheet.create({
 
     // items table
     table: { marginTop: 22 },
-    thead: { flexDirection: 'row', backgroundColor: BRAND_GREEN, color: '#fff', paddingVertical: 7, paddingHorizontal: 8 },
+    thead: { flexDirection: 'row', backgroundColor: BRAND_COLOR, color: '#fff', paddingVertical: 7, paddingHorizontal: 8 },
     th: { fontSize: 6.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 0.8, color: '#fff' },
     row: { flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#ececec' },
     cNum: { width: '7%', color: '#9a9a9a' },
@@ -92,7 +92,7 @@ const s = StyleSheet.create({
     grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 2, borderTopColor: INK, marginTop: 6, paddingTop: 8 },
     grandLabel: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
     grandVal: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
-    saved: { marginTop: 8, backgroundColor: '#e9f7ef', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
+    saved: { marginTop: 8, backgroundColor: '#F3EDCF', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
     payBox: { marginTop: 12, borderWidth: 1, borderColor: '#ececec', borderRadius: 4 },
     payRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, paddingHorizontal: 10 },
     payRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },
@@ -101,7 +101,7 @@ const s = StyleSheet.create({
 
     // footer
     foot: { marginTop: 30, borderTopWidth: 1, borderTopColor: '#ececec', paddingTop: 14, alignItems: 'center' },
-    thanks: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: BRAND_GREEN },
+    thanks: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: BRAND_COLOR },
     footSmall: { fontSize: 7.5, color: '#9a9a9a', marginTop: 5, textAlign: 'center', lineHeight: 1.6 },
 })
 

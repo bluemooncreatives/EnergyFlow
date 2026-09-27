@@ -166,7 +166,7 @@ const RegisterPage = () => {
                             </div>
 
                             <div className='pt-1'>
-                                <ButtonLoading loading={loading} type="submit" text="Create Account" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
+                                <ButtonLoading loading={loading} type="submit" text="Create Account" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
                             </div>
 
                             <div className='text-center text-sm'>

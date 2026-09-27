@@ -57,9 +57,9 @@ const FeaturedProductSmall = ({ product }) => {
 
     return (
         <Link href={WEBSITE_PRODUCT_DETAILS(product.slug)}>
-            <div ref={ref} className="w-full bg-gray-200 rounded-sm overflow-hidden" style={{ aspectRatio: '1 / 1.15' }}>
+            <div ref={ref} className="w-full bg-surface-sunken rounded-sm overflow-hidden" style={{ aspectRatio: '1 / 1.15' }}>
                 {/* Image */}
-                <div className="relative w-full h-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                <div className="relative w-full h-full bg-surface-sunken flex items-center justify-center overflow-hidden">
                     <Image
                         src={product?.media[0]?.secure_url || imgPlaceholder.src}
                         fill
@@ -71,10 +71,10 @@ const FeaturedProductSmall = ({ product }) => {
 
             {/* Text Below Image */}
             <div className="mt-3 px-1">
-                <h3 className="text-gray-900 font-light text-sm leading-snug line-clamp-2">
+                <h3 className="text-ink-strong font-light text-sm leading-snug line-clamp-2">
                     {product?.name}
                 </h3>
-                <p className="text-gray-700 font-light text-xs mt-1">
+                <p className="text-ink-body font-light text-xs mt-1">
                     ₹{product?.sellingPrice?.toLocaleString('en-IN')}
                 </p>
             </div>

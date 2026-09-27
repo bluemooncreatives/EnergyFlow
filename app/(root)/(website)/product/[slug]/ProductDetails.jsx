@@ -367,7 +367,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                                 href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?size=${encodeURIComponent(size)}`}
                                                 aria-pressed={isSelected}
                                                 className={cn(
-                                                    'ef-focus relative inline-flex h-11 min-w-[3.5rem] items-center justify-center rounded-full px-4 text-center text-[0.875rem] font-medium transition-colors',
+                                                    'ef-focus relative inline-flex h-11 min-w-[3.5rem] items-center justify-center rounded-[var(--radius-control)] px-4 text-center text-[0.875rem] font-medium transition-colors',
                                                     isSelected
                                                         ? 'bg-brand text-white'
                                                         : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'
@@ -388,14 +388,14 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 type="button"
                                 variant="brand"
                                 disabled
-                                className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
+                                className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium"
                             >
                                 Unavailable
                             </Button>
                         ) : !inCart ? (
                             /* ── Not in cart: pick a quantity, then add ──────────── */
                             <div className="flex flex-row items-stretch gap-3">
-                                <div className="inline-flex h-12 shrink-0 items-center rounded-full bg-surface-well px-1">
+                                <div className="inline-flex h-12 shrink-0 items-center rounded-[var(--radius-control)] bg-surface-well px-1">
                                     <button
                                         type="button"
                                         aria-label="Decrease quantity"
@@ -422,7 +422,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                         type="button"
                                         text="Add to cart"
                                         variant="brand"
-                                        className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
+                                        className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium"
                                         onClick={handleAddToCart}
                                     />
                                 </div>
@@ -430,7 +430,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                         ) : (
                             /* ── In cart: live stepper bound to the cart line ────── */
                             <div className="flex flex-row items-stretch gap-3">
-                                <div className="inline-flex h-12 shrink-0 items-center rounded-full bg-tint-honey px-1">
+                                <div className="inline-flex h-12 shrink-0 items-center rounded-[var(--radius-control)] bg-tint-honey px-1">
                                     <button
                                         type="button"
                                         aria-label={cartQty <= 1 ? 'Remove from cart' : 'Decrease quantity'}
@@ -454,7 +454,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 <div className="flex-1">
                                     <Button
                                         variant="brand"
-                                        className="h-12 w-full rounded-full text-[0.9375rem] font-medium"
+                                        className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium"
                                         type="button"
                                         asChild
                                     >
@@ -469,7 +469,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 type="button"
                                 variant="outline"
                                 onClick={handleBuyNow}
-                                className="mt-3 h-12 w-full rounded-full border-brand text-[0.9375rem] font-medium text-brand hover:bg-brand hover:text-white"
+                                className="mt-3 h-12 w-full rounded-[var(--radius-control)] border-brand text-[0.9375rem] font-medium text-brand hover:bg-brand hover:text-white"
                             >
                                 <Zap className="size-4" aria-hidden="true" /> Buy now
                             </Button>

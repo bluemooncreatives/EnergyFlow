@@ -68,7 +68,7 @@ export default function Navbar({
               <Link
                 key={item.title}
                 href={item.url}
-                className="text-base font-semibold text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
+                className="text-base font-semibold text-[var(--ink-strong)] transition-colors hover:text-[var(--brand-primary)]"
               >
                 {item.title}
               </Link>
@@ -77,7 +77,7 @@ export default function Navbar({
 
           <Link
             href={logo.url}
-            className="font-header text-3xl leading-none tracking-wide text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
+            className="font-header text-[1.75rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
             aria-label={logo.alt}
           >
             {logo.title}
@@ -87,7 +87,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => setOpenSearch(true)}
-              className="text-stone-600 transition-colors hover:text-[var(--brand-primary-hover)]"
+              className="text-[var(--ink-body)] transition-colors hover:text-[var(--brand-primary-hover)]"
               aria-label="Open search"
               title="Search (Ctrl K)"
             >
@@ -100,11 +100,11 @@ export default function Navbar({
 
             {!hydrated ? (
               // Don't flash a logged-out icon before the auth state is resolved.
-              <span className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-stone-200/70" aria-hidden />
+              <span className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-[var(--surface-well)]" aria-hidden />
             ) : !user ? (
               <Link
                 href={auth.login.url}
-                className="text-stone-600 transition-colors hover:text-[var(--brand-primary-hover)]"
+                className="text-[var(--ink-body)] transition-colors hover:text-[var(--brand-primary-hover)]"
                 aria-label={auth.login.text}
               >
                 <UserRound className="h-6 w-6" strokeWidth={1.75} />
@@ -125,7 +125,7 @@ export default function Navbar({
         <div className="flex items-center justify-between lg:hidden" role="navigation" aria-label="Mobile navigation">
           <Link
             href={logo.url}
-            className="font-header text-2xl leading-none tracking-wide text-[var(--brand-primary)]"
+            className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)]"
             aria-label={logo.alt}
           >
             {logo.title}
@@ -136,7 +136,7 @@ export default function Navbar({
               variant="ghost"
               size="icon"
               onClick={() => setOpenSearch(true)}
-              className="size-8 text-stone-700 hover:text-[var(--brand-primary-hover)]"
+              className="size-8 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
               aria-label="Open search"
             >
               <SearchIcon className="size-4" strokeWidth={1.75} />
@@ -151,7 +151,7 @@ export default function Navbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 text-stone-700 hover:text-[var(--brand-primary-hover)]"
+                  className="size-8 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
                   aria-label="Open menu"
                 >
                   <Menu className="size-4" strokeWidth={1.75} />
@@ -159,7 +159,7 @@ export default function Navbar({
               </SheetTrigger>
               <SheetContent className="flex w-[85%] max-w-sm gap-0 border-l border-black/[0.08] bg-background p-0 sm:max-w-sm">
                 <SheetHeader className="flex-shrink-0 border-b border-black/[0.08] px-5 py-5">
-                  <SheetTitle className="font-header text-2xl leading-none tracking-wide text-[var(--brand-primary)]">
+                  <SheetTitle className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)]">
                     {logo.title}
                   </SheetTitle>
                 </SheetHeader>
@@ -169,7 +169,7 @@ export default function Navbar({
                     <SheetClose asChild key={item.title}>
                       <Link
                         href={item.url}
-                        className="rounded-md px-3 py-3.5 font-neue text-base font-semibold text-[var(--brand-primary)] transition-colors hover:bg-[var(--brand-cream)]/50 hover:text-[var(--brand-primary-hover)] active:bg-[var(--brand-cream)]/70"
+                        className="rounded-md px-3 py-3.5 font-neue text-base font-semibold text-[var(--ink-strong)] transition-colors hover:bg-[var(--brand-cream)]/60 hover:text-[var(--brand-primary)] active:bg-[var(--brand-cream)]/80"
                       >
                         {item.title}
                       </Link>
@@ -180,8 +180,8 @@ export default function Navbar({
                 <div className="flex-shrink-0 border-t border-black/[0.08] px-5 py-5">
                   {!hydrated ? (
                     <div className="flex items-center gap-3">
-                      <span className="h-9 w-9 shrink-0 animate-pulse rounded-full bg-stone-200/70" aria-hidden />
-                      <span className="h-4 w-24 animate-pulse rounded bg-stone-200/70" aria-hidden />
+                      <span className="h-9 w-9 shrink-0 animate-pulse rounded-full bg-[var(--surface-well)]" aria-hidden />
+                      <span className="h-4 w-24 animate-pulse rounded bg-[var(--surface-well)]" aria-hidden />
                     </div>
                   ) : !user ? (
                     <div className="flex flex-col gap-2.5">

@@ -113,7 +113,7 @@ const ResetPassword = () => {
                                         )}
                                     />
                                     <div className='pt-1'>
-                                        <ButtonLoading loading={emailVerificationLoading} type="submit" text="Send OTP" variant="brand" className="h-12 w-full rounded-full text-[0.9375rem] font-medium cursor-pointer" />
+                                        <ButtonLoading loading={emailVerificationLoading} type="submit" text="Send OTP" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
                                     </div>
                                     <div className='text-center text-sm'>
                                         <div className='flex justify-center items-center gap-1'>

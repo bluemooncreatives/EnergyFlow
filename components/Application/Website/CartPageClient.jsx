@@ -42,7 +42,7 @@ const EmptyCart = () => (
 )
 
 const QtyStepper = ({ product, onDecrease, onIncrease }) => (
-    <div className="inline-flex h-10 items-center rounded-full bg-surface-well p-1" role="group" aria-label={`Quantity of ${product.name}`}>
+    <div className="inline-flex h-10 items-center rounded-[var(--radius-control)] bg-surface-well p-1" role="group" aria-label={`Quantity of ${product.name}`}>
         <button
             type="button"
             onClick={onDecrease}
@@ -165,7 +165,7 @@ const CartPageClient = () => {
                                                     type="button"
                                                     onClick={() => dispatch(removeFromCart(ids(product)))}
                                                     aria-label={`Remove ${product.name} from cart`}
-                                                    className="ef-focus inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-[0.8125rem] text-ink-muted transition-colors hover:text-destructive"
+                                                    className="ef-focus inline-flex items-center gap-1.5 rounded-[var(--radius-control)] px-2 py-1.5 text-[0.8125rem] text-ink-muted transition-colors hover:text-destructive"
                                                 >
                                                     <Trash2 className="size-4" aria-hidden="true" />
                                                     <span className="sm:sr-only">Remove</span>

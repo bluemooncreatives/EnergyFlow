@@ -232,7 +232,7 @@ const PageLoader = ({ onReady, onComplete }) => {
                     />
                     <span className="flex flex-col items-center leading-none">
                         <span
-                            className="lockup-word font-header text-[1.75rem] text-white will-change-transform max-sm:text-2xl"
+                            className="lockup-word font-header text-[1.75rem] font-semibold uppercase tracking-[0.04em] text-white will-change-transform max-sm:text-2xl"
                             style={{ opacity: 0, transform: 'translateY(12px)' }}
                         >
                             Energyflow

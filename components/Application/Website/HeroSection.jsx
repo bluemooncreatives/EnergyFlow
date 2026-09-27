@@ -40,6 +40,7 @@ const SLIDES = [
     alt: "A bowl of almonds, cashews, walnuts and pistachios",
     tint: "var(--tint-sage)",
     badge: { Icon: Leaf, text: "Handpicked & graded" },
+    floaters: ["almond", "cashew", "walnut", "pistachio"],
     cta: { label: "Shop dry fruits", href: shopCategory("dry-fruits-and-nuts"), requires: "dry-fruits-and-nuts", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
     secondary: { label: "See bestsellers", href: `${WEBSITE_SHOP}?bestseller=true` },
   },
@@ -54,6 +55,7 @@ const SLIDES = [
     alt: "A bowl of seeds, berries and super foods",
     tint: "var(--tint-pistachio)",
     badge: { Icon: Sprout, text: "Chia · Flax · Pumpkin" },
+    floaters: ["pumpkinSeed", "goji", "sunflowerSeed", "chia"],
     cta: { label: "Shop superfoods", href: shopCategory("seeds-and-superfoods"), requires: "seeds-and-superfoods", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
     secondary: { label: "Browse all products", href: WEBSITE_SHOP, alt: { label: "Ask about superfoods", href: "/contact" } },
   },
@@ -68,6 +70,7 @@ const SLIDES = [
     alt: "A festive gift box of chocolates and dry fruits",
     tint: "var(--tint-almond)",
     badge: { Icon: Gift, text: "Custom & bulk orders" },
+    floaters: ["bow", "sparkle", "truffle", "giftBox"],
     cta: { label: "Plan a gift order", href: "/contact" },
     secondary: { label: "Browse gift boxes", href: shopCategory("gift-boxes"), requires: "gift-boxes", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
   },
@@ -82,6 +85,7 @@ const SLIDES = [
     alt: "A bowl of fruit jellies and chocolate coated treats",
     tint: "var(--tint-berry)",
     badge: { Icon: Cherry, text: "Made with real fruit" },
+    floaters: ["jellyOrange", "cherry", "candy", "jellyGreen"],
     cta: { label: "Shop healthy treats", href: shopCategory("healthy-candies-and-sweets"), requires: "healthy-candies-and-sweets", fallback: { label: "Browse all products", href: WEBSITE_SHOP } },
     secondary: { label: "Browse all products", href: WEBSITE_SHOP, alt: { label: "Ask about treats", href: "/contact" } },
   },
@@ -118,22 +122,109 @@ const angleFor = (index, active, slots = SLOTS_DESKTOP) => slots[(index - active
 
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-// Four leaves, gently drifting, kept to the right half of the dial — clear
-// of the thumb arc on the left, the badge at the lower right and the orbit
-// line itself. The two soft (blurred) ones are desktop-only.
-const LEAVES = [
-  { top: "-4%", left: "66%", size: 44, rotate: -24, soft: false, dx: 12, dy: 14, spin: 12, dur: 8 },
-  { top: "18%", left: "93%", size: 36, rotate: 38, soft: false, dx: -10, dy: 14, spin: -10, dur: 9.5 },
-  { top: "50%", left: "99%", size: 44, rotate: -40, soft: true, dx: -10, dy: -12, spin: -14, dur: 11 },
-  { top: "99%", left: "72%", size: 28, rotate: 10, soft: true, dx: 10, dy: -8, spin: 16, dur: 7.5 },
+// Four floating slots, gently drifting, kept to the right half of the dial —
+// clear of the thumb arc on the left, the badge at the lower right and the
+// orbit line itself. Each slot shows a small illustration from the active
+// slide's range (see `floaters` on each slide) and crossfades on change.
+// The two soft (blurred) slots are desktop-only.
+const FLOATERS = [
+  { top: "-4%", left: "66%", size: 50, rotate: -18, soft: false, dx: 12, dy: 14, spin: 12, dur: 8 },
+  { top: "18%", left: "93%", size: 42, rotate: 24, soft: false, dx: -10, dy: 14, spin: -10, dur: 9.5 },
+  { top: "50%", left: "99%", size: 46, rotate: -30, soft: true, dx: -10, dy: -12, spin: -14, dur: 11 },
+  { top: "99%", left: "72%", size: 32, rotate: 10, soft: true, dx: 10, dy: -8, spin: 16, dur: 7.5 },
 ];
 
-const LeafShape = () => (
-  <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
-    <path d="M58 6C58 6 40 4 26 14 12 24 6 40 6 58c0 0 18 2 32-8 14-10 20-26 20-44Z" fill="currentColor" />
-    <path d="M58 6 6 58" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-  </svg>
+// Small produce / gifting illustrations, drawn on a 64×64 grid.
+const svg = (children) => (
+  <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">{children}</svg>
 );
+const SUGAR = (
+  <g fill="#FFF8EC" opacity="0.75">
+    <circle cx="22" cy="21" r="1.6" /><circle cx="34" cy="18" r="1.4" /><circle cx="44" cy="26" r="1.6" />
+    <circle cx="26" cy="33" r="1.3" /><circle cx="40" cy="40" r="1.5" /><circle cx="22" cy="44" r="1.4" />
+  </g>
+);
+const FLOATER_ART = {
+  // Dry fruits
+  almond: svg(<>
+    <path d="M32 4C20 16 14 30 18 44c3 10 10 16 14 16s11-6 14-16C50 30 44 16 32 4Z" fill="#B96F35" />
+    <path d="M31 11c-6 10-9 21-7 33" stroke="#D99A5E" strokeWidth="3" strokeLinecap="round" />
+  </>),
+  cashew: svg(<>
+    <path d="M46 8c9 6 13 19 9 31-5 15-21 21-33 15-6-3-8-9-4-12 4-3 9 0 14-1 8-2 12-9 11-17-1-6-5-9-3-13 1-3 4-4 6-3Z" fill="#E8C487" />
+    <path d="M50 18c2 9 0 19-8 25" stroke="#CFA05C" strokeWidth="3" strokeLinecap="round" />
+  </>),
+  walnut: svg(<>
+    <path d="M32 7C20 7 10 16 10 30c0 14 10 27 22 27s22-13 22-27C54 16 44 7 32 7Z" fill="#A86B36" />
+    <path d="M32 9v46M20 19c6 4 6 10 0 14s-6 10 0 14M44 19c-6 4-6 10 0 14s6 10 0 14" stroke="#7E4B22" strokeWidth="2.5" strokeLinecap="round" />
+  </>),
+  pistachio: svg(<>
+    <path d="M32 5C19 11 12 25 14 39c2 12 10 19 18 19s16-7 18-19C52 25 45 11 32 5Z" fill="#DCC49A" />
+    <path d="M32 15c-6 8-8 18-6 28 1 5 3 8 6 8s5-3 6-8c2-10 0-20-6-28Z" fill="#8FA33A" />
+  </>),
+  // Superfoods
+  pumpkinSeed: svg(<>
+    <path d="M32 4C21 12 16 26 18 40c2 12 8 20 14 20s12-8 14-20C48 26 43 12 32 4Z" fill="#7F9A3C" />
+    <path d="M31 9c-9 8-13 20-11 32" stroke="#AFC46A" strokeWidth="3" strokeLinecap="round" />
+  </>),
+  goji: svg(<>
+    <ellipse cx="32" cy="37" rx="13" ry="21" fill="#D4462B" />
+    <ellipse cx="27" cy="29" rx="3" ry="7" fill="#F08A6A" />
+    <path d="M32 16c0-4 2-8 7-10" stroke="#6B6014" strokeWidth="3" strokeLinecap="round" />
+  </>),
+  sunflowerSeed: svg(<>
+    <path d="M32 4C24 14 20 28 22 42c1 10 5 18 10 18s9-8 10-18C44 28 40 14 32 4Z" fill="#2E2A26" />
+    <path d="M29 14l-2 40M35 14l2 40" stroke="#D8D2C4" strokeWidth="2.5" strokeLinecap="round" />
+  </>),
+  chia: svg(<>
+    <circle cx="22" cy="26" r="9" fill="#5E574C" /><circle cx="41" cy="22" r="8" fill="#8E8576" /><circle cx="34" cy="42" r="10" fill="#3F3A33" />
+    <circle cx="19" cy="23" r="2" fill="#B5AC9C" /><circle cx="38" cy="19" r="2" fill="#D0C8B8" /><circle cx="31" cy="38" r="2" fill="#8E8576" />
+  </>),
+  // Gifting
+  bow: svg(<>
+    <path d="M32 30C22 18 8 16 8 26s14 10 24 4Z" fill="#BB3E00" />
+    <path d="M32 30c10-12 24-14 24-4s-14 10-24 4Z" fill="#D4561A" />
+    <path d="M28 32l-8 22 8-4 4 6 2-24Z" fill="#9E3400" /><path d="M36 32l8 22-8-4-4 6-2-24Z" fill="#BB3E00" />
+    <circle cx="32" cy="30" r="5" fill="#9E3400" />
+  </>),
+  sparkle: svg(<>
+    <path d="M32 4l6 20 20 8-20 8-6 20-6-20-20-8 20-8Z" fill="#F7AD45" />
+    <path d="M32 18l2.5 9.5L44 32l-9.5 2.5L32 44l-2.5-9.5L20 32l9.5-2.5Z" fill="#FDE3B6" />
+  </>),
+  truffle: svg(<>
+    <path d="M12 40l6 16h28l6-16c-10 6-30 6-40 0Z" fill="#E0A93E" />
+    <circle cx="32" cy="32" r="19" fill="#5A3319" />
+    <path d="M17 28c7-6 23-6 30 0" stroke="#8A5530" strokeWidth="3.5" strokeLinecap="round" />
+  </>),
+  giftBox: svg(<>
+    <rect x="10" y="26" width="44" height="30" rx="4" fill="#BB3E00" />
+    <rect x="8" y="18" width="48" height="12" rx="3" fill="#D4561A" />
+    <rect x="28" y="18" width="8" height="38" fill="#F7AD45" />
+    <path d="M32 18c-4-8-14-10-14-4s10 4 14 4c4 0 14 2 14-4s-10-4-14 4Z" fill="#F7AD45" />
+  </>),
+  // Treats
+  jellyOrange: svg(<>
+    <rect x="12" y="12" width="40" height="40" rx="10" fill="#F28C28" />
+    <rect x="12" y="12" width="40" height="14" rx="7" fill="#F7AD45" opacity="0.55" />
+    {SUGAR}
+  </>),
+  cherry: svg(<>
+    <path d="M24 38c4-12 10-24 22-30M42 40c0-12 1-22 4-32" stroke="#6B6014" strokeWidth="3" strokeLinecap="round" />
+    <path d="M46 8c7 0 11 4 11 9-7 0-11-4-11-9Z" fill="#7B6F19" />
+    <circle cx="22" cy="46" r="11" fill="#C8202F" /><circle cx="42" cy="46" r="11" fill="#E03A3E" />
+    <circle cx="18" cy="42" r="3" fill="#F28A8F" /><circle cx="38" cy="42" r="3" fill="#F7A3A6" />
+  </>),
+  candy: svg(<>
+    <path d="M18 32L5 21v22Z" fill="#BB3E00" /><path d="M46 32l13-11v22Z" fill="#BB3E00" />
+    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#F7AD45" />
+    <path d="M23 25l18 13M21 33l12 7M30 21l13 8" stroke="#FFF1D7" strokeWidth="2.5" strokeLinecap="round" />
+  </>),
+  jellyGreen: svg(<>
+    <rect x="12" y="12" width="40" height="40" rx="10" fill="#8FB63A" />
+    <rect x="12" y="12" width="40" height="14" rx="7" fill="#C4DB7A" opacity="0.6" />
+    {SUGAR}
+  </>),
+};
 
 const HIDDEN = { opacity: 0, visibility: "hidden" };
 
@@ -310,7 +401,7 @@ const HeroSection = ({ availability = null }) => {
 
       leavesRef.current.forEach((leaf, i) => {
         if (!leaf) return;
-        const p = LEAVES[i];
+        const p = FLOATERS[i];
         gsap.to(leaf, { x: p.dx, y: p.dy, rotation: `+=${p.spin}`, duration: p.dur, ease: "sine.inOut", repeat: -1, yoyo: true });
       });
     },
@@ -562,15 +653,19 @@ const HeroSection = ({ availability = null }) => {
                   </span>
                 ))}
 
-                {LEAVES.map((leaf, i) => (
+                {FLOATERS.map((slot, i) => (
                   <div
                     key={i}
                     ref={(el) => { leavesRef.current[i] = el; }}
-                    className={cn(styles.leaf, leaf.soft && `${styles.leafSoft} max-lg:hidden`)}
-                    style={{ top: leaf.top, left: leaf.left, width: leaf.size, height: leaf.size, transform: `rotate(${leaf.rotate}deg)` }}
+                    className={cn(styles.leaf, slot.soft && `${styles.leafSoft} max-lg:hidden`)}
+                    style={{ top: slot.top, left: slot.left, width: slot.size, height: slot.size, transform: `rotate(${slot.rotate}deg)` }}
                     aria-hidden="true"
                   >
-                    <LeafShape />
+                    {SLIDES.map((slide, s) => (
+                      <span key={slide.id} className={styles.floater} data-on={s === active ? "" : undefined}>
+                        {FLOATER_ART[slide.floaters[i]]}
+                      </span>
+                    ))}
                   </div>
                 ))}
               </div>

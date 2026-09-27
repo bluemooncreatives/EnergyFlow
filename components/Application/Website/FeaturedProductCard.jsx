@@ -70,7 +70,7 @@ const FeaturedProductCard = ({ product, size = 'medium' }) => {
     const discountPercentage = product?.discountPercentage || 0;
 
     return (
-        <div ref={ref} className={`group relative rounded-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300 ${sizeClasses[size]} h-full`}>
+        <div ref={ref} className={`group relative rounded-lg overflow-hidden border border-line-strong hover:shadow-xl transition-all duration-300 ${sizeClasses[size]} h-full`}>
             {/* Full-card link sits behind everything */}
             <Link
                 href={WEBSITE_PRODUCT_DETAILS(product.slug)}
@@ -79,7 +79,7 @@ const FeaturedProductCard = ({ product, size = 'medium' }) => {
             />
 
             {/* Image Container */}
-            <div className={`relative w-full ${imageHeightClasses[size]} bg-gray-100 overflow-hidden`}>
+            <div className={`relative w-full ${imageHeightClasses[size]} bg-surface-well overflow-hidden`}>
                 <Image
                     src={product?.media[0]?.secure_url || imgPlaceholder.src}
                     fill
@@ -109,7 +109,7 @@ const FeaturedProductCard = ({ product, size = 'medium' }) => {
                     >
                         <Heart
                             size={20}
-                            className={isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-700'}
+                            className={isWishlisted ? 'fill-red-500 text-red-500' : 'text-ink-body'}
                         />
                     </button>
                 </div>
@@ -117,17 +117,17 @@ const FeaturedProductCard = ({ product, size = 'medium' }) => {
 
             {/* Product Info */}
             <div className="p-4 border-t bg-background">
-                <h3 className="font-semibold text-sm sm:text-base text-gray-800 line-clamp-2 group-hover:text-gray-900 transition-colors">
+                <h3 className="font-semibold text-sm sm:text-base text-ink-strong line-clamp-2 group-hover:text-ink-strong transition-colors">
                     {product?.name}
                 </h3>
 
                 {/* Pricing */}
                 <div className="flex items-center gap-2 mt-2">
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-bold text-ink-strong">
                         ₹{product?.sellingPrice?.toLocaleString('en-IN')}
                     </span>
                     {product?.mrp > product?.sellingPrice && (
-                        <span className="text-sm text-stone-500 line-through">
+                        <span className="text-sm text-ink-muted line-through">
                             ₹{product?.mrp?.toLocaleString('en-IN')}
                         </span>
                     )}

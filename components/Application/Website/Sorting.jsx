@@ -19,7 +19,7 @@ const Sorting = ({ sorting, setSorting, mobileFilterOpen, setMobileFilterOpen, r
                 filter lives in the sticky sidebar. */}
             <Button
                 type="button"
-                className="h-11 shrink-0 rounded-full border-line-strong bg-surface-card px-4 text-[0.9375rem] font-medium text-brand hover:bg-surface-card hover:text-brand lg:hidden"
+                className="h-11 shrink-0 rounded-[var(--radius-control)] border-line-strong bg-surface-card px-4 text-[0.9375rem] font-medium text-brand hover:bg-surface-card hover:text-brand lg:hidden"
                 variant="outline"
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
             >
@@ -28,7 +28,7 @@ const Sorting = ({ sorting, setSorting, mobileFilterOpen, setMobileFilterOpen, r
             </Button>
 
             <Select value={sorting} onValueChange={(value) => setSorting(value)}>
-                <SelectTrigger aria-label="Sort products" className="h-11 flex-1 rounded-full border-line-strong bg-surface-card px-4 text-[0.9375rem] font-medium text-brand md:w-[230px] md:flex-none lg:order-2">
+                <SelectTrigger aria-label="Sort products" className="h-11 flex-1 rounded-[var(--radius-control)] border-line-strong bg-surface-card px-4 text-[0.9375rem] font-medium text-brand md:w-[230px] md:flex-none lg:order-2">
                     <SelectValue placeholder="Default Sorting" />
                 </SelectTrigger>
                 <SelectContent

@@ -3,7 +3,7 @@
    The green colour scheme that used to be scoped here is now the global
    brand palette — see section 1 of app/design-system.css. Every token the
    auth cards paint with (--brand-primary, --dark-red, --btn-brand-bg,
-   --form-field-*, --brand-panel-gradient) resolves to green at :root, so
+   --form-field-*, --brand-panel-gradient) resolves to the brand palette at :root, so
    no local override is needed.
 
    The `.auth-theme` class on app/(root)/auth/layout.jsx is kept as a hook

@@ -4,27 +4,27 @@
    Email clients strip <style> custom-properties and external fonts,
    so every value here is a literal inline-able constant and every
    layout primitive is table-based with inline styles.
-   Brand tokens mirror the app auth theme (dark green primary on an
-   ash-white ground) but are hard-coded because CSS vars don't survive
-   in Gmail/Outlook/Apple Mail. Token KEYS are kept stable (oxblood /
-   crimson / cream / warm) so every template keeps working unchanged —
-   only the values moved from red to green/ash.
+   Brand tokens mirror the app's harvest palette (paprika primary, olive
+   accent on a cream ground) but are hard-coded because CSS vars don't
+   survive in Gmail/Outlook/Apple Mail. Token KEYS are kept stable
+   (oxblood / crimson / cream / warm) so every template keeps working
+   unchanged — only the values change.
    ================================================================ */
 
-// ── Brand palette (ash white + dark green) ──
+// ── Brand palette (cream + paprika + olive) ──
 export const BRAND = {
-    oxblood: "#1E4229", // primary dark green — headings, footer, code, CTAs
-    crimson: "#2F6B41", // accent green — links, eyebrow, active dots
-    cream: "#E4E7DE", // pale ash — header band + light text on dark green footer
-    warm: "#ECECE9", // ash white — page background + inset panels
-    ink: "#1A1A1A", // near-black body copy
-    body: "#4A4A4A", // --text-body
+    oxblood: "#BB3E00", // paprika — headings, footer, code, CTAs
+    crimson: "#7B6F19", // olive — links, eyebrow, active dots
+    cream: "#FFF1D7", // palette cream — header band + light text on the paprika footer
+    warm: "#FFF8EC", // light cream — page background + inset panels
+    ink: "#2B2008", // olive-brown near-black body copy
+    body: "#5B4D33", // --text-body
     white: "#FFFFFF",
-    border: "#E2E3DE", // soft ash-grey hairline
-    borderStrong: "#CCCDC6",
-    muted: "#868B80", // ash-grey label
-    success: "#2E7D32",
-    danger: "#B3261E", // kept red — security warnings must still read as alerts
+    border: "#EEDFC0", // soft cream hairline
+    borderStrong: "#E0CBA0",
+    muted: "#8A7A5C", // warm grey label
+    success: "#6B6014",
+    danger: "#A11D2B", // crimson — security warnings must still read as alerts
 };
 
 // Web-safe stacks that read closest to the brand faces

@@ -56,7 +56,7 @@ const FeaturedProductLarge = ({ product }) => {
 
     return (
         <Link href={WEBSITE_PRODUCT_DETAILS(product.slug)}>
-            <div ref={containerRef} className="reveal relative w-full bg-gray-200 rounded-sm overflow-hidden" style={{ aspectRatio: '1 / 1.29' }}>
+            <div ref={containerRef} className="reveal relative w-full bg-surface-sunken rounded-sm overflow-hidden" style={{ aspectRatio: '1 / 1.29' }}>
                 {/* Image */}
                 <Image
                     src={product?.media[0]?.secure_url || imgPlaceholder.src}

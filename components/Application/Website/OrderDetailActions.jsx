@@ -54,7 +54,7 @@ const OrderDetailActions = ({ orderId }) => {
             <button
                 type='button'
                 onClick={copyOrderId}
-                className='inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line-strong bg-surface-card text-[0.875rem] font-medium text-foreground transition-colors hover:border-brand hover:text-brand'
+                className='inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-control)] border border-line-strong bg-surface-card text-[0.875rem] font-medium text-foreground transition-colors hover:border-brand hover:text-brand'
             >
                 {copied ? <Check className='size-3.5' /> : <Copy className='size-3.5' />}
                 {copied ? 'Copied' : 'Copy ID'}
@@ -63,7 +63,7 @@ const OrderDetailActions = ({ orderId }) => {
                 type='button'
                 onClick={downloadInvoice}
                 disabled={downloading}
-                className='inline-flex h-11 items-center justify-center gap-2 rounded-full border border-line-strong bg-surface-card text-[0.875rem] font-medium text-foreground transition-colors hover:border-brand hover:text-brand disabled:pointer-events-none disabled:opacity-60'
+                className='inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-control)] border border-line-strong bg-surface-card text-[0.875rem] font-medium text-foreground transition-colors hover:border-brand hover:text-brand disabled:pointer-events-none disabled:opacity-60'
             >
                 {downloading ? <Loader2 className='size-3.5 animate-spin' /> : <Download className='size-3.5' />}
                 {downloading ? 'Preparing' : 'Invoice'}

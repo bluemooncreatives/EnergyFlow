@@ -69,7 +69,7 @@ const statusTone: Record<string, string> = {
     PICKED_UP: "border-indigo-200 bg-indigo-50 text-indigo-700",
     IN_TRANSIT: "border-violet-200 bg-violet-50 text-violet-700",
     OUT_FOR_DELIVERY: "border-orange-200 bg-orange-50 text-orange-700",
-    DELIVERED: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    DELIVERED: "border-success/30 bg-success/10 text-success",
     RTO: "border-rose-200 bg-rose-50 text-rose-700",
     CANCELLED: "border-red-200 bg-red-50 text-red-700",
 }
@@ -198,7 +198,7 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                 <Card className="rounded-lg border bg-muted/20 py-0 shadow-none hover:translate-y-0 hover:shadow-none">
                     <CardHeader className="border-b px-4 py-3">
                         <CardTitle className="flex items-center gap-2 text-base">
-                            {hasAwb ? <CheckCircle2 className="size-4 text-emerald-600" /> : <PackageCheck className="size-4 text-muted-foreground" />}
+                            {hasAwb ? <CheckCircle2 className="size-4 text-success" /> : <PackageCheck className="size-4 text-muted-foreground" />}
                             Shipment Card
                         </CardTitle>
                     </CardHeader>
