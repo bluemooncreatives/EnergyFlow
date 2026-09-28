@@ -128,8 +128,12 @@ const NewsletterPopup = ({ settings }) => {
             setOpen(true)
         }
 
-        const delay = Number(behavior.delaySeconds) || 0
-        const scrollPct = Number(behavior.scrollPercent) || 0
+        // On phones a timed popup lands while the visitor is still reading the
+        // page they came for, which Google treats as an intrusive interstitial
+        // and which covers the hero during load. Mobile therefore waits for
+        // genuine engagement: the admin's scroll depth, or halfway down.
+        const delay = onMobile ? 0 : Number(behavior.delaySeconds) || 0
+        const scrollPct = Number(behavior.scrollPercent) || (onMobile ? MOBILE_SCROLL_PERCENT : 0)
         const exit = Boolean(behavior.exitIntent) && !onMobile && window.matchMedia('(pointer: fine)').matches
         const noTriggers = delay === 0 && scrollPct === 0 && !exit
 
@@ -150,10 +154,13 @@ const NewsletterPopup = ({ settings }) => {
 
             // A page too short to scroll never emits a scroll event: if that's
             // still true once content has loaded, treat the depth as reached.
-            const shortPage = setTimeout(() => {
-                if (document.documentElement.scrollHeight - window.innerHeight <= 8) fire()
-            }, 4000)
-            cleanups.push(() => clearTimeout(shortPage))
+            // Not on phones, where that would be a timed popup again.
+            if (!onMobile) {
+                const shortPage = setTimeout(() => {
+                    if (document.documentElement.scrollHeight - window.innerHeight <= 8) fire()
+                }, 4000)
+                cleanups.push(() => clearTimeout(shortPage))
+            }
         }
 
         if (exit) {

@@ -18,7 +18,6 @@ import {
     RotateCcw,
     Search,
     Trash2,
-    X,
 } from 'lucide-react'
 import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import PageHeader from '@/components/Application/Admin/PageHeader'
@@ -410,6 +409,3 @@ const CuratedProductsManager = ({ config }) => {
 }
 
 export default CuratedProductsManager
-
-// Re-exported for pages that want the close icon in their own UI.
-export { X }
