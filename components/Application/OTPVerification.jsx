@@ -1,42 +1,51 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { zSchema } from '@/lib/zodSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import ButtonLoading from './ButtonLoading'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import axios from 'axios'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp'
 import { showToast } from '@/lib/showToast'
-import axios from 'axios'
+import { AuthAlt, AuthHeader, AuthMessage, AuthSubmit } from './Auth/AuthParts'
 
-const OTPVerification = ({ email, onSubmit, loading }) => {
+const RESEND_COOLDOWN = 30
 
+/**
+ * The 6-digit code step shared by sign in and password reset. Submits by
+ * itself once the sixth digit lands; "Resend" is rate-limited client-side so
+ * an impatient double tap doesn't send a burst of emails. `onBack` (optional)
+ * returns to the previous screen to fix a mistyped email.
+ */
+const OTPVerification = ({ email, onSubmit, loading, onBack, children }) => {
     const [isResendingOtp, setIsResendingOtp] = useState(false)
+    const [cooldown, setCooldown] = useState(RESEND_COOLDOWN)
 
-    const formSchema = zSchema.pick({
-        otp: true, email: true
-    })
+    useEffect(() => {
+        if (cooldown <= 0) return
+        const timer = setTimeout(() => setCooldown((s) => s - 1), 1000)
+        return () => clearTimeout(timer)
+    }, [cooldown])
 
     const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            otp: "",
-            email: email
-        }
+        resolver: zodResolver(zSchema.pick({ otp: true, email: true })),
+        defaultValues: { otp: '', email },
     })
 
-    const handleOtpVerification = async (values) => {
-        onSubmit(values)
-    }
+    const submit = form.handleSubmit((values) => {
+        if (!loading) onSubmit(values)
+    })
 
     const resendOTP = async () => {
         try {
             setIsResendingOtp(true)
-            const { data: resendOtpResponse } = await axios.post('/api/auth/resend-otp',
-                { email }
-            )
+            const { data: resendOtpResponse } = await axios.post('/api/auth/resend-otp', { email })
             if (!resendOtpResponse.success) {
                 throw new Error(resendOtpResponse.message)
             }
+            form.resetField('otp')
+            setCooldown(RESEND_COOLDOWN)
             showToast('success', resendOtpResponse.message)
         } catch (error) {
             showToast('error', error.message)
@@ -46,53 +55,67 @@ const OTPVerification = ({ email, onSubmit, loading }) => {
     }
 
     return (
-        <div>
+        <>
+            <AuthHeader
+                eyebrow="Check your inbox"
+                title="Enter your"
+                accent="code"
+                lead={<>We sent a 6-digit code to <strong>{email}</strong>. It&apos;s valid for 10 minutes.</>}
+            >
+                {children}
+            </AuthHeader>
+
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleOtpVerification)} >
-                    <div className='text-center' >
-                        <h1 className='text-2xl font-bold mb-2'>Please complete verification</h1>
-                        <p className='text-md'>We have sent an One-time Password (OTP) to your registered email address. The OTP is valid for 10 minutes only.</p>
-                    </div>
-                    <div className='mb-5 mt-5 flex justify-center'>
-                        <FormField
-                            control={form.control}
-                            name="otp"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="font-semibold">One-time Password (OTP)</FormLabel>
-                                    <FormControl>
-                                        <InputOTP maxLength={6} {...field}>
-                                            <InputOTPGroup>
-                                                <InputOTPSlot className="text-xl size-10" index={0} />
-                                                <InputOTPSlot className="text-xl size-10" index={1} />
-                                                <InputOTPSlot className="text-xl size-10" index={2} />
-                                                <InputOTPSlot className="text-xl size-10" index={3} />
-                                                <InputOTPSlot className="text-xl size-10" index={4} />
-                                                <InputOTPSlot className="text-xl size-10" index={5} />
-                                            </InputOTPGroup>
-                                        </InputOTP>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+                <form onSubmit={submit} className="ef-auth-form" noValidate>
+                    <FormField
+                        control={form.control}
+                        name="otp"
+                        render={({ field }) => (
+                            <FormItem data-auth-item className="gap-2.5">
+                                <FormLabel className="ef-auth-label">One-time code</FormLabel>
+                                <FormControl>
+                                    <InputOTP
+                                        maxLength={6}
+                                        inputMode="numeric"
+                                        pattern="^[0-9]*$"
+                                        autoComplete="one-time-code"
+                                        autoFocus
+                                        onComplete={() => submit()}
+                                        {...field}
+                                    >
+                                        <InputOTPGroup className="ef-auth-otp">
+                                            {Array.from({ length: 6 }, (_, i) => (
+                                                <InputOTPSlot key={i} index={i} />
+                                            ))}
+                                        </InputOTPGroup>
+                                    </InputOTP>
+                                </FormControl>
+                                <AuthMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                    <div className='mb-3'>
-                        <ButtonLoading loading={loading} type="submit" text="Verify" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
-                        <div className='text-center mt-5'>
-                            {!isResendingOtp ?
-                                <button onClick={resendOTP} type='button' className='text-[var(--brand-primary)] cursor-pointer hover:underline'>Resend OTP</button>
-                                :
-                                <span className='text-md'>Resending....</span>
-                            }
+                    <AuthSubmit loading={loading} loadingText="Verifying…">Verify &amp; continue</AuthSubmit>
 
-                        </div>
-                    </div>
-
+                    <AuthAlt>
+                        Didn&apos;t get it?{' '}
+                        {cooldown > 0 ? (
+                            <span aria-live="polite">Resend in {cooldown}s</span>
+                        ) : (
+                            <button type="button" className="ef-auth-link" onClick={resendOTP} disabled={isResendingOtp}>
+                                {isResendingOtp ? 'Sending…' : 'Resend code'}
+                            </button>
+                        )}
+                        {onBack && (
+                            <>
+                                <span aria-hidden="true"> · </span>
+                                <button type="button" className="ef-auth-link" onClick={onBack}>Use a different email</button>
+                            </>
+                        )}
+                    </AuthAlt>
                 </form>
             </Form>
-        </div>
+        </>
     )
 }
 

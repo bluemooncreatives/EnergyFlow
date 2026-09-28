@@ -37,13 +37,14 @@ const splitBadge = (text = '') => {
 
 /**
  * Rotating seal: ring text spinning around a scalloped sunflower seal.
- * With an offer it shows the badge ("10% OFF"), otherwise a mail icon.
+ * With an offer it shows the badge ("10% OFF"), otherwise an icon (mail by
+ * default). `ring` / `icon` let other surfaces (the auth pages) reuse it.
  */
-export const NewsletterBadge = ({ offer, className, style }) => {
+export const NewsletterBadge = ({ offer, ring: ringText, icon: Icon = Mail, className, style }) => {
     const pathId = `nl-ring-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
-    const ring = offer
+    const ring = ringText ?? (offer
         ? 'Welcome gift ✦ Join the club ✦ Welcome gift ✦ Join the club ✦ '
-        : 'Join the club ✦ Fresh drops ✦ Member deals ✦ '
+        : 'Join the club ✦ Fresh drops ✦ Member deals ✦ ')
     const [line1, line2] = splitBadge(offer?.badge)
     // Scale the text to the longest line so "FREE SHIPPING" fits as well as "10%".
     const longest = Math.max(line1.length, line2.length, 1)
@@ -67,7 +68,7 @@ export const NewsletterBadge = ({ offer, className, style }) => {
                         {line2 && <span className="ef-nl-badge__big" style={bigStyle}>{line2}</span>}
                     </>
                 ) : (
-                    <Mail strokeWidth={2} />
+                    <Icon strokeWidth={2} />
                 )}
             </span>
         </div>

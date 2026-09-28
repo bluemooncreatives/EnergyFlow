@@ -1,10 +1,386 @@
-/* Auth pages (/auth/login, /auth/register, …)
+/* ================================================================
+   AUTH PAGES — /auth/login, /register, /reset-password, /verify-email
+   Built from the newsletter popup's parts (design-system.css §24): a
+   pine art panel (dotted field, orbit rings, floating seals, the rotating
+   seal riding the seam) beside a cream form body. The two halves take the
+   popup's .ef-nl--pine / .ef-nl--cream themes, so fields, buttons, titles
+   and focus rings match the popup exactly, in both site themes.
+   React: components/Application/Auth
+   ================================================================ */
+@layer components {
 
-   The green colour scheme that used to be scoped here is now the global
-   brand palette — see section 1 of app/design-system.css. Every token the
-   auth cards paint with (--brand-primary, --dark-red, --btn-brand-bg,
-   --form-field-*, --brand-panel-gradient) resolves to the brand palette at :root, so
-   no local override is needed.
+  .ef-auth-page {
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    padding: clamp(1rem, 3vw, 2.5rem) var(--website-gutter);
+    background:
+      radial-gradient(55% 45% at 0% 0%, var(--tint-almond), transparent 70%),
+      radial-gradient(50% 45% at 100% 100%, var(--tint-sage), transparent 70%),
+      var(--surface-page);
+  }
 
-   The `.auth-theme` class on app/(root)/auth/layout.jsx is kept as a hook
-   for any auth-only styling added later. */
+  /* ── Card ──────────────────────────────────────────────────── */
+  .ef-auth-card {
+    --auth-band: 8.5rem;       /* mobile art band height */
+    --auth-split: 46%;         /* desktop art panel width */
+    position: relative;
+    display: grid;
+    width: min(64rem, 100%);
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: var(--surface-card);
+    box-shadow: var(--elev-3), inset 0 0 0 1px var(--line-soft);
+  }
+  /* Hidden until the entrance timeline takes over (AuthShell), so the
+     server HTML never flashes before it animates. If the script never
+     runs, the failsafe reveals the card anyway. */
+  @media (prefers-reduced-motion: no-preference) {
+    .ef-auth-card[data-motion='pending'] {
+      opacity: 0;
+      animation: ef-auth-failsafe 0s 2.5s forwards;
+    }
+  }
+
+  /* ── Art panel ─────────────────────────────────────────────── */
+  .ef-auth-art {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    height: var(--auth-band);
+    padding: 1.125rem 1.25rem;
+    overflow: hidden;
+  }
+  /* Two classes so it beats .ef-nl's flat fill whatever the CSS chunk order. */
+  .ef-nl.ef-auth-art { background: var(--nl-bg-art); }
+  .ef-auth-art .ef-nl-art { z-index: -1; }
+  .ef-auth-art__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .ef-auth-art__foot { display: none; }
+
+  .ef-auth-logo {
+    display: inline-flex;
+    border-radius: var(--radius-control);
+  }
+  .ef-auth-logo img { width: 3.5rem; height: auto; }
+
+  .ef-auth-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2.25rem;
+    padding-inline: 0.75rem 0.875rem;
+    border-radius: 9999px;
+    background: rgb(247 243 232 / 0.1);
+    box-shadow: inset 0 0 0 1px var(--nl-line);
+    color: var(--nl-ink);
+    font-size: var(--type-small);
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background-color var(--duration-fast), box-shadow var(--duration-fast);
+  }
+  .ef-auth-back:hover { background: rgb(247 243 232 / 0.18); }
+  .ef-auth-back svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+  .ef-auth-back:hover svg { transform: translateX(-3px); }
+
+  /* ── Seal on the seam ──────────────────────────────────────── */
+  .ef-auth-seal {
+    --nl-badge-size: 4.75rem;
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--auth-band) - var(--nl-badge-size) * 0.5);
+    right: 1rem;
+    pointer-events: none;
+  }
+
+  /* ── Body ──────────────────────────────────────────────────── */
+  .ef-auth-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding: 2.25rem 1.25rem 1.75rem;
+  }
+  .ef-auth-step { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .ef-auth-head { display: flex; flex-direction: column; gap: 0.875rem; }
+  /* The first line stays clear of the corner seal on phones. */
+  .ef-auth-head > :first-child { margin-right: 5rem; }
+  .ef-auth-head .ef-nl-title { font-size: clamp(1.875rem, 1.4rem + 1.9vw, 2.625rem); }
+  .ef-auth-head .ef-nl-lead { font-size: var(--type-body); }
+  .ef-auth-head strong { color: var(--nl-ink); font-weight: 600; overflow-wrap: anywhere; }
+
+  .ef-auth-form { display: grid; gap: 1.125rem; }
+
+
+  /* Show / hide password toggle inside the field */
+  .ef-auth-field--reveal { padding-right: 3rem; }
+  .ef-auth-reveal {
+    position: absolute;
+    top: 50%;
+    right: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    translate: 0 -50%;
+    border: 0;
+    border-radius: calc(var(--radius-control) - 0.125rem);
+    background: transparent;
+    color: var(--nl-placeholder);
+    cursor: pointer;
+    transition: color var(--duration-fast), background-color var(--duration-fast);
+  }
+  .ef-auth-reveal:hover { color: var(--nl-ink); background: color-mix(in srgb, var(--nl-ink) 7%, transparent); }
+  .ef-auth-reveal svg { width: 1.125rem; height: 1.125rem; }
+
+
+  /* Live password checklist */
+  .ef-auth-rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 0.875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ef-auth-rules li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--nl-muted);
+    transition: color var(--duration-fast);
+  }
+  .ef-auth-rules__dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1.5px var(--nl-field-line);
+    transition: background-color var(--duration-fast), box-shadow var(--duration-fast), transform var(--duration-normal) var(--ease-spring);
+  }
+  .ef-auth-rules__dot svg { width: 0.625rem; height: 0.625rem; stroke-width: 3.5; }
+  .ef-auth-rules li[data-ok='true'] { color: var(--nl-ink); }
+  .ef-auth-rules li[data-ok='true'] .ef-auth-rules__dot {
+    background: var(--nl-check-bg);
+    color: var(--nl-check-ink);
+    box-shadow: none;
+    transform: scale(1.08);
+  }
+
+  /* Divider + Google */
+  .ef-auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--nl-muted);
+  }
+  .ef-auth-divider::before,
+  .ef-auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--nl-line);
+  }
+
+  .ef-auth-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--nl-field-line);
+    border-radius: var(--radius-control);
+    background: var(--nl-field-bg);
+    color: var(--nl-ink);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-normal) var(--ease-out), transform var(--duration-fast);
+  }
+  .ef-auth-social:hover { border-color: var(--nl-ink); box-shadow: var(--elev-2); }
+  .ef-auth-social:active { transform: translateY(1px); }
+  .ef-auth-social svg { width: 1.25rem; height: 1.25rem; }
+
+  /* "New here? Create an account" */
+  .ef-auth-alt {
+    margin: 0;
+    font-size: var(--type-small);
+    color: var(--nl-muted);
+    text-align: center;
+  }
+  .ef-auth-link {
+    padding: 0;
+    border: 0;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    font: inherit;
+    font-weight: 600;
+    color: var(--nl-ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-size var(--duration-normal) var(--ease-out), color var(--duration-fast);
+  }
+  .ef-auth-link:hover { background-size: 0 1px; background-position: 100% 100%; color: var(--nl-accent); }
+  .ef-auth-link:disabled { cursor: default; opacity: 0.6; background-size: 0 1px; }
+
+  /* Reset flow progress: Email · Code · New password */
+  .ef-auth-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ef-auth-progress li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--nl-muted);
+  }
+  .ef-auth-progress li + li::before {
+    content: '';
+    width: 1.25rem;
+    height: 1px;
+    background: var(--nl-field-line);
+  }
+  .ef-auth-progress__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1.5px var(--nl-field-line);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ef-auth-progress__num svg { width: 0.75rem; height: 0.75rem; stroke-width: 3.5; }
+  .ef-auth-progress li[data-state='current'] { color: var(--nl-ink); }
+  .ef-auth-progress li[data-state='current'] .ef-auth-progress__num { background: var(--nl-btn-bg); color: var(--nl-btn-ink); box-shadow: none; }
+  .ef-auth-progress li[data-state='done'] .ef-auth-progress__num { background: var(--nl-check-bg); color: var(--nl-check-ink); box-shadow: none; }
+
+  .ef-auth-status { display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  .ef-auth-status__icon svg { width: 42%; height: 42%; }
+  .ef-auth-status__icon--error { --seal-bg: var(--destructive); --seal-ink: var(--palette-cream); }
+
+  .ef-auth-back:focus-visible,
+  .ef-auth-logo:focus-visible,
+  .ef-auth-reveal:focus-visible,
+  .ef-auth-social:focus-visible,
+  .ef-auth-link:focus-visible {
+    outline: 2px solid var(--focus-color, var(--nl-ink));
+    outline-offset: 3px;
+  }
+
+  /* ── Tablet & up: side-by-side split ───────────────────────── */
+  @media (min-width: 480px) {
+    .ef-auth-body { padding-inline: 2rem; }
+  }
+
+  @media (min-width: 768px) {
+    .ef-auth-card {
+      grid-template-columns: var(--auth-split) minmax(0, 1fr);
+      min-height: min(40rem, calc(100svh - 5rem));
+    }
+    .ef-auth-art { height: auto; padding: 2.25rem 2.5rem 2.5rem; }
+    .ef-auth-logo img { width: 4.25rem; }
+    .ef-auth-art__foot { display: grid; gap: 1.125rem; }
+    .ef-auth-art__foot .ef-nl-title { font-size: clamp(2rem, 1.2rem + 1.8vw, 2.75rem); }
+    .ef-auth-art__foot .ef-nl-perks { gap: 0.5rem; }
+    .ef-auth-art__foot .ef-nl-perks li { font-size: var(--type-small); }
+
+    .ef-auth-seal {
+      --nl-badge-size: 6.5rem;
+      top: 2.5rem;
+      right: auto;
+      left: calc(var(--auth-split) - var(--nl-badge-size) * 0.5);
+    }
+
+    .ef-auth-body { padding: 3rem 3rem 2.75rem 4.75rem; }
+    .ef-auth-head > :first-child { margin-right: 0; }
+  }
+}
+
+/* ── Restyled shadcn parts ─────────────────────────────────────
+   Unlayered on purpose: FormLabel, FormMessage and the OTP slots carry
+   Tailwind utilities (text-sm, size-8, border-y…) that would beat any
+   rule inside @layer components. */
+.ef-auth-label {
+  font-size: var(--type-small);
+  font-weight: 600;
+  color: var(--nl-ink);
+}
+.ef-auth-label[data-error='true'] { color: var(--nl-error); }
+
+.ef-auth-error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  font-size: var(--type-small);
+  font-weight: 600;
+  color: var(--nl-error);
+}
+
+/* OTP: six separate keys in the popup's field styling */
+.ef-auth-otp { display: flex; gap: 0.375rem; }
+.ef-auth-otp [data-slot='input-otp-slot'] {
+  width: 2.75rem;
+  height: 3.25rem;
+  border: 1px solid var(--nl-field-line);
+  border-radius: var(--radius-control);
+  background: var(--nl-field-bg);
+  color: var(--nl-ink);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  box-shadow: none;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast), transform var(--duration-fast) var(--ease-out);
+}
+.ef-auth-otp [data-slot='input-otp-slot'][data-active='true'] {
+  border-color: var(--nl-ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-color, var(--nl-ink)) 30%, transparent);
+  transform: translateY(-2px);
+}
+/* The hidden input carries aria-invalid; it's a sibling of the slot group. */
+.cn-input-otp:has(input[aria-invalid='true']) .ef-auth-otp [data-slot='input-otp-slot'] { border-color: var(--nl-error); }
+
+@media (min-width: 480px) {
+  .ef-auth-otp { gap: 0.5rem; }
+  .ef-auth-otp [data-slot='input-otp-slot'] { width: 3.25rem; height: 3.5rem; font-size: 1.5rem; }
+}
+
+@keyframes ef-auth-failsafe { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ef-auth-back svg, .ef-auth-link, .ef-auth-social, .ef-auth-rules__dot { transition: none !important; }
+}

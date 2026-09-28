@@ -1,36 +1,37 @@
 'use client'
-import { Card, CardContent } from '@/components/ui/card'
 import { useState } from 'react'
-import Logo from '@/public/assets/images/hero/logo.png'
-import Image from 'next/image'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { zSchema } from '@/lib/zodSchema'
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { useForm } from 'react-hook-form'
-import ButtonLoading from '@/components/Application/ButtonLoading'
 import { z } from 'zod'
-import { Eye, EyeOff } from 'lucide-react'
-import Link from 'next/link'
-import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import axios from 'axios'
+import Link from 'next/link'
+import { LockKeyhole, Mail, Sprout, User } from 'lucide-react'
+import { zSchema } from '@/lib/zodSchema'
+import { Form } from "@/components/ui/form"
+import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import { showToast } from '@/lib/showToast'
+import AuthShell from '@/components/Application/Auth/AuthShell'
+import { AuthAlt, AuthField, AuthHeader, AuthStep, AuthSubmit, PasswordRules } from '@/components/Application/Auth/AuthParts'
+import { SuccessSeal } from '@/components/Application/Website/newsletter/NewsletterParts'
+
+const ART = {
+    title: 'Pure nutrition,',
+    accent: 'one account away.',
+    lead: 'Build your Energyflow profile once for faster checkout, order visibility and recommendations made for your taste.',
+    perks: ['Faster checkout', 'Order visibility from cart to door', 'Verified by email'],
+}
+const SEAL = { ring: 'Join Energyflow ✦ Pure nutrition ✦ ', icon: Sprout }
+
 const RegisterPage = () => {
     const [loading, setLoading] = useState(false)
-    const [isTypePassword, setIsTypePassword] = useState(true)
+    // Set after a successful sign-up: the address the verification link went to.
+    const [registered, setRegistered] = useState(null)
     const formSchema = zSchema.pick({
         name: true, email: true, password: true
     }).extend({
         confirmPassword: z.string()
     }).refine((data) => data.password === data.confirmPassword, {
-        message: 'Password and confirm password must be same.',
+        message: 'Passwords don’t match.',
         path: ['confirmPassword']
     })
 
@@ -53,6 +54,7 @@ const RegisterPage = () => {
             }
 
             form.reset()
+            setRegistered({ email: values.email, message: registerResponse.message })
             showToast('success', registerResponse.message)
 
         } catch (error) {
@@ -63,123 +65,82 @@ const RegisterPage = () => {
     }
 
     return (
-        <Card className="w-full max-w-5xl overflow-hidden border-0 bg-transparent py-0 shadow-none ring-0 gap-0">
-            <CardContent className="relative flex overflow-hidden rounded-[var(--admin-shell-radius)] bg-card p-0 shadow-xl md:flex-row">
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-black/60" />
-                <div className="pointer-events-none absolute left-0 top-0 z-10 hidden overflow-hidden backdrop-blur-2xl md:flex">
-                </div>
-
-                <div className="relative hidden overflow-hidden bg-[var(--surface-inverse)] p-8 text-sidebar-foreground md:block md:w-1/2 md:p-12">
-                    <div
-                        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[64%]"
-                        style={{ backgroundImage: "var(--auth-panel-gradient)" }}
+        <AuthShell art={ART} seal={SEAL}>
+            {!registered ? (
+                <AuthStep key="form">
+                    <AuthHeader
+                        eyebrow="New here"
+                        title="Create your"
+                        accent="account"
+                        lead="Set up your Energyflow profile in under a minute."
                     />
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[56%] bg-[linear-gradient(0deg,rgba(255,255,255,0.18),transparent_74%)] blur-2xl" />
-                    <div className="relative z-20 flex h-full flex-col justify-between">
-                        <div className='mb-8'>
-                            <Image src={Logo.src} width={Logo.width} height={Logo.height} alt='logo' className='max-w-[76px]' unoptimized />
-                            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-white/70">
-                                Build your Energyflow identity once and unlock faster checkout, order visibility, and curated recommendations made for your taste.
-                            </p>
-                        </div>
-                        <div className="space-y-3">
-                            <p className="font-header text-5xl leading-none text-white">Get Started</p>
-                            <p className="max-w-sm text-[15px] leading-relaxed text-white/70">Welcome to Energyflow — let&apos;s get started.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="relative z-20 bg-card p-8 text-card-foreground md:w-1/2 md:p-12">
-                    <div className='mb-8 flex flex-col items-start'>
-                        <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] text-ink-strong'>Create account</h1>
-                        <p className='mt-2 text-[15px] leading-relaxed text-muted-foreground'>Enter your details below to set up your Energyflow profile.</p>
-                    </div>
-
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleRegisterSubmit)} className='space-y-5'>
-                            <div>
-                                <FormField
-                                    control={form.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-sm text-foreground">Full Name</FormLabel>
-                                            <FormControl>
-                                                <Input type="text" placeholder="Your Full Name" className="form-field" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div>
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-sm text-foreground">Email</FormLabel>
-                                            <FormControl>
-                                                <Input type="email" placeholder="example@gmail.com" className="form-field" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div>
-                                <FormField
-                                    control={form.control}
-                                    name="password"
-                                    render={({ field }) => (
-                                        <FormItem className="relative">
-                                            <FormLabel className="text-sm text-foreground">Password</FormLabel>
-                                            <FormControl>
-                                                <Input type="password" placeholder="***********" className="form-field" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div>
-                                <FormField
-                                    control={form.control}
-                                    name="confirmPassword"
-                                    render={({ field }) => (
-                                        <FormItem className="relative">
-                                            <FormLabel className="text-sm text-foreground">Confirm Password</FormLabel>
-                                            <FormControl>
-                                                <Input type={isTypePassword ? 'password' : 'text'} placeholder="***********" className="form-field !pr-10" {...field} />
-                                            </FormControl>
-                                            <button className='absolute right-3 top-[32px] cursor-pointer text-muted-foreground hover:text-foreground' type='button' onClick={() => setIsTypePassword(!isTypePassword)}>
-                                                {isTypePassword ? (
-                                                    <EyeOff className='size-4' />
-                                                ) : (
-                                                    <Eye className='size-4' />
-                                                )}
-                                            </button>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-
-                            <div className='pt-1'>
-                                <ButtonLoading loading={loading} type="submit" text="Create Account" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
-                            </div>
-
-                            <div className='text-center text-sm'>
-                                <div className='flex justify-center items-center gap-1'>
-                                    <p className='text-muted-foreground'>Already have account?</p>
-                                    <Link href={WEBSITE_LOGIN} className='font-semibold text-foreground underline underline-offset-4'>Login</Link>
-                                </div>
-                            </div>
+                        <form onSubmit={form.handleSubmit(handleRegisterSubmit)} className="ef-auth-form" noValidate>
+                            <AuthField
+                                control={form.control}
+                                name="name"
+                                label="Full name"
+                                icon={User}
+                                placeholder="Your full name"
+                                autoComplete="name"
+                            />
+                            <AuthField
+                                control={form.control}
+                                name="email"
+                                label="Email"
+                                type="email"
+                                icon={Mail}
+                                placeholder="you@example.com"
+                                autoComplete="email"
+                                inputMode="email"
+                            />
+                            <AuthField
+                                control={form.control}
+                                name="password"
+                                label="Password"
+                                type="password"
+                                icon={LockKeyhole}
+                                placeholder="Create a strong password"
+                                autoComplete="new-password"
+                            >
+                                <PasswordRules control={form.control} />
+                            </AuthField>
+                            <AuthField
+                                control={form.control}
+                                name="confirmPassword"
+                                label="Confirm password"
+                                type="password"
+                                icon={LockKeyhole}
+                                placeholder="Type it once more"
+                                autoComplete="new-password"
+                            />
+                            <AuthSubmit loading={loading} loadingText="Creating account…">Create account</AuthSubmit>
+                            <AuthAlt>
+                                Already have an account? <Link href={WEBSITE_LOGIN} className="ef-auth-link">Sign in</Link>
+                            </AuthAlt>
                         </form>
                     </Form>
-                </div>
-            </CardContent>
-        </Card>
+                </AuthStep>
+            ) : (
+                <AuthStep key="done">
+                    <div className="ef-auth-status" role="status">
+                        <div data-auth-item><SuccessSeal size="3.75rem" /></div>
+                        <AuthHeader
+                            eyebrow="Account created"
+                            title="Check your"
+                            accent="inbox"
+                            lead={<>We sent a verification link to <strong>{registered.email}</strong>. Open it to activate your account, then sign in.</>}
+                        />
+                    </div>
+                    <Link href={WEBSITE_LOGIN} className="ef-nl-submit" data-auth-item>
+                        <span>Go to sign in</span>
+                    </Link>
+                    <AuthAlt>
+                        Wrong address? <button type="button" className="ef-auth-link" onClick={() => setRegistered(null)}>Start again</button>
+                    </AuthAlt>
+                </AuthStep>
+            )}
+        </AuthShell>
     )
 }
 
