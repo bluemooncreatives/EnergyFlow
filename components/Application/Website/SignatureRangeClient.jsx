@@ -79,7 +79,7 @@ const SLOT_CLASSES = {
 const MEDIA_CLASSES = {
     featured: 'inset-x-[12%] top-[10%] bottom-[34%]',
     wide: 'inset-x-[20%] top-[10%] bottom-[36%] @min-[30rem]/tile:left-auto @min-[30rem]/tile:right-[5%] @min-[30rem]/tile:bottom-[8%] @min-[30rem]/tile:w-[40%]',
-    compact: 'inset-x-[10%] top-[18%] bottom-[40%]',
+    compact: 'inset-x-[10%] top-[15%] bottom-[36%]',
 }
 
 const IMAGE_SIZES = {
@@ -186,7 +186,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
                     aria-hidden="true"
                     className={cn(
                         'pt-1 text-[0.6875rem] font-semibold tabular-nums tracking-[0.08em]',
-                        cover ? 'text-cream' : 'text-ink-muted'
+                        cover ? 'text-cream [text-shadow:0_1px_6px_rgb(0_0_0/0.5)]' : 'text-ink-muted'
                     )}
                 >
                     {pad(index + 1)}
@@ -208,10 +208,11 @@ const RangeTile = ({ tile, slot, index, total }) => {
                     <span className="hidden truncate text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-cream/70 @min-[13rem]/tile:block">
                         {tile.eyebrow}
                     </span>
+                    {/* size before leading: cn() drops a leading-* that precedes a text size */}
                     <span
                         className={cn(
-                            'font-header font-semibold uppercase leading-[0.95] text-balance break-words text-cream',
-                            TITLE_CLASSES[slot]
+                            TITLE_CLASSES[slot],
+                            'font-header font-semibold uppercase leading-[0.95] text-balance break-words text-cream'
                         )}
                     >
                         {tile.title}
@@ -228,8 +229,8 @@ const RangeTile = ({ tile, slot, index, total }) => {
                                 data-sig-price
                                 data-value={tile.price}
                                 className={cn(
-                                    'font-header font-semibold tabular-nums leading-none text-sun',
-                                    slot === 'featured' ? 'text-[clamp(1.25rem,1rem+0.9vw,1.75rem)]' : 'text-[1.0625rem]'
+                                    slot === 'featured' ? 'text-[clamp(1.25rem,1rem+0.9vw,1.75rem)]' : 'text-[1.0625rem]',
+                                    'font-header font-semibold tabular-nums leading-none text-sun'
                                 )}
                             >
                                 {price}
@@ -243,7 +244,10 @@ const RangeTile = ({ tile, slot, index, total }) => {
                     aria-hidden="true"
                     className={cn(
                         'flex shrink-0 items-center justify-center rounded-full bg-sun text-pine shadow-[0_10px_22px_-8px_rgb(242_201_76/0.7)]',
-                        slot === 'featured' ? 'size-11 sm:size-12' : 'size-9 sm:size-10'
+                        slot === 'featured' ? 'size-11 sm:size-12' : 'size-9 sm:size-10',
+                        // Narrow compact tiles (two-up on phones): the arrow rides the
+                        // panel's top edge so the title keeps the full width.
+                        slot === 'compact' && '@max-[14rem]/tile:absolute @max-[14rem]/tile:-top-4 @max-[14rem]/tile:right-2.5'
                     )}
                 >
                     <ArrowUpRight className="size-[1.1rem] transition-transform duration-500 ease-[var(--ease-spring)] group-hover/tile:rotate-45 motion-reduce:transition-none" />
