@@ -67,17 +67,17 @@ const BestsellerCard = ({ product, position }) => {
                 {/* Rank medallion, half on the mat, half on the body */}
                 <span
                     aria-hidden="true"
-                    className="absolute -bottom-5 left-5 flex size-11 items-center justify-center rounded-full bg-brand font-header text-[1.0625rem] text-white ring-4 ring-surface-card"
+                    className="absolute -bottom-5 left-5 flex size-11 items-center justify-center rounded-full bg-brand font-header text-[1.0625rem] text-on-brand ring-4 ring-surface-card"
                 >
                     {rank(position)}
                 </span>
             </div>
 
             <div className="flex flex-1 flex-col px-4 pb-4 pt-8">
-                <p className="text-[0.75rem] font-medium text-fern">
+                <p className="text-[0.75rem] font-medium text-[var(--brand-primary-bright)]">
                     Bestseller{variant?.size ? ` · ${variant.size}` : ''}
                 </p>
-                <h3 className="mt-1 text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">
+                <h3 className="mt-1 font-neue text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">
                     {/* The name's link covers the card; the actions sit above it. */}
                     <Link
                         href={href}
@@ -92,8 +92,8 @@ const BestsellerCard = ({ product, position }) => {
                 {/* Perforation with side notches (the notches take the band colour) */}
                 <div className="relative z-10 mt-auto pt-4">
                     <div className="relative border-t border-dashed border-line-strong">
-                        <span aria-hidden="true" className="absolute -left-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-surface-sunken" />
-                        <span aria-hidden="true" className="absolute -right-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-surface-sunken" />
+                        <span aria-hidden="true" className="absolute -left-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-[var(--section-bg,var(--surface-sunken))]" />
+                        <span aria-hidden="true" className="absolute -right-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-[var(--section-bg,var(--surface-sunken))]" />
                     </div>
 
                     <div className="mt-4 flex items-center gap-2">
@@ -134,7 +134,7 @@ const BestsellerCard = ({ product, position }) => {
     )
 }
 
-const BestsellersSectionClient = ({ products = [] }) => {
+const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
     const sectionRef = useRef(null)
     const rail = useScrollRail()
     useReveal(sectionRef, [products.length])
@@ -142,7 +142,7 @@ const BestsellersSectionClient = ({ products = [] }) => {
     if (!products.length) return null
 
     return (
-        <Section ref={sectionRef} tone="sunken" aria-labelledby="bestsellers-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="bestsellers-title">
             <SectionHeader
                 id="bestsellers-title"
                 eyebrow="Most reordered"
@@ -150,10 +150,12 @@ const BestsellersSectionClient = ({ products = [] }) => {
                 accent="bestsellers"
                 description="Ranked by what our customers come back for, again and again."
                 action={
-                    <>
-                        <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`} className="mr-2">Shop all bestsellers</StoreLink>
+                    // Shop button on top, rail arrows beneath it (right-aligned
+                    // once the header sits side by side on desktop).
+                    <div className="flex flex-col items-start gap-3 md:items-end">
+                        <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`}>Shop all bestsellers</StoreLink>
                         <RailControls rail={rail} label="bestsellers" className="hidden sm:flex" />
-                    </>
+                    </div>
                 }
             />
 

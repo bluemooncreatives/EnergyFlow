@@ -466,7 +466,7 @@ const Checkout = () => {
                 },
 
                 "theme": {
-                    "color": "#083A2F"
+                    "color": "#0B3D2E"
                 }
             }
 
@@ -487,12 +487,12 @@ const Checkout = () => {
     // ── reusable bits ──────────────────────────────────────────────
     const SectionHeading = ({ step, icon: Icon, title, hint }) => (
         <div className="mb-5 flex items-center gap-3">
-            <span className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-brand text-[0.8125rem] font-semibold text-white tabular-nums">
+            <span className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-brand text-[0.8125rem] font-semibold text-on-brand tabular-nums">
                 {step}
             </span>
             <div className="flex flex-1 items-center gap-2">
                 <Icon className="size-[18px] text-brand" strokeWidth={1.75} aria-hidden="true" />
-                <h2 className="font-neue text-[1.125rem] font-medium tracking-[-0.01em] text-ink-strong">
+                <h2 className="font-header text-[1.125rem] font-medium text-ink-strong">
                     {title}
                 </h2>
             </div>
@@ -533,7 +533,7 @@ const Checkout = () => {
                             <Package className='size-6 text-brand' strokeWidth={1.75} />
                         </div>
                         <div>
-                            <h4 className='font-neue text-lg font-semibold text-foreground'>Confirming your order…</h4>
+                            <h4 className='font-header text-lg font-semibold text-foreground'>Confirming your order…</h4>
                             <p className='mt-1.5 text-sm text-muted-foreground'>Please don&apos;t close or refresh this window.</p>
                         </div>
                     </div>
@@ -560,7 +560,7 @@ const Checkout = () => {
                         <div className='flex size-16 items-center justify-center rounded-full bg-tint-honey text-brand'>
                             <Package className='size-8' strokeWidth={1.5} />
                         </div>
-                        <h2 className='font-neue mt-5 text-2xl font-medium tracking-[-0.02em] text-ink-strong'>
+                        <h2 className='font-header mt-5 text-2xl font-medium text-ink-strong'>
                             {verifyError ? 'We couldn’t load this item' : 'This item is no longer available'}
                         </h2>
                         <p className='font-neue mt-2 max-w-[280px] text-sm text-muted-foreground'>
@@ -593,7 +593,7 @@ const Checkout = () => {
                         <div className='flex size-16 items-center justify-center rounded-full bg-tint-honey text-brand'>
                             <Truck className='size-8' strokeWidth={1.5} />
                         </div>
-                        <h2 className='font-neue mt-5 text-2xl font-medium tracking-[-0.02em] text-ink-strong'>Your cart is empty</h2>
+                        <h2 className='font-header mt-5 text-2xl font-medium text-ink-strong'>Your cart is empty</h2>
                         <p className='font-neue mt-2 max-w-[260px] text-sm text-muted-foreground'>
                             There&apos;s nothing to check out yet. Discover pieces you&apos;ll love and come back to complete your order.
                         </p>
@@ -818,7 +818,7 @@ const Checkout = () => {
                                 <div className='overflow-hidden rounded-[var(--radius-tile)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                     {/* header */}
                                     <div className='flex items-center justify-between border-b border-line-soft px-5 py-4 sm:px-6'>
-                                        <h2 className='font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong'>Order summary</h2>
+                                        <h2 className='font-header text-xl font-medium text-ink-strong'>Order summary</h2>
                                         {isBuyNow ? (
                                             <span className='inline-flex items-center gap-1 rounded-[var(--radius-control)] bg-tint-honey px-2.5 py-1 text-[0.75rem] font-medium text-brand'>
                                                 <Zap className='size-3' aria-hidden='true' /> Buy now

@@ -16,11 +16,11 @@ const BRAND = {
     address: 'Rangpuri, Mahipalpur, New Delhi - 110037',
 }
 
-const BRAND_COLOR = '#083A2F'   // pine — matches --brand-primary
-const CREAM = '#F7F0DD'
-const INK = '#0B2A22'
-const MUTE = '#5E6D64'
-const GREEN = '#1F5A45'          // fern — savings / success
+const BRAND_COLOR = '#0B3D2E'   // pine — matches --brand-primary
+const CREAM = '#F7F3E8'
+const INK = '#0A2F24'
+const MUTE = '#5A6A5F'
+const GREEN = '#2F6B3F'          // fern — savings / success
 
 const money = (n) =>
     'Rs. ' + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
@@ -93,7 +93,7 @@ const s = StyleSheet.create({
     grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 2, borderTopColor: INK, marginTop: 6, paddingTop: 8 },
     grandLabel: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
     grandVal: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
-    saved: { marginTop: 8, backgroundColor: '#E1E9D8', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
+    saved: { marginTop: 8, backgroundColor: '#E2EAD8', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
     payBox: { marginTop: 12, borderWidth: 1, borderColor: '#ececec', borderRadius: 4 },
     payRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, paddingHorizontal: 10 },
     payRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },

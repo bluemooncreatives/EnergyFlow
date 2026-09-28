@@ -99,7 +99,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
                         aria-hidden="true"
                         className={cn(
                             'flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300',
-                            isOpen ? 'bg-brand text-white' : 'bg-surface-well text-brand'
+                            isOpen ? 'bg-brand text-on-brand' : 'bg-surface-well text-brand'
                         )}
                     >
                         <Plus
@@ -130,7 +130,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
     )
 }
 
-const FAQSection = () => {
+const FAQSection = ({ tone = 'page' }) => {
     const [openIndex, setOpenIndex] = useState(0)
     const sectionRef = useRef(null)
     const baseId = useId()
@@ -144,7 +144,7 @@ const FAQSection = () => {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            <Section ref={sectionRef} aria-labelledby="faq-title">
+            <Section ref={sectionRef} tone={tone} id="faq" aria-labelledby="faq-title" className="scroll-mt-20">
                 <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
 
                     <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
@@ -158,7 +158,7 @@ const FAQSection = () => {
 
                         <div
                             data-reveal
-                            className="ef-tile ef-on-inverse flex flex-col items-start gap-4 bg-brand p-6 text-white sm:p-7"
+                            className="ef-tile ef-on-inverse flex flex-col items-start gap-4 bg-surface-inverse p-6 text-white sm:p-7"
                             style={{ backgroundImage: 'var(--brand-panel-gradient)', borderRadius: 'var(--radius-card)' }}
                         >
                             <span className="flex size-11 items-center justify-center rounded-full bg-amber text-brand-deep">

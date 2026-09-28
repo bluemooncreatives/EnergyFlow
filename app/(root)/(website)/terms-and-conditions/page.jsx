@@ -18,7 +18,7 @@ const breadcrumb = {
 
 const Section = ({ number, title, children }) => (
     <div className='mt-10'>
-        <h2 className='mb-3 text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong lg:text-[1.375rem]'>
+        <h2 className='mb-3 text-[1.25rem] font-medium text-ink-strong lg:text-[1.375rem]'>
             {number}. {title}
         </h2>
         <div className='space-y-3 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
@@ -269,7 +269,7 @@ const TermsAndConditions = () => {
 
                 {/* Contact */}
                 <div className='mt-12 border-t border-line-soft pt-8'>
-                    <h2 className='mb-3 text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong lg:text-[1.375rem]'>Contact Us</h2>
+                    <h2 className='mb-3 text-[1.25rem] font-medium text-ink-strong lg:text-[1.375rem]'>Contact Us</h2>
                     <p className='text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         If you have any questions, concerns, or requests regarding these Terms &amp; Conditions, please reach out to us:
                     </p>

@@ -51,7 +51,7 @@ const LogoutButton = () => {
       onClick={handleLogout}
       className="cursor-pointer"
     >
-      <LogOut className="size-4 text-red-500" />
+      <LogOut className="size-4 text-destructive" />
       Logout
     </DropdownMenuItem>
   );

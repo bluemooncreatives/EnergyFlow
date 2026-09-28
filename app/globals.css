@@ -7,91 +7,117 @@
 
 /* ────────────────────────────────────────────────────────────────
    FONT FACES
-   Loaded here so Next.js can inject preload <link> tags via layout.jsx.
+   Self-hosted so layout.jsx can preload the critical files.
+     Clash Display (Fontshare, ITF Free Font License) — every headline
+     Archivo (Google Fonts, OFL) — body copy, UI, forms, tables
    ──────────────────────────────────────────────────────────────── */
 @font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Thin.woff2') format('woff2');
-  font-weight: 200;
-  font-style: normal;
-  font-display: optional;
-}
-
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: optional;
-}
-
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Book.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Regular.woff2') format('woff2');
+  font-family: 'Clash Display';
+  src: url('/assets/font/ClashDisplay-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Medium.woff2') format('woff2');
+  font-family: 'Clash Display';
+  src: url('/assets/font/ClashDisplay-Semibold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PP Neue Montreal';
-  src: url('/assets/font/PPNeueMontreal-Bold.woff2') format('woff2');
+  font-family: 'Clash Display';
+  src: url('/assets/font/ClashDisplay-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
 }
 
-/* Metrics-adjusted fallback for the swap-loaded body weights (400/500/600).
-   With plain `font-display: swap`, text paints in Arial and reflows when
-   PP Neue Montreal arrives — on slow connections that swap lands after the
-   page is painted and shifts every text block (the intermittent CLS ~0.25
-   Lighthouse flags on /shop). These faces render Arial scaled to PP Neue
-   Montreal's exact proportions (values computed from the woff2 metrics, the
-   same technique next/font uses), so the swap no longer moves layout. */
+/* Archivo is variable (wght 100–900): one file per script subset. */
 @font-face {
-  font-family: 'PP Neue Fallback';
+  font-family: 'Archivo';
+  src: url('/assets/font/Archivo-Variable-Latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/assets/font/Archivo-Variable-LatinExt.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Metrics-adjusted fallbacks. With `font-display: swap`, text first paints
+   in Arial and reflows when the web font arrives — on slow connections that
+   swap lands after paint and shifts every text block (CLS). These faces
+   render Arial scaled to each font's measured proportions (average advance
+   width and vertical metrics read from the woff2 files, the technique
+   next/font uses), so the swap no longer moves layout. */
+@font-face {
+  font-family: 'Archivo Fallback';
   src: local('Arial');
   font-weight: 400;
-  size-adjust: 100.91%;
-  ascent-override: 94.94%;
-  descent-override: 23.98%;
+  size-adjust: 98.69%;
+  ascent-override: 88.97%;
+  descent-override: 21.28%;
   line-gap-override: 0%;
 }
 
 @font-face {
-  font-family: 'PP Neue Fallback';
+  font-family: 'Archivo Fallback';
   src: local('Arial');
   font-weight: 500;
-  size-adjust: 102.54%;
-  ascent-override: 93.43%;
-  descent-override: 23.60%;
+  size-adjust: 100.55%;
+  ascent-override: 87.32%;
+  descent-override: 20.88%;
   line-gap-override: 0%;
 }
 
 @font-face {
-  font-family: 'PP Neue Fallback';
+  font-family: 'Archivo Fallback';
   src: local('Arial');
   font-weight: 600;
-  size-adjust: 104.61%;
-  ascent-override: 91.58%;
-  descent-override: 23.13%;
+  size-adjust: 102.65%;
+  ascent-override: 85.54%;
+  descent-override: 20.46%;
   line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Clash Display Fallback';
+  src: local('Arial');
+  font-weight: 500;
+  size-adjust: 107.10%;
+  ascent-override: 83.10%;
+  descent-override: 23.34%;
+  line-gap-override: 8.40%;
+}
+
+@font-face {
+  font-family: 'Clash Display Fallback';
+  src: local('Arial');
+  font-weight: 600;
+  size-adjust: 110.13%;
+  ascent-override: 80.81%;
+  descent-override: 22.70%;
+  line-gap-override: 8.17%;
+}
+
+@font-face {
+  font-family: 'Clash Display Fallback';
+  src: local('Arial');
+  font-weight: 700;
+  size-adjust: 112.84%;
+  ascent-override: 78.87%;
+  descent-override: 22.15%;
+  line-gap-override: 7.98%;
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -108,6 +134,7 @@
   --color-background:             var(--background);
   --color-foreground:             var(--foreground);
   --font-sans:                    var(--font-body);
+  --font-display:                 var(--font-display);
   --font-mono:                    var(--font-mono);
 
   /* Semantic palette */
@@ -139,7 +166,7 @@
   /* Sidebar */
   --color-sidebar:                var(--sidebar);
   --color-sidebar-foreground:     var(--sidebar-foreground);
-  --color-sidebar-primary:        var(--brand-primary);
+  --color-sidebar-primary:        var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-accent:         var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -160,6 +187,12 @@
   --color-brand-hover:     var(--brand-primary-hover);
   --color-brand-bright:    var(--brand-primary-bright);
   --color-brand-deep:      var(--brand-primary-deep);
+  --color-on-brand:        var(--on-brand);
+  --color-sun:             var(--brand-sun);
+  --color-sun-ink:         var(--brand-sun-ink);
+  --color-forest:          var(--brand-forest);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-line-rule:       var(--line-rule);
   --color-olive:           var(--brand-olive);
   --color-olive-deep:      var(--brand-olive-deep);
   --color-cocoa:           var(--brand-cocoa);
@@ -213,6 +246,22 @@
   }
   html {
     @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  /* Every headline is Clash Display. Small UI headings that should read as
+     body text (product names, table captions) opt out with `font-neue`. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-display);
+    letter-spacing: var(--tracking-display);
+    word-spacing: var(--word-spacing-display);
+  }
+  ::selection {
+    background: var(--brand-sun);
+    color: var(--brand-sun-ink);
   }
 }
 

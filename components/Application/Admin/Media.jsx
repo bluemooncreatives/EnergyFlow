@@ -25,7 +25,7 @@ const Media = ({ media, handleDelete, deleteType, selectedMedia, setSelectedMedi
     }
 
     return (
-        <div className='border border-gray-200 dark:border-gray-800 relative group rounded overflow-hidden'>
+        <div className='border border-border relative group rounded overflow-hidden'>
             <div className='absolute top-2 left-2 z-20'>
                 <Checkbox
                     checked={selectedMedia.includes(media._id)}
@@ -58,7 +58,7 @@ const Media = ({ media, handleDelete, deleteType, selectedMedia, setSelectedMedi
                         }
 
                         <DropdownMenuItem className="cursor-pointer" onClick={() => handleDelete([media._id], deleteType)}>
-                            <Trash2 className='size-4 text-red-500' />
+                            <Trash2 className='size-4 text-destructive' />
                             {deleteType === 'SD' ? 'Move Into Trash' : 'Delete Permanently'}
                         </DropdownMenuItem>
 

@@ -69,7 +69,7 @@ const SearchModel = ({ open, setOpen }) => {
                     ))}
 
                     {query && results.length === 0 &&
-                        <div className="text-sm text-center text-red-500">
+                        <div className="text-sm text-center text-destructive">
                             No Result Found.
                         </div>
                     }

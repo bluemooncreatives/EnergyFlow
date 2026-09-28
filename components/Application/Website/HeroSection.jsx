@@ -15,7 +15,7 @@ import styles from "./HeroSection.module.css";
 gsap.registerPlugin(useGSAP);
 
 // Long enough to read a headline, a line of copy and reach the button.
-const AUTO_MS = 6500;
+const AUTO_MS = 5500;
 const SWIPE_PX = 48;
 const LOADER_SESSION_KEY = "energyflow_loader_seen";
 
@@ -170,7 +170,7 @@ const FLOATER_ART = {
   goji: svg(<>
     <ellipse cx="32" cy="37" rx="13" ry="21" fill="#D4462B" />
     <ellipse cx="27" cy="29" rx="3" ry="7" fill="#F08A6A" />
-    <path d="M32 16c0-4 2-8 7-10" stroke="#1F5A45" strokeWidth="3" strokeLinecap="round" />
+    <path d="M32 16c0-4 2-8 7-10" stroke="#2F6B3F" strokeWidth="3" strokeLinecap="round" />
   </>),
   sunflowerSeed: svg(<>
     <path d="M32 4C24 14 20 28 22 42c1 10 5 18 10 18s9-8 10-18C44 28 40 14 32 4Z" fill="#2E2A26" />
@@ -182,14 +182,14 @@ const FLOATER_ART = {
   </>),
   // Gifting
   bow: svg(<>
-    <path d="M32 30C22 18 8 16 8 26s14 10 24 4Z" fill="#1F5A45" />
-    <path d="M32 30c10-12 24-14 24-4s-14 10-24 4Z" fill="#2E7057" />
-    <path d="M28 32l-8 22 8-4 4 6 2-24Z" fill="#083A2F" /><path d="M36 32l8 22-8-4-4 6-2-24Z" fill="#1F5A45" />
-    <circle cx="32" cy="30" r="5" fill="#083A2F" />
+    <path d="M32 30C22 18 8 16 8 26s14 10 24 4Z" fill="#2F6B3F" />
+    <path d="M32 30c10-12 24-14 24-4s-14 10-24 4Z" fill="#4E8A5C" />
+    <path d="M28 32l-8 22 8-4 4 6 2-24Z" fill="#0B3D2E" /><path d="M36 32l8 22-8-4-4 6-2-24Z" fill="#2F6B3F" />
+    <circle cx="32" cy="30" r="5" fill="#0B3D2E" />
   </>),
   sparkle: svg(<>
-    <path d="M32 4l6 20 20 8-20 8-6 20-6-20-20-8 20-8Z" fill="#DCB25E" />
-    <path d="M32 18l2.5 9.5L44 32l-9.5 2.5L32 44l-2.5-9.5L20 32l9.5-2.5Z" fill="#F4E6C2" />
+    <path d="M32 4l6 20 20 8-20 8-6 20-6-20-20-8 20-8Z" fill="#F2C94C" />
+    <path d="M32 18l2.5 9.5L44 32l-9.5 2.5L32 44l-2.5-9.5L20 32l9.5-2.5Z" fill="#FBEDC4" />
   </>),
   truffle: svg(<>
     <path d="M12 40l6 16h28l6-16c-10 6-30 6-40 0Z" fill="#E0A93E" />
@@ -197,27 +197,27 @@ const FLOATER_ART = {
     <path d="M17 28c7-6 23-6 30 0" stroke="#8A5530" strokeWidth="3.5" strokeLinecap="round" />
   </>),
   giftBox: svg(<>
-    <rect x="10" y="26" width="44" height="30" rx="4" fill="#1F5A45" />
-    <rect x="8" y="18" width="48" height="12" rx="3" fill="#2E7057" />
-    <rect x="28" y="18" width="8" height="38" fill="#DCB25E" />
-    <path d="M32 18c-4-8-14-10-14-4s10 4 14 4c4 0 14 2 14-4s-10-4-14 4Z" fill="#DCB25E" />
+    <rect x="10" y="26" width="44" height="30" rx="4" fill="#2F6B3F" />
+    <rect x="8" y="18" width="48" height="12" rx="3" fill="#4E8A5C" />
+    <rect x="28" y="18" width="8" height="38" fill="#F2C94C" />
+    <path d="M32 18c-4-8-14-10-14-4s10 4 14 4c4 0 14 2 14-4s-10-4-14 4Z" fill="#F2C94C" />
   </>),
   // Treats
   jellyOrange: svg(<>
     <rect x="12" y="12" width="40" height="40" rx="10" fill="#F28C28" />
-    <rect x="12" y="12" width="40" height="14" rx="7" fill="#DCB25E" opacity="0.55" />
+    <rect x="12" y="12" width="40" height="14" rx="7" fill="#F2C94C" opacity="0.55" />
     {SUGAR}
   </>),
   cherry: svg(<>
-    <path d="M24 38c4-12 10-24 22-30M42 40c0-12 1-22 4-32" stroke="#1F5A45" strokeWidth="3" strokeLinecap="round" />
-    <path d="M46 8c7 0 11 4 11 9-7 0-11-4-11-9Z" fill="#2E7057" />
+    <path d="M24 38c4-12 10-24 22-30M42 40c0-12 1-22 4-32" stroke="#2F6B3F" strokeWidth="3" strokeLinecap="round" />
+    <path d="M46 8c7 0 11 4 11 9-7 0-11-4-11-9Z" fill="#4E8A5C" />
     <circle cx="22" cy="46" r="11" fill="#C8202F" /><circle cx="42" cy="46" r="11" fill="#E03A3E" />
     <circle cx="18" cy="42" r="3" fill="#F28A8F" /><circle cx="38" cy="42" r="3" fill="#F7A3A6" />
   </>),
   candy: svg(<>
-    <path d="M18 32L5 21v22Z" fill="#1F5A45" /><path d="M46 32l13-11v22Z" fill="#1F5A45" />
-    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#DCB25E" />
-    <path d="M23 25l18 13M21 33l12 7M30 21l13 8" stroke="#F7F0DD" strokeWidth="2.5" strokeLinecap="round" />
+    <path d="M18 32L5 21v22Z" fill="#2F6B3F" /><path d="M46 32l13-11v22Z" fill="#2F6B3F" />
+    <ellipse cx="32" cy="32" rx="16" ry="12" fill="#F2C94C" />
+    <path d="M23 25l18 13M21 33l12 7M30 21l13 8" stroke="#F7F3E8" strokeWidth="2.5" strokeLinecap="round" />
   </>),
   jellyGreen: svg(<>
     <rect x="12" y="12" width="40" height="40" rx="10" fill="#8FB63A" />
@@ -282,7 +282,13 @@ const HeroSection = ({ availability = null }) => {
     } catch {
       // storage blocked — the loader simply plays
     }
-    setCanAutoplay(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    // Auto-advance only where hover can pause it (mouse / trackpad). On touch
+    // screens a slide changing under the thumb causes mis-taps, so phones and
+    // tablets advance by swipe and tabs alone.
+    setCanAutoplay(
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    );
   }, []);
 
   const handleLoaderReady = useCallback(() => setLoaderComplete(true), []);
@@ -481,13 +487,20 @@ const HeroSection = ({ availability = null }) => {
   );
 
   // ── Input ─────────────────────────────────────────────────────────
+  // A slide the shopper picks stays put: any manual navigation ends
+  // autoplay (the play button brings it back).
+  const choose = (index, direction) => {
+    setUserPaused(true);
+    goTo(index, direction);
+  };
+
   const onTabKeyDown = (event) => {
     const keys = { ArrowRight: 1, ArrowLeft: -1, Home: "home", End: "end" };
     const k = keys[event.key];
     if (k === undefined) return;
     event.preventDefault();
     const next = k === "home" ? 0 : k === "end" ? TOTAL - 1 : (active + k + TOTAL) % TOTAL;
-    goTo(next, k === "home" ? -1 : k === "end" ? 1 : k);
+    choose(next, k === "home" ? -1 : k === "end" ? 1 : k);
     event.currentTarget.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
@@ -503,7 +516,7 @@ const HeroSection = ({ availability = null }) => {
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
     if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-    goTo(activeRef.current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    choose(activeRef.current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
   };
 
   // Pause for keyboard focus only — a mouse click on a tab also focuses it,
@@ -584,13 +597,13 @@ const HeroSection = ({ availability = null }) => {
                     </p>
 
                     <div data-anim className={styles.ctaRow}>
-                      <Link href={cta.href} className="ef-btn ef-btn--primary ef-btn--lg">
+                      {/* Sunflower lead + pine second, as in the brand reference. */}
+                      <Link href={cta.href} className="ef-btn ef-btn--accent ef-btn--lg">
                         {cta.label}
                         <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
                       </Link>
-                      <Link href={secondary.href} className="ef-link">
+                      <Link href={secondary.href} className="ef-btn ef-btn--pine ef-btn--lg">
                         {secondary.label}
-                        <ArrowRight aria-hidden="true" />
                       </Link>
                     </div>
                   </div>
@@ -636,7 +649,7 @@ const HeroSection = ({ availability = null }) => {
                       tabIndex={-1}
                       className={cn(styles.thumb, i === active && styles.thumbActive)}
                       ref={(el) => { thumbsRef.current[i] = el; }}
-                      onClick={() => goTo(i)}
+                      onClick={() => choose(i)}
                     >
                       <span className={styles.thumbImg}>
                         <Image src={slide.plate} alt="" fill sizes="80px" />
@@ -685,7 +698,7 @@ const HeroSection = ({ availability = null }) => {
                   aria-controls={`hero-slide-${i}`}
                   tabIndex={i === active ? 0 : -1}
                   className={cn(styles.tab, "ef-focus")}
-                  onClick={() => goTo(i)}
+                  onClick={() => choose(i)}
                 >
                   <span className={styles.track} aria-hidden="true">
                     <span className={styles.fill} ref={(el) => { fillsRef.current[i] = el; }} />

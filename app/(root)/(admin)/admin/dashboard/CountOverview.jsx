@@ -68,7 +68,7 @@ const CountOverview = () => {
                                             <div className="flex items-center gap-2">
                                                 <CardTitle className={`text-sm font-medium text-foreground`}>{card.title}</CardTitle>
                                             </div>
-                                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${card.chartVar})`, color: card.chartVar === '--chart-2' ? '#0B2A22' : 'var(--background)' }} aria-hidden>
+                                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${card.chartVar})`, color: card.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }} aria-hidden>
                                                 <card.icon className="h-4 w-4" />
                                             </span>
                                         </CardHeader>
@@ -80,7 +80,7 @@ const CountOverview = () => {
                                                 <TrendingUp className="h-3 w-3" />
                                             </span>
                                         ) : (
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                                                 <TrendingDown className="h-3 w-3" />
                                             </span>
                                         )}

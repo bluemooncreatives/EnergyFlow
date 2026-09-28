@@ -24,14 +24,14 @@ const usefulLinks = [
     { label: 'Home', href: WEBSITE_HOME },
     { label: 'Shop', href: WEBSITE_SHOP },
     { label: 'About', href: '/about-us' },
-    { label: 'Register', href: WEBSITE_REGISTER },
-    { label: 'Login', href: WEBSITE_LOGIN },
+    { label: 'Contact', href: '/contact' },
+    { label: 'FAQs', href: `${WEBSITE_HOME}#faq` },
 ]
 
 const helpLinks = [
-    { label: 'Register', href: WEBSITE_REGISTER },
-    { label: 'Login', href: WEBSITE_LOGIN },
     { label: 'My Account', href: USER_DASHBOARD },
+    { label: 'Login', href: WEBSITE_LOGIN },
+    { label: 'Register', href: WEBSITE_REGISTER },
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Terms & Conditions', href: '/terms-and-conditions' },
 ]
@@ -44,7 +44,7 @@ const socialLinks = [
 
 const LinkColumn = ({ title, links }) => (
     <div className='footer-col'>
-        <h3 className='mb-5 text-[12px] font-medium uppercase tracking-[0.14em] text-white/55'>{title}</h3>
+        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-[var(--brand-sun)]'>{title}</h3>
         <nav aria-label={`${title} links`}>
             <ul className='space-y-2.5'>
                 {links.map(({ label, href }) => (
@@ -105,7 +105,7 @@ const Footer = ({ categoryLinks = [] }) => {
     }, { scope: rootRef })
 
     return (
-        <footer ref={rootRef} className='sticky z-0 bottom-0 left-0 w-full bg-pine-deep text-white overflow-hidden' style={{ backgroundImage: 'var(--pine-panel-gradient)' }} aria-label='Site footer'>
+        <footer ref={rootRef} className='relative w-full border-t border-[var(--line-soft)] bg-pine-deep text-white overflow-hidden' style={{ backgroundImage: 'var(--pine-panel-gradient)' }} aria-label='Site footer'>
             <div className='website-gutter pt-14 pb-8'>
 
                 {/* ───── Top row: caption + big email + CTA card ───── */}
@@ -117,20 +117,22 @@ const Footer = ({ categoryLinks = [] }) => {
                         </p>
                         <Link
                             href={`mailto:${CONTACT_EMAIL}`}
-                            className='footer-email inline-block border-b border-white/30 pb-3 font-medium tracking-[-0.03em] text-[clamp(1.25rem,4.8vw,2.6rem)] leading-none hover:text-[var(--brand-cream)] transition-colors break-all'
+                            className='footer-email inline-block border-b border-white/30 pb-3 font-header font-medium text-[clamp(1.25rem,4.8vw,2.6rem)] leading-none hover:border-[var(--brand-sun)] hover:text-[var(--brand-sun)] transition-colors break-all'
                         >
                             {CONTACT_EMAIL}
                         </Link>
                     </div>
 
-                    {/* Get Started CTA card */}
+                    {/* Get Started CTA card — sunflower with a pine button, as in
+                        the brand reference; fixed palette so it reads the same
+                        in light and dark mode. */}
                     <div className='shrink-0'>
-                        <div className='footer-cta w-full rounded-[var(--radius-card)] bg-[var(--brand-cream)] p-5 sm:w-64'>
-                            <p className='mb-1 text-xl font-medium tracking-[-0.01em] text-[var(--ink-strong)]'>Get Started</p>
-                            <p className='mb-6 text-[0.875rem] leading-snug text-[var(--ink-body)]'>Ghee, oils, dry fruits and gifts, delivered across India.</p>
+                        <div className='footer-cta w-full rounded-[var(--radius-card)] bg-[var(--palette-sunflower)] p-5 text-[var(--palette-pine)] sm:w-64'>
+                            <p className='mb-1 font-header text-xl font-semibold uppercase'>Get Started</p>
+                            <p className='mb-6 text-[0.875rem] leading-snug text-[var(--palette-pine)]/80'>Ghee, oils, dry fruits and gifts, delivered across India.</p>
                             <Link
                                 href={WEBSITE_SHOP}
-                                className='ef-btn ef-btn--primary ef-btn--block justify-between'
+                                className='ef-btn ef-btn--pine ef-btn--block justify-between'
                             >
                                 <span>Shop now</span>
                                 <ArrowRight className='ef-btn__arrow' aria-hidden='true' />
@@ -147,7 +149,7 @@ const Footer = ({ categoryLinks = [] }) => {
 
                     {/* Office / Contact */}
                     <div className='footer-col lg:text-right'>
-                        <h3 className='mb-5 text-[12px] font-medium uppercase tracking-[0.14em] text-white/55'>Office</h3>
+                        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-[var(--brand-sun)]'>Office</h3>
                         <ul className='space-y-2.5 text-[0.9375rem] text-white/80'>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <MapPin className='size-5 shrink-0 lg:order-2' />
@@ -183,20 +185,20 @@ const Footer = ({ categoryLinks = [] }) => {
                 <FooterWordmark />
             </div>
 
-            {/* ───── Bottom bar (purple) ───── */}
-            <div className='bg-[var(--brand-ink-soft)] text-[var(--brand-cream)]'>
+            {/* ───── Bottom bar — the sunflower strip that closes the page ───── */}
+            <div className='border-t border-[var(--palette-pine)] bg-[var(--surface-sun)] text-[var(--palette-pine)]'>
                 <div className='website-gutter py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm'>
                     <div className='flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3'>
                         <p>Copyright © {new Date().getFullYear()} Energyflow. All Rights Reserved.</p>
-                        <span className='hidden text-[var(--brand-cream)]/40 sm:inline' aria-hidden='true'>•</span>
-                        <p className='text-[var(--brand-cream)]/70'>
+                        <span className='hidden text-[var(--palette-pine)]/40 sm:inline' aria-hidden='true'>•</span>
+                        <p className='text-[var(--palette-pine)]/75'>
                             Designed &amp; built by{' '}
                             <Link
                                 href='https://www.instagram.com/bluemoon.creatives/'
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 aria-label='Blue Moon Creatives on Instagram'
-                                className='font-semibold text-[var(--brand-cream)] underline decoration-[var(--brand-cream)]/40 underline-offset-2 transition-colors hover:text-[var(--brand-white)] hover:decoration-[var(--brand-white)]'
+                                className='font-semibold text-[var(--palette-pine)] underline decoration-[var(--palette-pine)]/40 underline-offset-2 transition-colors hover:text-[var(--palette-forest)] hover:decoration-[var(--palette-forest)]'
                             >
                                 Blue Moon Creatives
                             </Link>
@@ -207,7 +209,7 @@ const Footer = ({ categoryLinks = [] }) => {
                             <Globe className='size-4' /> New Delhi, India
                         </span>
                         {socialLinks.map(({ label, href }) => (
-                            <Link key={`bar-${label}`} href={href} target='_blank' rel='noopener noreferrer' className='hover:text-[var(--brand-white)] transition-colors'>
+                            <Link key={`bar-${label}`} href={href} target='_blank' rel='noopener noreferrer' className='font-medium hover:text-[var(--palette-forest)] transition-colors'>
                                 {label}
                             </Link>
                         ))}

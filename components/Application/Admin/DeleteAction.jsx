@@ -5,7 +5,7 @@ const DeleteAction = ({ handleDelete, row, deleteType }) => {
         <DropdownMenuItem
             key="delete"
             onClick={() => handleDelete([row.original._id], deleteType)}
-            className='text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400 cursor-pointer'
+            className='text-destructive focus:text-destructive cursor-pointer'
         >
             <Trash2 className='size-4' />
             Delete

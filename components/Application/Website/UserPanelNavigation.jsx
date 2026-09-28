@@ -67,7 +67,7 @@ const UserPanelNavigation = () => {
                     <div className="flex items-center gap-3">
                         <Avatar className="size-9 border border-line-soft">
                             <AvatarImage src={user?.avatar?.url} alt={user?.name || 'User'} className="object-cover" />
-                            <AvatarFallback className="bg-brand font-neue text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
+                            <AvatarFallback className="bg-brand font-neue text-[11px] font-semibold uppercase tracking-[0.04em] text-on-brand">
                                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                             </AvatarFallback>
                         </Avatar>
@@ -93,7 +93,7 @@ const UserPanelNavigation = () => {
                                 <Link
                                     href={href}
                                     className={`group flex items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 transition-all duration-200 ${isActive
-                                        ? 'bg-brand text-white'
+                                        ? 'bg-brand text-on-brand'
                                         : 'text-foreground/60 hover:bg-[var(--brand-warm-bg)] hover:text-[var(--brand-primary)]'
                                         }`}
                                 >
@@ -113,10 +113,10 @@ const UserPanelNavigation = () => {
                 <button
                     type="button"
                     onClick={handleLogout}
-                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-red-50"
+                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-destructive/10"
                 >
-                    <LogOut className="size-3.5 shrink-0 text-foreground/40 group-hover:text-red-500" />
-                    <span className="text-base font-semibold text-foreground/60 group-hover:text-red-600">
+                    <LogOut className="size-3.5 shrink-0 text-foreground/40 group-hover:text-destructive" />
+                    <span className="text-base font-semibold text-foreground/60 group-hover:text-destructive">
                         Logout
                     </span>
                 </button>

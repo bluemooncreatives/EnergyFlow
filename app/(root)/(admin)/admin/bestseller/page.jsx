@@ -242,7 +242,7 @@ const ShowBestseller = () => {
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="size-8 text-red-600 hover:text-red-700"
+                      className="size-8 text-destructive hover:text-destructive/80"
                       disabled={removingId === product._id}
                       onClick={() => handleRemove(product._id)}
                       aria-label="Remove from bestsellers"

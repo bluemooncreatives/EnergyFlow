@@ -8,6 +8,7 @@ import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import StoreButton from './storefront/StoreButton'
 import WaveEdge from './storefront/WaveEdge'
+import { cn } from '@/lib/utils'
 
 const BENEFITS = [
     {
@@ -32,7 +33,7 @@ const BENEFITS = [
     },
 ]
 
-// Full-bleed deep-green band with organic wave edges that spill into the
+// Full-bleed pine band with organic wave edges that spill into the
 // sections either side. z-[1] lifts it above the following section so the
 // lower wave isn't painted over.
 const BenefitsSection = () => {
@@ -49,7 +50,7 @@ const BenefitsSection = () => {
             <WaveEdge position="top" />
             <WaveEdge position="bottom" />
 
-            <div className="relative py-[clamp(0.5rem,2vw,1.5rem)] text-white">
+            <div className="relative py-[clamp(0.5rem,2vw,1.5rem)] text-[var(--ink-on-inverse)]">
                 <SectionHeader
                     id="benefits-title"
                     eyebrow="Our promise"
@@ -58,21 +59,21 @@ const BenefitsSection = () => {
                     action={<StoreButton href={WEBSITE_SHOP} variant="accent" arrow>Shop all products</StoreButton>}
                 />
 
-                <ul className="grid list-none grid-cols-1 gap-[var(--grid-gap)] p-0 sm:grid-cols-2 lg:grid-cols-4">
-                    {/* Icon beside the text while cards are wide (1–2 columns);
-                        stacked only in the narrow 4-up desktop row. Everything
-                        stays left-aligned to the same edge at every width. */}
-                    {BENEFITS.map(({ Icon, title, description }) => (
+                {/* The reference's ruled feature row: cells divided by thin
+                    cream rules (the 1px gap shows the ul's rule colour
+                    through), each led by a scalloped seal. */}
+                <ul className="grid list-none grid-cols-1 gap-px overflow-hidden rounded-[var(--radius-card)] border border-[rgb(247_243_232/0.22)] bg-[rgb(247_243_232/0.22)] p-0 sm:grid-cols-2 lg:grid-cols-4">
+                    {BENEFITS.map(({ Icon, title, description }, i) => (
                         <li
                             key={title}
                             data-reveal
-                            className="grid grid-cols-[auto_minmax(0,1fr)] content-start gap-x-4 gap-y-1.5 rounded-card bg-white/[0.06] p-5 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)] transition-colors duration-300 hover:bg-white/[0.09] sm:gap-x-5 sm:p-6 lg:flex lg:flex-col lg:items-start lg:gap-0 lg:p-7"
+                            className="flex flex-col items-center gap-4 bg-[var(--surface-inverse)] px-6 py-9 text-center transition-colors duration-300 hover:bg-[var(--brand-pine-hover)] lg:py-11"
                         >
-                            <span className="row-span-2 flex size-11 shrink-0 items-center justify-center rounded-full bg-amber text-brand-deep sm:size-12 lg:mb-6">
-                                <Icon className="size-5" aria-hidden="true" />
+                            <span className={cn('ef-seal size-[4.25rem] sm:size-[4.75rem]', i % 2 ? 'ef-seal--cream' : 'ef-seal--sun')}>
+                                <Icon strokeWidth={1.75} aria-hidden="true" />
                             </span>
-                            <h3 className="self-center text-[1.125rem] font-medium leading-snug tracking-[-0.01em] text-white sm:text-[1.1875rem] lg:mb-2 lg:self-start">{title}</h3>
-                            <p className="col-start-2 text-[0.9375rem] leading-relaxed text-white/75">{description}</p>
+                            <h3 className="font-header text-[1.125rem] font-semibold uppercase leading-tight text-[var(--palette-cream)] sm:text-[1.1875rem]">{title}</h3>
+                            <p className="max-w-[17rem] text-[0.9375rem] leading-relaxed text-[var(--ink-on-inverse-muted)]">{description}</p>
                         </li>
                     ))}
                 </ul>

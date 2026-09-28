@@ -103,7 +103,7 @@ const LoginPage = () => {
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-black/60" />
                 <div className="pointer-events-none absolute left-0 top-0 z-10 hidden overflow-hidden backdrop-blur-2xl md:flex">
                 </div>
-                <div className="relative hidden overflow-hidden bg-[var(--brand-primary)] p-8 text-sidebar-foreground md:block md:w-1/2 md:p-12">
+                <div className="relative hidden overflow-hidden bg-[var(--surface-inverse)] p-8 text-sidebar-foreground md:block md:w-1/2 md:p-12">
                     <div
                         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[64%]"
                         style={{ backgroundImage: "var(--auth-panel-gradient)" }}
@@ -127,7 +127,7 @@ const LoginPage = () => {
                     {!otpEmail ? (
                         <>
                             <div className='mb-8 flex flex-col items-start'>
-                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink-strong'>Sign in</h1>
+                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] text-ink-strong'>Sign in</h1>
                                 <p className='mt-2 text-left text-[15px] leading-relaxed text-muted-foreground'>Login into your account by filling out the form below.</p>
                             </div>
                             <Form {...form}>

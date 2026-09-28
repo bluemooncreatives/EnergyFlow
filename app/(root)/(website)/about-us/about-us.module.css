@@ -89,10 +89,11 @@
 
 .headline {
   margin: 0;
-  font-family: var(--font-body);
-  font-weight: 700;
-  text-transform: lowercase;
-  letter-spacing: -0.04em;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  word-spacing: var(--word-spacing-display);
   line-height: 0.8;
   font-size: clamp(4.5rem, 21vw, 17rem);
   color: var(--brand-primary);   /* paprika */

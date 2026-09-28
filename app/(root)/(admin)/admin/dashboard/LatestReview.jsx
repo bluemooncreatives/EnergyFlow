@@ -65,7 +65,7 @@ const LatestReview = () => {
                             <div className="flex items-center gap-1">
                                 {Array.from({ length: review.rating }).map((_, i) => (
                                     <span key={i}>
-                                        <Star className="text-yellow-400 w-4 h-4 fill-yellow-400" />
+                                        <Star className="text-gold w-4 h-4 fill-gold" />
                                     </span>
                                 ))}
                             </div>

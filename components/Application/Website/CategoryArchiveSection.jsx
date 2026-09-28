@@ -1,5 +1,8 @@
 import dynamic from 'next/dynamic'
 import { getCategoryShowcase } from '@/lib/services/categoryService'
+import dryFruitsPanel from '@/public/assets/images/category/dry-fruits.webp'
+import fruitsBerriesPanel from '@/public/assets/images/category/fruits-berries.webp'
+import beansSpicesPanel from '@/public/assets/images/category/beans-spices.webp'
 
 // GSAP-driven client logic is split into its own chunk so it does not block
 // parsing/hydration of the critical path.
@@ -14,19 +17,36 @@ const WRITEUP =
     'festive hampers ready to gift. Whether you are restocking your pantry, building a daily wellness ' +
     'routine, or choosing a thoughtful gift, start here and find exactly what you need.'
 
+// Art-directed panel photos for the main categories, keyed by slug. Any other
+// category falls back to its first product photo from the catalogue.
+const PANEL_IMAGES = {
+    'dry-fruits-and-nuts': {
+        src: dryFruitsPanel,
+        alt: 'Bowls of almonds, cashews, pistachios, walnuts, hazelnuts and raisins',
+    },
+    'imported-fruits-and-berries': {
+        src: fruitsBerriesPanel,
+        alt: 'Fresh pomegranate and blackberries on a wooden board',
+    },
+    'seeds-and-superfoods': {
+        src: beansSpicesPanel,
+        alt: 'Beans, seeds and spices in small wooden bowls',
+    },
+}
+
 const mapCategory = (category) => ({
     id: `cat-${category.id}`,
     href: category.href,
     name: category.name,
     count: category.productCount || 0,
-    previewImage: category.previewImage,
-    alt: category.alt,
+    previewImage: PANEL_IMAGES[category.slug]?.src ?? category.previewImage,
+    alt: PANEL_IMAGES[category.slug]?.alt ?? category.alt,
     priceFrom: category.priceFrom,
     maxDiscount: category.maxDiscount || 0,
     products: category.products || [],
 })
 
-const CategoryArchiveSection = async () => {
+const CategoryArchiveSection = async ({ tone }) => {
     const categories = await getCategoryShowcase()
 
     const items = (categories || []).map(mapCategory)
@@ -35,7 +55,7 @@ const CategoryArchiveSection = async () => {
     // render an empty showcase on the live storefront.
     if (items.length === 0) return null
 
-    return <CategoryShowcaseClient items={items} writeup={WRITEUP} />
+    return <CategoryShowcaseClient items={items} writeup={WRITEUP} tone={tone} />
 }
 
 export default CategoryArchiveSection

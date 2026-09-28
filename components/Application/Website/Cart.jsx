@@ -41,7 +41,7 @@ const Cart = () => {
             <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center rounded-md px-1.5 py-1.5 transition hover:bg-muted/40 sm:px-2.5 sm:py-2">
                 <ShoppingCart className="h-4 w-4 text-foreground sm:h-5 sm:w-5" strokeWidth={1.75} />
                 {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-white tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-on-brand tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
                         {cartCount}
                     </span>
                 )}
@@ -53,7 +53,7 @@ const Cart = () => {
                 {/* Header */}
                 <SheetHeader className="flex-shrink-0 border-b border-border/50 px-5 py-4 sm:px-6 sm:py-5">
                     <div className="flex items-center justify-between pr-8">
-                        <SheetTitle className="font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong">
+                        <SheetTitle className="font-header text-xl font-medium text-ink-strong">
                             Your cart
                         </SheetTitle>
                         {cartCount > 0 && (
@@ -72,7 +72,7 @@ const Cart = () => {
                             <div className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-[var(--brand-primary)]">
                                 <ShoppingCartIcon className="size-8" strokeWidth={1.5} />
                             </div>
-                            <h3 className="font-neue mt-5 text-xl font-medium tracking-[-0.01em] text-ink-strong">
+                            <h3 className="font-header mt-5 text-xl font-medium text-ink-strong">
                                 Your cart is empty
                             </h3>
                             <p className="font-neue mt-2.5 max-w-[220px] text-sm text-muted-foreground">

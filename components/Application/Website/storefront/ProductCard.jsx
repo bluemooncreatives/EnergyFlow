@@ -178,7 +178,7 @@ const ProductCard = ({
                 </div>
                 )}
 
-                <h3 className="text-[0.9375rem] font-medium leading-[1.3] tracking-[-0.005em] text-ink-strong">
+                <h3 className="font-neue text-[0.9375rem] font-medium leading-[1.3] tracking-[-0.005em] text-ink-strong">
                     <Link href={href} title={name} className="ef-focus ef-clamp-2 rounded-sm transition-colors hover:text-brand-hover">
                         {name}
                     </Link>

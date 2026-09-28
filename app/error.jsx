@@ -27,13 +27,13 @@ export default function GlobalError({ error, reset }) {
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
                     <button
                         onClick={reset}
-                        className="border border-[var(--dark-red)] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[var(--dark-red)] transition-colors hover:bg-[var(--dark-red)] hover:text-white"
+                        className="border border-[var(--dark-red)] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[var(--dark-red)] transition-colors hover:bg-[var(--dark-red)] hover:text-on-brand"
                     >
                         Try Again
                     </button>
                     <Link
                         href="/"
-                        className="bg-[var(--dark-red)] px-8 py-3 text-sm font-medium uppercase tracking-widest text-white transition-colors hover:bg-[var(--dark-red-2)]"
+                        className="bg-[var(--dark-red)] px-8 py-3 text-sm font-medium uppercase tracking-widest text-on-brand transition-colors hover:bg-[var(--dark-red-2)]"
                     >
                         Back to Home
                     </Link>

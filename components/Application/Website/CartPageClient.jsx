@@ -32,7 +32,7 @@ const EmptyCart = () => (
             <ShoppingBag className="size-7" strokeWidth={1.5} aria-hidden="true" />
         </span>
         <div className="flex flex-col gap-2">
-            <h2 className="text-2xl font-medium tracking-[-0.02em] text-ink-strong">Your cart is empty</h2>
+            <h2 className="text-2xl font-medium text-ink-strong">Your cart is empty</h2>
             <p className="text-[0.9375rem] leading-relaxed text-ink-body">
                 Explore dry fruits, ghee, cold pressed oils and gift boxes. Everything you add shows up here.
             </p>
@@ -179,7 +179,7 @@ const CartPageClient = () => {
                             {/* ── Summary ── */}
                             <aside className="lg:sticky lg:top-28" aria-labelledby="summary-title">
                                 <div className="ef-card gap-5 p-5 sm:p-6" style={{ borderRadius: 'var(--radius-tile)' }}>
-                                    <h2 id="summary-title" className="text-xl font-medium tracking-[-0.01em] text-ink-strong">Order summary</h2>
+                                    <h2 id="summary-title" className="text-xl font-medium text-ink-strong">Order summary</h2>
 
                                     <dl className="flex flex-col gap-3 text-[0.9375rem]">
                                         <div className="flex justify-between gap-4">

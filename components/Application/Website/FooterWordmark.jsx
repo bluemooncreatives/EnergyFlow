@@ -11,7 +11,8 @@ import { useRef, useState } from 'react'
  * bounding box, so `width: 100%` scales the word to fill the screen width
  * with NATURAL letter spacing and proportions (no stretching, no clipping).
  *
- * The letters show only as a faint outline. On hover, a radial "spotlight"
+ * Set in Clash Display (the headline face). The letters show only as a faint
+ * outline. On hover, a sunflower-to-cream radial "spotlight"
  * gradient — clipped to the glyphs via the text `fill` — follows the cursor,
  * lighting up only the part of the writeup under the mouse.
  */
@@ -92,7 +93,7 @@ const FooterWordmark = () => {
                         cy='0'
                         r='0'
                     >
-                        <stop offset='0%' style={{ stopColor: 'var(--brand-cream)', stopOpacity: 1 }} />
+                        <stop offset='0%' style={{ stopColor: 'var(--palette-sunflower)', stopOpacity: 1 }} />
                         <stop offset='55%' style={{ stopColor: 'var(--brand-cream)', stopOpacity: 0.35 }} />
                         <stop offset='100%' style={{ stopColor: 'var(--brand-cream)', stopOpacity: 0 }} />
                     </radialGradient>
@@ -102,7 +103,7 @@ const FooterWordmark = () => {
                     ref={textRef}
                     x='0'
                     y={BASELINE_Y}
-                    style={{ fontWeight: 700, fontSize: `${FONT_SIZE}px`, letterSpacing: '-0.02em' }}
+                    style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: `${FONT_SIZE}px`, letterSpacing: '-0.01em' }}
                     fill='url(#ms-spotlight)'
                     stroke='rgba(255,255,255,0.28)'
                     strokeWidth='0.5'
