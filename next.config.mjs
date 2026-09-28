@@ -60,6 +60,12 @@ const nextConfig = {
     // react-pdf relies on native-ish deps (fontkit, yoga-layout wasm) that must not
     // be bundled — keep it external so it runs correctly in the Node server runtime.
     serverExternalPackages: ['@react-pdf/renderer'],
+    // Next 15 streams generateMetadata output into <body> for user agents it
+    // does not treat as HTML-limited, Googlebot included. Every dynamic page
+    // here reads the same cached data for its metadata as for its content, so
+    // blocking costs nothing and guarantees <title>, description, canonical
+    // and robots sit in <head> for every crawler and link-preview bot.
+    htmlLimitedBots: /.*/,
     // The parent folder holds several projects. Pin the workspace root to this
     // app so a lockfile anywhere above it can't make Turbopack infer the wrong
     // root (which breaks module resolution and HMR caching).

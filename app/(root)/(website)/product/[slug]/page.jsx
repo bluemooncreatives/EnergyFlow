@@ -1,9 +1,9 @@
 import { notFound, permanentRedirect } from 'next/navigation'
-import { preconnect } from 'react-dom'
 import ProductDetails from './ProductDetails'
 import { getProductDetailsBySlug, getRelatedProducts } from '@/lib/services/productService'
 import { decodeHTMLDeep, htmlToText, pickRandom } from '@/lib/utils'
 import {
+    CloudinaryPreconnect,
     JsonLd,
     RETURN_POLICY,
     SHIPPING_DETAILS,
@@ -155,9 +155,6 @@ const buildProductSchema = ({ product, variant, reviewCount, ratingAvg }) => {
 }
 
 const ProductPage = async ({ params, searchParams }) => {
-    // The LCP here is a Cloudinary photo; the root layout only dns-prefetches
-    // that origin, so open the connection early on this route.
-    preconnect('https://res.cloudinary.com')
     const { slug } = await params
     const { size } = await searchParams
 
@@ -204,6 +201,7 @@ const ProductPage = async ({ params, searchParams }) => {
 
     return (
         <>
+            <CloudinaryPreconnect />
             <JsonLd data={productSchema} />
             <JsonLd data={breadcrumbSchema(crumbs)} />
             <ProductDetails

@@ -228,7 +228,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
                         <>
                             <div className="flex items-end gap-3">
                                 <span className="font-header text-[5rem] font-semibold leading-[0.8] tabular-nums">
-                                    {summary.isPending ? '–' : average.toFixed(1)}
+                                    {summary.isPending || total === 0 ? '—' : average.toFixed(1)}
                                 </span>
                                 <span className="pb-1 text-sm text-[var(--ink-on-inverse-muted)]">out of 5</span>
                             </div>

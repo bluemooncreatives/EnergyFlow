@@ -1,8 +1,8 @@
 import ShopClient from '@/components/Application/Website/ShopClient'
-import { preconnect } from 'react-dom'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
 
 import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
+import { CloudinaryPreconnect } from '@/lib/seo'
 
 const DESCRIPTION =
     'Shop dry fruits, nuts, dried berries, seeds, superfoods, flavoured makhana, healthy snacks, Ayurvedic herbs, chocolates and dry fruit gift boxes online. Delivered across India.'
@@ -55,7 +55,6 @@ const buildSearchParamString = (searchParams) => {
 }
 
 const Shop = async ({ searchParams }) => {
-    preconnect('https://res.cloudinary.com')
     const resolvedSearchParams = (await searchParams) ?? {}
     const initialSearchParamsString = buildSearchParamString(resolvedSearchParams)
     const [filters, { products, total, totalPages }] = await Promise.all([
@@ -79,13 +78,16 @@ const Shop = async ({ searchParams }) => {
     ])
 
     return (
-        <ShopClient
-            initialFilters={filters}
-            initialProducts={products}
-            initialTotal={total}
-            initialTotalPages={totalPages}
-            initialSearchParamsString={initialSearchParamsString}
-        />
+        <>
+            <CloudinaryPreconnect />
+            <ShopClient
+                initialFilters={filters}
+                initialProducts={products}
+                initialTotal={total}
+                initialTotalPages={totalPages}
+                initialSearchParamsString={initialSearchParamsString}
+            />
+        </>
     )
 }
 

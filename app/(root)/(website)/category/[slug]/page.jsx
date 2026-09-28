@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { preconnect } from 'react-dom'
 import { ChevronDown } from 'lucide-react'
 import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
@@ -8,6 +7,7 @@ import ProductBox from '@/components/Application/Website/ProductBox'
 import { getCategoryLanding, getShopFilters } from '@/lib/services/shopService'
 import { getCategorySeo } from '@/lib/catalogSeo'
 import {
+    CloudinaryPreconnect,
     JsonLd,
     absoluteUrl,
     breadcrumbSchema,
@@ -56,7 +56,6 @@ export async function generateMetadata({ params }) {
 }
 
 const CategoryPage = async ({ params }) => {
-    preconnect('https://res.cloudinary.com')
     const { slug } = await params
     if (slug !== slug.toLowerCase()) permanentRedirect(WEBSITE_CATEGORY(slug.toLowerCase()))
     const [landing, filters] = await Promise.all([
@@ -95,6 +94,7 @@ const CategoryPage = async ({ params }) => {
 
     return (
         <>
+            <CloudinaryPreconnect />
             <JsonLd data={collectionSchema} />
             <JsonLd data={breadcrumbSchema([
                 { name: 'Home', path: '/' },

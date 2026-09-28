@@ -8,8 +8,9 @@ const POLICIES = [
     { icon: CreditCard, label: 'Refunds', title: '5–7 business days', text: 'Refunds go back to the original payment method within 5–7 business days.' },
 ]
 
-// Shipping & returns as a ruled four-up on the sage band. The grid lines are
-// the 1px gaps showing the band colour, so they hold at every column count.
+// Shipping & returns as a ruled four-up on the sage band: pine rules above
+// and below, and the 1px grid gaps show the rule colour between cells, so
+// the dividers hold at every column count.
 const ProductAssurance = () => (
     <section aria-labelledby="assurance-title" className="ef-section ef-section--sunken">
         <div className="ef-container">
@@ -25,7 +26,7 @@ const ProductAssurance = () => (
                 </p>
             </div>
 
-            <ul className="grid gap-px overflow-hidden rounded-[var(--radius-tile)] bg-line-rule sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="grid gap-px border-y border-line-rule bg-line-rule sm:grid-cols-2 lg:grid-cols-4">
                 {POLICIES.map(({ icon: Icon, label, title, text }) => (
                     <li key={label} data-reveal className="group flex flex-col gap-4 bg-surface-sunken p-6 transition-colors duration-500 hover:bg-surface-card lg:p-7">
                         <span className="ef-seal ef-seal--sun size-14 transition-transform duration-700 ease-[var(--ease-spring)] group-hover:rotate-[20deg] motion-reduce:transition-none" aria-hidden="true">

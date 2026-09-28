@@ -23,15 +23,27 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
     const thumbRef = useRef(null)
     const [visible, setVisible] = useState(false)
 
+    // A scroll check rather than an IntersectionObserver: an observer never
+    // fires when the page jumps from below the buttons straight to above them
+    // (anchor links, restored scroll, the End key), leaving the bar hidden.
     useEffect(() => {
         const el = watchRef.current
-        if (!el || typeof IntersectionObserver === 'undefined') return
-        const io = new IntersectionObserver(([entry]) => {
+        if (!el) return
+        let frame = 0
+        const check = () => {
+            frame = 0
             // Only once the buttons are above the fold, not before reaching them.
-            setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0)
-        })
-        io.observe(el)
-        return () => io.disconnect()
+            setVisible(el.getBoundingClientRect().bottom < 0)
+        }
+        const schedule = () => { if (!frame) frame = requestAnimationFrame(check) }
+        check()
+        window.addEventListener('scroll', schedule, { passive: true })
+        window.addEventListener('resize', schedule)
+        return () => {
+            cancelAnimationFrame(frame)
+            window.removeEventListener('scroll', schedule)
+            window.removeEventListener('resize', schedule)
+        }
     }, [watchRef])
 
     useEffect(() => {

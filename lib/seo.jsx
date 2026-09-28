@@ -102,6 +102,11 @@ export const SHIPPING_DETAILS = {
     },
 }
 
+// Pages whose LCP is a product photo open the Cloudinary connection early.
+// The root layout only dns-prefetches it, because the homepage LCP is local.
+// React 19 hoists this <link> into <head>.
+export const CloudinaryPreconnect = () => <link rel="preconnect" href="https://res.cloudinary.com" />
+
 export const JsonLd = ({ data }) => (
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }} />
 )
