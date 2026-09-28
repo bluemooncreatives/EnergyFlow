@@ -212,7 +212,7 @@
 }
 .thumbImg img {
     object-fit: contain;
-    padding: 14%;
+    padding: 5%;
     transition: transform var(--duration-normal) var(--ease-out);
 }
 .thumb:hover .thumbImg img { transform: scale(1.08); }

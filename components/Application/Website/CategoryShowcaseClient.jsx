@@ -124,7 +124,9 @@ const Panel = ({ item, panelRef }) => {
                         className="object-cover"
                     />
                 </div>
-                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(4_26_20/0.92)_0%,rgb(4_26_20/0.45)_42%,rgb(4_26_20/0.05)_70%)]" />
+                {/* Scrim. Phones always show the full details stack, which reaches much
+                    higher up the photo, so the scrim climbs with it there. */}
+                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(4_26_20/0.96)_0%,rgb(4_26_20/0.82)_45%,rgb(4_26_20/0.35)_78%,rgb(4_26_20/0.1)_100%)] lg:bg-[linear-gradient(to_top,rgb(4_26_20/0.92)_0%,rgb(4_26_20/0.45)_42%,rgb(4_26_20/0.05)_70%)]" />
 
                 {/* Collapsed label (desktop only). Its link covers the panel, so a
                     click anywhere opens the category, and keyboard focus on it opens
@@ -146,7 +148,7 @@ const Panel = ({ item, panelRef }) => {
                     className="absolute inset-x-4 bottom-4 z-10 flex flex-col gap-4 text-white lg:invisible lg:inset-x-6 lg:bottom-6 lg:flex-row lg:items-end lg:justify-between lg:gap-6 lg:opacity-0"
                 >
                     <div className="flex min-w-0 flex-col gap-3 lg:max-w-[20rem]">
-                        <h3 data-d className="text-[1.625rem] font-medium leading-[1.1] lg:text-[2rem]">
+                        <h3 data-d className="text-[1.75rem] font-semibold leading-[1.05] lg:text-[2.25rem]">
                             {item.name}
                         </h3>
                         <p data-d className="flex flex-wrap gap-x-3 gap-y-1 text-[0.875rem] text-white/80">
@@ -156,36 +158,67 @@ const Panel = ({ item, panelRef }) => {
                         <Link
                             data-d
                             href={item.href}
-                            className="ef-focus group/cta mt-1 inline-flex h-11 w-fit items-center gap-2 rounded-[var(--radius-control)] bg-khaki px-5 text-[0.9375rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)]"
+                            className="ef-btn ef-btn--accent mt-1 w-fit max-w-full"
                         >
-                            Shop {item.name}
-                            <ArrowRight className="size-4 transition-transform duration-300 group-hover/cta:translate-x-1" aria-hidden="true" />
+                            <span className="truncate">Shop {item.name}</span>
+                            <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
                         </Link>
                     </div>
 
                     {item.products.length > 0 && (
-                        <div data-d className="w-full rounded-card bg-white/12 p-3 backdrop-blur-md shadow-[inset_0_0_0_1px_rgb(255_255_255/0.18)] lg:w-[15.5rem] lg:shrink-0">
-                            <p className="px-1 pb-2 text-[0.6875rem] font-medium uppercase text-white/70">Popular picks</p>
-                            <ul className="flex list-none flex-col gap-1 p-0">
-                                {item.products.map((product) => (
-                                    <li key={product.slug} data-row>
-                                        <Link
-                                            href={WEBSITE_PRODUCT_DETAILS(product.slug)}
-                                            className="ef-focus group/row flex items-center gap-2.5 rounded-well p-1 transition-colors hover:bg-white/10"
-                                        >
-                                            <span className="relative size-10 shrink-0 overflow-hidden rounded-[calc(var(--radius-well)-3px)] bg-white/20">
-                                                <Image src={product.image} alt="" fill sizes="40px" className="object-cover" />
-                                            </span>
-                                            <span className="min-w-0 flex-1">
-                                                <span className="block truncate text-[0.8125rem] font-medium">{product.name}</span>
-                                                <span className="block text-[0.75rem] text-white/70">
-                                                    {formatINR(product.price)}{product.size ? ` · ${product.size}` : ''}
+                        // Popular picks: a solid cream card (pine in dark mode)
+                        // so it reads over any photo, rows ruled in pine like the
+                        // brand reference, arrow boxed like the storefront CTAs.
+                        <div
+                            data-d
+                            className="w-full overflow-hidden rounded-[var(--radius-control)] bg-[var(--palette-cream)] text-[var(--palette-pine)] shadow-[0_18px_40px_-16px_rgb(0_0_0/0.55)] dark:bg-[var(--palette-pine)] dark:text-[var(--palette-cream)] dark:shadow-[0_18px_40px_-16px_rgb(0_0_0/0.7),inset_0_0_0_1px_rgb(247_243_232/0.12)] lg:w-[17.5rem] lg:shrink-0"
+                        >
+                            <div className="flex items-center justify-between gap-3 border-b border-[rgb(11_61_46/0.14)] px-4 py-3 dark:border-[rgb(247_243_232/0.12)]">
+                                <p className="flex items-center gap-2 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.06em]">
+                                    <span aria-hidden="true" className="size-2 rounded-full bg-[var(--palette-sunflower)] shadow-[0_0_0_1.5px_var(--palette-olive)]" />
+                                    Popular picks
+                                </p>
+                                <span className="text-[0.75rem] font-medium tabular-nums opacity-65">
+                                    Top {item.products.length}
+                                </span>
+                            </div>
+
+                            <ul className="list-none divide-y divide-[rgb(11_61_46/0.1)] p-0 dark:divide-[rgb(247_243_232/0.1)]">
+                                {item.products.map((product) => {
+                                    const markdown = product.mrp > product.price
+                                    return (
+                                        <li key={product.slug} data-row>
+                                            <Link
+                                                href={WEBSITE_PRODUCT_DETAILS(product.slug)}
+                                                className="ef-focus group/row flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[rgb(11_61_46/0.06)] dark:hover:bg-[rgb(247_243_232/0.06)]"
+                                            >
+                                                <span className="relative size-12 shrink-0 overflow-hidden rounded-[calc(var(--radius-control)-2px)] bg-[rgb(140_122_59/0.12)] ring-1 ring-[rgb(11_61_46/0.08)] dark:bg-[var(--palette-cream)] dark:ring-0">
+                                                    <Image src={product.image} alt="" fill sizes="48px" className="object-cover transition-transform duration-500 group-hover/row:scale-[1.07] motion-reduce:transition-none" />
                                                 </span>
-                                            </span>
-                                            <ArrowUpRight className="size-3.5 shrink-0 text-white/60 transition-colors group-hover/row:text-white" aria-hidden="true" />
-                                        </Link>
-                                    </li>
-                                ))}
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block truncate text-[0.9375rem] font-semibold leading-snug">{product.name}</span>
+                                                    <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none">
+                                                        <strong className="font-semibold tabular-nums">{formatINR(product.price)}</strong>
+                                                        {markdown && (
+                                                            <s className="tabular-nums opacity-55">{formatINR(product.mrp)}</s>
+                                                        )}
+                                                        {product.size && (
+                                                            <span className="rounded-[4px] bg-[rgb(140_122_59/0.14)] px-1.5 py-[3px] text-[0.6875rem] font-semibold text-[var(--brand-olive-deep)] dark:bg-[rgb(242_201_76/0.16)] dark:text-[var(--palette-sunflower)]">
+                                                                {product.size}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </span>
+                                                <span
+                                                    aria-hidden="true"
+                                                    className="flex size-8 shrink-0 items-center justify-center rounded-[calc(var(--radius-control)-2px)] bg-[rgb(11_61_46/0.08)] transition-colors group-hover/row:bg-[var(--palette-sunflower)] group-hover/row:text-[var(--palette-pine)] dark:bg-[rgb(247_243_232/0.1)]"
+                                                >
+                                                    <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/row:-translate-y-px group-hover/row:translate-x-px motion-reduce:transition-none" />
+                                                </span>
+                                            </Link>
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         </div>
                     )}

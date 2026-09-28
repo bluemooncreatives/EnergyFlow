@@ -6,7 +6,7 @@ const Layout = async ({ children }) => {
     const footerCategories = await getFooterCategories()
 
     return (
-        <div className='font-neue overflow-x-hidden'>
+        <div className='font-neue overflow-x-clip'>
             <Header />
             <main id="main-content" className='relative min-h-screen bg-surface-page'>
                 {children}
