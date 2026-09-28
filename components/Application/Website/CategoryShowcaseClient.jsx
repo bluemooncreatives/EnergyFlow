@@ -46,10 +46,12 @@ const Panel = ({ item, index, panelRef }) => {
             </div>
             <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(4_26_20/0.92)_0%,rgb(4_26_20/0.45)_42%,rgb(4_26_20/0.05)_70%)]" />
 
-            {/* Top row: index + count */}
-            <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between text-[0.75rem] font-medium text-white/85">
-                <span className="tabular-nums">{pad(index + 1)}</span>
-                <span className="rounded-[var(--radius-control)] bg-white/15 px-2.5 py-1 backdrop-blur-sm">
+            {/* Top row: index + count. The scrim is thinnest up here and the
+                photos are light, so both sit on solid pine chips (fixed
+                palette: legible over any photo, in either theme). */}
+            <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between text-[0.75rem] font-semibold text-[var(--palette-cream)]">
+                <span className="rounded-[var(--radius-control)] bg-[var(--palette-pine)]/85 px-2 py-1 tabular-nums shadow-[0_0_0_1px_rgb(247_243_232/0.14)] backdrop-blur-sm">{pad(index + 1)}</span>
+                <span className="rounded-[var(--radius-control)] bg-[var(--palette-pine)]/85 px-2.5 py-1 shadow-[0_0_0_1px_rgb(247_243_232/0.14)] backdrop-blur-sm">
                     {plural(item.count, 'product', 'products')}
                 </span>
             </div>

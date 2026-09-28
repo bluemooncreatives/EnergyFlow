@@ -1165,6 +1165,78 @@ body {
   .ef-section--inverse .ef-link,
   .ef-on-inverse .ef-link { color: var(--brand-white); }
 
+  /* Secondary CTA with a boxed arrow — "View all products", "Shop
+     everything", "Read our story". Outlined button, label left, arrow in a
+     filled square on the right. On hover the button fills and the arrow
+     box swaps to sunflower (pine in dark mode). */
+  .ef-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.875rem;
+    height: 3rem;
+    padding: 0.3125rem 0.3125rem 0.3125rem 1.25rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    background: var(--surface-card);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--brand-primary);
+    transition: background-color var(--duration-fast) var(--ease-in-out),
+                border-color var(--duration-fast) var(--ease-in-out),
+                color var(--duration-fast) var(--ease-in-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+  .ef-cta__box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    flex-shrink: 0;
+    border-radius: calc(var(--radius-control) - 0.1875rem);
+    background: var(--brand-primary);
+    color: var(--on-brand);
+    transition: background-color var(--duration-fast) var(--ease-in-out),
+                color var(--duration-fast) var(--ease-in-out);
+  }
+  .ef-cta__box svg {
+    width: 1.0625rem;
+    height: 1.0625rem;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+  .ef-cta:hover {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    color: var(--on-brand);
+    box-shadow: var(--elev-2);
+  }
+  .ef-cta:hover .ef-cta__box     { background: var(--brand-sun); color: var(--brand-sun-ink); }
+  .ef-cta:hover .ef-cta__box svg { transform: translateX(2px); }
+  .ef-cta:active                 { transform: translateY(1px); }
+  /* Dark: the button fills sunflower on hover, so the box turns pine. */
+  .dark .ef-cta:hover .ef-cta__box { background: var(--palette-pine); color: var(--palette-cream); }
+  /* On a pine band: cream outline, sunflower box. */
+  .ef-section--inverse .ef-cta,
+  .ef-on-inverse .ef-cta {
+    background: transparent;
+    border-color: rgb(247 243 232 / 0.35);
+    color: var(--ink-on-inverse);
+  }
+  .ef-section--inverse .ef-cta__box,
+  .ef-on-inverse .ef-cta__box { background: var(--brand-sun); color: var(--brand-sun-ink); }
+  .ef-section--inverse .ef-cta:hover,
+  .ef-on-inverse .ef-cta:hover {
+    background: var(--palette-cream);
+    border-color: var(--palette-cream);
+    color: var(--palette-pine);
+  }
+
   /* Round icon button — carousel arrows, quick actions */
   .ef-icon-btn {
     display: inline-flex;
@@ -1228,6 +1300,7 @@ body {
 
   /* ── Focus (all storefront controls) ───────────────────────── */
   .ef-btn:focus-visible,
+  .ef-cta:focus-visible,
   .ef-link:focus-visible,
   .ef-icon-btn:focus-visible,
   .ef-focus:focus-visible {
@@ -1276,6 +1349,7 @@ body {
 
 /* Motion safety — storefront transitions collapse for users who ask. */
 @media (prefers-reduced-motion: reduce) {
-  .ef-btn, .ef-card, .ef-link, .ef-icon-btn, .ef-btn__arrow { transition: none !important; }
+  .ef-btn, .ef-card, .ef-link, .ef-icon-btn, .ef-btn__arrow,
+  .ef-cta, .ef-cta__box, .ef-cta__box svg { transition: none !important; }
   .ef-card--interactive:hover { transform: none; }
 }

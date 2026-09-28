@@ -39,11 +39,14 @@ export const StoreButton = ({
     return <button type="button" className={classes} {...props}>{content}</button>
 }
 
-// "View all →" style inline link.
+// "View all" style secondary CTA: an outlined button with the arrow boxed on
+// the right (design-system.css `.ef-cta`).
 export const StoreLink = ({ href, children, className, ...props }) => (
-    <Link href={href} className={cn('ef-link', className)} {...props}>
-        {children}
-        <ArrowRight aria-hidden="true" />
+    <Link href={href} className={cn('ef-cta', className)} {...props}>
+        <span>{children}</span>
+        <span className="ef-cta__box" aria-hidden="true">
+            <ArrowRight />
+        </span>
     </Link>
 )
 

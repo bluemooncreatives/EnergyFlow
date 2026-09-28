@@ -150,10 +150,12 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
                 accent="bestsellers"
                 description="Ranked by what our customers come back for, again and again."
                 action={
-                    <>
-                        <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`} className="mr-2">Shop all bestsellers</StoreLink>
+                    // Shop button on top, rail arrows beneath it (right-aligned
+                    // once the header sits side by side on desktop).
+                    <div className="flex flex-col items-start gap-3 md:items-end">
+                        <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`}>Shop all bestsellers</StoreLink>
                         <RailControls rail={rail} label="bestsellers" className="hidden sm:flex" />
-                    </>
+                    </div>
                 }
             />
 
