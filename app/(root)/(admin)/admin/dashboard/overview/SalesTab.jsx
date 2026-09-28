@@ -116,17 +116,15 @@ const RevenueTrendCard = ({ monthlySales, activeYear, activeMonth }) => {
 
 // ── KPI Summary cards ─────────────────────────────────────────────────
 const KpiCard = ({ label, value, sub, icon: Icon, bg, fg = 'var(--primary-foreground)', borderColor }) => (
-    <Card className="border-l-4 hover:-translate-y-0.5 transition-transform hover:shadow-md" style={{ borderLeftColor: borderColor || bg }}>
-        <CardContent className="p-4">
-            <div className="flex items-start justify-between gap-2">
-                <p className="text-xs font-medium text-muted-foreground">{label}</p>
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
-                    <Icon className="size-3.5" />
-                </span>
-            </div>
-            <p className="mt-3 text-2xl font-bold tabular-nums leading-none">{value}</p>
-            {sub && <p className="mt-1.5 text-[0.6875rem] text-muted-foreground">{sub}</p>}
-        </CardContent>
+    <Card className="rounded-xl border-l-4 p-4 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg" style={{ borderLeftColor: borderColor || bg }}>
+        <div className="flex items-start justify-between gap-2">
+            <p className="text-sm font-medium text-foreground">{label}</p>
+            <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
+                <Icon className="size-4" />
+            </span>
+        </div>
+        <p className="mt-3 text-2xl sm:text-3xl font-bold leading-none tracking-tight tabular-nums">{value}</p>
+        {sub && <p className="mt-2 text-xs text-muted-foreground">{sub}</p>}
     </Card>
 )
 
@@ -156,7 +154,7 @@ const MonthlyOrdersCard = ({ monthlySales, activeMonth }) => {
                 <ChartContainer config={chartConfigOrders} className="h-[200px] w-full">
                     <BarChart data={data} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
                         <CartesianGrid vertical={false} stroke="var(--border)" />
-                        <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
+                        <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
                         <ChartTooltip content={<ChartTooltipContent />} />
                         <Bar dataKey="orders" radius={[4, 4, 0, 0]} maxBarSize={28}>
                             {data.map((entry, i) => (
@@ -197,8 +195,8 @@ const AovTrendCard = ({ monthlySales }) => {
                 <ChartContainer config={chartConfigAov} className="h-[200px] w-full">
                     <LineChart data={data} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
                         <CartesianGrid vertical={false} stroke="var(--border)" />
-                        <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
-                        <YAxis tickFormatter={(v) => inr(v, true)} tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} width={44} />
+                        <XAxis dataKey="month" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
+                        <YAxis tickFormatter={(v) => inr(v, true)} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} width={44} />
                         <Tooltip formatter={(v) => [inr(v), 'AOV']} contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--card-foreground)', fontSize: 12 }} />
                         <Line type="monotone" dataKey="aov" stroke="var(--chart-2)" strokeWidth={2.5} dot={{ r: 3, fill: 'var(--chart-2)', strokeWidth: 0 }} activeDot={{ r: 5, stroke: 'var(--card)', strokeWidth: 2 }} />
                     </LineChart>
@@ -241,7 +239,7 @@ const SalesRadarCard = ({ monthlySales }) => {
                 <ChartContainer config={chartConfigRadar} className="h-[200px] w-full">
                     <RadarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                         <PolarGrid stroke="var(--border)" />
-                        <PolarAngleAxis dataKey="quarter" tick={{ fontSize: 9, fill: 'var(--muted-foreground)' }} />
+                        <PolarAngleAxis dataKey="quarter" tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                         <Radar dataKey="amount" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.25} strokeWidth={2} />
                         <Tooltip formatter={(v) => [inr(v), 'Revenue']} contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--card-foreground)', fontSize: 12 }} />
                     </RadarChart>

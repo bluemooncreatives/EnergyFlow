@@ -14,13 +14,13 @@ import { ShoppingBag, TrendingUp, Users, Star } from 'lucide-react'
 
 // Reusable section card header with icon badge
 const SectionCard = ({ title, description, action, children, iconBg = 'var(--chart-1)', iconFg = 'var(--primary-foreground)', icon: Icon }) => (
-    <Card>
-        <CardHeader className="pb-3">
+    <Card className="rounded-xl">
+        <CardHeader className="px-4 py-3 sm:px-5 pb-3">
             <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     {Icon && (
                         <span
-                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
                             style={{ backgroundColor: iconBg, color: iconFg }}
                             aria-hidden="true"
                         >
@@ -29,13 +29,13 @@ const SectionCard = ({ title, description, action, children, iconBg = 'var(--cha
                     )}
                     <div>
                         <CardTitle className="text-sm font-semibold">{title}</CardTitle>
-                        {description && <CardDescription className="mt-0.5 text-xs">{description}</CardDescription>}
+                        {description && <CardDescription className="mt-0.5 text-xs text-muted-foreground">{description}</CardDescription>}
                     </div>
                 </div>
                 {action}
             </div>
         </CardHeader>
-        <CardContent>{children}</CardContent>
+        <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">{children}</CardContent>
     </Card>
 )
 

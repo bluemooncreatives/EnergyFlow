@@ -104,12 +104,12 @@ const OrderStatusSummaryCard = () => {
             <CardContent>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
                     {STATUS_META.map(({ key, label, icon: Icon, bg, fg }) => (
-                        <Link key={key} href={ADMIN_ORDER_SHOW} className="group flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center transition hover:border-primary/30 hover:bg-muted/40">
-                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
+                        <Link key={key} href={ADMIN_ORDER_SHOW} className="group flex flex-col items-center gap-1.5 rounded-xl border p-3.5 text-center transition hover:border-primary/30 hover:bg-muted/40">
+                            <span className="inline-flex size-9 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
                                 <Icon className="size-4" />
                             </span>
-                            <span className="text-xl font-bold tabular-nums leading-none">{counts[key] ?? '—'}</span>
-                            <span className="text-[0.625rem] font-medium text-muted-foreground">{label}</span>
+                            <span className="text-xl sm:text-2xl font-bold tabular-nums leading-none">{counts[key] ?? '—'}</span>
+                            <span className="text-xs font-medium text-muted-foreground">{label}</span>
                         </Link>
                     ))}
                 </div>
@@ -162,14 +162,14 @@ const LatestOrdersCard = () => {
                             <TableBody>
                                 {orders.map(order => (
                                     <TableRow key={order._id}>
-                                        <TableCell className="py-2 font-mono text-[0.6875rem]">
-                                            <Link href={ADMIN_ORDER_DETAILS(order._id)} className="hover:text-primary hover:underline">
+                                        <TableCell className="py-2.5 font-mono text-xs">
+                                            <Link href={ADMIN_ORDER_DETAILS(order._id)} className="hover:text-primary hover:underline font-medium">
                                                 {String(order._id).slice(-8).toUpperCase()}
                                             </Link>
                                         </TableCell>
-                                        <TableCell className="py-2 text-sm text-muted-foreground">{order.products?.length ?? 0}</TableCell>
-                                        <TableCell className="py-2">{statusBadge(order.status)}</TableCell>
-                                        <TableCell className="py-2 text-right font-semibold tabular-nums">₹{order.totalAmount?.toLocaleString('en-IN')}</TableCell>
+                                        <TableCell className="py-2.5 text-xs sm:text-sm text-muted-foreground">{order.products?.length ?? 0}</TableCell>
+                                        <TableCell className="py-2.5">{statusBadge(order.status)}</TableCell>
+                                        <TableCell className="py-2.5 text-right font-semibold tabular-nums text-xs sm:text-sm">₹{order.totalAmount?.toLocaleString('en-IN')}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -269,10 +269,10 @@ const StoreCountsCard = () => {
                         <div key={label} className="flex items-center gap-3 rounded-lg border p-3">
                             <span className="text-xl">{icon}</span>
                             <div>
-                                <p className="text-lg font-bold tabular-nums leading-none">
-                                    {loading ? <span className="inline-block h-5 w-10 animate-pulse rounded bg-muted" /> : (value ?? 0).toLocaleString('en-IN')}
+                                <p className="text-xl font-bold tabular-nums leading-none">
+                                    {loading ? <span className="inline-block h-6 w-12 animate-pulse rounded bg-muted" /> : (value ?? 0).toLocaleString('en-IN')}
                                 </p>
-                                <p className="mt-0.5 text-[0.6875rem] text-muted-foreground">{label}</p>
+                                <p className="mt-1 text-xs text-muted-foreground">{label}</p>
                             </div>
                         </div>
                     ))}

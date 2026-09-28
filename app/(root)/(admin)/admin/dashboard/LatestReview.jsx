@@ -26,10 +26,10 @@ const LatestReview = () => {
         }
     }, [getLatestReview])
 
-    if (loading) return <div className="h-full w-full flex justify-center items-center">Loading...</div>
+    if (loading) return <div className="h-full w-full flex justify-center items-center py-8 text-sm text-muted-foreground">Loading...</div>
 
-    if (!latestReview || latestReview.length === 0) return <div className="h-full w-full flex justify-center items-center">
-        <Image src={notFound.src} width={notFound.width} height={notFound.height} alt="not found" className="w-20" />
+    if (!latestReview || latestReview.length === 0) return <div className="h-full w-full flex justify-center items-center py-8">
+        <Image src={notFound.src} width={notFound.width} height={notFound.height} alt="not found" className="w-16 opacity-50" />
     </div>
 
     return (
@@ -37,14 +37,14 @@ const LatestReview = () => {
             <TableHeader>
                 <TableRow className="group/row">
                     <TableHead className="bg-background text-xs font-semibold text-muted-foreground">
-                        <span className="flex items-center gap-2">
-                            <Package className="h-3.5 w-3.5" />
+                        <span className="flex items-center gap-1.5">
+                            <Package className="size-3.5" />
                             Product
                         </span>
                     </TableHead>
-                    <TableHead className="bg-background text-xs font-semibold text-muted-foreground">
-                        <span className="flex items-center gap-2">
-                            <Star className="h-3.5 w-3.5" />
+                    <TableHead className="bg-background text-right text-xs font-semibold text-muted-foreground">
+                        <span className="inline-flex items-center gap-1.5">
+                            <Star className="size-3.5" />
                             Rating
                         </span>
                     </TableHead>
@@ -52,21 +52,22 @@ const LatestReview = () => {
             </TableHeader>
             <TableBody>
                 {latestReview?.map((review) => (
-                    <TableRow key={review._id} className="group/row text-sm">
-                        <TableCell className="bg-background py-3">
-                            <div className="flex items-center gap-3">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src={review?.product?.media[0]?.secure_url || imgPlaceholder.src} />
+                    <TableRow key={review._id} className="group/row text-xs sm:text-sm">
+                        <TableCell className="bg-background py-2.5">
+                            <div className="flex items-center gap-2.5">
+                                <Avatar className="size-8 shrink-0 rounded-md">
+                                    <AvatarImage src={review?.product?.media?.[0]?.secure_url || imgPlaceholder.src} className="rounded-md object-cover" />
                                 </Avatar>
-                                <span className="line-clamp-1 font-medium">{review?.product?.name || 'Not found'}</span>
+                                <span className="line-clamp-1 font-medium">{review?.product?.name || 'Product'}</span>
                             </div>
                         </TableCell>
-                        <TableCell className="bg-background py-3">
-                            <div className="flex items-center gap-1">
-                                {Array.from({ length: review.rating }).map((_, i) => (
-                                    <span key={i}>
-                                        <Star className="text-gold w-4 h-4 fill-gold" />
-                                    </span>
+                        <TableCell className="bg-background py-2.5 text-right">
+                            <div className="inline-flex items-center gap-0.5">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star
+                                        key={i}
+                                        className={`size-3 ${i < review.rating ? 'fill-[var(--brand-gold)] text-[var(--brand-gold)]' : 'text-muted-foreground/30'}`}
+                                    />
                                 ))}
                             </div>
                         </TableCell>
