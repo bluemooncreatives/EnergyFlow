@@ -213,8 +213,6 @@ const AnalyticsDashboard = () => {
                 </div>
             </div>
 
-
-
             {isError && !data ? (
                 <div className="flex flex-col items-center rounded-lg bg-card ring-1 ring-foreground/10 px-6 py-16 text-center">
                     <span
