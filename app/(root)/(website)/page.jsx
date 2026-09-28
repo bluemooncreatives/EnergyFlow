@@ -12,21 +12,12 @@ import { getStorefrontAvailability } from '@/lib/services/categoryService'
 
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
 // so they don't block parsing and hydration of the above-fold critical path.
-const Marquee = dynamic(() => import('@/components/Application/Website/Marquee'))
+const PromiseTicker = dynamic(() => import('@/components/Application/Website/PromiseTicker'))
+const PantryMarquee = dynamic(() => import('@/components/Application/Website/PantryMarquee'))
 const SignatureRangeSection = dynamic(() => import('@/components/Application/Website/SignatureRangeSection'))
 const AboutUsSection = dynamic(() => import('@/components/Application/Website/AboutUsSection'))
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
 const FAQSection = dynamic(() => import('@/components/Application/Website/FAQSection'))
-
-// Short, checkable claims for the ticker under the hero. Keep them in step
-// with the promise band (BenefitsSection) and the FAQ answers.
-const PROMISES = [
-    'Freshly sourced',
-    'Every lot quality checked',
-    'Free shipping',
-    'Delivered across India',
-    'Bulk & gifting orders',
-]
 
 const HOME_DESCRIPTION =
     'Shop premium dry fruits, nuts, seeds and super foods at Energyflow. Almonds, cashews, walnuts, pistachios, chia and pumpkin seeds, roasted healthy snacks, millets, muesli, berries, cold pressed oils, A2 Gir cow bilona ghee, herbal powders and honey. Freshly sourced, quality checked and delivered across India.'
@@ -82,7 +73,7 @@ const Home = async () => {
             <HeroSection availability={availability} />
 
             {/* 2 · Promise ticker: the trust signals, right under the fold. */}
-            <Marquee items={PROMISES} label="The Energyflow promise" />
+            <PromiseTicker />
 
             {/* The hero is 100svh, so everything below is below the fold.
                 LazyHydrate keeps each section's server HTML in the document but
@@ -91,7 +82,8 @@ const Home = async () => {
 
                 Order follows the shopper: find your way in (categories) →
                 what others buy (bestsellers) → what we are known for
-                (signature range) → offers (deals, popular) → why trust us
+                (signature range) → offers (deals, a pantry marquee as a breather
+                between the product grids, popular) → why trust us
                 (promise band, reviews, story) → remaining doubts (FAQ).
                 Tones are assigned here so the page/sunken rhythm lives in one
                 place. Data-driven sections (categories, bestsellers, deals,
@@ -113,7 +105,11 @@ const Home = async () => {
             </LazyHydrate>
 
             <LazyHydrate>
-                <PopularProductsSection tone="sunken" availability={availability} />
+                <PantryMarquee tone="sunken" availability={availability} />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <PopularProductsSection tone="page" availability={availability} />
             </LazyHydrate>
 
             <LazyHydrate>
