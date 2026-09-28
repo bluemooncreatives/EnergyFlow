@@ -18,6 +18,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import Cart from "@/components/Application/Website/Cart"
 import GlobalSearch from "@/components/Application/Website/GlobalSearch"
 import ThemeToggle from "@/components/Application/Website/ThemeToggle"
+import { MobileShopMenu, ShopMegaMenu } from "@/components/Application/Website/ShopMegaMenu"
 import { BrandButton, BrandOutlineButton } from "@/components/Application/Website/BrandButton"
 import userIcon from "@/public/assets/images/user.png"
 
@@ -26,6 +27,12 @@ const defaultMenu = [
   { title: "About Us", url: "/about-us" },
   { title: "Contact", url: "/contact" },
 ]
+
+const DESKTOP_LINK =
+  "text-[0.8125rem] font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] underline-offset-[10px] decoration-2 decoration-[var(--brand-sun)] transition-colors hover:text-[var(--brand-primary)] hover:underline"
+
+const MOBILE_LINK =
+  "rounded-md px-3 py-3.5 font-neue text-sm font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)] hover:text-[var(--brand-primary)] active:bg-[var(--surface-sunken)]"
 
 const defaultAuth = {
   login: { text: "Sign in", url: "/auth/login" },
@@ -40,6 +47,7 @@ export default function Navbar({
     title: "Energyflow",
   },
   menu = defaultMenu,
+  navCategories = null,
   auth = defaultAuth,
 }) {
   const [openSearch, setOpenSearch] = React.useState(false)
@@ -65,15 +73,15 @@ export default function Navbar({
       <div className="w-full pl-4 pr-3 lg:px-10">
         <nav className="hidden grid-cols-[1fr_auto_1fr] items-center lg:grid" aria-label="Main navigation">
           <div className="flex items-center gap-8">
-            {menu.map((item) => (
-              <Link
-                key={item.title}
-                href={item.url}
-                className="text-[0.8125rem] font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] underline-offset-[10px] decoration-2 decoration-[var(--brand-sun)] transition-colors hover:text-[var(--brand-primary)] hover:underline"
-              >
-                {item.title}
-              </Link>
-            ))}
+            {menu.map((item) =>
+              item.megaMenu ? (
+                <ShopMegaMenu key={item.title} item={item} data={navCategories} linkClassName={DESKTOP_LINK} />
+              ) : (
+                <Link key={item.title} href={item.url} className={DESKTOP_LINK}>
+                  {item.title}
+                </Link>
+              )
+            )}
           </div>
 
           <Link
@@ -170,16 +178,17 @@ export default function Navbar({
                 </SheetHeader>
 
                 <nav className="flex flex-1 flex-col overflow-y-auto px-3 py-3" aria-label="Mobile menu">
-                  {menu.map((item) => (
-                    <SheetClose asChild key={item.title}>
-                      <Link
-                        href={item.url}
-                        className="rounded-md px-3 py-3.5 font-neue text-sm font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)] hover:text-[var(--brand-primary)] active:bg-[var(--surface-sunken)]"
-                      >
-                        {item.title}
-                      </Link>
-                    </SheetClose>
-                  ))}
+                  {menu.map((item) =>
+                    item.megaMenu ? (
+                      <MobileShopMenu key={item.title} item={item} data={navCategories} linkClassName={MOBILE_LINK} />
+                    ) : (
+                      <SheetClose asChild key={item.title}>
+                        <Link href={item.url} className={MOBILE_LINK}>
+                          {item.title}
+                        </Link>
+                      </SheetClose>
+                    )
+                  )}
 
                   <div className="mt-2 border-t border-[var(--line-soft)] pt-2">
                     <ThemeToggle variant="row" />
