@@ -89,6 +89,13 @@ const AnalyticsDashboard = () => {
 
     const setQuery = (next) => {
         const q = new URLSearchParams(params.toString())
+        if (next.range && next.range !== 'custom' && next.range !== 'month' && next.range !== 'year' && next.range !== 'date') {
+            q.delete('year')
+            q.delete('month')
+            q.delete('date')
+            q.delete('from')
+            q.delete('to')
+        }
         Object.entries(next).forEach(([k, v]) => (v ? q.set(k, v) : q.delete(k)))
         q.set('tab', 'analytics')
         router.replace(`${pathname}?${q.toString()}`, { scroll: false })
@@ -131,7 +138,7 @@ const AnalyticsDashboard = () => {
     const applyCustom = (e) => {
         e.preventDefault()
         if (!draft.from || !draft.to || draft.from > draft.to) return
-        setQuery({ range: 'custom', from: draft.from, to: draft.to })
+        setQuery({ range: 'custom', from: draft.from, to: draft.to, year: '', month: '', date: '' })
     }
 
     return (
@@ -181,7 +188,7 @@ const AnalyticsDashboard = () => {
                         {PRESETS.map((p) => (
                             <button
                                 key={p.id} type="button" role="tab" aria-selected={range === p.id}
-                                onClick={() => { setCustomOpen(false); setQuery({ range: p.id, from: '', to: '' }) }}
+                                onClick={() => { setCustomOpen(false); setQuery({ range: p.id, from: '', to: '', year: '', month: '', date: '' }) }}
                                 className={cn('rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === p.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
                             >{p.label}</button>
                         ))}
@@ -191,6 +198,49 @@ const AnalyticsDashboard = () => {
                             className={cn('flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === 'custom' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
                         ><CalendarRange className="size-3.5" aria-hidden="true" /> Custom</button>
                     </div>
+
+                    {/* Direct Month dropdown */}
+                    <div className="flex items-center gap-1 rounded-md border bg-background px-2 py-1 text-xs">
+                        <span className="text-muted-foreground font-medium">Month:</span>
+                        <select
+                            value={range === 'month' && month ? `${year || todayIst().slice(0, 4)}-${month}` : ''}
+                            onChange={(e) => {
+                                if (!e.target.value) return
+                                const [y, m] = e.target.value.split('-')
+                                setCustomOpen(false)
+                                setQuery({ range: 'month', year: y, month: m, date: '', from: '', to: '' })
+                            }}
+                            className="bg-transparent text-xs font-semibold text-foreground focus:outline-hidden"
+                        >
+                            <option value="">Month</option>
+                            {[...Array(12)].map((_, i) => {
+                                const mNum = i + 1
+                                const yNum = year || todayIst().slice(0, 4)
+                                const mName = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][i]
+                                return <option key={mNum} value={`${yNum}-${mNum}`}>{mName} {yNum}</option>
+                            })}
+                        </select>
+                    </div>
+
+                    {/* Direct Year dropdown */}
+                    <div className="flex items-center gap-1 rounded-md border bg-background px-2 py-1 text-xs">
+                        <span className="text-muted-foreground font-medium">Year:</span>
+                        <select
+                            value={range === 'year' && year ? year : ''}
+                            onChange={(e) => {
+                                if (!e.target.value) return
+                                setCustomOpen(false)
+                                setQuery({ range: 'year', year: e.target.value, month: '', date: '', from: '', to: '' })
+                            }}
+                            className="bg-transparent text-xs font-semibold text-foreground focus:outline-hidden"
+                        >
+                            <option value="">Year</option>
+                            {['2027', '2026', '2025', '2024'].map((y) => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     {customOpen && (
                         <form onSubmit={applyCustom} className="flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-left-1 duration-200">
                             <label className="sr-only" htmlFor="an-from">From</label>
