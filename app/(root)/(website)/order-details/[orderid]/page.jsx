@@ -187,7 +187,7 @@ const OrderDetails = async ({ params }) => {
                                                         <Image src={media} fill sizes='72px' alt={name} className='object-cover object-center' />
                                                     </div>
                                                     <div className='flex min-w-0 flex-1 flex-col'>
-                                                        <h4 className='line-clamp-2 text-sm font-semibold leading-snug text-foreground'>
+                                                        <h4 className='line-clamp-2 font-neue text-sm font-semibold leading-snug text-foreground'>
                                                             {nameNode}
                                                         </h4>
                                                         {size && (

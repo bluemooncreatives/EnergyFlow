@@ -77,7 +77,7 @@ const BestsellerCard = ({ product, position }) => {
                 <p className="text-[0.75rem] font-medium text-fern">
                     Bestseller{variant?.size ? ` · ${variant.size}` : ''}
                 </p>
-                <h3 className="mt-1 text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">
+                <h3 className="mt-1 font-neue text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">
                     {/* The name's link covers the card; the actions sit above it. */}
                     <Link
                         href={href}

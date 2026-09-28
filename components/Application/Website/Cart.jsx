@@ -53,7 +53,7 @@ const Cart = () => {
                 {/* Header */}
                 <SheetHeader className="flex-shrink-0 border-b border-border/50 px-5 py-4 sm:px-6 sm:py-5">
                     <div className="flex items-center justify-between pr-8">
-                        <SheetTitle className="font-neue text-xl font-medium tracking-[-0.01em] text-ink-strong">
+                        <SheetTitle className="font-header text-xl font-medium tracking-[-0.01em] text-ink-strong">
                             Your cart
                         </SheetTitle>
                         {cartCount > 0 && (
@@ -72,7 +72,7 @@ const Cart = () => {
                             <div className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-[var(--brand-primary)]">
                                 <ShoppingCartIcon className="size-8" strokeWidth={1.5} />
                             </div>
-                            <h3 className="font-neue mt-5 text-xl font-medium tracking-[-0.01em] text-ink-strong">
+                            <h3 className="font-header mt-5 text-xl font-medium tracking-[-0.01em] text-ink-strong">
                                 Your cart is empty
                             </h3>
                             <p className="font-neue mt-2.5 max-w-[220px] text-sm text-muted-foreground">

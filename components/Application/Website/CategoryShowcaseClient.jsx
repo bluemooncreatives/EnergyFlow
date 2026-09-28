@@ -295,7 +295,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
             {/* The long-form range description stays on the page for search and
                 for shoppers who want it, set small so the panels lead. */}
             {writeup && (
-                <p data-reveal className="mt-[var(--section-gap)] max-w-4xl text-[0.875rem] leading-relaxed text-ink-muted">
+                <p data-reveal className="mt-[var(--section-gap)] w-full text-[0.875rem] leading-relaxed text-ink-muted">
                     {writeup}
                 </p>
             )}
