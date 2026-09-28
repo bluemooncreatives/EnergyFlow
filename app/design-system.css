@@ -223,9 +223,12 @@
   --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
                   Consolas, "Liberation Mono", "Courier New", monospace;
 
-  /* Headline defaults (h1–h4, .ef-title, .font-header) */
-  --weight-display:   600;
-  --tracking-display: -0.01em;
+  /* Headline defaults (h1–h4, .ef-title, .font-header). Clash Display is
+     set tight and ships a narrow word space, so headlines open it up —
+     otherwise "PURE NUTRITION" reads as one word, most of all on phones. */
+  --weight-display:       600;
+  --tracking-display:     0em;
+  --word-spacing-display: 0.14em;
 
   /* Tailwind alias */
   --font-geist-sans: var(--font-body);
@@ -557,6 +560,7 @@
 .font-header {
   font-family: var(--font-display);
   letter-spacing: var(--tracking-display);
+  word-spacing: var(--word-spacing-display);
 }
 
 /* Body font — Archivo. (Class name kept from the earlier typeface so the
@@ -1051,6 +1055,7 @@ body {
     font-weight: var(--weight-display);
     line-height: 1;
     letter-spacing: var(--tracking-display);
+    word-spacing: var(--word-spacing-display);
     text-transform: uppercase;
     color: var(--ink-strong);
     text-wrap: balance;

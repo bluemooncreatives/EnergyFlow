@@ -89,7 +89,7 @@ const RangeTile = ({ range, featured, availability }) => {
                 <span className="ef-eyebrow self-start">{range.eyebrow}</span>
                 <h3
                     className={cn(
-                        'font-medium leading-[1.05] tracking-[-0.03em] text-ink-strong',
+                        'font-medium leading-[1.05] text-ink-strong',
                         featured ? 'text-[clamp(1.75rem,1.2rem+2.2vw,3.25rem)]' : 'text-[clamp(1.5rem,1.2rem+1.1vw,2.125rem)]'
                     )}
                 >

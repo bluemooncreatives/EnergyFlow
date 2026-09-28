@@ -4,33 +4,46 @@
    Email clients strip <style> custom-properties and external fonts,
    so every value here is a literal inline-able constant and every
    layout primitive is table-based with inline styles.
-   Brand tokens mirror the app's green-led palette (pine primary, fern
-   accent on an antique-white ground) but are hard-coded because CSS vars don't
+   Brand tokens mirror the app's "Live green" palette (pine primary,
+   forest accent, sunflower highlight on a cream ground) but are hard-coded because CSS vars don't
    survive in Gmail/Outlook/Apple Mail. Token KEYS are kept stable
    (oxblood / crimson / cream / warm) so every template keeps working
    unchanged — only the values change.
    ================================================================ */
 
-// ── Brand palette (antique white + pine + fern) ──
+// ── Brand palette (cream + pine + forest + sunflower + olive) ──
 export const BRAND = {
     oxblood: "#0B3D2E", // pine — headings, footer, code, CTAs
-    crimson: "#2F6B3F", // fern — links, eyebrow, active dots
-    cream: "#F7F3E8", // antique white — header band + light text on the pine footer
-    warm: "#F7F3E8", // light antique white — page background + inset panels
+    crimson: "#2F6B3F", // forest — links, eyebrow, active dots
+    cream: "#F7F3E8", // cream — header band + light text on the pine footer
+    warm: "#F7F3E8", // cream — page background + inset panels
+    sun: "#F2C94C", // sunflower — highlight band, badges (pine text on it)
+    olive: "#8C7A3B", // olive — secondary marks, star ratings
     ink: "#0A2F24", // deep green body copy
     body: "#34453C", // --text-body
     white: "#FFFFFF",
-    border: "#E4E0CE", // soft hairline
-    borderStrong: "#D2CCB4",
+    border: "#E3DDCB", // soft hairline
+    borderStrong: "#D3CCB2",
     muted: "#5A6A5F", // green-grey label
     success: "#2F6B3F",
-    danger: "#A11D2B", // crimson — security warnings must still read as alerts
+    danger: "#B3261E", // red — security warnings must still read as alerts
 };
 
-// Web-safe stacks that read closest to the brand faces
-// (Felixti display ≈ editorial serif; PP Neue Montreal ≈ grotesque sans).
-export const FONT_DISPLAY = "Georgia, 'Times New Roman', Times, serif";
-export const FONT_BODY = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+// Brand faces first (Clash Display headlines, Archivo body). Clients that
+// honour @font-face (Apple Mail, iOS Mail, some Outlook builds) load them from
+// the site via FONT_FACES below; Gmail and older Outlook fall back to the
+// closest web-safe sans.
+export const FONT_DISPLAY = "'Clash Display', 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+export const FONT_BODY = "'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif";
+
+// Absolute-URL @font-face rules for the brand fonts (progressive enhancement).
+const fontFaces = () => {
+    const base = `${siteUrl()}/assets/font`;
+    return [
+        `@font-face { font-family:'Clash Display'; font-weight:600; font-style:normal; src:url('${base}/ClashDisplay-Semibold.woff2') format('woff2'); }`,
+        `@font-face { font-family:'Archivo'; font-weight:100 900; font-style:normal; src:url('${base}/Archivo-Variable-Latin.woff2') format('woff2'); }`,
+    ].join("\n    ");
+};
 
 // The only real social account we own.
 export const INSTAGRAM_URL =
@@ -131,6 +144,7 @@ export const emailShell = ({ preheader = "", bodyHtml = "", title = BRAND_NAME }
   <title>${esc(title)}</title>
   <!--[if mso]><style>body,table,td,a{font-family:Arial,Helvetica,sans-serif !important;}</style><![endif]-->
   <style>
+    ${fontFaces()}
     body { margin:0; padding:0; width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; background-color:${BRAND.warm}; }
     img { border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; }
     table { border-collapse:collapse !important; }

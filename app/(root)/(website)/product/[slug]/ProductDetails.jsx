@@ -314,7 +314,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                             <p className="ef-eyebrow w-fit">Energyflow</p>
                         )}
 
-                        <h1 className="mt-4 text-[clamp(2rem,1.4rem+2vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink-strong">
+                        <h1 className="mt-4 text-[clamp(2rem,1.4rem+2vw,3rem)] font-medium leading-[1.05] text-ink-strong">
                             {product?.name}
                         </h1>
 

@@ -13,6 +13,7 @@ import { StoreLink } from './storefront/StoreButton'
 import { rowTrimClass } from './storefront/format'
 
 // Each banner carries its own scrim: enough ivory behind the copy to keep it
+// (the ivory is fixed, so the copy on it is pinned to palette pine in both themes)
 // legible, faded out by ~60% so the photograph itself stays contrasty. A banner
 // opens the shop filtered to its `category`, or the whole shop while that
 // category has no products (same rule as the hero's links).
@@ -58,10 +59,10 @@ const PromoBanner = ({ banner, availability }) => (
 
         <span className="flex max-w-[65%] flex-col items-start gap-3 p-6 sm:p-8">
             <span className="ef-badge ef-badge--sale">Up to {banner.discount} off</span>
-            <span className="text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] font-medium leading-[1.05] tracking-[-0.03em] text-ink-strong">
+            <span className="font-header text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] font-semibold uppercase leading-[1] text-[var(--palette-pine)]">
                 {banner.title}
             </span>
-            <span className="ef-btn ef-btn--primary ef-btn--sm mt-1">
+            <span className="ef-btn ef-btn--pine ef-btn--sm mt-1">
                 Shop now <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
             </span>
         </span>

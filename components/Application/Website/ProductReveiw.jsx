@@ -189,7 +189,7 @@ const ProductReveiw = ({ productId }) => {
 
                 {isReview &&
                     <div className='my-6 rounded-[var(--radius-card)] bg-surface-sunken p-5 lg:p-6'>
-                        <h3 className='mb-1 font-header text-[1.375rem] font-medium tracking-[-0.02em] text-ink-strong'>Write a review</h3>
+                        <h3 className='mb-1 font-header text-[1.375rem] font-medium text-ink-strong'>Write a review</h3>
 
                         {!auth
                             ?
@@ -263,7 +263,7 @@ const ProductReveiw = ({ productId }) => {
 
 
                 <div className='mt-10 border-t border-line-soft pt-6'>
-                    <h3 className='font-header text-[1.25rem] font-medium tracking-[-0.01em] text-ink-strong'>{data?.pages[0]?.totalReview || 0} {(data?.pages[0]?.totalReview || 0) === 1 ? 'review' : 'reviews'}</h3>
+                    <h3 className='font-header text-[1.25rem] font-medium text-ink-strong'>{data?.pages[0]?.totalReview || 0} {(data?.pages[0]?.totalReview || 0) === 1 ? 'review' : 'reviews'}</h3>
 
                     <div className='mt-10'>
                         {(data?.pages?.[0]?.totalReview ?? 0) === 0 && !isFetching && (

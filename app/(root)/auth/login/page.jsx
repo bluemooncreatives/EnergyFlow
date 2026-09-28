@@ -127,7 +127,7 @@ const LoginPage = () => {
                     {!otpEmail ? (
                         <>
                             <div className='mb-8 flex flex-col items-start'>
-                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink-strong'>Sign in</h1>
+                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] text-ink-strong'>Sign in</h1>
                                 <p className='mt-2 text-left text-[15px] leading-relaxed text-muted-foreground'>Login into your account by filling out the form below.</p>
                             </div>
                             <Form {...form}>

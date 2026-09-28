@@ -257,6 +257,7 @@
     font-family: var(--font-display);
     font-weight: var(--weight-display);
     letter-spacing: var(--tracking-display);
+    word-spacing: var(--word-spacing-display);
   }
   ::selection {
     background: var(--brand-sun);

@@ -74,7 +74,7 @@ const BestsellerCard = ({ product, position }) => {
             </div>
 
             <div className="flex flex-1 flex-col px-4 pb-4 pt-8">
-                <p className="text-[0.75rem] font-medium text-fern">
+                <p className="text-[0.75rem] font-medium text-[var(--brand-primary-bright)]">
                     Bestseller{variant?.size ? ` · ${variant.size}` : ''}
                 </p>
                 <h3 className="mt-1 font-neue text-[1rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink-strong">

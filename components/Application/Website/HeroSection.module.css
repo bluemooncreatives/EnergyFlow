@@ -70,6 +70,7 @@
     font-weight: var(--weight-display);
     line-height: 0.94;
     letter-spacing: var(--tracking-display);
+    word-spacing: var(--word-spacing-display);
     text-transform: uppercase;
     color: var(--ink-strong);
     text-wrap: balance;
@@ -500,7 +501,7 @@
     .headline {
         font-size: clamp(1.875rem, 1.1rem + 4vw, 2.25rem);
         line-height: 1.02;
-        letter-spacing: -0.035em;
+        letter-spacing: var(--tracking-display);
     }
 
     .writeup {

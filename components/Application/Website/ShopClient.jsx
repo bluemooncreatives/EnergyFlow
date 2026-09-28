@@ -269,7 +269,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                                 <span className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-brand">
                                     <PackageSearch className="size-7" strokeWidth={1.5} aria-hidden="true" />
                                 </span>
-                                <h2 className="text-2xl font-medium tracking-[-0.02em] text-ink-strong">
+                                <h2 className="text-2xl font-medium text-ink-strong">
                                     {searchParams.size > 0 ? 'Nothing here just yet' : 'No products yet'}
                                 </h2>
                                 <p className="max-w-md text-[0.9375rem] leading-relaxed text-ink-body">

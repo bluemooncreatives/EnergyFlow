@@ -215,9 +215,9 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
             <h2
                 id="about-title"
                 data-rise-group
-                className="m-0 text-[clamp(2.25rem,0.9rem+4vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.035em] text-ink-strong"
+                className="m-0 text-[clamp(2.25rem,0.9rem+4vw,4.5rem)] font-medium leading-[1.02] text-ink-strong"
             >
-                <span data-rise className="block text-fern lg:pl-[calc(100%/12)]">
+                <span data-rise className="block text-[var(--brand-primary-bright)] lg:pl-[calc(100%/12)]">
                     {CONTENT.kicker}
                 </span>
                 <span className="block lg:grid lg:grid-cols-12 lg:gap-x-6">

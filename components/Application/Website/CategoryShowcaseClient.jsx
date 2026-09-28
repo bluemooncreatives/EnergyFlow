@@ -74,7 +74,7 @@ const Panel = ({ item, index, panelRef }) => {
                 className="absolute inset-x-4 bottom-4 z-10 flex flex-col gap-4 text-white lg:invisible lg:inset-x-6 lg:bottom-6 lg:flex-row lg:items-end lg:justify-between lg:gap-6 lg:opacity-0"
             >
                 <div className="flex min-w-0 flex-col gap-3 lg:max-w-[20rem]">
-                    <h3 data-d className="text-[1.625rem] font-medium leading-[1.1] tracking-[-0.02em] lg:text-[2rem]">
+                    <h3 data-d className="text-[1.625rem] font-medium leading-[1.1] lg:text-[2rem]">
                         {item.name}
                     </h3>
                     <p data-d className="flex flex-wrap gap-x-3 gap-y-1 text-[0.875rem] text-white/80">

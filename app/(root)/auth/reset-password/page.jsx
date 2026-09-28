@@ -94,7 +94,7 @@ const ResetPassword = () => {
                     {!otpEmail ? (
                         <>
                             <div className='mb-8 flex flex-col items-start'>
-                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] tracking-[-0.035em] text-ink-strong'>Forgot Password?</h1>
+                                <h1 className='text-[clamp(2rem,1.6rem+1.6vw,2.75rem)] font-medium leading-[1.05] text-ink-strong'>Forgot Password?</h1>
                                 <p className='mt-2 text-[15px] leading-relaxed text-muted-foreground'>Enter your email address and we&apos;ll send you a reset code.</p>
                             </div>
                             <Form {...form}>

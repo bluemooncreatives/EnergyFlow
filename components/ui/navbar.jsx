@@ -61,8 +61,8 @@ export default function Navbar({
   }, [])
 
   return (
-    <section className="py-4">
-      <div className="w-full px-4 lg:px-10">
+    <section className="py-2.5 lg:py-4">
+      <div className="w-full pl-4 pr-3 lg:px-10">
         <nav className="hidden grid-cols-[1fr_auto_1fr] items-center lg:grid" aria-label="Main navigation">
           <div className="flex items-center gap-8">
             {menu.map((item) => (
@@ -128,26 +128,26 @@ export default function Navbar({
         <div className="flex items-center justify-between lg:hidden" role="navigation" aria-label="Mobile navigation">
           <Link
             href={logo.url}
-            className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)]"
+            className="min-w-0 truncate font-header text-[clamp(1.125rem,4.4vw+0.25rem,1.375rem)] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]"
             aria-label={logo.alt}
           >
             {logo.title}
           </Link>
 
-          <div className="flex items-center gap-0.5">
-            <ThemeToggle className="flex size-8 items-center justify-center" iconClassName="size-4" />
-
+          {/* Three 40px tap targets; the theme switch lives in the menu sheet
+              on phones so the wordmark never collides with the icons. */}
+          <div className="-mr-2 flex shrink-0 items-center">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setOpenSearch(true)}
-              className="size-8 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
+              className="size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
               aria-label="Open search"
             >
-              <SearchIcon className="size-4" strokeWidth={1.75} />
+              <SearchIcon className="size-[1.125rem]" strokeWidth={1.75} />
             </Button>
 
-            <div>
+            <div className="flex size-10 items-center justify-center">
               <Cart />
             </div>
 
@@ -156,15 +156,15 @@ export default function Navbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-8 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
+                  className="size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
                   aria-label="Open menu"
                 >
-                  <Menu className="size-4" strokeWidth={1.75} />
+                  <Menu className="size-[1.125rem]" strokeWidth={1.75} />
                 </Button>
               </SheetTrigger>
               <SheetContent className="flex w-[85%] max-w-sm gap-0 border-l border-[var(--line-soft)] bg-background p-0 sm:max-w-sm">
                 <SheetHeader className="flex-shrink-0 border-b border-[var(--line-soft)] px-5 py-5">
-                  <SheetTitle className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)]">
+                  <SheetTitle className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]">
                     {logo.title}
                   </SheetTitle>
                 </SheetHeader>
@@ -180,6 +180,10 @@ export default function Navbar({
                       </Link>
                     </SheetClose>
                   ))}
+
+                  <div className="mt-2 border-t border-[var(--line-soft)] pt-2">
+                    <ThemeToggle variant="row" />
+                  </div>
                 </nav>
 
                 <div className="flex-shrink-0 border-t border-[var(--line-soft)] px-5 py-5">

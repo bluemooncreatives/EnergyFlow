@@ -128,7 +128,7 @@ const OrderDetails = async ({ params }) => {
                                     <ShoppingBag className='size-5' />
                                 </div>
                                 <div className='min-w-0'>
-                                    <h1 className='break-all text-lg font-medium tracking-[-0.01em] text-ink-strong sm:text-xl'>
+                                    <h1 className='break-all text-lg font-medium text-ink-strong sm:text-xl'>
                                         Order #{orderData?.order_id}
                                     </h1>
                                     {placedOn && (
@@ -157,7 +157,7 @@ const OrderDetails = async ({ params }) => {
                             {/* Items */}
                             <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                 <div className='flex items-center justify-between border-b border-border/60 px-5 py-4'>
-                                    <h2 className='flex items-center gap-2 text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>
+                                    <h2 className='flex items-center gap-2 text-[1.0625rem] font-medium text-ink-strong'>
                                         <Package className='size-[18px] text-brand' /> Items
                                     </h2>
                                     <span className='rounded-[var(--radius-control)] bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
@@ -218,7 +218,7 @@ const OrderDetails = async ({ params }) => {
                             <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                 <div className='flex items-center gap-2 border-b border-border/60 px-5 py-4'>
                                     <MapPin className='size-[18px] text-brand' />
-                                    <h2 className='text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>Shipping Address</h2>
+                                    <h2 className='text-[1.0625rem] font-medium text-ink-strong'>Shipping Address</h2>
                                 </div>
                                 <div className='px-5 py-5'>
                                     <p className='text-sm font-semibold text-foreground'>{orderData?.name}</p>
@@ -246,7 +246,7 @@ const OrderDetails = async ({ params }) => {
                                 {/* Payment summary */}
                                 <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                                     <div className='border-b border-border/60 px-5 py-4'>
-                                        <h2 className='text-[1.0625rem] font-medium tracking-[-0.01em] text-ink-strong'>Order Summary</h2>
+                                        <h2 className='text-[1.0625rem] font-medium text-ink-strong'>Order Summary</h2>
                                     </div>
 
                                     <div className='space-y-2.5 px-5 py-4'>
