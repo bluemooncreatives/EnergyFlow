@@ -122,7 +122,7 @@ const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmen
                     return (
                         <li key={step.key} className={`relative flex gap-3 sm:flex-1 sm:flex-col sm:items-center sm:gap-2 ${isLast ? "sm:flex-none" : ""}`}>
                             <div className="relative z-10 flex flex-col items-center">
-                                <span className={`flex size-9 items-center justify-center rounded-full border-2 transition-colors ${done ? "border-[var(--dark-red)] bg-[var(--dark-red)] text-white" : "border-border bg-background text-muted-foreground"}`}>
+                                <span className={`flex size-9 items-center justify-center rounded-full border-2 transition-colors ${done ? "border-[var(--dark-red)] bg-[var(--dark-red)] text-on-brand" : "border-border bg-background text-muted-foreground"}`}>
                                     <step.Icon className="size-4" />
                                 </span>
                                 {!isLast && (

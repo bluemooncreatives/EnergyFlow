@@ -40,26 +40,28 @@ const formatDate = (d) => {
 
 // ── Status presentation ────────────────────────────────────────────
 const STATUS_META = {
-    pending: { label: 'Order Placed', tone: 'amber', Icon: Clock, note: 'We have received your order and it is awaiting processing.' },
-    processing: { label: 'Processing', tone: 'blue', Icon: Package, note: 'Your order is being prepared for shipment.' },
-    shipped: { label: 'Shipped', tone: 'indigo', Icon: Truck, note: 'Your order is on the way to your address.' },
-    delivered: { label: 'Delivered', tone: 'emerald', Icon: PackageCheck, note: 'Your order has been delivered. We hope you love it!' },
-    cancelled: { label: 'Cancelled', tone: 'red', Icon: XCircle, note: 'This order has been cancelled.' },
-    unverified: { label: 'Payment Unverified', tone: 'red', Icon: Clock, note: 'We could not verify the payment for this order yet.' },
+    pending: { label: 'Order Placed', tone: 'sun', Icon: Clock, note: 'We have received your order and it is awaiting processing.' },
+    processing: { label: 'Processing', tone: 'olive', Icon: Package, note: 'Your order is being prepared for shipment.' },
+    shipped: { label: 'Shipped', tone: 'pine', Icon: Truck, note: 'Your order is on the way to your address.' },
+    delivered: { label: 'Delivered', tone: 'forest', Icon: PackageCheck, note: 'Your order has been delivered. We hope you love it!' },
+    cancelled: { label: 'Cancelled', tone: 'danger', Icon: XCircle, note: 'This order has been cancelled.' },
+    unverified: { label: 'Payment Unverified', tone: 'danger', Icon: Clock, note: 'We could not verify the payment for this order yet.' },
 }
 
+// Palette status tones (design-system.css §23): waiting → sun, in progress →
+// olive, on the move → pine, done → forest, problem → danger.
 const TONE = {
-    amber: 'border-amber-500/30 bg-amber-500/10 text-amber-700',
-    blue: 'border-blue-500/30 bg-blue-500/10 text-blue-700',
-    indigo: 'border-indigo-500/30 bg-indigo-500/10 text-indigo-700',
-    emerald: 'border-success/30 bg-success/10 text-success',
-    red: 'border-red-500/30 bg-red-500/10 text-red-700',
+    sun: 'ef-tone--sun',
+    olive: 'ef-tone--olive',
+    pine: 'ef-tone--pine',
+    forest: 'ef-tone--forest',
+    danger: 'ef-tone--danger',
 }
 
 const PAYMENT_STATUS_META = {
-    unpaid: { label: 'Unpaid', tone: 'amber' },
-    partial_paid: { label: 'Partially Paid', tone: 'blue' },
-    fully_paid: { label: 'Fully Paid', tone: 'emerald' },
+    unpaid: { label: 'Unpaid', tone: 'sun' },
+    partial_paid: { label: 'Partially Paid', tone: 'olive' },
+    fully_paid: { label: 'Fully Paid', tone: 'forest' },
 }
 
 const PAYMENT_METHOD_LABEL = {
@@ -122,7 +124,7 @@ const OrderDetails = async ({ params }) => {
                     <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
                         <div className='flex flex-col gap-4 border-b border-border/60 bg-surface-well/70 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6'>
                             <div className='flex min-w-0 items-start gap-3'>
-                                <div className='flex size-11 flex-shrink-0 items-center justify-center rounded-full bg-brand text-white'>
+                                <div className='flex size-11 flex-shrink-0 items-center justify-center rounded-full bg-brand text-on-brand'>
                                     <ShoppingBag className='size-5' />
                                 </div>
                                 <div className='min-w-0'>
@@ -324,7 +326,7 @@ const OrderDetails = async ({ params }) => {
                                         <OrderDetailActions orderId={orderData?.order_id} />
                                         <Link
                                             href={WEBSITE_SHOP}
-                                            className='inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand text-[0.9375rem] font-medium text-white transition-colors hover:bg-brand-hover'
+                                            className='inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-control)] bg-brand text-[0.9375rem] font-medium text-on-brand transition-colors hover:bg-brand-hover'
                                         >
                                             Continue Shopping <ChevronRight className='size-4' />
                                         </Link>

@@ -41,7 +41,7 @@ const Cart = () => {
             <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center rounded-md px-1.5 py-1.5 transition hover:bg-muted/40 sm:px-2.5 sm:py-2">
                 <ShoppingCart className="h-4 w-4 text-foreground sm:h-5 sm:w-5" strokeWidth={1.75} />
                 {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-white tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-on-brand tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
                         {cartCount}
                     </span>
                 )}

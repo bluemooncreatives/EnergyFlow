@@ -13,17 +13,17 @@
 
 // ── Brand palette (antique white + pine + fern) ──
 export const BRAND = {
-    oxblood: "#083A2F", // pine — headings, footer, code, CTAs
-    crimson: "#1F5A45", // fern — links, eyebrow, active dots
-    cream: "#F7F0DD", // antique white — header band + light text on the pine footer
-    warm: "#FAF6EA", // light antique white — page background + inset panels
-    ink: "#0B2A22", // deep green body copy
-    body: "#3F4F47", // --text-body
+    oxblood: "#0B3D2E", // pine — headings, footer, code, CTAs
+    crimson: "#2F6B3F", // fern — links, eyebrow, active dots
+    cream: "#F7F3E8", // antique white — header band + light text on the pine footer
+    warm: "#F7F3E8", // light antique white — page background + inset panels
+    ink: "#0A2F24", // deep green body copy
+    body: "#34453C", // --text-body
     white: "#FFFFFF",
     border: "#E4E0CE", // soft hairline
     borderStrong: "#D2CCB4",
-    muted: "#5E6D64", // green-grey label
-    success: "#1F5A45",
+    muted: "#5A6A5F", // green-grey label
+    success: "#2F6B3F",
     danger: "#A11D2B", // crimson — security warnings must still read as alerts
 };
 

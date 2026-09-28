@@ -99,7 +99,7 @@ const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
                         aria-hidden="true"
                         className={cn(
                             'flex size-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300',
-                            isOpen ? 'bg-brand text-white' : 'bg-surface-well text-brand'
+                            isOpen ? 'bg-brand text-on-brand' : 'bg-surface-well text-brand'
                         )}
                     >
                         <Plus
@@ -158,7 +158,7 @@ const FAQSection = ({ tone = 'page' }) => {
 
                         <div
                             data-reveal
-                            className="ef-tile ef-on-inverse flex flex-col items-start gap-4 bg-brand p-6 text-white sm:p-7"
+                            className="ef-tile ef-on-inverse flex flex-col items-start gap-4 bg-surface-inverse p-6 text-white sm:p-7"
                             style={{ backgroundImage: 'var(--brand-panel-gradient)', borderRadius: 'var(--radius-card)' }}
                         >
                             <span className="flex size-11 items-center justify-center rounded-full bg-amber text-brand-deep">

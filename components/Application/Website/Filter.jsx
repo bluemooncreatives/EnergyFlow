@@ -144,7 +144,7 @@ const Filter = ({ filters, showClearLink = true }) => {
                     onClick={handleBestsellerFilter}
                     aria-pressed={bestsellerOnly}
                     className={`ef-focus flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-[0.875rem] font-medium transition-colors ${bestsellerOnly
-                        ? 'bg-brand text-white'
+                        ? 'bg-brand text-on-brand'
                         : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'}`}
                 >
                     <Crown className="size-4" />
@@ -156,7 +156,7 @@ const Filter = ({ filters, showClearLink = true }) => {
                     onClick={handleFreshlyArrivedFilter}
                     aria-pressed={freshlyArrivedOnly}
                     className={`ef-focus flex h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-[0.875rem] font-medium transition-colors ${freshlyArrivedOnly
-                        ? 'bg-brand text-white'
+                        ? 'bg-brand text-on-brand'
                         : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'}`}
                 >
                     <Sparkles className="size-4" />

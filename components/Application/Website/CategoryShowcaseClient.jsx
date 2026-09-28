@@ -284,7 +284,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                         <Link
                             key={item.id}
                             href={item.href}
-                            className="ef-focus rounded-[var(--radius-control)] bg-surface-card px-3 py-1.5 text-[0.8125rem] font-medium text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] transition-colors hover:bg-brand hover:text-white"
+                            className="ef-focus rounded-[var(--radius-control)] bg-surface-card px-3 py-1.5 text-[0.8125rem] font-medium text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] transition-colors hover:bg-brand hover:text-on-brand"
                         >
                             {item.name}
                         </Link>

@@ -465,7 +465,7 @@ const Checkout = () => {
                 },
 
                 "theme": {
-                    "color": "#083A2F"
+                    "color": "#0B3D2E"
                 }
             }
 
@@ -486,7 +486,7 @@ const Checkout = () => {
     // ── reusable bits ──────────────────────────────────────────────
     const SectionHeading = ({ step, icon: Icon, title, hint }) => (
         <div className="mb-5 flex items-center gap-3">
-            <span className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-brand text-[0.8125rem] font-semibold text-white tabular-nums">
+            <span className="flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-brand text-[0.8125rem] font-semibold text-on-brand tabular-nums">
                 {step}
             </span>
             <div className="flex flex-1 items-center gap-2">

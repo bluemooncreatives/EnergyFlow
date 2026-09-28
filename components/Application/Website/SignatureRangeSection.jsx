@@ -82,7 +82,7 @@ const RangeTile = ({ range, featured, availability }) => {
             {/* soft light pooling behind the art */}
             <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -bottom-1/4 -right-1/4 -z-10 aspect-square w-[80%] rounded-full bg-white/45 blur-2xl"
+                className="pointer-events-none absolute -bottom-1/4 -right-1/4 -z-10 aspect-square w-[80%] rounded-full bg-white/45 blur-2xl dark:bg-white/[0.04]"
             />
 
             <div className={cn('relative z-10 flex max-w-[62%] flex-col gap-3', featured && 'lg:max-w-[70%]')}>
@@ -101,7 +101,7 @@ const RangeTile = ({ range, featured, availability }) => {
             </div>
 
             <span className="relative z-10 mt-auto inline-flex items-center gap-2 pt-6 text-[0.9375rem] font-medium text-brand">
-                <span className="flex size-10 items-center justify-center rounded-full bg-brand text-white transition-transform duration-300 group-hover/tile:rotate-45 motion-reduce:transition-none">
+                <span className="flex size-10 items-center justify-center rounded-full bg-brand text-on-brand transition-transform duration-300 group-hover/tile:rotate-45 motion-reduce:transition-none">
                     <ArrowUpRight className="size-[1.1rem]" aria-hidden="true" />
                 </span>
                 {link.label}

@@ -1,5 +1,6 @@
 import GlobalProvider from "@/components/Application/GlobalProvider";
 import LenisProvider from '@/components/Application/LenisProvider'
+import ThemeProvider from "@/components/Application/Admin/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -76,9 +77,15 @@ export const metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-  other: {
-    'theme-color': '#F7F0DD',
-  },
+};
+
+// Browser chrome follows the active colour scheme: cream canvas in light
+// mode, deep evergreen in dark.
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F7F3E8' },
+    { media: '(prefers-color-scheme: dark)', color: '#061D16' },
+  ],
 };
 
 // Organisation-level structured data, emitted sitewide rather than per page so
@@ -112,23 +119,26 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
         {/* Preload only fonts on the LCP critical path.
-            Medium (weight 600) is used by the LCP "Shop" heading and the logo.
-            Book (weight 400) is the primary body font — preloaded so it's
-            ready before below-the-fold content renders. */}
-        <link rel="preload" href="/assets/font/PPNeueMontreal-Medium.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/assets/font/PPNeueMontreal-Book.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+            Clash Display Semibold (600) sets the hero and section headlines;
+            Archivo (variable, latin subset) is the body font on every page. */}
+        <link rel="preload" href="/assets/font/ClashDisplay-Semibold.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/assets/font/Archivo-Variable-Latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <GlobalProvider>
-          <Toaster />
-          <LenisProvider>
-            {children}
-          </LenisProvider>
-        </GlobalProvider>
+        {/* One theme for the whole app: the storefront and the admin panel
+            share the light/dark choice (stored by next-themes). */}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <GlobalProvider>
+            <Toaster />
+            <LenisProvider>
+              {children}
+            </LenisProvider>
+          </GlobalProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

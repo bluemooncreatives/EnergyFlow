@@ -62,16 +62,18 @@ type ShipmentManagementProps = {
     onShipmentCreated: (order: OrderData) => void
 }
 
+// Palette status tones (design-system.css §23): waiting → sun, in progress →
+// olive, on the move → pine, done → forest, problem → danger.
 const statusTone: Record<string, string> = {
-    PENDING: "border-amber-200 bg-amber-50 text-amber-700",
-    PROCESSING: "border-blue-200 bg-blue-50 text-blue-700",
-    READY_TO_SHIP: "border-cyan-200 bg-cyan-50 text-cyan-700",
-    PICKED_UP: "border-indigo-200 bg-indigo-50 text-indigo-700",
-    IN_TRANSIT: "border-violet-200 bg-violet-50 text-violet-700",
-    OUT_FOR_DELIVERY: "border-orange-200 bg-orange-50 text-orange-700",
-    DELIVERED: "border-success/30 bg-success/10 text-success",
-    RTO: "border-rose-200 bg-rose-50 text-rose-700",
-    CANCELLED: "border-red-200 bg-red-50 text-red-700",
+    PENDING: "ef-tone--sun",
+    PROCESSING: "ef-tone--olive",
+    READY_TO_SHIP: "ef-tone--olive",
+    PICKED_UP: "ef-tone--pine",
+    IN_TRANSIT: "ef-tone--pine",
+    OUT_FOR_DELIVERY: "ef-tone--forest",
+    DELIVERED: "ef-tone--forest",
+    RTO: "ef-tone--danger",
+    CANCELLED: "ef-tone--danger",
 }
 
 const labelize = (value?: string | null) => {

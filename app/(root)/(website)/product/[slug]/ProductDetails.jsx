@@ -369,7 +369,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                                 className={cn(
                                                     'ef-focus relative inline-flex h-11 min-w-[3.5rem] items-center justify-center rounded-[var(--radius-control)] px-4 text-center text-[0.875rem] font-medium transition-colors',
                                                     isSelected
-                                                        ? 'bg-brand text-white'
+                                                        ? 'bg-brand text-on-brand'
                                                         : 'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-strong)] hover:text-brand'
                                                 )}
                                             >
@@ -469,7 +469,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 type="button"
                                 variant="outline"
                                 onClick={handleBuyNow}
-                                className="mt-3 h-12 w-full rounded-[var(--radius-control)] border-brand text-[0.9375rem] font-medium text-brand hover:bg-brand hover:text-white"
+                                className="mt-3 h-12 w-full rounded-[var(--radius-control)] border-brand text-[0.9375rem] font-medium text-brand hover:bg-brand hover:text-on-brand"
                             >
                                 <Zap className="size-4" aria-hidden="true" /> Buy now
                             </Button>

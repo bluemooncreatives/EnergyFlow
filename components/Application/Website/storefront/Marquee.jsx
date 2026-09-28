@@ -37,7 +37,7 @@ export const usePrefersReducedMotion = () => {
 // Ticker: a phrase followed by a small cut-out (or a dot) as the separator.
 const TickerItem = ({ item }) => (
     <li data-marquee-item className="flex shrink-0 items-center">
-        <span className="whitespace-nowrap text-[1.25rem] font-medium leading-none tracking-[-0.01em] sm:text-[1.75rem] sm:tracking-[-0.02em]">
+        <span className="whitespace-nowrap font-header text-[1.25rem] font-semibold uppercase leading-none sm:text-[1.75rem]">
             {item.label}
         </span>
         {item.image ? (
@@ -49,7 +49,7 @@ const TickerItem = ({ item }) => (
                 className="mx-5 h-10 w-auto shrink-0 drop-shadow-[0_6px_10px_rgb(0_0_0/0.25)] sm:mx-7 sm:h-14"
             />
         ) : (
-            <span aria-hidden="true" className="mx-5 size-2 shrink-0 rounded-full bg-amber sm:mx-7" />
+            <span aria-hidden="true" className="mx-5 size-2 shrink-0 rounded-full bg-current sm:mx-7" />
         )}
     </li>
 )
@@ -80,12 +80,12 @@ const ShowcaseItem = ({ item, index }) => (
                 style={{ '--tilt': `${TILTS[index % TILTS.length]}deg` }}
                 className="h-[clamp(3rem,2rem+3vw,5rem)] w-auto shrink-0 rotate-(--tilt) transition-transform duration-500 ease-[var(--ease-spring)] group-hover/item:rotate-0 group-hover/item:scale-[1.08] motion-reduce:transition-none"
             />
-            <span className="whitespace-nowrap text-[clamp(1.5rem,1rem+1.8vw,3rem)] font-medium leading-none tracking-[-0.035em] text-ink-strong transition-colors duration-300 group-hover/item:text-brand">
+            <span className="whitespace-nowrap font-header text-[clamp(1.5rem,1rem+1.8vw,3rem)] font-semibold uppercase leading-none text-ink-strong transition-colors duration-300 group-hover/item:text-brand">
                 {item.label}
             </span>
             <span
                 aria-hidden="true"
-                className="flex size-[clamp(1.75rem,1.4rem+0.8vw,2.25rem)] shrink-0 -translate-x-2 items-center justify-center rounded-full bg-brand text-white opacity-0 transition duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 motion-reduce:transition-none"
+                className="flex size-[clamp(1.75rem,1.4rem+0.8vw,2.25rem)] shrink-0 -translate-x-2 items-center justify-center rounded-full bg-brand text-on-brand opacity-0 transition duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 motion-reduce:transition-none"
             >
                 <ArrowUpRight className="size-1/2" />
             </span>

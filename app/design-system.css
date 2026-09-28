@@ -8,63 +8,81 @@
 
 /* ────────────────────────────────────────────────────────────────
    1. BRAND COLORS
-   Green-led palette — dark slate green, dark khaki, antique white — plus
-   the shades derived from it. All component colors resolve to these.
-     Pine   #083A2F  (dark slate green) primary + depth: actions, links,
-                     logo, dark bands, footer, sidebar, headings
-     Fern   #1F5A45  (derived mid green) headline accents, labels, success
-     Khaki  #DCB25E  the one warm note: Buy now, badges, stickers, icon
-                     discs on green; #A67C1E where it must read on white
-     Antique white #F7F0DD  canvas; pale sage for alternating bands
+   "Live green" palette — five colours, every component resolves to them:
+     Sunflower #F2C94C  the warm note: accent CTA fills, badges, seals,
+                        highlight bands; the primary colour in dark mode
+     Forest    #2F6B3F  mid green: accent words, success, labels, icons
+     Pine      #0B3D2E  ink + depth: headlines, actions, rules, dark bands,
+                        sidebar, footer
+     Cream     #F7F3E8  the canvas; text on every dark surface
+     Olive     #8C7A3B  earthy secondary: star ratings, eyebrows, dividers;
+                        deep variant (#6B5C27) for olive text on cream
+   `--palette-*` never change with the theme — use them for artwork and for
+   surfaces that must look the same in both modes (the sunflower band).
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --brand-pine:        #083A2F;
-  --brand-pine-hover:  #0F4D3E;
-  --brand-pine-deep:   #052A22;
-  --brand-fern:        #1F5A45;
-  --brand-khaki:       #DCB25E;
-  --brand-antique:     #F7F0DD;
+  --palette-sunflower: #F2C94C;
+  --palette-forest:    #2F6B3F;
+  --palette-pine:      #0B3D2E;
+  --palette-cream:     #F7F3E8;
+  --palette-olive:     #8C7A3B;
 
-  /* Primary = pine (12.6:1 with white) */
+  --brand-pine:        #0B3D2E;
+  --brand-pine-hover:  #11503D;
+  --brand-pine-deep:   #072A20;
+  --brand-forest:      #2F6B3F;
+  --brand-fern:        var(--brand-forest);   /* legacy name */
+  --brand-sun:         #F2C94C;
+  --brand-sun-ink:     #0B3D2E;                /* text on sunflower (7.7:1) */
+  --brand-khaki:       var(--brand-sun);       /* legacy name */
+  --brand-antique:     #F7F3E8;
+
+  /* Primary = pine in light mode (11:1 on cream), sunflower in dark mode */
   --brand-primary:       var(--brand-pine);
   --brand-primary-hover: var(--brand-pine-hover);
+  /* Text/icon colour on a --brand-primary fill (flips with it) */
+  --on-brand:            #F7F3E8;
 
-  /* Neutral palette */
-  --brand-ink:       #000000;   /* true black */
-  --brand-ink-soft:  #0B2A22;   /* near-black body copy (deep green) */
+  /* Neutral palette. --brand-white / --brand-cream are also used as text on
+     dark bands, so they never flip. */
+  --brand-ink:       #000000;
+  --brand-ink-soft:  #0A2F24;   /* near-black body copy (deep pine) */
   --brand-white:     #FFFFFF;
   --brand-cream:     var(--brand-antique);
 
-  /* Headline accent words ("Super *Foods*") are fern; "-deep" is the dark
-     ink for text on khaki fills (6.4:1). */
-  --brand-primary-bright: var(--brand-fern);
-  --brand-primary-deep:   #0B2A22;
+  /* Headline accent words ("Super *Foods*") are forest; "-deep" is the dark
+     ink for text on sunflower fills. */
+  --brand-primary-bright: var(--brand-forest);
+  --brand-primary-deep:   #0A2F24;
+
+  /* Olive — a true olive now (earlier palettes aliased this to fern). */
+  --brand-olive:      #8C7A3B;
+  --brand-olive-deep: #6B5C27;   /* olive text on cream (6:1) */
 
   /* Legacy hue names from earlier palettes, kept so nothing breaks. */
   --brand-cocoa:      var(--brand-pine-deep);
-  --brand-cocoa-deep: #031A15;
-  --brand-olive:      var(--brand-fern);
-  --brand-olive-deep: var(--brand-pine);
+  --brand-cocoa-deep: #041C15;
 
   /* Accent on dark green surfaces (the preloader's progress rule). */
-  --brand-lime: var(--brand-khaki);
+  --brand-lime: var(--brand-sun);
 
   /* Warm neutral fill (image placeholders, instagram cards, section accents) */
-  --brand-warm-bg: #EFE9D6;
+  --brand-warm-bg: #F0EBDB;
 
   /* Body copy — softer than ink, darker than muted */
-  --text-body: #3F4F47;
+  --text-body: #34453C;
 
-  /* "Amber" is the highlight-FILL role: khaki (pair with --brand-primary-deep
-     text). --brand-gold is khaki deepened to read on white (star ratings). */
-  --brand-amber:       var(--brand-khaki);
-  --brand-amber-hover: #E5C27A;
-  --brand-amber-soft:  #F4E6C2;
-  --brand-amber-ink:   #7A5A12;   /* khaki-family text on light (6:1) */
-  --brand-gold:        #A67C1E;
+  /* "Amber" is the highlight-FILL role: sunflower (pair with
+     --brand-primary-deep text). --brand-gold is olive, for star ratings and
+     small marks that must read on cream. */
+  --brand-amber:       var(--brand-sun);
+  --brand-amber-hover: #F5D56E;
+  --brand-amber-soft:  #FBEDC4;
+  --brand-amber-ink:   var(--brand-olive-deep);
+  --brand-gold:        var(--brand-olive);
 
-  /* Success — fern */
-  --success: var(--brand-fern);   /* 7:1 on antique white */
+  /* Success — forest */
+  --success: var(--brand-forest);   /* 5.8:1 on cream */
 
   /* ── Legacy aliases (kept for backward-compat with existing components) ── */
   --dark-red:   var(--brand-primary);
@@ -75,8 +93,21 @@
   --secondary-2: var(--brand-cream);
 }
 
+/* Dark mode — deep evergreen base; sunflower becomes the primary and cream
+   the ink. The fixed palette and cream/white stay as they are. */
 .dark {
-  --success: #6FBF98;
+  --brand-primary:        var(--brand-sun);
+  --brand-primary-hover:  #F5D56E;
+  --on-brand:             #0A2F24;
+  --brand-primary-bright: var(--brand-sun);
+  --brand-olive:          #C2AE6A;
+  --brand-olive-deep:     #D3C189;
+  --brand-gold:           #D9BF5F;
+  --brand-amber-soft:     #3A3218;
+  --brand-warm-bg:        #11332A;
+  --brand-ink-soft:       #F7F3E8;
+  --text-body:            #D5D9C8;
+  --success:              #7CC28E;
 }
 
 
@@ -86,96 +117,96 @@
    storefront). The admin panel re-maps them in admin.css.
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --background:          #F7F0DD;
-  --foreground:          #0B2A22;
-  --card:                #FDFAF1;
-  --card-foreground:     #0B2A22;
-  --popover:             #FDFAF1;
-  --popover-foreground:  #0B2A22;
-  --primary:             #083A2F;
-  --primary-foreground:  #FFFFFF;
-  --secondary:           #E9EDDF;
-  --secondary-foreground:#0B2A22;
-  --muted:               #EEEBDD;
-  --muted-foreground:    #5E6D64;
-  --accent:              #E1E9D8;
-  --accent-foreground:   #0B2A22;
-  --destructive:         #A11D2B;
-  --border:              #E2DDC9;
-  --input:               #D2CCB4;
-  --ring:                #083A2F;
+  --background:          #F7F3E8;
+  --foreground:          #0A2F24;
+  --card:                #FDFBF6;
+  --card-foreground:     #0A2F24;
+  --popover:             #FDFBF6;
+  --popover-foreground:  #0A2F24;
+  --primary:             #0B3D2E;
+  --primary-foreground:  #F7F3E8;
+  --secondary:           #E6ECDD;
+  --secondary-foreground:#0A2F24;
+  --muted:               #EFEADC;
+  --muted-foreground:    #5A6A5F;
+  --accent:              #FBEDC4;
+  --accent-foreground:   #0A2F24;
+  --destructive:         #B3261E;
+  --border:              #E3DDCB;
+  --input:               #D3CCB2;
+  --ring:                #2F6B3F;
 }
 
 
 /* ────────────────────────────────────────────────────────────────
    3. SEMANTIC COLORS — Dark Mode
-   Deep-forest base; khaki becomes the primary (dark text on it).
+   Deep-evergreen base; sunflower becomes the primary (pine text on it).
    ──────────────────────────────────────────────────────────────── */
 .dark {
-  --background:           #04140F;
-  --foreground:           #F7F0DD;
-  --card:                 #0A211A;
-  --card-foreground:      #F7F0DD;
-  --popover:              #0A211A;
-  --popover-foreground:   #F7F0DD;
-  --primary:              #DCB25E;
-  --primary-foreground:   #04140F;
-  --secondary:            #0F2C23;
-  --secondary-foreground: #F7F0DD;
-  --muted:                #0D261E;
-  --muted-foreground:     #A9BDB3;
-  --accent:               #133629;
-  --accent-foreground:    #F7F0DD;
-  --destructive:          #E5484D;
-  --border:               rgb(247 240 221 / 12%);
-  --input:                rgb(247 240 221 / 16%);
-  --ring:                 #DCB25E;
+  --background:           #061D16;
+  --foreground:           #F7F3E8;
+  --card:                 #0C2A21;
+  --card-foreground:      #F7F3E8;
+  --popover:              #0C2A21;
+  --popover-foreground:   #F7F3E8;
+  --primary:              #F2C94C;
+  --primary-foreground:   #0A2F24;
+  --secondary:            #10332A;
+  --secondary-foreground: #F7F3E8;
+  --muted:                #0E2D24;
+  --muted-foreground:     #B2BCA9;
+  --accent:               #2E2A16;
+  --accent-foreground:    #F7F3E8;
+  --destructive:          #F2665C;
+  --border:               rgb(247 243 232 / 12%);
+  --input:                rgb(247 243 232 / 18%);
+  --ring:                 #F2C94C;
 }
 
 
 /* ────────────────────────────────────────────────────────────────
-   4. DATA-VIZ COLORS (Charts)
+   4. DATA-VIZ COLORS (Charts) — the palette, ordered for separation
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --chart-1: #083A2F;   /* pine        */
-  --chart-2: #DCB25E;   /* khaki       */
-  --chart-3: #2E7057;   /* jade        */
-  --chart-4: #A67C1E;   /* deep khaki  */
-  --chart-5: #4F8A6F;   /* sage green  */
+  --chart-1: #0B3D2E;   /* pine      */
+  --chart-2: #F2C94C;   /* sunflower */
+  --chart-3: #2F6B3F;   /* forest    */
+  --chart-4: #8C7A3B;   /* olive     */
+  --chart-5: #8FB59A;   /* sage      */
 }
 
 .dark {
-  --chart-1: #6FBF98;
-  --chart-2: #DCB25E;
-  --chart-3: #3FA37F;
-  --chart-4: #E5C27A;
-  --chart-5: #A8D5BF;
+  --chart-1: #7CC28E;
+  --chart-2: #F2C94C;
+  --chart-3: #F7F3E8;
+  --chart-4: #C2AE6A;
+  --chart-5: #4E8A5C;
 }
 
 
 /* ────────────────────────────────────────────────────────────────
-   5. SIDEBAR COLORS
+   5. SIDEBAR COLORS — a pine rail with a sunflower active state
    ──────────────────────────────────────────────────────────────── */
 :root {
-  --sidebar:                    #083A2F;
-  --sidebar-foreground:         #F7F0DD;
-  --sidebar-primary:            #DCB25E;
-  --sidebar-primary-foreground: #04140F;
-  --sidebar-accent:             #11493B;
+  --sidebar:                    #0B3D2E;
+  --sidebar-foreground:         #F7F3E8;
+  --sidebar-primary:            #F2C94C;
+  --sidebar-primary-foreground: #0A2F24;
+  --sidebar-accent:             #145041;
   --sidebar-accent-foreground:  #FFFFFF;
-  --sidebar-border:             #11493B;
-  --sidebar-ring:               #DCB25E;
+  --sidebar-border:             #145041;
+  --sidebar-ring:               #F2C94C;
 }
 
 .dark {
-  --sidebar:                    #020D0A;
-  --sidebar-foreground:         #F7F0DD;
-  --sidebar-primary:            #DCB25E;
-  --sidebar-primary-foreground: #04140F;
-  --sidebar-accent:             #0F2C23;
-  --sidebar-accent-foreground:  #F7F0DD;
-  --sidebar-border:             #0F2C23;
-  --sidebar-ring:               #DCB25E;
+  --sidebar:                    #03130E;
+  --sidebar-foreground:         #F7F3E8;
+  --sidebar-primary:            #F2C94C;
+  --sidebar-primary-foreground: #0A2F24;
+  --sidebar-accent:             #10332A;
+  --sidebar-accent-foreground:  #F7F3E8;
+  --sidebar-border:             #10332A;
+  --sidebar-ring:               #F2C94C;
 }
 
 
@@ -183,14 +214,18 @@
    6. TYPOGRAPHY TOKENS
    ──────────────────────────────────────────────────────────────── */
 :root {
-  /* Font families */
-  --font-body:    'PP Neue Montreal', 'PP Neue Fallback', ui-sans-serif, system-ui, -apple-system,
+  /* Font families — Clash Display for every headline, Archivo for
+     everything else (body, UI, forms, tables). */
+  --font-body:    'Archivo', 'Archivo Fallback', ui-sans-serif, system-ui, -apple-system,
                   "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  /* One family site-wide: the display role (.font-header — logo, auth and
-     panel headings) uses PP Neue Montreal too. */
-  --font-display: var(--font-body);
+  --font-display: 'Clash Display', 'Clash Display Fallback', 'Archivo', ui-sans-serif,
+                  system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
                   Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Headline defaults (h1–h4, .ef-title, .font-header) */
+  --weight-display:   600;
+  --tracking-display: -0.01em;
 
   /* Tailwind alias */
   --font-geist-sans: var(--font-body);
@@ -220,8 +255,8 @@
   --weight-thin:    200;
   --weight-light:   300;
   --weight-book:    400;
-  --weight-regular: 500;
-  --weight-medium:  600;
+  --weight-regular: 400;   /* Archivo Regular — all general copy */
+  --weight-medium:  500;
   --weight-bold:    700;
 
   /* ── Line heights ── */
@@ -331,8 +366,14 @@
   --shadow-xl:         0 20px 25px rgba(0, 0, 0, 0.08),
                        0 10px 10px rgba(0, 0, 0, 0.03);
   --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --shadow-brand:      0 12px 32px rgba(8, 58, 47, 0.14);
-  --shadow-focus:      0 0 0 3px rgb(8 58 47 / 0.35);
+  --shadow-brand:      0 12px 32px rgb(11 61 46 / 0.16);
+  --shadow-focus:      0 0 0 3px rgb(47 107 63 / 0.35);
+}
+
+.dark {
+  --shadow-card-hover: 0 12px 32px rgb(0 0 0 / 0.45);
+  --shadow-brand:      0 12px 32px rgb(0 0 0 / 0.5);
+  --shadow-focus:      0 0 0 3px rgb(242 201 76 / 0.4);
 }
 
 
@@ -418,7 +459,7 @@
   /* brand CTA */
   --btn-brand-bg:       var(--brand-primary);
   --btn-brand-bg-hover: var(--brand-primary-hover);
-  --btn-brand-color:    var(--brand-white);
+  --btn-brand-color:    var(--on-brand);
 
   /* ── Badges ── */
   --badge-height:  1.25rem;   /* 20px */
@@ -465,30 +506,30 @@
   --filter-scrollbar-size:  6px;
 
   /* ── Page header ── */
-  --header-bg:      rgb(253 250 241 / 0.9);
-  --header-blur-bg: rgb(253 250 241 / 0.8);
-  --header-border:  rgb(8 58 47 / 0.18);
+  --header-bg:      rgb(253 251 246 / 0.9);
+  --header-blur-bg: rgb(253 251 246 / 0.8);
+  --header-border:  rgb(11 61 46 / 0.2);
 
   /* ── Brand panel gradients ──
-     Layered radial glow that adds depth to a flat brand fill. Built from
-     fixed shades so each stays on-palette:
-       --brand-panel-gradient  pine (marquee, auth, promo tiles, loader)
+     Layered radial glow that adds depth to a flat pine fill. Built from
+     fixed palette shades, so they read the same in both themes:
+       --brand-panel-gradient  pine with a forest glow (auth, promo tiles, loader)
        --pine-panel-gradient   deepest pine (footer)
      (--olive- / --cocoa-panel-gradient are legacy names for the deep one.) */
   --brand-panel-gradient:
-    radial-gradient(66% 112% at  6% 100%, rgb(15 77 62 / 0.88), transparent 78%),
-    radial-gradient(56% 102% at 22% 100%, rgb(31 90 69 / 0.60), transparent 80%),
-    radial-gradient(48%  96% at 42% 100%, rgb(15 77 62 / 0.82), transparent 82%),
-    radial-gradient(44%  92% at 64% 100%, rgb(5 42 34 / 0.76), transparent 84%),
-    radial-gradient(42%  88% at 86% 100%, rgb(8 58 47 / 0.68), transparent 86%),
-    linear-gradient(0deg, rgb(220 178 94 / 0.06), transparent 62%);
+    radial-gradient(66% 112% at  6% 100%, rgb(17 80 61 / 0.88), transparent 78%),
+    radial-gradient(56% 102% at 22% 100%, rgb(47 107 63 / 0.55), transparent 80%),
+    radial-gradient(48%  96% at 42% 100%, rgb(17 80 61 / 0.82), transparent 82%),
+    radial-gradient(44%  92% at 64% 100%, rgb(7 42 32 / 0.76), transparent 84%),
+    radial-gradient(42%  88% at 86% 100%, rgb(11 61 46 / 0.68), transparent 86%),
+    linear-gradient(0deg, rgb(242 201 76 / 0.07), transparent 62%);
   --pine-panel-gradient:
-    radial-gradient(66% 112% at  6% 100%, rgb(8 58 47 / 0.85), transparent 78%),
-    radial-gradient(56% 102% at 22% 100%, rgb(15 77 62 / 0.45), transparent 80%),
-    radial-gradient(48%  96% at 42% 100%, rgb(8 58 47 / 0.80), transparent 82%),
-    radial-gradient(44%  92% at 64% 100%, rgb(3 26 21 / 0.76), transparent 84%),
-    radial-gradient(42%  88% at 86% 100%, rgb(5 42 34 / 0.68), transparent 86%),
-    linear-gradient(0deg, rgb(247 240 221 / 0.04), transparent 62%);
+    radial-gradient(66% 112% at  6% 100%, rgb(11 61 46 / 0.85), transparent 78%),
+    radial-gradient(56% 102% at 22% 100%, rgb(17 80 61 / 0.45), transparent 80%),
+    radial-gradient(48%  96% at 42% 100%, rgb(11 61 46 / 0.80), transparent 82%),
+    radial-gradient(44%  92% at 64% 100%, rgb(4 28 21 / 0.76), transparent 84%),
+    radial-gradient(42%  88% at 86% 100%, rgb(7 42 32 / 0.68), transparent 86%),
+    linear-gradient(0deg, rgb(247 243 232 / 0.04), transparent 62%);
   --olive-panel-gradient: var(--pine-panel-gradient);
   --cocoa-panel-gradient: var(--pine-panel-gradient);
 
@@ -496,18 +537,30 @@
   --auth-panel-gradient: var(--brand-panel-gradient);
 }
 
+.dark {
+  --form-field-border:       rgb(247 243 232 / 0.22);
+  --form-field-border-hover: rgb(247 243 232 / 0.5);
+  --form-field-placeholder:  rgb(247 243 232 / 0.42);
+  --form-field-focus-ring:   rgb(242 201 76 / 0.28);
+
+  --header-bg:      rgb(6 29 22 / 0.9);
+  --header-blur-bg: rgb(6 29 22 / 0.8);
+  --header-border:  rgb(247 243 232 / 0.12);
+}
+
 
 /* ────────────────────────────────────────────────────────────────
    14. TYPOGRAPHY UTILITIES
    ──────────────────────────────────────────────────────────────── */
 
-/* Display / heading role — PP Neue Montreal, set tight */
+/* Display / heading role — Clash Display */
 .font-header {
   font-family: var(--font-display);
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-display);
 }
 
-/* Body font — PP Neue Montreal */
+/* Body font — Archivo. (Class name kept from the earlier typeface so the
+   many existing call sites keep working.) */
 .font-neue {
   font-family: var(--font-body);
 }
@@ -772,38 +825,41 @@ body {
 
 /* ================================================================
    22. STOREFRONT TOKENS
-   The public website's visual language: green-led — an antique-white
-   canvas, pale sage bands, pine actions and bands, fern accents, and
-   khaki as the one warm highlight. Palm shade on a sunny beach. Everything below the hero, the shop grid and any
-   new storefront page should build from these — never from raw hex.
+   The public website's visual language, taken from the "Live green"
+   reference: a cream canvas, pale-sage alternate bands, pine ink and
+   thin pine rules, forest accents, a sunflower band and sunflower
+   seals as the warm highlight, olive for the earthy details.
+   Everything below the hero, the shop grid and any new storefront page
+   should build from these — never from raw hex.
    ================================================================ */
 :root {
   /* ── Surfaces ── */
-  --surface-page:    #F7F0DD;   /* antique white — the canvas                   */
-  --surface-sunken:  #E9EDDF;   /* pale sage — alternate section band          */
-  --surface-card:    #FDFAF1;   /* cards, tiles, accordion rows                 */
-  --surface-well:    #EFE9D6;   /* image wells behind product photos           */
+  --surface-page:    #F7F3E8;   /* cream — the canvas                           */
+  --surface-sunken:  #EAEEDF;   /* pale sage — alternate section band          */
+  --surface-card:    #FDFBF6;   /* cards, tiles, accordion rows                 */
+  --surface-well:    #F0EBDB;   /* image wells behind product photos           */
   --surface-inverse: var(--brand-pine);   /* pine bands                          */
+  --surface-sun:     var(--palette-sunflower);   /* the sunflower band          */
 
   /* ── Ink ── */
-  --ink-strong: #0B2A22;   /* headings — deep green (14:1 on antique white) */
-  --ink-body:   #3F4F47;   /* paragraphs (8:1)                              */
-  --ink-muted:  #5E6D64;   /* meta, captions (4.8:1)                        */
-  --ink-on-inverse:       #F7F0DD;
-  --ink-on-inverse-muted: rgb(247 240 221 / 0.78);
+  --ink-strong: #0B3D2E;   /* headings — pine (11:1 on cream)               */
+  --ink-body:   #34453C;   /* paragraphs (9:1)                              */
+  --ink-muted:  #5A6A5F;   /* meta, captions (5.2:1)                        */
+  --ink-on-inverse:       #F7F3E8;
+  --ink-on-inverse-muted: rgb(247 243 232 / 0.78);
 
   /* ── Lines ── */
-  --line-soft:   rgb(8 58 47 / 0.10);
-  --line-strong: rgb(8 58 47 / 0.18);
+  --line-soft:   rgb(11 61 46 / 0.10);
+  --line-strong: rgb(11 61 46 / 0.20);
+  --line-rule:   rgb(11 61 46 / 0.55);   /* the editorial grid rule */
 
-  /* ── Tints (category tiles, bento cards, hero discs, photo mats) — mostly
-        greens, with khaki for warmth. ── */
-  --tint-pistachio: #E1E9D8;   /* sage        */
-  --tint-almond:    #F3E6C4;   /* khaki       */
-  --tint-honey:     #F6EBCC;   /* khaki light */
-  --tint-sage:      #D8E4DA;   /* jade        */
-  --tint-berry:     #E6EBD3;   /* fern-khaki  */
-  --tint-oat:       #E3EEE8;   /* mint        */
+  /* ── Tints (category tiles, bento cards, hero discs, photo mats) ── */
+  --tint-pistachio: #E2EAD8;   /* sage             */
+  --tint-almond:    #FAEBC0;   /* sunflower        */
+  --tint-honey:     #FCF2D6;   /* sunflower light  */
+  --tint-sage:      #D8E6D8;   /* forest           */
+  --tint-berry:     #EDE6CC;   /* olive            */
+  --tint-oat:       #E4EEE4;   /* mint             */
 
   /* ── Layout ── */
   --container-max:  1440px;
@@ -811,16 +867,16 @@ body {
   --section-gap:    clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem); /* header → body   */
   --grid-gap:       clamp(0.75rem, 0.5rem + 0.8vw, 1.25rem);
 
-  /* ── Radii ── (softened, not pill-round) */
-  --radius-control: 0.75rem;  /* 12px buttons, chips, pills      */
-  --radius-card:    0.875rem; /* 14px product cards, rows        */
-  --radius-tile:    1.125rem; /* 18px promo tiles, bands         */
-  --radius-well:    0.625rem; /* 10px image well inside a card   */
+  /* ── Radii ── (tighter, as in the reference) */
+  --radius-control: 0.5rem;   /*  8px buttons, chips, pills      */
+  --radius-card:    0.75rem;  /* 12px product cards, rows        */
+  --radius-tile:    1rem;     /* 16px promo tiles, bands         */
+  --radius-well:    0.5rem;   /*  8px image well inside a card   */
 
-  /* ── Elevation (green-tinted, never grey) ── */
-  --elev-1: 0 1px 2px rgb(8 58 47 / 0.06), 0 1px 1px rgb(8 58 47 / 0.04);
-  --elev-2: 0 14px 34px -12px rgb(8 58 47 / 0.20), 0 4px 10px -4px rgb(8 58 47 / 0.07);
-  --elev-3: 0 28px 60px -20px rgb(8 58 47 / 0.30);
+  /* ── Elevation (pine-tinted, never grey) ── */
+  --elev-1: 0 1px 2px rgb(11 61 46 / 0.06), 0 1px 1px rgb(11 61 46 / 0.04);
+  --elev-2: 0 14px 34px -12px rgb(11 61 46 / 0.22), 0 4px 10px -4px rgb(11 61 46 / 0.08);
+  --elev-3: 0 28px 60px -20px rgb(11 61 46 / 0.32);
 
   /* ── Storefront type scale ── */
   --type-display: clamp(2rem, 1.25rem + 2.9vw, 3.5rem);   /* section titles */
@@ -831,7 +887,38 @@ body {
   --type-eyebrow: 0.75rem;    /* 12px */
 
   /* ── Focus ── */
-  --focus-color: var(--brand-primary);
+  --focus-color: var(--brand-forest);
+}
+
+/* Dark storefront — the same rhythm, lit from below: evergreen page,
+   slightly lifted sage band, pine bands that glow against it. */
+.dark {
+  --surface-page:    #061D16;
+  --surface-sunken:  #0A251D;
+  --surface-card:    #0D2C23;
+  --surface-well:    #11332A;
+  --surface-inverse: #0B3D2E;
+
+  --ink-strong: #F7F3E8;
+  --ink-body:   #D5D9C8;
+  --ink-muted:  #A9B4A2;
+
+  --line-soft:   rgb(247 243 232 / 0.10);
+  --line-strong: rgb(247 243 232 / 0.18);
+  --line-rule:   rgb(247 243 232 / 0.32);
+
+  --tint-pistachio: #15352A;
+  --tint-almond:    #3A3218;
+  --tint-honey:     #332C17;
+  --tint-sage:      #14362B;
+  --tint-berry:     #2E2A1A;
+  --tint-oat:       #123229;
+
+  --elev-1: 0 1px 2px rgb(0 0 0 / 0.35);
+  --elev-2: 0 14px 34px -12px rgb(0 0 0 / 0.6), 0 4px 10px -4px rgb(0 0 0 / 0.35);
+  --elev-3: 0 28px 60px -20px rgb(0 0 0 / 0.7);
+
+  --focus-color: var(--brand-sun);
 }
 
 
@@ -866,6 +953,53 @@ body {
     color: var(--ink-on-inverse);
     --focus-color: var(--brand-amber);
   }
+  /* The sunflower band from the reference — identical in both themes, so
+     its ink is pinned to the fixed palette too. */
+  .ef-section--sun {
+    --section-bg: var(--surface-sun);
+    background: var(--surface-sun);
+    color: var(--palette-pine);
+    --focus-color: var(--palette-pine);
+  }
+
+  /* Thin pine rules for the editorial grid (reference: the ruled
+     three-up feature row). Put on a grid; cells get the dividers. */
+  .ef-ruled {
+    border-block: 1px solid var(--line-rule);
+  }
+  .ef-ruled > * + * {
+    border-top: 1px solid var(--line-rule);
+  }
+  @media (min-width: 768px) {
+    .ef-ruled > * + * {
+      border-top: 0;
+      border-left: 1px solid var(--line-rule);
+    }
+  }
+
+  /* Scalloped seal badge that frames an icon (reference: the feature
+     icons). Tone with the modifiers; size with width/height utilities. */
+  .ef-seal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    background: var(--seal-bg, var(--palette-pine));
+    color: var(--seal-ink, var(--palette-cream));
+    -webkit-mask: var(--seal-mask) center / contain no-repeat;
+            mask: var(--seal-mask) center / contain no-repeat;
+    --seal-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40'/%3E%3Ccircle cx='89.0' cy='50.0' r='9.5'/%3E%3Ccircle cx='86.0' cy='64.9' r='9.5'/%3E%3Ccircle cx='77.6' cy='77.6' r='9.5'/%3E%3Ccircle cx='64.9' cy='86.0' r='9.5'/%3E%3Ccircle cx='50.0' cy='89.0' r='9.5'/%3E%3Ccircle cx='35.1' cy='86.0' r='9.5'/%3E%3Ccircle cx='22.4' cy='77.6' r='9.5'/%3E%3Ccircle cx='14.0' cy='64.9' r='9.5'/%3E%3Ccircle cx='11.0' cy='50.0' r='9.5'/%3E%3Ccircle cx='14.0' cy='35.1' r='9.5'/%3E%3Ccircle cx='22.4' cy='22.4' r='9.5'/%3E%3Ccircle cx='35.1' cy='14.0' r='9.5'/%3E%3Ccircle cx='50.0' cy='11.0' r='9.5'/%3E%3Ccircle cx='64.9' cy='14.0' r='9.5'/%3E%3Ccircle cx='77.6' cy='22.4' r='9.5'/%3E%3Ccircle cx='86.0' cy='35.1' r='9.5'/%3E%3C/svg%3E");
+  }
+  .ef-seal svg { width: 42%; height: 42%; }
+  .ef-seal--sun    { --seal-bg: var(--palette-sunflower); --seal-ink: var(--palette-pine); }
+  .ef-seal--pine   { --seal-bg: var(--palette-pine);      --seal-ink: var(--palette-cream); }
+  .ef-seal--forest { --seal-bg: var(--palette-forest);    --seal-ink: var(--palette-cream); }
+  .ef-seal--olive  { --seal-bg: var(--palette-olive);     --seal-ink: var(--palette-cream); }
+  .ef-seal--cream  { --seal-bg: var(--palette-cream);     --seal-ink: var(--palette-pine); }
+  /* A pine seal would vanish into a dark page; lift it to forest there. */
+  .dark .ef-seal--pine { --seal-bg: var(--palette-forest); }
 
   /* ── Section heading ───────────────────────────────────────── */
   .ef-eyebrow {
@@ -877,8 +1011,8 @@ body {
     background: var(--surface-card);
     box-shadow: inset 0 0 0 1px var(--line-soft);
     font-size: var(--type-eyebrow);
-    font-weight: var(--weight-medium);
-    letter-spacing: 0;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     line-height: 1;
     text-transform: uppercase;
     color: var(--brand-primary);
@@ -886,12 +1020,19 @@ body {
   }
   .ef-eyebrow::before {
     content: '';
-    width: 0.4rem;
-    height: 0.4rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 9999px;
-    background: var(--brand-primary);
+    background: var(--brand-sun);
+    box-shadow: 0 0 0 1.5px var(--brand-olive);
     flex-shrink: 0;
   }
+  .ef-section--sun .ef-eyebrow {
+    background: rgb(255 255 255 / 0.35);
+    box-shadow: inset 0 0 0 1px rgb(11 61 46 / 0.25);
+    color: var(--palette-pine);
+  }
+  .ef-section--sun .ef-eyebrow::before { background: var(--palette-pine); box-shadow: none; }
   .ef-section--inverse .ef-eyebrow,
   .ef-on-inverse .ef-eyebrow {
     background: rgb(255 255 255 / 0.08);
@@ -901,19 +1042,24 @@ body {
   .ef-section--inverse .ef-eyebrow::before,
   .ef-on-inverse .ef-eyebrow::before { background: var(--brand-amber); }
 
+  /* Section headline — Clash Display, set heavy and in capitals like the
+     reference's "LIVE GREEN, LIVE BETTER." */
   .ef-title {
     margin: 0;
-    font-family: var(--font-body);
+    font-family: var(--font-display);
     font-size: var(--type-display);
-    font-weight: var(--weight-medium);
-    line-height: 1.04;
-    letter-spacing: -0.03em;
+    font-weight: var(--weight-display);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
     color: var(--ink-strong);
     text-wrap: balance;
   }
   /* Mid-size title for sections inside a page that already has a large <h1>
      (product details, reviews) — keeps the heading hierarchy the right way up. */
-  .ef-title--md { font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem); letter-spacing: -0.025em; }
+  .ef-title--md { font-size: clamp(1.5rem, 1.1rem + 1.3vw, 2.125rem); }
+  .ef-section--sun .ef-title { color: var(--palette-pine); }
+  .ef-section--sun .ef-title__accent { color: var(--palette-forest); }
 
   /* The accent half of a two-tone title ("Popular *picks*") */
   .ef-title__accent { color: var(--brand-primary-bright); }
@@ -945,9 +1091,11 @@ body {
     border: 1px solid transparent;
     border-radius: var(--radius-control);
     font-family: var(--font-body);
-    font-size: var(--type-body);
-    font-weight: var(--weight-medium);
+    font-size: 0.875rem;
+    font-weight: 600;
     line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     white-space: nowrap;
     text-decoration: none;
     cursor: pointer;
@@ -965,21 +1113,29 @@ body {
   .ef-btn__arrow { transition: transform var(--duration-normal) var(--ease-out); }
   .ef-btn:hover .ef-btn__arrow { transform: translateX(3px); }
 
-  .ef-btn--sm    { --btn-h: 2.5rem; padding-inline: 1rem; font-size: var(--type-small); }
+  .ef-btn--sm    { --btn-h: 2.5rem; padding-inline: 1rem; font-size: 0.75rem; }
   .ef-btn--lg    { --btn-h: 3.375rem; padding-inline: 1.75rem; }
   .ef-btn--block { width: 100%; }
 
-  .ef-btn--primary       { background: var(--brand-primary); color: var(--brand-white); }
+  /* Pine in light mode, sunflower in dark (the primary flips; --on-brand
+     flips with it). */
+  .ef-btn--primary       { background: var(--brand-primary); color: var(--on-brand); }
   .ef-btn--primary:hover { background: var(--brand-primary-hover); box-shadow: var(--elev-2); }
 
-  .ef-btn--accent       { background: var(--brand-amber); color: var(--brand-primary-deep); }
-  .ef-btn--accent:hover { background: var(--brand-amber-hover); box-shadow: 0 14px 30px -12px rgb(220 178 94 / 0.55); }
+  /* Sunflower "SHOP NOW" — the reference's lead CTA. */
+  .ef-btn--accent       { background: var(--brand-sun); color: var(--brand-sun-ink); }
+  .ef-btn--accent:hover { background: var(--brand-amber-hover); box-shadow: 0 14px 30px -12px rgb(242 201 76 / 0.6); }
+
+  /* Solid pine in both themes — the reference's "LEARN MORE". */
+  .ef-btn--pine       { background: var(--palette-pine); color: var(--palette-cream); }
+  .ef-btn--pine:hover { background: var(--brand-pine-hover); box-shadow: var(--elev-2); }
+  .dark .ef-btn--pine { box-shadow: inset 0 0 0 1px rgb(247 243 232 / 0.22); }
 
   .ef-btn--outline       { background: transparent; border-color: var(--line-strong); color: var(--brand-primary); }
-  .ef-btn--outline:hover { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--brand-white); }
+  .ef-btn--outline:hover { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--on-brand); }
 
-  .ef-btn--light       { background: var(--brand-white); color: var(--brand-primary); }
-  .ef-btn--light:hover { background: var(--brand-cream); }
+  .ef-btn--light       { background: var(--palette-cream); color: var(--palette-pine); }
+  .ef-btn--light:hover { background: var(--brand-white); }
 
   .ef-btn--ghost-light       { background: transparent; border-color: rgb(255 255 255 / 0.35); color: var(--brand-white); }
   .ef-btn--ghost-light:hover { background: rgb(255 255 255 / 0.12); border-color: rgb(255 255 255 / 0.6); }
@@ -1020,7 +1176,7 @@ body {
     transition: background-color var(--duration-fast), color var(--duration-fast),
                 border-color var(--duration-fast), opacity var(--duration-fast);
   }
-  .ef-icon-btn:hover:not(:disabled) { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--brand-white); }
+  .ef-icon-btn:hover:not(:disabled) { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--on-brand); }
   .ef-icon-btn:disabled { opacity: 0.35; cursor: default; }
   .ef-icon-btn svg { width: 1.125rem; height: 1.125rem; }
 
@@ -1037,9 +1193,20 @@ body {
     line-height: 1;
     white-space: nowrap;
   }
-  .ef-badge--sale    { background: var(--brand-amber); color: var(--brand-primary-deep); }
+  .ef-badge--sale    { background: var(--brand-sun); color: var(--brand-sun-ink); }
   .ef-badge--soft    { background: var(--surface-card); color: var(--brand-primary); box-shadow: var(--elev-1); }
-  .ef-badge--inverse { background: var(--brand-primary); color: var(--brand-white); }
+  .ef-badge--inverse { background: var(--brand-primary); color: var(--on-brand); }
+
+  /* ── Status tones ──────────────────────────────────────────── */
+  /* Order / payment / shipment states, drawn from the palette by phase:
+     waiting = sunflower, in progress = olive, on the move = pine,
+     done = forest, problem = danger. Pair with a border + padding. Every
+     colour here is a token that flips, so the tones hold up in dark mode. */
+  .ef-tone--sun    { border-color: rgb(242 201 76 / 0.55); background-color: rgb(242 201 76 / 0.18); color: var(--brand-amber-ink); }
+  .ef-tone--olive  { border-color: color-mix(in srgb, var(--brand-olive) 40%, transparent); background-color: color-mix(in srgb, var(--brand-olive) 12%, transparent); color: var(--brand-olive-deep); }
+  .ef-tone--pine   { border-color: color-mix(in srgb, var(--ink-strong) 28%, transparent); background-color: color-mix(in srgb, var(--ink-strong) 7%, transparent); color: var(--ink-strong); }
+  .ef-tone--forest { border-color: color-mix(in srgb, var(--success) 32%, transparent); background-color: color-mix(in srgb, var(--success) 11%, transparent); color: var(--success); }
+  .ef-tone--danger { border-color: color-mix(in srgb, var(--destructive) 32%, transparent); background-color: color-mix(in srgb, var(--destructive) 10%, transparent); color: var(--destructive); }
 
   /* ── Cards ─────────────────────────────────────────────────── */
   .ef-card {

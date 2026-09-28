@@ -210,8 +210,8 @@ const PageLoader = ({ onReady, onComplete }) => {
             className="loader fixed top-0 left-0 w-full h-svh overflow-hidden z-[120] pointer-events-none"
         >
             <div className="overlay absolute top-0 w-full h-full flex">
-                <div className="block w-full h-full bg-[var(--brand-primary)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
-                <div className="block w-full h-full bg-[var(--brand-primary)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
+                <div className="block w-full h-full bg-[var(--surface-inverse)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
+                <div className="block w-full h-full bg-[var(--surface-inverse)] [clip-path:polygon(0%_0%,100%_0%,100%_100%,0%_100%)]"></div>
             </div>
 
             {/* Centred lockup: mark, wordmark, then the progress rule beneath. */}

@@ -16,11 +16,13 @@ const PROMISES = [
     { label: 'Bulk & gifting orders', image: bilonaGhee },
 ]
 
+// The sunflower band from the brand reference: pine type on sunflower, ruled
+// top and bottom in pine. Pinned to the fixed palette, so it reads the same
+// in light and dark mode.
 const PromiseTicker = () => (
     <section
         aria-label="The Energyflow promise"
-        className="relative overflow-hidden bg-[var(--brand-primary)] py-3 text-[var(--brand-cream)] sm:py-4"
-        style={{ backgroundImage: 'var(--brand-panel-gradient)' }}
+        className="relative overflow-hidden border-y border-[var(--palette-pine)] bg-[var(--surface-sun)] py-3 text-[var(--palette-pine)] sm:py-4"
     >
         <Marquee items={PROMISES} label="Our promises" />
     </section>

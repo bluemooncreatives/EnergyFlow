@@ -67,7 +67,7 @@ const BestsellerCard = ({ product, position }) => {
                 {/* Rank medallion, half on the mat, half on the body */}
                 <span
                     aria-hidden="true"
-                    className="absolute -bottom-5 left-5 flex size-11 items-center justify-center rounded-full bg-brand font-header text-[1.0625rem] text-white ring-4 ring-surface-card"
+                    className="absolute -bottom-5 left-5 flex size-11 items-center justify-center rounded-full bg-brand font-header text-[1.0625rem] text-on-brand ring-4 ring-surface-card"
                 >
                     {rank(position)}
                 </span>

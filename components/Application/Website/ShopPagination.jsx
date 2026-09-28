@@ -60,7 +60,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
     const cell =
         'ef-focus inline-flex h-10 min-w-10 items-center justify-center rounded-full px-2 text-[0.875rem] font-medium tabular-nums transition-colors disabled:pointer-events-none disabled:opacity-35 aria-busy:cursor-progress'
     const idle =
-        'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-brand hover:text-white'
+        'bg-surface-card text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] hover:bg-brand hover:text-on-brand'
 
     return (
         <nav role="navigation" aria-label="Pagination" aria-busy={busy || undefined} className="flex items-center justify-center gap-1.5">
@@ -98,7 +98,7 @@ const ShopPagination = ({ page, totalPages, onPageChange, disabled = false, sibl
                         className={cn(
                             cell,
                             active
-                                ? 'bg-brand text-white hover:bg-brand-hover'
+                                ? 'bg-brand text-on-brand hover:bg-brand-hover'
                                 : idle
                         )}
                     >

@@ -21,9 +21,9 @@ const buttonVariants = cva(
         pill: "rounded-[var(--radius-control)] border-current bg-transparent font-semibold uppercase tracking-[0em]",
         // Storefront CTAs — pill shape and weight match the .ef-btn design-system class.
         brand:
-          "rounded-[var(--radius-control)] bg-[var(--brand-primary)] font-medium text-white hover:bg-[var(--brand-primary-hover)] focus-visible:ring-[var(--brand-primary)]/40",
+          "rounded-[var(--radius-control)] bg-[var(--brand-primary)] font-medium text-on-brand hover:bg-[var(--brand-primary-hover)] focus-visible:ring-[var(--brand-primary)]/40",
         "brand-outline":
-          "rounded-[var(--radius-control)] border border-[var(--line-strong)] bg-transparent font-medium text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-white focus-visible:ring-[var(--brand-primary)]/40",
+          "rounded-[var(--radius-control)] border border-[var(--line-strong)] bg-transparent font-medium text-[var(--brand-primary)] hover:border-[var(--brand-primary)] hover:bg-[var(--brand-primary)] hover:text-on-brand focus-visible:ring-[var(--brand-primary)]/40",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

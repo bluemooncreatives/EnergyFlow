@@ -198,7 +198,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                                 {/* Header — matches the branded sheet chrome used across the site */}
                                 <SheetHeader className="flex-shrink-0 gap-0 border-b border-border/60 px-5 py-4 pr-12">
                                     <div className="flex items-center gap-3">
-                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--brand-cream)]/60 text-[var(--brand-primary)]">
+                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--surface-well)] text-[var(--brand-primary)]">
                                             <SlidersHorizontal className="size-4" strokeWidth={1.75} />
                                         </span>
                                         <div className="min-w-0">
