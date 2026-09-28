@@ -1,8 +1,8 @@
 /* ================================================================
    AUTH PAGES — /auth/login, /register, /reset-password, /verify-email
    Built from the newsletter popup's parts (design-system.css §24): a
-   pine art panel (dotted field, orbit rings, floating seals, the rotating
-   seal riding the seam) beside a cream form body. The two halves take the
+   pine art panel (dotted field, orbit rings, floating seals) beside a
+   cream form body. The two halves take the
    popup's .ef-nl--pine / .ef-nl--cream themes, so fields, buttons, titles
    and focus rings match the popup exactly, in both site themes.
    React: components/Application/Auth
@@ -22,7 +22,7 @@
 
   /* ── Card ──────────────────────────────────────────────────── */
   .ef-auth-card {
-    --auth-band: 8.5rem;       /* mobile art band height */
+    --auth-band: 7rem;         /* mobile art band height */
     --auth-split: 46%;         /* desktop art panel width */
     position: relative;
     display: grid;
@@ -100,16 +100,6 @@
   }
   .ef-auth-back:hover svg { transform: translateX(-3px); }
 
-  /* ── Seal on the seam ──────────────────────────────────────── */
-  .ef-auth-seal {
-    --nl-badge-size: 4.75rem;
-    position: absolute;
-    z-index: 3;
-    top: calc(var(--auth-band) - var(--nl-badge-size) * 0.5);
-    right: 1rem;
-    pointer-events: none;
-  }
-
   /* ── Body ──────────────────────────────────────────────────── */
   .ef-auth-body {
     position: relative;
@@ -122,8 +112,6 @@
   .ef-auth-step { display: flex; flex-direction: column; gap: 1.5rem; }
 
   .ef-auth-head { display: flex; flex-direction: column; gap: 0.875rem; }
-  /* The first line stays clear of the corner seal on phones. */
-  .ef-auth-head > :first-child { margin-right: 5rem; }
   .ef-auth-head .ef-nl-title { font-size: clamp(1.875rem, 1.4rem + 1.9vw, 2.625rem); }
   .ef-auth-head .ef-nl-lead { font-size: var(--type-body); }
   .ef-auth-head strong { color: var(--nl-ink); font-weight: 600; overflow-wrap: anywhere; }
@@ -325,15 +313,7 @@
     .ef-auth-art__foot .ef-nl-perks { gap: 0.5rem; }
     .ef-auth-art__foot .ef-nl-perks li { font-size: var(--type-small); }
 
-    .ef-auth-seal {
-      --nl-badge-size: 6.5rem;
-      top: 6rem;   /* below the art panel's "Back to store" row */
-      right: auto;
-      left: calc(var(--auth-split) - var(--nl-badge-size) * 0.5);
-    }
-
-    .ef-auth-body { padding: 3rem 3rem 2.75rem 4.75rem; }
-    .ef-auth-head > :first-child { margin-right: 0; }
+    .ef-auth-body { padding: 3rem clamp(2.5rem, 4vw, 3.5rem); }
   }
 }
 

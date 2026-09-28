@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
-import { Loader2, MailCheck, X } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import AuthShell from '@/components/Application/Auth/AuthShell'
 import { AuthAction, AuthHeader, AuthStep } from '@/components/Application/Auth/AuthParts'
@@ -14,7 +14,6 @@ const ART = {
     lead: 'One click on the link we emailed confirms the address is yours.',
     perks: ['Keeps your account yours', 'Order updates reach the right inbox'],
 }
-const SEAL = { ring: 'Verify email ✦ Welcome aboard ✦ ', icon: MailCheck }
 
 const STATES = {
     loading: {
@@ -79,7 +78,7 @@ const EmailVerification = () => {
     const copy = STATES[status]
 
     return (
-        <AuthShell art={ART} seal={SEAL}>
+        <AuthShell art={ART}>
             <AuthStep key={status}>
                 <div className="ef-auth-status" role="status" aria-live="polite">
                     <div data-auth-item><StatusIcon status={status} /></div>

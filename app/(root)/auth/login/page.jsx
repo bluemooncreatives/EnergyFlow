@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useDispatch } from 'react-redux'
 import { signIn } from 'next-auth/react'
-import { LockKeyhole, Mail, ShieldCheck } from 'lucide-react'
+import { LockKeyhole, Mail } from 'lucide-react'
 import { zSchema } from '@/lib/zodSchema'
 import { Form } from "@/components/ui/form"
 import { USER_DASHBOARD, WEBSITE_REGISTER, WEBSITE_RESETPASSWORD } from '@/routes/WebsiteRoute'
@@ -25,7 +25,6 @@ const ART = {
     lead: 'Sign in to review orders, manage your profile and keep everything with Energyflow in one place.',
     perks: ['Sign-ins confirmed by one-time code', 'Every order in one place', 'Faster checkout'],
 }
-const SEAL = { ring: 'Secure sign in ✦ One-time code ✦ ', icon: ShieldCheck }
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -93,7 +92,7 @@ const LoginPage = () => {
     }
 
     return (
-        <AuthShell art={ART} seal={SEAL}>
+        <AuthShell art={ART}>
             {!otpEmail ? (
                 <AuthStep key="credentials">
                     <AuthHeader

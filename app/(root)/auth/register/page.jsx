@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import axios from 'axios'
 import Link from 'next/link'
-import { LockKeyhole, Mail, Sprout, User } from 'lucide-react'
+import { LockKeyhole, Mail, User } from 'lucide-react'
 import { zSchema } from '@/lib/zodSchema'
 import { Form } from "@/components/ui/form"
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
@@ -20,7 +20,6 @@ const ART = {
     lead: 'Build your Energyflow profile once for faster checkout, order visibility and recommendations made for your taste.',
     perks: ['Faster checkout', 'Order visibility from cart to door', 'Verified by email'],
 }
-const SEAL = { ring: 'Join Energyflow ✦ Pure nutrition ✦ ', icon: Sprout }
 
 const RegisterPage = () => {
     const [loading, setLoading] = useState(false)
@@ -67,7 +66,7 @@ const RegisterPage = () => {
     }
 
     return (
-        <AuthShell art={ART} seal={SEAL}>
+        <AuthShell art={ART}>
             {!registered ? (
                 <AuthStep key="form">
                     <AuthHeader

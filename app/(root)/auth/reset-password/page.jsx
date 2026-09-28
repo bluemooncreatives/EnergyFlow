@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import Link from 'next/link'
-import { KeyRound, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { zSchema } from '@/lib/zodSchema'
 import { Form } from "@/components/ui/form"
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
@@ -20,7 +20,6 @@ const ART = {
     lead: 'We’ll email a one-time code so only you can set a new password.',
     perks: ['Code valid for 10 minutes', 'Sent to your account email', 'A new password in three steps'],
 }
-const SEAL = { ring: 'Account security ✦ One-time code ✦ ', icon: KeyRound }
 const STEPS = ['Email', 'Code', 'New password']
 
 const ResetPassword = () => {
@@ -66,7 +65,7 @@ const ResetPassword = () => {
     const progress = <AuthProgress steps={STEPS} current={step} />
 
     return (
-        <AuthShell art={ART} seal={SEAL}>
+        <AuthShell art={ART}>
             {step === 0 && (
                 <AuthStep key="email">
                     <AuthHeader
