@@ -46,7 +46,7 @@ const TickerItem = ({ item }) => (
                 alt=""
                 sizes="96px"
                 draggable={false}
-                className="mx-5 h-10 w-auto shrink-0 drop-shadow-[0_6px_10px_rgb(0_0_0/0.25)] sm:mx-7 sm:h-14"
+                className="mx-5 h-10 w-auto shrink-0 sm:mx-7 sm:h-14"
             />
         ) : (
             <span aria-hidden="true" className="mx-5 size-2 shrink-0 rounded-full bg-current sm:mx-7" />
