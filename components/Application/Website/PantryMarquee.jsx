@@ -41,7 +41,7 @@ const PantryMarquee = ({ availability = null, tone = 'sunken' }) => {
     }))
 
     return (
-        <Section tone={tone} tight bleed aria-labelledby="pantry-title" className="overflow-hidden">
+        <Section tone={tone} bleed aria-labelledby="pantry-title" className="overflow-hidden py-[clamp(1.75rem,1.25rem+2vw,3rem)]">
             <div className="ef-container mb-2 flex items-center justify-between gap-4">
                 <h2 id="pantry-title" className="ef-eyebrow">Straight from our pantry</h2>
 
@@ -60,7 +60,7 @@ const PantryMarquee = ({ availability = null, tone = 'sunken' }) => {
                 )}
             </div>
 
-            <Marquee variant="showcase" items={items} label="Shop by product" speed={1.2} paused={paused} />
+            <Marquee variant="showcase" items={items} label="Shop by product" speed={1} paused={paused} />
         </Section>
     )
 }

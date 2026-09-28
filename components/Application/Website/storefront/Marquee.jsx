@@ -58,7 +58,7 @@ const Sparkle = () => (
     <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="mx-[clamp(1.25rem,3vw,3.5rem)] size-[clamp(1.25rem,0.9rem+1.2vw,2.25rem)] shrink-0 text-amber"
+        className="mx-[clamp(1rem,2vw,2.25rem)] size-[clamp(0.875rem,0.7rem+0.5vw,1.25rem)] shrink-0 text-amber"
     >
         <path fill="currentColor" d="M12 0c.9 6.4 5.6 11.1 12 12-6.4.9-11.1 5.6-12 12-.9-6.4-5.6-11.1-12-12C6.4 11.1 11.1 6.4 12 0Z" />
     </svg>
@@ -70,22 +70,22 @@ const ShowcaseItem = ({ item, index }) => (
         <Link
             href={item.href}
             draggable={false}
-            className="ef-focus group/item flex items-center gap-[clamp(0.75rem,1.5vw,1.75rem)] rounded-[var(--radius-card)] px-2"
+            className="ef-focus group/item flex items-center gap-[clamp(0.5rem,1vw,1rem)] rounded-[var(--radius-card)] px-2"
         >
             <Image
                 src={item.image}
                 alt=""
-                sizes="(max-width: 640px) 160px, 280px"
+                sizes="(max-width: 640px) 96px, 160px"
                 draggable={false}
                 style={{ '--tilt': `${TILTS[index % TILTS.length]}deg` }}
-                className="h-[clamp(4.5rem,2.5rem+7vw,9.5rem)] w-auto shrink-0 rotate-(--tilt) drop-shadow-[0_18px_22px_rgb(8_58_47/0.18)] transition-transform duration-500 ease-[var(--ease-spring)] group-hover/item:rotate-0 group-hover/item:scale-[1.08] motion-reduce:transition-none"
+                className="h-[clamp(3rem,2rem+3vw,5rem)] w-auto shrink-0 rotate-(--tilt) transition-transform duration-500 ease-[var(--ease-spring)] group-hover/item:rotate-0 group-hover/item:scale-[1.08] motion-reduce:transition-none"
             />
-            <span className="whitespace-nowrap text-[clamp(2.25rem,1.2rem+4.2vw,6rem)] font-medium leading-none tracking-[-0.04em] text-ink-strong transition-colors duration-300 group-hover/item:text-brand">
+            <span className="whitespace-nowrap text-[clamp(1.5rem,1rem+1.8vw,3rem)] font-medium leading-none tracking-[-0.035em] text-ink-strong transition-colors duration-300 group-hover/item:text-brand">
                 {item.label}
             </span>
             <span
                 aria-hidden="true"
-                className="flex size-[clamp(2.25rem,1.6rem+1.6vw,3.25rem)] shrink-0 -translate-x-2 items-center justify-center rounded-full bg-brand text-white opacity-0 transition duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 motion-reduce:transition-none"
+                className="flex size-[clamp(1.75rem,1.4rem+0.8vw,2.25rem)] shrink-0 -translate-x-2 items-center justify-center rounded-full bg-brand text-white opacity-0 transition duration-300 group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-visible/item:translate-x-0 group-focus-visible/item:opacity-100 motion-reduce:transition-none"
             >
                 <ArrowUpRight className="size-1/2" />
             </span>
@@ -321,7 +321,7 @@ const Marquee = ({
             ref={viewportRef}
             className={cn(
                 'relative',
-                showcase ? 'py-6' : 'py-1',
+                showcase ? 'py-3' : 'py-1',
                 reduced ? 'no-scrollbar overflow-x-auto' : 'touch-pan-y overflow-hidden',
                 !reduced && showcase && 'cursor-grab data-dragging:cursor-grabbing',
                 className
