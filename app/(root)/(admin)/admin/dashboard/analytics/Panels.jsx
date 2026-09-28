@@ -25,8 +25,9 @@ import {
     Users,
     Wallet,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, initialsOf } from '@/lib/utils'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
+import cloudinaryLoader from '@/lib/cloudinaryLoader'
 import {
     ADMIN_CONTACTS_SHOW,
     ADMIN_COUPON_SHOW,
@@ -249,10 +250,10 @@ export const PaymentMix = ({ paymentMethods = [], paymentStatuses = [] }) => {
                 </table>
             ) : (
                 <div className="flex flex-col items-center gap-4 sm:flex-row">
-                    <div className="relative size-40 shrink-0" role="img" aria-label={methods.map((m) => `${PAYMENT_METHOD_LABEL[m.method]} ${pct(share(m.sales, total), 0)}`).join(', ')}>
+                    <div className="relative size-40 shrink-0 animate-in fade-in zoom-in-95 duration-500 motion-reduce:animate-none" role="img" aria-label={methods.map((m) => `${PAYMENT_METHOD_LABEL[m.method]} ${pct(share(m.sales, total), 0)}`).join(', ')}>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
-                                <Pie data={methods} dataKey="sales" nameKey="method" innerRadius="64%" outerRadius="100%" paddingAngle={methods.length > 1 ? 2 : 0} stroke="var(--card)" strokeWidth={2} isAnimationActive animationDuration={700}>
+                                <Pie data={methods} dataKey="sales" nameKey="method" innerRadius="64%" outerRadius="100%" paddingAngle={methods.length > 1 ? 2 : 0} stroke="var(--card)" strokeWidth={2} isAnimationActive={false}>
                                     {methods.map((m) => <Cell key={m.method} fill={colorOf(m.method)} />)}
                                 </Pie>
                                 <Tooltip content={({ active, payload }) => active && payload?.length ? (
@@ -375,7 +376,7 @@ export const TopProducts = ({ items = [], totalSales = 0 }) => {
                         <li key={p.id} className="flex items-center gap-3">
                             <span className="w-4 shrink-0 text-center text-xs font-semibold tabular-nums text-muted-foreground">{i + 1}</span>
                             <span className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
-                                <Image src={p.image || imgPlaceholder.src} alt="" fill sizes="40px" className="object-cover" />
+                                <Image src={p.image || imgPlaceholder.src} alt="" fill sizes="40px" loader={cloudinaryLoader} className="object-cover" />
                             </span>
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between gap-2">
@@ -488,7 +489,7 @@ export const CustomerInsights = ({ customerMix, topCustomers = [], kpis, audienc
                         {topCustomers.map((c) => (
                             <li key={c.key} className="flex items-center gap-3 py-2">
                                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-[0.6875rem] font-semibold text-primary">
-                                    {String(c.name || '?').trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('')}
+                                    {initialsOf(c.name)}
                                 </span>
                                 <div className="min-w-0 flex-1">
                                     <p className="truncate text-sm font-medium">{c.name || 'Guest'} {c.returning && <span className="ml-1 rounded-full border px-1.5 text-[0.625rem] ef-tone--sun">Returning</span>}</p>

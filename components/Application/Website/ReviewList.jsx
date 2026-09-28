@@ -4,20 +4,12 @@ import { useState } from 'react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Star } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, initialsOf } from '@/lib/utils'
 
 dayjs.extend(relativeTime)
 
 // Past this many characters the review body folds behind "Read more".
 const FOLD_AT = 280
-
-const initialsOf = (name) =>
-    String(name || '')
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() || '')
-        .join('') || '?'
 
 // One shopper review. Deleted accounts fall back to "Energyflow shopper" and
 // initials; missing dates and ratings degrade instead of rendering "NaN".

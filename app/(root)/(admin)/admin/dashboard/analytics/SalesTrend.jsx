@@ -101,7 +101,7 @@ const SalesTrend = ({ data, kpis }) => {
                             <tr>
                                 <th className="px-3 py-2 font-semibold">{granularity === 'hour' ? 'Hour' : granularity === 'month' ? 'Month' : granularity === 'week' ? 'Week' : 'Day'}</th>
                                 <th className="px-3 py-2 text-right font-semibold">{metric.label}</th>
-                                {showCompare || metric.compare ? <th className="px-3 py-2 text-right font-semibold">Previous</th> : null}
+                                {metric.compare ? <th className="px-3 py-2 text-right font-semibold">Previous</th> : null}
                             </tr>
                         </thead>
                         <tbody>
@@ -116,7 +116,7 @@ const SalesTrend = ({ data, kpis }) => {
                     </table>
                 </div>
             ) : (
-                <div className="h-[18rem] w-full" role="img" aria-label={`${metric.label} ${range.label.toLowerCase()}, total ${metric.format(total)}. Switch to the table view for every value.`}>
+                <div className="h-[18rem] w-full animate-in fade-in slide-in-from-bottom-2 duration-500 motion-reduce:animate-none" role="img" aria-label={`${metric.label} ${range.label.toLowerCase()}, total ${metric.format(total)}. Switch to the table view for every value.`}>
                     <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart data={timeline} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
                             <defs>
@@ -155,7 +155,7 @@ const SalesTrend = ({ data, kpis }) => {
                                 fill="url(#trend-fill)"
                                 dot={timeline.length <= 31 ? { r: 2.5, fill: 'var(--viz-1)', strokeWidth: 0 } : false}
                                 activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--card)', fill: 'var(--viz-1)' }}
-                                animationDuration={700}
+                                isAnimationActive={false}
                             />
                         </ComposedChart>
                     </ResponsiveContainer>

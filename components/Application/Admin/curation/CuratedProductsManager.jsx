@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { showToast } from '@/lib/showToast'
 import { cn } from '@/lib/utils'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
+import cloudinaryLoader from '@/lib/cloudinaryLoader'
 import { ADMIN_DASHBOARD } from '@/routes/AdminPanelRoute'
 import { WEBSITE_PRODUCT_DETAILS } from '@/routes/WebsiteRoute'
 import useReorderList from './useReorderList'
@@ -45,7 +46,7 @@ const Stat = ({ label, value, hint, tone }) => (
 
 const Thumb = ({ src, alt, className }) => (
     <span className={cn('relative block shrink-0 overflow-hidden rounded-lg bg-muted', className)}>
-        <Image src={src || imgPlaceholder.src} alt={alt} fill sizes="96px" className="object-cover" />
+        <Image src={src || imgPlaceholder.src} alt={alt} fill sizes="160px" loader={cloudinaryLoader} className="object-cover" />
     </span>
 )
 

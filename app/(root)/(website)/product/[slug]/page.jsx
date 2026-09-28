@@ -1,4 +1,4 @@
-import { notFound, permanentRedirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import ProductDetails from './ProductDetails'
 import { getProductDetailsBySlug, getRelatedProducts } from '@/lib/services/productService'
 import { decodeHTMLDeep, htmlToText, pickRandom } from '@/lib/utils'
@@ -15,13 +15,6 @@ import {
     toMetaDescription,
 } from '@/lib/seo'
 import { WEBSITE_CATEGORY, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
-
-// Old slug → new slug for products renamed for search. Consulted only when
-// the old slug no longer matches a product, so an entry can be added before
-// or after the rename in the admin without breaking either URL.
-const RENAMED_PRODUCT_SLUGS = {
-    cheery: 'candied-cherries',
-}
 
 // Catalogue names are typed by hand ("CHIA  SEED", " Millets & Grains"), so
 // every name that reaches the page, its head and its schema goes through the
@@ -165,21 +158,12 @@ const ProductPage = async ({ params, searchParams }) => {
     const { slug } = await params
     const { size } = await searchParams
 
-    // Slugs are stored lower-case; send mixed-case links to the real URL
-    // instead of a 404.
-    if (slug !== slug.toLowerCase()) {
-        permanentRedirect(`${WEBSITE_PRODUCT_DETAILS(slug.toLowerCase())}${size ? `?size=${encodeURIComponent(size)}` : ''}`)
-    }
 
     const productData = await getProductDetailsBySlug(slug, size)
 
-    if (!productData) {
-        // A renamed product keeps its old links and rankings: once the old
-        // slug stops resolving, send it permanently to the new one.
-        const renamedTo = RENAMED_PRODUCT_SLUGS[slug]
-        if (renamedTo) permanentRedirect(`${WEBSITE_PRODUCT_DETAILS(renamedTo)}${size ? `?size=${encodeURIComponent(size)}` : ''}`)
-        notFound()
-    }
+    // layout.jsx has already turned missing, renamed and mixed-case slugs
+    // into a real 404 / 308; this only covers a product deleted in between.
+    if (!productData) notFound()
 
     const product = normalizeProduct(productData.product)
 

@@ -30,7 +30,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { zSchema } from '@/lib/zodSchema'
 import { showToast } from '@/lib/showToast'
-import { cn } from '@/lib/utils'
+import { cn, initialsOf } from '@/lib/utils'
 import { ADMIN_DASHBOARD, ADMIN_TESTIMONIAL_SHOW } from '@/routes/AdminPanelRoute'
 
 const breadcrumbData = [
@@ -48,9 +48,6 @@ const FILTERS = [
 ]
 
 const errorMessage = (error) => error?.response?.data?.message || error?.message || 'Something went wrong.'
-
-const initialsOf = (name) =>
-  String(name || '?').trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() || '').join('') || '?'
 
 // 1–5 stars as a radio group, with hover preview and the rating's word.
 const StarPicker = ({ value, onChange }) => {
