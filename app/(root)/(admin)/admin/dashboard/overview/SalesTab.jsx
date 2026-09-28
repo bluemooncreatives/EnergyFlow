@@ -49,13 +49,13 @@ const IconBadge = ({ icon: Icon, bg = 'var(--chart-1)', fg = 'var(--primary-fore
 
 // card header row
 const PanelHeader = ({ icon, iconBg, iconFg, title, description, action }) => (
-    <CardHeader className="pb-2">
+    <CardHeader className="px-4 py-3 sm:px-5 pb-3">
         <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
                 <IconBadge icon={icon} bg={iconBg} fg={iconFg} />
                 <div>
                     <CardTitle className="text-sm font-semibold">{title}</CardTitle>
-                    {description && <CardDescription className="mt-0.5 text-xs">{description}</CardDescription>}
+                    {description && <CardDescription className="mt-0.5 text-xs text-muted-foreground">{description}</CardDescription>}
                 </div>
             </div>
             {action}
@@ -80,7 +80,7 @@ const RevenueTrendCard = ({ monthlySales, activeYear, activeMonth }) => {
     const total = useMemo(() => data.reduce((s, d) => s + d.amount, 0), [data])
 
     return (
-        <Card className="lg:col-span-2">
+        <Card className="rounded-xl lg:col-span-2">
             <PanelHeader
                 icon={TrendingUp}
                 iconBg="var(--chart-1)"
@@ -93,7 +93,7 @@ const RevenueTrendCard = ({ monthlySales, activeYear, activeMonth }) => {
                     </Button>
                 }
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <ChartContainer config={chartConfigRevenue} className="h-[240px] w-full">
                     <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
                         <defs>
@@ -142,7 +142,7 @@ const MonthlyOrdersCard = ({ monthlySales, activeMonth }) => {
     }), [monthlySales, activeMonth])
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={ShoppingBag}
                 iconBg="var(--chart-3)"
@@ -150,7 +150,7 @@ const MonthlyOrdersCard = ({ monthlySales, activeMonth }) => {
                 title="Monthly Order Volume"
                 description="Count of orders placed each month"
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <ChartContainer config={chartConfigOrders} className="h-[200px] w-full">
                     <BarChart data={data} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
                         <CartesianGrid vertical={false} stroke="var(--border)" />
@@ -183,7 +183,7 @@ const AovTrendCard = ({ monthlySales }) => {
     }), [monthlySales])
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={Receipt}
                 iconBg="var(--chart-2)"
@@ -191,7 +191,7 @@ const AovTrendCard = ({ monthlySales }) => {
                 title="Avg. Order Value"
                 description="Monthly average order value trend"
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <ChartContainer config={chartConfigAov} className="h-[200px] w-full">
                     <LineChart data={data} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
                         <CartesianGrid vertical={false} stroke="var(--border)" />
@@ -227,7 +227,7 @@ const SalesRadarCard = ({ monthlySales }) => {
     }, [monthlySales])
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={BarChart3}
                 iconBg="var(--chart-4)"
@@ -235,7 +235,7 @@ const SalesRadarCard = ({ monthlySales }) => {
                 title="Quarterly Sales Radar"
                 description="Revenue distribution across quarters"
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <ChartContainer config={chartConfigRadar} className="h-[200px] w-full">
                     <RadarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
                         <PolarGrid stroke="var(--border)" />
