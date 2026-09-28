@@ -64,45 +64,56 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
     const rootRef = useRef(null)
     const categories = categoryLinks.length ? categoryLinks : fallbackCategoryLinks
 
-    useGSAP(() => {
-        const reveal = (selector, vars = {}) =>
-            gsap.from(selector, {
-                autoAlpha: 0,
-                y: 40,
-                duration: 0.9,
-                ease: 'power4.out',
-                scrollTrigger: { trigger: selector, start: 'top 90%', once: true },
-                ...vars,
-            })
+    // The footer lives in the layout, so it mounts once and stays mounted
+    // across client navigations. ScrollTrigger start positions measured on
+    // the first page are wrong on every page after it (a trigger measured
+    // at 8000px on the home page is never reached on a 4000px product page),
+    // and they also go stale as lazy sections above load — which left the
+    // footer stuck at its hidden starting state. An IntersectionObserver
+    // asks the browser "is it on screen now?" instead of comparing against a
+    // stored offset, so it is right on any page, at any height.
+    useGSAP((context, contextSafe) => {
+        const root = rootRef.current
+        if (!root || typeof IntersectionObserver === 'undefined') return
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-        // Top row — caption, big email, CTA card
-        reveal('.footer-caption')
-        reveal('.footer-email', { y: 60, duration: 1 })
-        reveal('.footer-cta', { x: 60, y: 0, duration: 1, ease: 'power3.out' })
+        const groups = [
+            // Top row — caption, big email, CTA card
+            { trigger: '.footer-caption', from: { y: 40 }, to: { duration: 0.9, ease: 'power4.out' }, margin: '-10%' },
+            { trigger: '.footer-email', from: { y: 60 }, to: { duration: 1, ease: 'power4.out' }, margin: '-10%' },
+            { trigger: '.footer-cta', from: { x: 60 }, to: { duration: 1, ease: 'power3.out' }, margin: '-10%' },
+            // Middle row — link columns / office reveal with a stagger
+            { trigger: '.footer-cols', targets: '.footer-col', from: { y: 50 }, to: { duration: 0.8, ease: 'power3.out', stagger: 0.12 }, margin: '-15%' },
+        ]
+            .map((group) => ({
+                ...group,
+                el: root.querySelector(group.trigger),
+                targets: gsap.utils.toArray(group.targets || group.trigger, root),
+            }))
+            .filter((group) => group.el && group.targets.length)
 
-        // Middle row — link columns / office reveal with a stagger
-        gsap.from('.footer-col', {
-            autoAlpha: 0,
-            y: 50,
-            duration: 0.8,
-            ease: 'power3.out',
-            stagger: 0.12,
-            scrollTrigger: { trigger: '.footer-cols', start: 'top 85%', once: true },
+        // Content is visible by default; only hide it once JS is ready to
+        // bring it back.
+        groups.forEach(({ targets, from }) => gsap.set(targets, { autoAlpha: 0, ...from }))
+
+        const reveal = contextSafe(({ targets, to }) =>
+            gsap.to(targets, { autoAlpha: 1, x: 0, y: 0, overwrite: true, ...to })
+        )
+
+        const observers = groups.map((group) => {
+            const observer = new IntersectionObserver(([entry]) => {
+                // Already on screen, or already scrolled past (restored
+                // scroll, End key, a jump to the page bottom).
+                if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+                    observer.disconnect()
+                    reveal(group)
+                }
+            }, { rootMargin: `0px 0px ${group.margin} 0px` })
+            observer.observe(group.el)
+            return observer
         })
 
-        // The footer sits below several lazily-hydrated sections whose real
-        // height isn't known yet when these triggers are first measured, so
-        // their start positions go stale once that content mounts/loads —
-        // leaving the footer stuck at its hidden (autoAlpha: 0) starting
-        // state. Recompute once everything above has settled.
-        const lateRefresh = () => ScrollTrigger.refresh()
-        const timer = setTimeout(lateRefresh, 300)
-        window.addEventListener('load', lateRefresh)
-
-        return () => {
-            clearTimeout(timer)
-            window.removeEventListener('load', lateRefresh)
-        }
+        return () => observers.forEach((observer) => observer.disconnect())
     }, { scope: rootRef })
 
     return (
