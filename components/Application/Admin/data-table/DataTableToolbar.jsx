@@ -1,55 +1,61 @@
 'use client'
-import { Cross2Icon } from '@radix-ui/react-icons'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import DataTableViewOptions from './DataTableViewOptions'
+
+import { useEffect, useRef, useState } from 'react'
+import { Loader2, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const DataTableToolbar = ({
-    table,
-    searchPlaceholder = 'Filter...',
-    searchKey,
-    className,
-}) => {
-    const isFiltered =
-        table.getState().columnFilters?.length > 0 || table.getState().globalFilter
+const DEBOUNCE_MS = 350
+
+// Table search. Typing is local and instant; the table (and the server
+// query) only updates once typing pauses, so each keystroke is not a
+// request. Esc clears. A spinner shows while results refresh.
+const DataTableToolbar = ({ table, searchPlaceholder = 'Search…', busy = false, className }) => {
+    const applied = table.getState().globalFilter ?? ''
+    const [value, setValue] = useState(applied)
+    const timer = useRef(null)
+
+    // Follow resets from outside (e.g. "Clear search" in the empty state).
+    useEffect(() => { setValue(applied) }, [applied])
+    useEffect(() => () => clearTimeout(timer.current), [])
+
+    const update = (next) => {
+        setValue(next)
+        clearTimeout(timer.current)
+        timer.current = setTimeout(() => table.setGlobalFilter(next.trim()), DEBOUNCE_MS)
+    }
+
+    const clear = () => {
+        clearTimeout(timer.current)
+        setValue('')
+        table.setGlobalFilter('')
+    }
 
     return (
-        <div className={cn("flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between", className)}>
-            <div className="flex w-full flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:space-x-2">
-                {searchKey ? (
-                    <Input
-                        placeholder={searchPlaceholder}
-                        value={(table.getColumn(searchKey)?.getFilterValue() ?? '')}
-                        onChange={(event) =>
-                            table.getColumn(searchKey)?.setFilterValue(event.target.value)
-                        }
-                        className="h-9 w-full sm:w-[220px] lg:w-[280px]"
-                    />
-                ) : (
-                    <Input
-                        placeholder={searchPlaceholder}
-                        value={table.getState().globalFilter ?? ''}
-                        onChange={(event) => table.setGlobalFilter(event.target.value)}
-                        className="h-9 w-full sm:w-[220px] lg:w-[280px]"
-                    />
-                )}
-                {isFiltered && (
-                    <Button
-                        variant="ghost"
-                        size="lg"
-                        onClick={() => {
-                            table.resetColumnFilters?.()
-                            table.setGlobalFilter?.('')
-                        }}
-                        className="h-9 px-2 lg:px-3"
+        <div className={cn('relative w-full sm:max-w-sm', className)}>
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <input
+                type="search"
+                value={value}
+                onChange={(event) => update(event.target.value)}
+                onKeyDown={(event) => { if (event.key === 'Escape' && value) { event.preventDefault(); clear() } }}
+                placeholder={searchPlaceholder}
+                aria-label={searchPlaceholder}
+                className="h-9 w-full rounded-lg border border-input bg-background pl-9 pr-9 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:hidden"
+            />
+            <span className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center">
+                {busy && value ? (
+                    <Loader2 className="mr-1.5 size-4 animate-spin text-muted-foreground" aria-label="Searching" />
+                ) : value ? (
+                    <button
+                        type="button"
+                        onClick={clear}
+                        aria-label="Clear search"
+                        className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground"
                     >
-                        Reset
-                        <Cross2Icon className="ms-2 h-4 w-4" />
-                    </Button>
-                )}
-            </div>
-            <DataTableViewOptions table={table} />
+                        <X className="size-3.5" aria-hidden="true" />
+                    </button>
+                ) : null}
+            </span>
         </div>
     )
 }

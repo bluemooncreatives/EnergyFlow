@@ -20,7 +20,8 @@ const useDeleteMutation = (queryKey, deleteEndpoint) => {
         },
         onSuccess: (data) => {
             showToast('success', data.message)
-            queryClient.invalidateQueries([queryKey])
+            // v5 takes a filters object; a bare array refetched every query.
+            queryClient.invalidateQueries({ queryKey: [queryKey] })
         },
         onError: (error) => {
             showToast('error', error.message)
