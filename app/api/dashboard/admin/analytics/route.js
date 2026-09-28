@@ -17,8 +17,11 @@ export async function GET(request) {
         const params = request.nextUrl.searchParams
         const report = await getStoreAnalytics({
             range: params.get('range') || '30d',
-            from: params.get('from'),
-            to: params.get('to'),
+            from: params.get('from') || undefined,
+            to: params.get('to') || undefined,
+            year: params.get('year') || undefined,
+            month: params.get('month') || undefined,
+            date: params.get('date') || undefined,
         })
 
         return response(true, 200, 'Analytics report.', report, {
