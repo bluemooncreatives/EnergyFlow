@@ -94,8 +94,10 @@ const ProductCard = ({
         setImgIndex((i) => (i + dir + images.length) % images.length)
     }
 
-    const addLabel = canAdd ? `Add ${name} to cart` : `${name} is currently unavailable`
-    const buyLabel = canAdd ? `Buy ${name} now` : `${name} is currently unavailable`
+    // Each name starts with the button's visible text so voice-control users
+    // can say what they see (WCAG 2.5.3, label in name).
+    const addLabel = canAdd ? `Add to cart: ${name}` : `Unavailable: ${name}`
+    const buyLabel = canAdd ? `Buy now: ${name}` : `Unavailable: ${name}`
 
     return (
         <article className={cn('ef-card ef-card--interactive group/card @container/card h-full', className)}>

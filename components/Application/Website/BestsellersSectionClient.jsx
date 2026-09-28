@@ -15,6 +15,7 @@ import RailControls from './storefront/RailControls'
 import { Price } from './storefront/ProductCard'
 import { StoreLink } from './storefront/StoreButton'
 import { discountPercent } from './storefront/format'
+import { formatProductName } from '@/lib/seo'
 
 // Harvest tints for the photo mats, cycled card by card.
 const MATS = [
@@ -33,7 +34,7 @@ const rank = (n) => String(n).padStart(2, '0')
 // the actions sit below a notched, perforated line like a shop tag.
 const BestsellerCard = ({ product, position }) => {
     const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
-    const name = product.name || 'Product'
+    const name = formatProductName(product.name) || 'Product'
     const href = WEBSITE_PRODUCT_DETAILS(product.slug)
     const image = product.media?.find((m) => m?.secure_url) || { secure_url: imgPlaceholder.src }
     const price = variant?.sellingPrice ?? product.sellingPrice
@@ -101,7 +102,7 @@ const BestsellerCard = ({ product, position }) => {
                             type="button"
                             onClick={buyNow}
                             disabled={!canAdd}
-                            aria-label={canAdd ? `Buy ${name} now` : `${name} is currently unavailable`}
+                            aria-label={canAdd ? `Buy now: ${name}` : `Unavailable: ${name}`}
                             className="ef-focus inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-khaki px-4 text-[0.8125rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
                         >
                             <Zap className="size-3.5" aria-hidden="true" /> {canAdd ? 'Buy now' : 'Unavailable'}
@@ -120,7 +121,7 @@ const BestsellerCard = ({ product, position }) => {
                                 type="button"
                                 onClick={addToCart}
                                 disabled={!canAdd}
-                                aria-label={canAdd ? `Add ${name} to cart` : `${name} is currently unavailable`}
+                                aria-label={canAdd ? `Add to cart: ${name}` : `Unavailable: ${name}`}
                                 title="Add to cart"
                                 className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-pine text-white transition-colors hover:bg-[var(--brand-pine-hover)] disabled:pointer-events-none disabled:opacity-40"
                             >

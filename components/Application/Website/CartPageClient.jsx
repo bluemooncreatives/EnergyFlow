@@ -14,6 +14,7 @@ import { useHydrated } from '@/hooks/useHydrated'
 import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton, { StoreLink } from '@/components/Application/Website/storefront/StoreButton'
 import { formatINR } from '@/components/Application/Website/storefront/format'
+import { formatProductName } from '@/lib/seo'
 
 const CartSkeleton = () => (
     <div className="grid gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem]" aria-hidden="true">
@@ -135,7 +136,7 @@ const CartPageClient = () => {
 
                                             <div className="flex min-w-0 flex-col gap-1">
                                                 <h2 className="text-[1rem] font-medium leading-snug text-ink-strong">
-                                                    <Link href={href} className="ef-focus ef-clamp-2 rounded-sm hover:text-brand-hover">{product.name}</Link>
+                                                    <Link href={href} className="ef-focus ef-clamp-2 rounded-sm hover:text-brand-hover">{formatProductName(product.name)}</Link>
                                                 </h2>
                                                 <p className="text-[0.8125rem] text-ink-muted">
                                                     {product.size && <>{product.size} · </>}{formatINR(product.sellingPrice)} each

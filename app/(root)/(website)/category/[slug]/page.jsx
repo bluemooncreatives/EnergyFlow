@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
+import { preconnect } from 'react-dom'
 import { ChevronDown } from 'lucide-react'
 import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }) {
         alternates: { canonical: path },
         // An empty aisle is thin content: keep it out of the index until it
         // is stocked, but let crawlers follow its links.
-        robots: total > 0 ? undefined : { index: false, follow: true },
+        ...(total > 0 ? {} : { robots: { index: false, follow: true } }),
         openGraph: {
             title: `${seo.title} | Energyflow`,
             description: seo.description,
@@ -55,6 +56,7 @@ export async function generateMetadata({ params }) {
 }
 
 const CategoryPage = async ({ params }) => {
+    preconnect('https://res.cloudinary.com')
     const { slug } = await params
     if (slug !== slug.toLowerCase()) permanentRedirect(WEBSITE_CATEGORY(slug.toLowerCase()))
     const [landing, filters] = await Promise.all([
@@ -118,6 +120,7 @@ const CategoryPage = async ({ params }) => {
 
                     {products.length > 0 ? (
                         <>
+                            <h2 className="sr-only">{name} products</h2>
                             <p className="mt-6 text-[0.8125rem] text-ink-muted">
                                 {total} {total === 1 ? 'product' : 'products'} in {name}
                             </p>

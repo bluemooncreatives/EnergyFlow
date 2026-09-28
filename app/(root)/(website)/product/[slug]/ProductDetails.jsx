@@ -365,7 +365,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                             <Link
                                                 key={size}
                                                 href={`${WEBSITE_PRODUCT_DETAILS(product.slug)}?size=${encodeURIComponent(size)}`}
-                                                aria-pressed={isSelected}
+                                                aria-current={isSelected ? 'true' : undefined}
                                                 className={cn(
                                                     'ef-focus relative inline-flex h-11 min-w-[3.5rem] items-center justify-center rounded-[var(--radius-control)] px-4 text-center text-[0.875rem] font-medium transition-colors',
                                                     isSelected

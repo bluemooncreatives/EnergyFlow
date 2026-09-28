@@ -696,6 +696,7 @@ const HeroSection = ({ availability = null }) => {
                   id={`hero-tab-${i}`}
                   aria-selected={i === active}
                   aria-controls={`hero-slide-${i}`}
+                  aria-label={`${pad(i + 1)} ${slide.label}`}
                   tabIndex={i === active ? 0 : -1}
                   className={cn(styles.tab, "ef-focus")}
                   onClick={() => choose(i)}

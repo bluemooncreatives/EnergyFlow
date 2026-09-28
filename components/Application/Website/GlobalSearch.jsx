@@ -28,6 +28,7 @@ import useDebounce from '@/hooks/useDebounce'
 import websiteSearchData from '@/lib/websiteSearchData'
 import { WEBSITE_SHOP, WEBSITE_PRODUCT_DETAILS } from '@/routes/WebsiteRoute'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
+import { formatProductName } from '@/lib/seo'
 
 const RECENT_KEY = 'energyflow:recent-searches'
 const MAX_RECENT = 6
@@ -369,7 +370,7 @@ const GlobalSearch = ({ open, setOpen, isLoggedIn = false }) => {
                                                         </div>
                                                         <div className="min-w-0 flex-1">
                                                             <p className="truncate text-sm font-semibold text-foreground">
-                                                                {product?.name}
+                                                                {formatProductName(product?.name)}
                                                             </p>
                                                             <p className="flex items-center gap-2 text-[13px]">
                                                                 <span className="font-semibold text-foreground">

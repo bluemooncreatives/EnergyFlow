@@ -1,4 +1,5 @@
 import ShopClient from '@/components/Application/Website/ShopClient'
+import { preconnect } from 'react-dom'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
 
 import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
@@ -54,6 +55,7 @@ const buildSearchParamString = (searchParams) => {
 }
 
 const Shop = async ({ searchParams }) => {
+    preconnect('https://res.cloudinary.com')
     const resolvedSearchParams = (await searchParams) ?? {}
     const initialSearchParamsString = buildSearchParamString(resolvedSearchParams)
     const [filters, { products, total, totalPages }] = await Promise.all([

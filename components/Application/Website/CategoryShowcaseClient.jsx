@@ -13,6 +13,7 @@ import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import { StoreLink } from './storefront/StoreButton'
 import { formatINR } from './storefront/format'
+import { formatProductName } from '@/lib/seo'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -196,11 +197,11 @@ const Panel = ({ item, panelRef }) => {
                                                     <Image src={product.image} alt="" fill sizes="48px" className="object-cover transition-transform duration-500 group-hover/row:scale-[1.07] motion-reduce:transition-none" />
                                                 </span>
                                                 <span className="min-w-0 flex-1">
-                                                    <span className="block truncate text-[0.9375rem] font-semibold leading-snug">{product.name}</span>
+                                                    <span className="block truncate text-[0.9375rem] font-semibold leading-snug">{formatProductName(product.name)}</span>
                                                     <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] leading-none">
                                                         <strong className="font-semibold tabular-nums">{formatINR(product.price)}</strong>
                                                         {markdown && (
-                                                            <s className="tabular-nums opacity-55">{formatINR(product.mrp)}</s>
+                                                            <s className="tabular-nums opacity-70">{formatINR(product.mrp)}</s>
                                                         )}
                                                         {product.size && (
                                                             <span className="rounded-[4px] bg-[rgb(140_122_59/0.14)] px-1.5 py-[3px] text-[0.6875rem] font-semibold text-[var(--brand-olive-deep)] dark:bg-[rgb(242_201_76/0.16)] dark:text-[var(--palette-sunflower)]">

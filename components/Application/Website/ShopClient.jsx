@@ -247,6 +247,8 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
 
                         {/* Scroll anchor — page changes bring this back into view. */}
                         <div ref={gridTopRef} className="scroll-mt-24" />
+                        {/* Product cards use <h3>; this keeps the outline h1 → h2 → h3. */}
+                        <h2 className="sr-only">Products</h2>
 
                         {error ? (
                             <div className="ef-card mt-6 flex flex-col items-center gap-4 px-6 py-14 text-center">

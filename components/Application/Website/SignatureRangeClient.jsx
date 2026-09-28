@@ -190,7 +190,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
                     )}
                 >
                     {pad(index + 1)}
-                    <span className="hidden opacity-55 @min-[15rem]/tile:inline"> / {pad(total)}</span>
+                    <span className="hidden opacity-80 @min-[15rem]/tile:inline"> / {pad(total)}</span>
                 </span>
             </div>
 

@@ -195,7 +195,7 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
                     <div className='flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3'>
                         <p>Copyright © {new Date().getFullYear()} Energyflow. All Rights Reserved.</p>
                         <span className='hidden text-[var(--palette-pine)]/40 sm:inline' aria-hidden='true'>•</span>
-                        <p className='text-[var(--palette-pine)]/75'>
+                        <p className='text-[var(--palette-pine)]'>
                             Designed &amp; built by{' '}
                             <Link
                                 href='https://www.instagram.com/bluemoon.creatives/'

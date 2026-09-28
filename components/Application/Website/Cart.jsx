@@ -17,6 +17,7 @@ import { WEBSITE_CART, WEBSITE_CHECKOUT, WEBSITE_SHOP } from "@/routes/WebsiteRo
 import { BrandButton, BrandOutlineButton } from "@/components/Application/Website/BrandButton"
 import { useEffect, useState } from "react"
 import { showToast } from "@/lib/showToast"
+import { formatProductName } from '@/lib/seo'
 
 const fmt = (n) => n?.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
 
@@ -100,7 +101,7 @@ const Cart = () => {
                                             src={product?.media || imgPlaceholder.src}
                                             fill
                                             sizes="80px"
-                                            alt={product.name}
+                                            alt={formatProductName(product.name)}
                                             className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
                                         />
                                     </div>
@@ -108,7 +109,7 @@ const Cart = () => {
                                     {/* Details */}
                                     <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
                                         <h4 className="line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground">
-                                            {product.name}
+                                            {formatProductName(product.name)}
                                         </h4>
                                         <span className="w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
                                             {product.size}
@@ -125,7 +126,7 @@ const Cart = () => {
                                             type="button"
                                             onClick={() => dispatch(removeFromCart({ productId: product.productId, variantId: product.variantId }))}
                                             className="ef-focus w-fit cursor-pointer rounded-sm text-[0.8125rem] text-ink-muted transition-colors hover:text-destructive"
-                                            aria-label={`Remove ${product.name} from cart`}
+                                            aria-label={`Remove ${formatProductName(product.name)} from cart`}
                                         >
                                             Remove
                                         </button>
