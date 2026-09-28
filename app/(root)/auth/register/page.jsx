@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import axios from 'axios'
 import Link from 'next/link'
-import { LockKeyhole, Mail, Sprout, User } from 'lucide-react'
+import { ArrowRight, LockKeyhole, Mail, Sprout, User } from 'lucide-react'
 import { zSchema } from '@/lib/zodSchema'
 import { Form } from "@/components/ui/form"
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
@@ -54,7 +54,9 @@ const RegisterPage = () => {
             }
 
             form.reset()
-            setRegistered({ email: values.email, message: registerResponse.message })
+            // The API still succeeds when the verification email fails to send;
+            // its message then says so and signing in resends the link.
+            setRegistered({ email: values.email, emailSent: !/could not send/i.test(registerResponse.message) })
             showToast('success', registerResponse.message)
 
         } catch (error) {
@@ -125,15 +127,25 @@ const RegisterPage = () => {
                 <AuthStep key="done">
                     <div className="ef-auth-status" role="status">
                         <div data-auth-item><SuccessSeal size="3.75rem" /></div>
-                        <AuthHeader
-                            eyebrow="Account created"
-                            title="Check your"
-                            accent="inbox"
-                            lead={<>We sent a verification link to <strong>{registered.email}</strong>. Open it to activate your account, then sign in.</>}
-                        />
+                        {registered.emailSent ? (
+                            <AuthHeader
+                                eyebrow="Account created"
+                                title="Check your"
+                                accent="inbox"
+                                lead={<>We sent a verification link to <strong>{registered.email}</strong>. Open it to activate your account, then sign in.</>}
+                            />
+                        ) : (
+                            <AuthHeader
+                                eyebrow="Account created"
+                                title="One more"
+                                accent="step"
+                                lead={<>We couldn&apos;t send the verification email to <strong>{registered.email}</strong> just now. Sign in and we&apos;ll send it again.</>}
+                            />
+                        )}
                     </div>
                     <Link href={WEBSITE_LOGIN} className="ef-nl-submit" data-auth-item>
                         <span>Go to sign in</span>
+                        <ArrowRight aria-hidden="true" />
                     </Link>
                     <AuthAlt>
                         Wrong address? <button type="button" className="ef-auth-link" onClick={() => setRegistered(null)}>Start again</button>

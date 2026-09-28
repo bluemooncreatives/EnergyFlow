@@ -1,92 +1,99 @@
 'use client'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
-import axios from 'axios'
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useParams } from 'next/navigation'
+import axios from 'axios'
+import { ArrowRight, Loader2, MailCheck, X } from 'lucide-react'
+import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
+import AuthShell from '@/components/Application/Auth/AuthShell'
+import { AuthHeader, AuthStep } from '@/components/Application/Auth/AuthParts'
+import { SuccessSeal } from '@/components/Application/Website/newsletter/NewsletterParts'
 
-const EmailVerification = ({ params }) => {
-    const { token } = params
+const ART = {
+    title: 'Almost',
+    accent: 'there.',
+    lead: 'One click on the link we emailed confirms the address is yours.',
+    perks: ['Keeps your account yours', 'Order updates reach the right inbox'],
+}
+const SEAL = { ring: 'Verify email ✦ Welcome aboard ✦ ', icon: MailCheck }
+
+const STATES = {
+    loading: {
+        eyebrow: 'One moment',
+        title: 'Verifying your',
+        accent: 'email',
+        lead: 'Checking your link. This only takes a second.',
+    },
+    success: {
+        eyebrow: 'All set',
+        title: 'Email',
+        accent: 'verified',
+        lead: 'Your account is active. Sign in to start shopping.',
+    },
+    error: {
+        eyebrow: 'Link problem',
+        title: 'Link',
+        accent: 'expired',
+        lead: 'This link has expired or was already used. Sign in and we’ll email you a fresh one.',
+    },
+}
+
+const StatusIcon = ({ status }) => {
+    if (status === 'success') return <SuccessSeal size="3.75rem" />
+    if (status === 'error') {
+        return (
+            <span className="ef-seal ef-auth-status__icon ef-auth-status__icon--error" style={{ width: '3.75rem', height: '3.75rem' }}>
+                <X strokeWidth={3} aria-hidden="true" />
+            </span>
+        )
+    }
+    return (
+        <span className="ef-seal ef-seal--sun ef-auth-status__icon" style={{ width: '3.75rem', height: '3.75rem' }}>
+            <Loader2 strokeWidth={2.5} className="animate-spin" aria-hidden="true" />
+        </span>
+    )
+}
+
+const EmailVerification = () => {
+    const { token } = useParams()
     const [status, setStatus] = useState('loading')
 
     useEffect(() => {
         let isActive = true
         const verify = async () => {
             try {
-                setStatus('loading')
                 const { data: verificationResponse } = await axios.post('/api/auth/verify-email', { token })
-                if (isActive) {
-                    setStatus(verificationResponse?.success ? 'success' : 'error')
-                }
-            } catch (error) {
-                if (isActive) {
-                    setStatus('error')
-                }
+                if (isActive) setStatus(verificationResponse?.success ? 'success' : 'error')
+            } catch {
+                if (isActive) setStatus('error')
             }
         }
 
-        if (token) {
-            verify()
-        }
+        if (token) verify()
+        else setStatus('error')
 
         return () => {
             isActive = false
         }
     }, [token])
 
-    const ui = useMemo(() => {
-        if (status === 'success') {
-            return {
-                icon: <CheckCircle2 className="size-6 text-success animate-[pulse_2.4s_ease-in-out_infinite]" />,
-                tone: 'text-success ring-success/20 bg-success/10',
-                title: 'Email verified successfully',
-                description: 'You can now sign in to your account.',
-                cta: { label: 'Go to Login', href: WEBSITE_LOGIN },
-                showButton: true,
-            }
-        }
-
-        if (status === 'error') {
-            return {
-                icon: <XCircle className="size-6 text-destructive animate-[pulse_2.6s_ease-in-out_infinite]" />,
-                tone: 'text-destructive ring-destructive/20 bg-destructive/10',
-                title: 'Verification failed',
-                description: 'The link may be expired or already used. Sign in to request a new one.',
-                cta: { label: 'Go to Login', href: WEBSITE_LOGIN },
-                showButton: true,
-            }
-        }
-
-        return {
-            icon: <Loader2 className="size-6 animate-spin text-muted-foreground" />,
-            tone: 'text-muted-foreground ring-foreground/10 bg-muted',
-            title: 'Verifying your email',
-            description: 'Please wait while we validate your link.',
-            cta: { label: 'Go to Login', href: WEBSITE_LOGIN },
-            showButton: false,
-        }
-    }, [status])
+    const copy = STATES[status]
 
     return (
-        <Card className="w-full max-w-md overflow-hidden border bg-card py-0 shadow-md">
-            <CardContent className="flex flex-col items-center gap-4 px-8 py-7 text-center">
-                <div className={`relative flex size-12 items-center justify-center rounded-full ring-1 ${ui.tone}`}>
-                    <span className={`absolute inset-0 rounded-full ${status === 'loading' ? 'animate-pulse bg-muted/60' : 'bg-current/10'}`} />
-                    <span className="relative z-10">{ui.icon}</span>
+        <AuthShell art={ART} seal={SEAL}>
+            <AuthStep key={status}>
+                <div className="ef-auth-status" role="status" aria-live="polite">
+                    <div data-auth-item><StatusIcon status={status} /></div>
+                    <AuthHeader {...copy} />
                 </div>
-                <div className="space-y-1">
-                    <h1 className="font-header text-2xl text-foreground">{ui.title}</h1>
-                    <p className="text-[15px] leading-relaxed text-muted-foreground">{ui.description}</p>
-                </div>
-                {ui.showButton && (
-                    <Button asChild size="lg" className="mt-2 w-full">
-                        <Link href={ui.cta.href}>{ui.cta.label}</Link>
-                    </Button>
+                {status !== 'loading' && (
+                    <Link href={WEBSITE_LOGIN} className="ef-nl-submit" data-auth-item>
+                        <span>{status === 'success' ? 'Sign in' : 'Go to sign in'}</span>
+                        <ArrowRight aria-hidden="true" />
+                    </Link>
                 )}
-            </CardContent>
-        </Card>
+            </AuthStep>
+        </AuthShell>
     )
 }
 
