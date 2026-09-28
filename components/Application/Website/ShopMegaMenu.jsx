@@ -43,7 +43,6 @@ const CategoryThumb = ({ category, index, className, sizes = '48px' }) => (
 
 export const ShopMegaMenu = ({ item, data, linkClassName }) => {
     const categories = data?.categories || []
-    const totalProducts = data?.totalProducts || 0
     const pathname = usePathname()
     const panelId = useId()
 
@@ -190,27 +189,25 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                 )}
             >
                 <div className="overflow-hidden rounded-[var(--radius-tile)] border border-[var(--line-soft)] bg-[var(--surface-card)] shadow-[var(--elev-3)]">
-                    <div className="grid lg:grid-cols-[minmax(0,1fr)_17rem] xl:grid-cols-[minmax(0,1fr)_19rem]">
+                    <div className="grid lg:grid-cols-[minmax(0,1fr)_15rem] xl:grid-cols-[minmax(0,1fr)_17rem]">
                         {/* Category grid */}
-                        <div className="flex min-w-0 flex-col gap-4 p-5 xl:p-6">
-                            <div className="flex items-end justify-between gap-4">
-                                <div>
-                                    <span className="ef-eyebrow">Shop by category</span>
-                                    <p className="mt-2 text-[0.8125rem] text-[var(--ink-muted)]">
-                                        {categories.length} {categories.length === 1 ? 'category' : 'categories'} · {productLabel(totalProducts)}
-                                    </p>
-                                </div>
+                        <div className="flex min-w-0 flex-col gap-3 p-4 xl:px-5">
+                            <div className="flex items-center justify-between gap-4">
+                                <span className="ef-eyebrow">Shop by category</span>
                                 <Link
                                     href={item.url}
                                     data-tile
-                                    className="ef-link text-[0.8125rem] font-semibold uppercase tracking-[0.06em]"
+                                    className="ef-cta h-9 gap-2.5 py-1 pl-3.5 pr-1 text-xs"
                                 >
-                                    <LayoutGrid aria-hidden="true" /> Shop all <ArrowRight aria-hidden="true" />
+                                    Shop all
+                                    <span className="ef-cta__box size-7 [&_svg]:size-3.5">
+                                        <ArrowRight aria-hidden="true" />
+                                    </span>
                                 </Link>
                             </div>
 
                             <ul
-                                className="grid max-h-[min(55vh,26rem)] list-none grid-cols-2 gap-1 overflow-y-auto overscroll-contain p-0 pr-1 xl:grid-cols-3"
+                                className="grid max-h-[min(55vh,24rem)] list-none grid-cols-2 gap-1 overflow-y-auto overscroll-contain p-0 pr-1 xl:grid-cols-3"
                                 data-lenis-prevent
                             >
                                 {categories.map((category, index) => {
@@ -223,14 +220,14 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                                                 onPointerEnter={() => setPreviewId(category.id)}
                                                 onFocus={() => setPreviewId(category.id)}
                                                 className={cn(
-                                                    'group flex items-center gap-3 rounded-[var(--radius-card)] p-2 pr-3 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--focus-color)]',
+                                                    'group flex items-center gap-3 rounded-[var(--radius-card)] p-1.5 pr-3 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--focus-color)]',
                                                     current ? 'bg-[var(--surface-sunken)]' : 'hover:bg-[var(--surface-sunken)]'
                                                 )}
                                             >
                                                 {primed ? (
-                                                    <CategoryThumb category={category} index={index} className="size-12" />
+                                                    <CategoryThumb category={category} index={index} className="size-11" sizes="44px" />
                                                 ) : (
-                                                    <span className="size-12 shrink-0 rounded-[var(--radius-control)] bg-[var(--surface-well)]" aria-hidden="true" />
+                                                    <span className="size-11 shrink-0 rounded-[var(--radius-control)] bg-[var(--surface-well)]" aria-hidden="true" />
                                                 )}
                                                 <span className="flex min-w-0 flex-1 flex-col">
                                                     <span className="truncate text-[0.9375rem] font-semibold text-[var(--ink-strong)] group-hover:text-[var(--brand-primary)]">
@@ -257,7 +254,7 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                             href={preview.href}
                             tabIndex={-1}
                             aria-hidden="true"
-                            className="group relative m-2 ml-0 hidden min-h-[18rem] overflow-hidden rounded-[var(--radius-card)] lg:block"
+                            className="group relative m-2 ml-0 hidden min-h-[10rem] overflow-hidden rounded-[var(--radius-card)] lg:block"
                             style={{ background: preview.image ? 'var(--palette-pine)' : tintAt(previewIndex) }}
                         >
                             {primed && preview.image ? (
@@ -266,7 +263,7 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                                     src={preview.image}
                                     alt=""
                                     fill
-                                    sizes="(min-width: 1280px) 304px, 272px"
+                                    sizes="(min-width: 1280px) 272px, 240px"
                                     className="object-cover transition-transform duration-700 ease-out animate-in fade-in-0 group-hover:scale-[1.04] motion-reduce:animate-none"
                                 />
                             ) : (
@@ -278,11 +275,11 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                                 </span>
                             )}
                             <span className="absolute inset-0 bg-gradient-to-t from-[rgb(4_28_21/0.85)] via-[rgb(4_28_21/0.2)] to-transparent" />
-                            <span key={`label-${preview.id}`} className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5 animate-in fade-in-0 slide-in-from-bottom-1 motion-reduce:animate-none">
+                            <span key={`label-${preview.id}`} className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-4 animate-in fade-in-0 slide-in-from-bottom-1 motion-reduce:animate-none">
                                 <span className="w-fit rounded-full bg-[var(--palette-sunflower)] px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-[var(--palette-pine)]">
                                     {productLabel(preview.productCount)}
                                 </span>
-                                <span className="font-header text-2xl font-semibold uppercase leading-none text-[var(--palette-cream)]">
+                                <span className="font-header text-xl font-semibold uppercase leading-none text-[var(--palette-cream)]">
                                     {preview.name}
                                 </span>
                                 <span className="flex items-center gap-1.5 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-[var(--palette-sunflower)]">
