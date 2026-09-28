@@ -125,7 +125,7 @@ const TrashContent = () => {
                 breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
             />
 
-            <div className="rounded-md bg-card">
+            <div>
                 <DatatableWrapper
                     queryKey={`${trashOf}-data-deleted`}
                     fetchUrl={config.fetchUrl}

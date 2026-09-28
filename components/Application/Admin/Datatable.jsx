@@ -92,7 +92,11 @@ const Datatable = ({
     const [sorting, setSorting] = useState([])
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: initialPageSize })
     const [rowSelection, setRowSelection] = useState({})
-    const [columnVisibility, setColumnVisibility] = useState({})
+    // Columns marked `hidden: true` start hidden but stay available under
+    // "Columns" (long addresses, internal ids).
+    const [columnVisibility, setColumnVisibility] = useState(() =>
+        Object.fromEntries((columnsConfig || []).filter((col) => col.hidden).map((col) => [col.id || col.accessorKey, false]))
+    )
     const [exportLoading, setExportLoading] = useState(false)
     const [pendingDelete, setPendingDelete] = useState(null)
 

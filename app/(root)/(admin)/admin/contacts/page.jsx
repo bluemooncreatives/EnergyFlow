@@ -37,7 +37,7 @@ const ContactsPage = () => {
         breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
       />
 
-      <div className="rounded-md bg-card">
+      <div>
         <DatatableWrapper
           queryKey="contacts-data"
           fetchUrl="/api/contact"

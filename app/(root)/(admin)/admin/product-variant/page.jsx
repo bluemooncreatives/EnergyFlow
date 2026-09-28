@@ -45,7 +45,7 @@ const ShowProductVariant = () => {
                 }
             />
 
-            <div className="rounded-md bg-card">
+            <div>
                 <DatatableWrapper
                     queryKey="product-variant-data"
                     fetchUrl="/api/product-variant"

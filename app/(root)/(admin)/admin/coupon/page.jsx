@@ -45,7 +45,7 @@ const ShowCoupon = () => {
                 }
             />
 
-            <div className="rounded-md bg-card">
+            <div>
                 <DatatableWrapper
                     queryKey="coupon-data"
                     fetchUrl="/api/coupon"

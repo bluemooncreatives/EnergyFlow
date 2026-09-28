@@ -165,7 +165,7 @@ const NewsletterSubscribersPage = () => {
         />
       </div>
 
-      <div className="rounded-md bg-card">
+      <div>
         <DatatableWrapper
           queryKey={QUERY_KEY}
           fetchUrl="/api/newsletter"

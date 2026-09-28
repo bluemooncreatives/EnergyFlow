@@ -1,7 +1,6 @@
 'use client'
 
 import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import Link from 'next/link'
@@ -10,8 +9,6 @@ import { MapPin, Mail, Phone, Instagram, Facebook, Twitter, Globe, ArrowRight } 
 import { USER_DASHBOARD, WEBSITE_HOME, WEBSITE_LOGIN, WEBSITE_REGISTER, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import FooterWordmark from '@/components/Application/Website/FooterWordmark'
 import NewsletterFooterStrip from '@/components/Application/Website/newsletter/NewsletterFooterStrip'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const CONTACT_EMAIL = 'energyflow0001@gmail.com'
 const CONTACT_PHONE = '+919289657742'

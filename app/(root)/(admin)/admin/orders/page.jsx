@@ -34,7 +34,7 @@ const ShowOrder = () => {
                 breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
             />
 
-            <div className="rounded-md bg-card">
+            <div>
                 <DatatableWrapper
                     queryKey="orders-data"
                     fetchUrl="/api/orders"

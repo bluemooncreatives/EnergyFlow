@@ -1,6 +1,7 @@
 import Footer from '@/components/Application/Website/Footer'
 import Header from '@/components/Application/Website/Header'
 import NewsletterPopup from '@/components/Application/Website/newsletter/NewsletterPopup'
+import ScrollTriggerSync from '@/components/Application/Website/ScrollTriggerSync'
 import { getFooterCategories, getNavCategories } from '@/lib/services/categoryService'
 import { getPublicNewsletterSettings } from '@/lib/services/newsletterService'
 
@@ -26,6 +27,7 @@ const Layout = async ({ children }) => {
                 newsletter={newsletter?.footer?.enabled ? newsletter.footer : null}
             />
             {newsletter && <NewsletterPopup settings={newsletter} />}
+            <ScrollTriggerSync />
         </div>
     )
 }

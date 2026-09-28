@@ -45,7 +45,7 @@ const ShowCategory = () => {
                 }
             />
 
-            <div className="rounded-md bg-card">
+            <div>
                 <DatatableWrapper
                     queryKey="category-data"
                     fetchUrl="/api/category"
