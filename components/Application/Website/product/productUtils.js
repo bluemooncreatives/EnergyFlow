@@ -20,7 +20,12 @@ export const unitPriceLabel = (price, size) => {
     const grams = packGrams(size)
     const value = Number(price)
     if (!grams || !Number.isFinite(value) || value <= 0) return null
-    return `${formatINR(Math.round((value / grams) * 100 * 100) / 100)} / 100 g`
+    const per100 = Math.round((value / grams) * 100 * 100) / 100
+    // Paise always in pairs: "₹439.50", never "₹439.5"; whole rupees stay whole.
+    const amount = Number.isInteger(per100)
+        ? formatINR(per100)
+        : per100.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    return `${amount} / 100 g`
 }
 
 // Genuine markdown only: a stale discountPercentage with equal prices is 0.
