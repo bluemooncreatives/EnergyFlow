@@ -55,6 +55,8 @@ const privatePageHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Allow an isolated build while the local development server is running.
+    distDir: process.env.NEXT_DIST_DIR || '.next',
     compress: true,
     poweredByHeader: false,
     // react-pdf relies on native-ish deps (fontkit, yoga-layout wasm) that must not

@@ -1,3 +1,6 @@
+import CategoryModel from '@/models/Category.model'
+import mongoose from 'mongoose'
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
@@ -37,6 +40,15 @@ export async function POST(request) {
 
         const productData = validate.data
 
+        if (!mongoose.isValidObjectId(productData.category) || !await CategoryModel.exists({ _id: productData.category, deletedAt: null })) {
+            return response(false, 400, 'Choose an active category.', {}, { status: 400 })
+        }
+        const slugOwner = await ProductModel.exists({
+
+            $or: [{ slug: productData.slug }, { routeSlugs: productData.slug }],
+        })
+        if (slugOwner) return response(false, 409, 'This product slug is already reserved. Choose another slug.', {}, { status: 409 })
+
         // Server is authoritative on pricing: enforce SP <= MRP and derive the
         // discount, ignoring whatever the client sent.
         const pricing = validatePricing(productData.mrp, productData.sellingPrice)
@@ -60,6 +72,7 @@ export async function POST(request) {
 
         // The Freshly Arrived section tops up with the newest products, so a new
         // product can change what it shows — refresh that cache.
+        revalidateCatalogue()
         revalidateTag('storefront-freshly-arrived-products')
         // A new product changes its category's product count and may become the
         // representative image for the homepage "Categories" section.
@@ -72,6 +85,9 @@ export async function POST(request) {
         return response(true, 200, 'Product added successfully.', { _id: newProduct._id })
 
     } catch (error) {
+        if (error.code === 11000 || error.errors?.slug) {
+            return response(false, 409, 'The SKU or slug is already reserved. Choose a unique value.', {}, { status: 409 })
+        }
         return catchError(error)
     }
 }

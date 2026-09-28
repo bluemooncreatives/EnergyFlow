@@ -1,3 +1,4 @@
+import '@/models/Category.model'
 import mongoose from "mongoose"
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
@@ -36,8 +37,9 @@ export async function GET() {
 
         const items = await ProductModel.find({ deletedAt: null, isFreshlyArrived: true })
             .sort({ freshlyArrivedSortOrder: 1, createdAt: -1, _id: 1 })
-            .select('name slug sellingPrice mrp media freshlyArrivedSortOrder')
+            .select('name slug category sellingPrice mrp media freshlyArrivedSortOrder')
             .populate('media', 'secure_url alt')
+            .populate({ path: 'category', select: 'slug name' })
             .lean()
 
         return response(true, 200, 'Freshly arrived products fetched.', items)

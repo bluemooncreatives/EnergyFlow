@@ -86,7 +86,7 @@ const CategoryPage = async ({ params }) => {
             itemListElement: products.map((product, index) => ({
                 '@type': 'ListItem',
                 position: index + 1,
-                url: absoluteUrl(WEBSITE_PRODUCT_DETAILS(product.slug)),
+                url: absoluteUrl(WEBSITE_PRODUCT_DETAILS(product)),
                 name: formatProductName(product.name),
             })),
         },

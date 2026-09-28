@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
@@ -34,6 +35,7 @@ export async function POST(request) {
 
         // The new category can change the shop filter list and the homepage
         // "Categories" section (once it has products), so refresh those caches.
+        revalidateCatalogue()
         revalidateTag('storefront-shop-filters')
         revalidateTag('storefront-home-categories')
 

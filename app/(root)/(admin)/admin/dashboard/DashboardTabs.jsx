@@ -12,7 +12,7 @@ const TabsInner = ({ overview }) => {
     const params = useSearchParams()
     const router = useRouter()
     const pathname = usePathname()
-    const tab = params.get('tab') === 'overview' ? 'overview' : 'analytics'
+    const tab = params.get('tab') === 'analytics' ? 'analytics' : 'overview'
 
     const onChange = (value) => {
         const q = new URLSearchParams(params.toString())
@@ -24,8 +24,8 @@ const TabsInner = ({ overview }) => {
         <Tabs value={tab} onValueChange={onChange} className="space-y-4">
             <div className="w-full overflow-x-auto print:hidden">
                 <TabsList>
-                    <TabsTrigger value="analytics" className="gap-1.5"><BarChart3 className="size-4" aria-hidden="true" /> Analytics &amp; reports</TabsTrigger>
                     <TabsTrigger value="overview" className="gap-1.5"><LayoutDashboard className="size-4" aria-hidden="true" /> Overview</TabsTrigger>
+                    <TabsTrigger value="analytics" className="gap-1.5"><BarChart3 className="size-4" aria-hidden="true" /> Analytics &amp; reports</TabsTrigger>
                 </TabsList>
             </div>
             <TabsContent value="analytics"><AnalyticsDashboard /></TabsContent>

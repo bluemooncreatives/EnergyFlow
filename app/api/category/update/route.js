@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
@@ -37,6 +38,7 @@ export async function PUT(request) {
 
         // Name/slug changes ripple to the shop filter list and the homepage
         // "Categories" section (label + shop link), so refresh those caches.
+        revalidateCatalogue()
         revalidateTag('storefront-shop-filters')
         revalidateTag('storefront-home-categories')
 

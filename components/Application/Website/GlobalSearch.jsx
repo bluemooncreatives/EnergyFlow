@@ -149,9 +149,9 @@ const GlobalSearch = ({ open, setOpen, isLoggedIn = false }) => {
     )
 
     const goToProduct = React.useCallback(
-        (slug) => {
-            if (!slug) return
-            closeAndGo(WEBSITE_PRODUCT_DETAILS(slug))
+        (product) => {
+            if (!product?.slug) return
+            closeAndGo(WEBSITE_PRODUCT_DETAILS(product))
         },
         [closeAndGo]
     )
@@ -356,7 +356,7 @@ const GlobalSearch = ({ open, setOpen, isLoggedIn = false }) => {
                                                     <CommandItem
                                                         key={product._id}
                                                         value={`product-${product._id}`}
-                                                        onSelect={() => goToProduct(product.slug)}
+                                                        onSelect={() => goToProduct(product)}
                                                         className="gap-3 px-2 py-2 font-neue"
                                                     >
                                                         <div className="relative size-11 shrink-0 overflow-hidden rounded-[var(--radius-sm)] bg-[var(--product-card-bg)]">

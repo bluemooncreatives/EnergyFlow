@@ -201,9 +201,9 @@
    a table view. Single-measure charts use --viz-1 only.
    ──────────────────────────────────────────────────────────────── */
 .admin-theme {
-  --viz-1: #2E8B57;      /* green  — primary measure, slot 1 */
-  --viz-2: #C98A12;      /* amber  — slot 2 */
-  --viz-3: #3A6FB0;      /* blue   — slot 3 */
+  --viz-1: var(--chart-1);      /* green  — primary measure, slot 1 */
+  --viz-2: var(--chart-2);      /* amber  — slot 2 */
+  --viz-3: var(--chart-3);      /* blue   — slot 3 */
   --viz-prev: #9AA59C;   /* previous-period comparison line */
   --viz-grid: rgb(11 61 46 / 0.08);
   --viz-axis: #5A6A5F;
@@ -212,9 +212,9 @@
   --viz-bad: #B3261E;
 }
 .dark .admin-theme {
-  --viz-1: #3E9E63;
-  --viz-2: #B8871C;
-  --viz-3: #5585CF;
+  --viz-1: var(--chart-1);
+  --viz-2: var(--chart-2);
+  --viz-3: var(--chart-3);
   --viz-prev: #6F7F74;
   --viz-grid: rgb(247 243 232 / 0.08);
   --viz-axis: #B2BCA9;

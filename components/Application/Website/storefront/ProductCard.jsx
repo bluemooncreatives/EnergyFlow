@@ -73,7 +73,7 @@ const ProductCard = ({
 
     if (!product) return null
 
-    const href = WEBSITE_PRODUCT_DETAILS(product.slug)
+    const href = WEBSITE_PRODUCT_DETAILS(product)
     const name = formatProductName(product.name) || 'Product'
 
     // Show what "Add" actually puts in the cart: the default variant's pack

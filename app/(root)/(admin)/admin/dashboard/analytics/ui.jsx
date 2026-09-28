@@ -1,22 +1,24 @@
 'use client'
 
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+
 import Link from 'next/link'
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Minus, Sparkles } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, ArrowUpRight, Minus, Sparkles, IndianRupee, ShoppingBag, Receipt, Package, UsersRound, UserPlus, Repeat2, Ban } from 'lucide-react'
 import { Area, AreaChart, ResponsiveContainer } from 'recharts'
 import { cn } from '@/lib/utils'
 
 /** Card shell for one report. `action` sits top-right (a link or toggle). */
 export const Panel = ({ title, description, action, className, children, id }) => (
-    <section id={id} className={cn('flex min-w-0 flex-col rounded-xl border bg-card', className)} aria-labelledby={id ? `${id}-title` : undefined}>
-        <header className="flex flex-wrap items-start justify-between gap-3 border-b px-4 py-3.5 sm:px-5">
+    <Card id={id} className={cn('min-w-0', className)} aria-labelledby={id ? `${id}-title` : undefined}>
+        <CardHeader className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-                <h3 id={id ? `${id}-title` : undefined} className="text-[0.9375rem] font-semibold leading-tight">{title}</h3>
-                {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+                <CardTitle id={id ? `${id}-title` : undefined}>{title}</CardTitle>
+                {description && <CardDescription className="mt-1">{description}</CardDescription>}
             </div>
             {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
-        </header>
-        <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">{children}</div>
-    </section>
+        </CardHeader>
+        <CardContent className="flex min-h-0 flex-1 flex-col">{children}</CardContent>
+    </Card>
 )
 
 export const PanelLink = ({ href, children = 'View all' }) => (
@@ -78,25 +80,27 @@ export const Sparkline = ({ data, dataKey, id }) => {
     )
 }
 
-export const KpiTile = ({ label, value, change, inverse, hint, spark, sparkKey, href, loading }) => {
+export const KpiTile = ({ label, value, change, inverse, hint, spark, sparkKey, href, loading, index = 0 }) => {
+    const Icon = [IndianRupee, ShoppingBag, Receipt, Package, UsersRound, UserPlus, Repeat2, Ban][index % 8]
+    const color = `var(--chart-${index % 4 + 1})`
     const body = (
         <>
             <div className="flex items-start justify-between gap-2">
-                <p className="text-xs font-medium text-muted-foreground">{label}</p>
-                {!loading && change !== undefined && <Delta change={change} inverse={inverse} />}
+                <p className="text-sm font-medium text-foreground">{label}</p>
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: color, color: index % 4 === 1 ? "#0A2F24" : "var(--background)" }}><Icon className="size-4" aria-hidden="true" /></span>
             </div>
-            <p className="mt-2 font-header text-[1.625rem] font-semibold leading-none tracking-tight tabular-nums">
+            <p className="mt-4 text-4xl font-bold leading-none tracking-tight tabular-nums">
                 {loading ? <span className="inline-block h-6 w-24 animate-pulse rounded bg-muted align-middle" /> : value}
             </p>
-            {hint && <p className="mt-1.5 truncate text-xs text-muted-foreground">{hint}</p>}
+            <div className="mt-2 flex flex-wrap items-center gap-2">{!loading && change !== undefined && <Delta change={change} inverse={inverse} />}{hint && <p className="text-xs text-muted-foreground">{hint}</p>}</div>
             {spark && <div className="mt-auto pt-3">{loading ? <div className="h-10 animate-pulse rounded bg-muted/60" /> : <Sparkline data={spark} dataKey={sparkKey} id={sparkKey + label.replace(/\W/g, '')} />}</div>}
         </>
     )
-    const cls = 'flex h-full min-w-0 flex-col rounded-xl border bg-card p-4 transition'
+    const cls = 'flex h-full min-w-0 flex-col rounded-lg border-l-4 bg-card p-4 text-card-foreground ring-1 ring-foreground/10 transition hover:-translate-y-0.5 hover:shadow-lg'
     return href ? (
-        <Link href={href} className={cn(cls, 'hover:border-primary/40 hover:shadow-[0_8px_24px_-12px_rgb(11_61_46/0.25)]')}>{body}</Link>
+        <Link href={href} style={{ borderLeftColor: color }} className={cn(cls, 'hover:border-primary/40 hover:shadow-[0_8px_24px_-12px_rgb(11_61_46/0.25)]')}>{body}</Link>
     ) : (
-        <div className={cls}>{body}</div>
+        <div className={cls} style={{ borderLeftColor: color }}>{body}</div>
     )
 }
 

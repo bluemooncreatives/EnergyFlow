@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
@@ -8,6 +9,7 @@ import CategoryModel from "@/models/Category.model";
 // Trashing/restoring/deleting a category changes the shop filter list and the
 // homepage "Categories" section, so both storefront caches must be dropped.
 const revalidateCategoryCaches = () => {
+    revalidateCatalogue()
     revalidateTag('storefront-shop-filters')
     revalidateTag('storefront-home-categories')
 }

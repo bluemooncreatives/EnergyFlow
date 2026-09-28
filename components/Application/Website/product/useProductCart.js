@@ -39,6 +39,7 @@ export const useProductCart = (product, variant, image) => {
             variantId,
             name: product.name,
             url: product.slug,
+            categorySlug: product.category?.slug || product.categorySlug,
             size: variant.size,
             mrp: variant.mrp,
             sellingPrice: variant.sellingPrice,

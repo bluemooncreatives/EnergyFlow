@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
@@ -38,6 +39,7 @@ export async function PUT(request) {
 
         // Trashing or restoring a bestseller changes what the storefront carousel
         // should show, so drop its cache.
+        revalidateCatalogue()
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
         revalidateTag('storefront-daily-best-sells')
@@ -82,6 +84,7 @@ export async function DELETE(request) {
 
         await ProductModel.deleteMany({ _id: { $in: ids } })
 
+        revalidateCatalogue()
         revalidateTag('storefront-bestseller-products')
         revalidateTag('storefront-freshly-arrived-products')
         revalidateTag('storefront-daily-best-sells')

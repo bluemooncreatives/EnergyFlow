@@ -190,7 +190,7 @@ const Panel = ({ item, panelRef }) => {
                                     return (
                                         <li key={product.slug} data-row>
                                             <Link
-                                                href={WEBSITE_PRODUCT_DETAILS(product.slug)}
+                                                href={WEBSITE_PRODUCT_DETAILS(product, item.slug)}
                                                 className="ef-focus group/row flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[rgb(11_61_46/0.06)] dark:hover:bg-[rgb(247_243_232/0.06)]"
                                             >
                                                 <span className="relative size-12 shrink-0 overflow-hidden rounded-[calc(var(--radius-control)-2px)] bg-[rgb(140_122_59/0.12)] ring-1 ring-[rgb(11_61_46/0.08)] dark:bg-[var(--palette-cream)] dark:ring-0">

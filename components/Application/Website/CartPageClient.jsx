@@ -120,7 +120,7 @@ const CartPageClient = () => {
                             {/* ── Line items ── */}
                             <ul className="flex list-none flex-col gap-3 p-0" aria-label="Items in your cart">
                                 {products.map((product) => {
-                                    const href = WEBSITE_PRODUCT_DETAILS(product.url)
+                                    const href = WEBSITE_PRODUCT_DETAILS(product)
                                     const line = (Number(product.sellingPrice) || 0) * (Number(product.qty) || 0)
                                     return (
                                         <li key={product.variantId} className="ef-card grid grid-cols-[5rem_minmax(0,1fr)] gap-4 p-3 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-center sm:p-4">

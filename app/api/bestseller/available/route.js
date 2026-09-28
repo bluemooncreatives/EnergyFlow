@@ -30,7 +30,7 @@ export async function GET(request) {
             // First photo + category name so the admin picker can show a
             // visual, searchable grid instead of bare names.
             .populate({ path: 'media', select: 'secure_url', options: { perDocumentLimit: 1 } })
-            .populate({ path: 'category', select: 'name' })
+            .populate({ path: 'category', select: 'name slug' })
             .lean()
 
         return response(true, 200, 'Available products fetched.', products)

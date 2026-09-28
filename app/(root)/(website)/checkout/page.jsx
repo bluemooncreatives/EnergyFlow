@@ -838,7 +838,7 @@ const Checkout = () => {
                                             return (
                                                 <div key={product.variantId} className='flex gap-3 py-4'>
                                                     <Link
-                                                        href={WEBSITE_PRODUCT_DETAILS(product.url)}
+                                                        href={WEBSITE_PRODUCT_DETAILS(product)}
                                                         className='relative h-[84px] w-[64px] flex-shrink-0 overflow-hidden rounded-md border border-border/40'
                                                     >
                                                         <Image
@@ -853,7 +853,7 @@ const Checkout = () => {
                                                     <div className='flex min-w-0 flex-1 flex-col'>
                                                         <div className='flex items-start justify-between gap-2'>
                                                             <h3 className='line-clamp-2 font-neue text-[0.875rem] font-medium leading-snug text-ink-strong'>
-                                                                <Link href={WEBSITE_PRODUCT_DETAILS(product.url)}>{product.name}</Link>
+                                                                <Link href={WEBSITE_PRODUCT_DETAILS(product)}>{product.name}</Link>
                                                             </h3>
                                                             {!isBuyNow && (
                                                             <button
@@ -1021,7 +1021,7 @@ const Checkout = () => {
                                             className="h-12 w-full rounded-[var(--radius-control)] bg-brand text-[0.9375rem] font-medium hover:bg-brand-hover cursor-pointer"
                                         />
                                         <Link
-                                            href={isBuyNow ? WEBSITE_PRODUCT_DETAILS(buyLine?.url) : WEBSITE_CART}
+                                            href={isBuyNow ? WEBSITE_PRODUCT_DETAILS(buyLine) : WEBSITE_CART}
                                             className='mt-3 flex items-center justify-center gap-1.5 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-brand'
                                         >
                                             {isBuyNow ? '← Back to product' : '← Edit cart'}

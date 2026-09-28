@@ -24,6 +24,9 @@ const productSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
+    // All slugs owned by this product, including previous names. A unique
+    // multikey index prevents another product from claiming a redirect alias.
+    routeSlugs: { type: [String], default: undefined },
     mrp: {
         type: Number,
         required: true,
@@ -79,6 +82,17 @@ const productSchema = new mongoose.Schema({
 
 
 productSchema.index({ category: 1 })
+productSchema.index({ routeSlugs: 1 }, { unique: true, sparse: true })
+productSchema.pre('validate', async function () {
+    if (!this.isNew && !this.isModified('slug')) return
+    const previous = this.isNew ? null : await this.constructor.findById(this._id).select('slug routeSlugs').lean()
+    const slugs = [...new Set([...(previous?.routeSlugs || []), previous?.slug, this.slug].filter(Boolean))]
+    const conflict = await this.constructor.exists({
+        _id: { $ne: this._id }, $or: [{ slug: { $in: slugs } }, { routeSlugs: { $in: slugs } }],
+    })
+    if (conflict) this.invalidate('slug', 'This slug is already reserved by another product. Choose a different slug.')
+    this.routeSlugs = slugs
+})
 // Drives the storefront Bestsellers query: active bestsellers, ordered by rank.
 productSchema.index({ isBestseller: 1, deletedAt: 1, bestsellerSortOrder: 1 })
 // Drives the storefront Freshly Arrived query: active picks, ordered by rank.

@@ -137,7 +137,7 @@ const AnalyticsDashboard = () => {
     return (
         <div className="flex flex-col gap-4 print:gap-3">
             {/* Controls */}
-            <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
+            <div className="flex flex-col gap-3 rounded-lg bg-card ring-1 ring-foreground/10 p-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
                 <div className="flex flex-wrap items-center gap-2">
                     <div className="flex flex-wrap rounded-lg bg-muted p-1" role="tablist" aria-label="Date range">
                         {PRESETS.map((p) => (
@@ -200,7 +200,7 @@ const AnalyticsDashboard = () => {
             )}
 
             {isError && !data ? (
-                <div className="flex flex-col items-center rounded-xl border bg-card px-6 py-16 text-center">
+                <div className="flex flex-col items-center rounded-lg bg-card ring-1 ring-foreground/10 px-6 py-16 text-center">
                     <AlertTriangle className="size-8 text-destructive" aria-hidden="true" />
                     <p className="mt-3 font-semibold">Couldn’t build the report</p>
                     <p className="mt-1 text-sm text-muted-foreground">{error?.response?.data?.message || error?.message || 'Please try again.'}</p>
@@ -210,8 +210,8 @@ const AnalyticsDashboard = () => {
                 <div className={cn('flex flex-col gap-4 transition-opacity', isFetching && data && 'opacity-70')} aria-busy={isFetching}>
                     <ActionCenter actions={data?.actions} loading={isLoading} />
 
-                    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                        {tiles.map((tile) => <KpiTile key={tile.label} {...tile} loading={isLoading || !data} />)}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {tiles.map((tile, index) => <KpiTile index={index} key={tile.label} {...tile} loading={isLoading || !data} />)}
                     </div>
 
                     {data && (

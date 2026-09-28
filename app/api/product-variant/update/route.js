@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
@@ -91,6 +92,7 @@ export async function PUT(request) {
         await getProductVariant.save()
 
         // Size / media edits can change the shop filter list.
+        revalidateCatalogue()
         revalidateTag('storefront-shop-filters')
 
         return response(true, 200, 'Product variant updated successfully.')

@@ -393,7 +393,7 @@ export const TopProducts = ({ items = [], totalSales = 0 }) => {
                                     <span className="flex shrink-0 items-center gap-2">
                                         {pct(share(p.sales, totalSales), 0)} of sales
                                         {p.slug && (
-                                            <Link href={WEBSITE_PRODUCT_DETAILS(p.slug)} target="_blank" aria-label={`View ${p.name} on the storefront`} className="hover:text-foreground">
+                                            <Link href={WEBSITE_PRODUCT_DETAILS(p)} target="_blank" aria-label={`View ${p.name} on the storefront`} className="hover:text-foreground">
                                                 <ExternalLink className="size-3.5" />
                                             </Link>
                                         )}

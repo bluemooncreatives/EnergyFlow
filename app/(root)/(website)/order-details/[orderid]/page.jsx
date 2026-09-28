@@ -179,7 +179,7 @@ const OrderDetails = async ({ params }) => {
                                             const lineTotal = (product?.sellingPrice || 0) * (product?.qty || 0)
                                             const lineMrp = (product?.mrp || product?.sellingPrice || 0) * (product?.qty || 0)
                                             const nameNode = slug
-                                                ? <Link href={WEBSITE_PRODUCT_DETAILS(slug)} className='transition-colors hover:text-brand'>{name}</Link>
+                                                ? <Link href={WEBSITE_PRODUCT_DETAILS(product.productId)} className='transition-colors hover:text-brand'>{name}</Link>
                                                 : name
                                             return (
                                                 <div key={product?.variantId?._id || product?._id || idx} className='flex gap-4 p-5'>

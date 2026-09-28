@@ -118,7 +118,7 @@ const OrderDetails = ({ params }) => {
                                                     <Image src={product?.variantId?.media[0]?.secure_url || placeholderImg.src} width={60} height={60} alt="product" className="rounded" />
                                                     <div>
                                                         <h4 className="text-lg">
-                                                            <Link href={WEBSITE_PRODUCT_DETAILS(product?.productId?.slug)}>{product?.productId?.name}</Link>
+                                                            <Link href={WEBSITE_PRODUCT_DETAILS(product?.productId)}>{product?.productId?.name}</Link>
                                                             <p>Pack Size: {product?.variantId?.size}</p>
                                                         </h4>
                                                     </div>

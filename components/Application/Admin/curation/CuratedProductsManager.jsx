@@ -372,7 +372,7 @@ const CuratedProductsManager = ({ config }) => {
                                             </div>
                                             <div className="flex shrink-0 items-center gap-1">
                                                 <Button asChild variant="ghost" size="icon" className="size-8 max-sm:hidden" title="View on storefront">
-                                                    <Link href={WEBSITE_PRODUCT_DETAILS(product.slug)} target="_blank" aria-label={`View ${product.name} on the storefront`}>
+                                                    <Link href={WEBSITE_PRODUCT_DETAILS(product)} target="_blank" aria-label={`View ${product.name} on the storefront`}>
                                                         <ExternalLink className="size-4" />
                                                     </Link>
                                                 </Button>

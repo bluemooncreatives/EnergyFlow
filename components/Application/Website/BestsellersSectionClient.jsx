@@ -35,7 +35,7 @@ const rank = (n) => String(n).padStart(2, '0')
 const BestsellerCard = ({ product, position }) => {
     const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
     const name = formatProductName(product.name) || 'Product'
-    const href = WEBSITE_PRODUCT_DETAILS(product.slug)
+    const href = WEBSITE_PRODUCT_DETAILS(product)
     const image = product.media?.find((m) => m?.secure_url) || { secure_url: imgPlaceholder.src }
     const price = variant?.sellingPrice ?? product.sellingPrice
     const mrp = variant?.mrp ?? product.mrp

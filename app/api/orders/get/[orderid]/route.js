@@ -1,3 +1,4 @@
+import '@/models/Category.model'
 import { isAuthenticated } from "@/lib/authentication";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
@@ -24,7 +25,7 @@ export async function GET(request, { params }) {
             return response(false, 404, 'Order not found.')
         }
 
-        const orderData = await OrderModel.findOne({ order_id: orderid }).populate('products.productId', 'name slug').populate({
+        const orderData = await OrderModel.findOne({ order_id: orderid }).populate({ path: 'products.productId', select: 'name slug category', populate: { path: 'category', select: 'slug' } }).populate({
             path: 'products.variantId',
             populate: { path: 'media' }
         }).lean()

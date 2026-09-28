@@ -2,33 +2,16 @@
 import Link from 'next/link'
 import useFetch from '@/hooks/useFetch';
 import { ADMIN_CATEGORY_SHOW, ADMIN_CUSTOMERS_SHOW, ADMIN_PRODUCT_SHOW, ADMIN_ORDER_SHOW } from '@/routes/AdminPanelRoute';
-import { FolderTree, Shirt, UsersRound, ShoppingBag, TrendingUp, TrendingDown } from 'lucide-react';
+import { FolderTree, Shirt, UsersRound, ShoppingBag, CircleCheck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 const CountOverview = () => {
 
-    const { data: countData } = useFetch('/api/dashboard/admin/count')
-
-    const getTrendInfo = (current, previous) => {
-        if (!previous || previous === 0) {
-            return { isIncreased: true, text: 'Increased from Last Month' }
-        }
-        const isIncreased = current > previous
-        return {
-            isIncreased,
-            text: isIncreased ? 'Increased from Last Month' : 'Decreased from Last Month'
-        }
-    }
-
-    const categoryTrend = getTrendInfo(countData?.data?.category || 0, countData?.data?.categoryPrevious)
-    const productTrend = getTrendInfo(countData?.data?.product || 0, countData?.data?.productPrevious)
-    const customerTrend = getTrendInfo(countData?.data?.customer || 0, countData?.data?.customerPrevious)
-    const orderTrend = getTrendInfo(countData?.data?.order || 0, countData?.data?.orderPrevious)
+    const { data: countData, loading, error, refetch } = useFetch('/api/dashboard/admin/count')
 
     const cards = [
         {
             title: 'Total Categories',
             value: countData?.data?.category || 0,
-            trend: categoryTrend,
             href: ADMIN_CATEGORY_SHOW,
             icon: FolderTree,
             chartVar: '--chart-1'
@@ -36,7 +19,6 @@ const CountOverview = () => {
         {
             title: 'Total Products',
             value: countData?.data?.product || 0,
-            trend: productTrend,
             href: ADMIN_PRODUCT_SHOW,
             icon: Shirt,
             chartVar: '--chart-2'
@@ -44,7 +26,6 @@ const CountOverview = () => {
         {
             title: 'Total Customers',
             value: countData?.data?.customer || 0,
-            trend: customerTrend,
             href: ADMIN_CUSTOMERS_SHOW,
             icon: UsersRound,
             chartVar: '--chart-3'
@@ -52,12 +33,13 @@ const CountOverview = () => {
         {
             title: 'Total Orders',
             value: countData?.data?.order || 0,
-            trend: orderTrend,
             href: ADMIN_ORDER_SHOW,
             icon: ShoppingBag,
             chartVar: '--chart-4'
         },
     ]
+
+    if (error) return <div role="alert" className="rounded-lg bg-card p-4 ring-1 ring-foreground/10"><p className="text-sm">Could not load store totals.</p><button type="button" onClick={refetch} className="mt-2 text-sm font-medium underline">Try again</button></div>
 
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -73,18 +55,10 @@ const CountOverview = () => {
                                             </span>
                                         </CardHeader>
                             <CardContent>
-                                <div className="text-4xl font-bold">{card.value}</div>
+                                <div className="text-4xl font-bold">{loading || !countData ? <span className="inline-block h-9 w-16 animate-pulse rounded bg-muted" aria-label="Loading" /> : card.value}</div>
                                 <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    {card.trend.isIncreased ? (
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-success/15 text-success">
-                                                <TrendingUp className="h-3 w-3" />
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                                                <TrendingDown className="h-3 w-3" />
-                                            </span>
-                                        )}
-                                    <span className="ml-1">{card.trend.text}</span>
+                                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-success/15 text-success"><CircleCheck className="h-3 w-3" /></span>
+                                    <span className="ml-1">Current store total</span>
                                 </p>
                             </CardContent>
                     </Card>

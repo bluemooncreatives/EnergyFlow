@@ -1,3 +1,4 @@
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
@@ -7,6 +8,7 @@ import ProductVariantModel from "@/models/ProductVariant.model";
 // Adding/removing/restoring a variant can change which sizes exist, so drop
 // the shop filter list cache.
 const revalidateFilterCaches = () => {
+    revalidateCatalogue()
     revalidateTag('storefront-shop-filters')
 }
  

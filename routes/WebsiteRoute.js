@@ -9,7 +9,7 @@ export const WEBSITE_SHOP = "/shop"
 // Filtering and multi-category views still live on /shop?category=…
 export const WEBSITE_CATEGORY = (slug) => `/category/${slug}`
 
-export const WEBSITE_PRODUCT_DETAILS = (slug) => slug ? `/product/${slug}` : '/product'
+export { productPath as WEBSITE_PRODUCT_DETAILS } from '../lib/productRoute'
 
 export const WEBSITE_CART = "/cart"
 export const WEBSITE_CHECKOUT = "/checkout"

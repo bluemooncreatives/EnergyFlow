@@ -1,6 +1,8 @@
 import { connectDB } from '@/lib/databaseConnection'
 import ProductModel from '@/models/Product.model'
 import '@/models/Media.model'
+import '@/models/Category.model'
+import ProductVariantModel from '@/models/ProductVariant.model'
 import { getIndexableCategories } from '@/lib/services/shopService'
 import { SITE_URL } from '@/lib/seo'
 import { WEBSITE_CATEGORY, WEBSITE_PRODUCT_DETAILS } from '@/routes/WebsiteRoute'
@@ -37,12 +39,14 @@ export default async function sitemap() {
     try {
         await connectDB()
         const products = await ProductModel.find({ deletedAt: null })
-            .select('slug updatedAt media')
+            .select('slug category updatedAt media')
+            .populate({ path: 'category', match: { deletedAt: null }, select: 'slug' })
             .populate({ path: 'media', select: 'secure_url', match: { deletedAt: null } })
             .lean()
 
-        productPages = products.map((product) => ({
-            url: `${SITE_URL}${WEBSITE_PRODUCT_DETAILS(product.slug)}`,
+        const stocked = new Set((await ProductVariantModel.distinct('product', { deletedAt: null })).map(String))
+        productPages = products.filter((product) => product.category?.slug && stocked.has(String(product._id))).map((product) => ({
+            url: `${SITE_URL}${WEBSITE_PRODUCT_DETAILS(product)}`,
             lastModified: product.updatedAt,
             changeFrequency: 'weekly',
             priority: 0.8,

@@ -1,3 +1,6 @@
+import CategoryModel from '@/models/Category.model'
+import mongoose from 'mongoose'
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
@@ -35,6 +38,15 @@ export async function PUT(request) {
 
         const validatedData = validate.data
 
+        if (!mongoose.isValidObjectId(validatedData.category) || !await CategoryModel.exists({ _id: validatedData.category, deletedAt: null })) {
+            return response(false, 400, 'Choose an active category.', {}, { status: 400 })
+        }
+        const slugOwner = await ProductModel.exists({
+            _id: { $ne: validatedData._id },
+            $or: [{ slug: validatedData.slug }, { routeSlugs: validatedData.slug }],
+        })
+        if (slugOwner) return response(false, 409, 'This product slug is already reserved. Choose another slug.', {}, { status: 409 })
+
         // Server is authoritative on pricing: enforce SP <= MRP and derive the
         // discount, ignoring whatever the client sent.
         const pricing = validatePricing(validatedData.mrp, validatedData.sellingPrice)
@@ -59,6 +71,7 @@ export async function PUT(request) {
 
         // Re-categorising a product or changing its media can change category
         // counts and the homepage "Categories" representative image.
+        revalidateCatalogue()
         revalidateTag('storefront-home-categories')
         // An edit to mrp/sellingPrice decides whether a product qualifies for
         // the Daily Best Sells rail at all, and both homepage rails render the
@@ -69,6 +82,9 @@ export async function PUT(request) {
         return response(true, 200, 'Product updated successfully.')
 
     } catch (error) {
+        if (error.code === 11000 || error.errors?.slug) {
+            return response(false, 409, 'The SKU or slug is already reserved. Choose a unique value.', {}, { status: 409 })
+        }
         return catchError(error)
     }
 }

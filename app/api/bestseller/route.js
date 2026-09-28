@@ -1,3 +1,4 @@
+import '@/models/Category.model'
 import mongoose from "mongoose"
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
@@ -36,8 +37,9 @@ export async function GET() {
 
         const bestsellers = await ProductModel.find({ deletedAt: null, isBestseller: true })
             .sort({ bestsellerSortOrder: 1, createdAt: -1, _id: 1 })
-            .select('name slug sellingPrice mrp media bestsellerSortOrder')
+            .select('name slug category sellingPrice mrp media bestsellerSortOrder')
             .populate('media', 'secure_url alt')
+            .populate({ path: 'category', select: 'slug name' })
             .lean()
 
         return response(true, 200, 'Bestsellers fetched.', bestsellers)
