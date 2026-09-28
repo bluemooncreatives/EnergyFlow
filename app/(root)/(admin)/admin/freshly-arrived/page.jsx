@@ -141,7 +141,7 @@ const ShowFreshlyArrived = () => {
       />
 
       {belowMinimum && (
-        <div className="flex items-start gap-2 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
+        <div className="flex items-start gap-2 rounded-md border ef-tone--sun p-3 text-sm">
           <Info className="mt-0.5 size-4 shrink-0" />
           <p>
             This section always displays {MIN_REQUIRED} products. You currently have{' '}
@@ -266,7 +266,7 @@ const ShowFreshlyArrived = () => {
                       type="button"
                       variant="outline"
                       size="icon"
-                      className="size-8 text-red-600 hover:text-red-700"
+                      className="size-8 text-destructive hover:text-destructive/80"
                       disabled={removingId === product._id}
                       onClick={() => handleRemove(product._id)}
                       aria-label="Remove from freshly arrived"

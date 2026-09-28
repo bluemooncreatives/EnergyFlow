@@ -140,7 +140,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Product <span className="text-red-500">*</span>
+                        Product <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Select
@@ -163,7 +163,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        SKU <span className="text-red-500">*</span>
+                        SKU <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="text" placeholder="Enter sku" {...field} />
@@ -181,7 +181,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Pack Size <span className="text-red-500">*</span>
+                        Pack Size <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Select
@@ -204,7 +204,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        MRP <span className="text-red-500">*</span>
+                        MRP <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Enter MRP" {...field} />
@@ -222,7 +222,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Selling Price <span className="text-red-500">*</span>
+                        Selling Price <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Enter Selling Price" {...field} />
@@ -240,7 +240,7 @@ const EditProductVariant = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Discount Percentage <span className="text-red-500">*</span>
+                        Discount Percentage <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="number" readOnly placeholder="Enter Discount Percentage" {...field} />

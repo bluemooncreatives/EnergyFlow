@@ -95,7 +95,7 @@ const EditCoupon = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Code<span className="text-red-500">*</span>
+                        Code<span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="text" placeholder="Enter code" className="uppercase" {...field} onChange={(e) => field.onChange(e.target.value.toUpperCase())} />
@@ -113,7 +113,7 @@ const EditCoupon = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Discount Percentage <span className="text-red-500">*</span>
+                        Discount Percentage <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Enter Discount Percentage" {...field} />
@@ -130,7 +130,7 @@ const EditCoupon = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Min. Shopping Amount <span className="text-red-500">*</span>
+                        Min. Shopping Amount <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="Enter Min. Shopping Amount" {...field} />
@@ -147,7 +147,7 @@ const EditCoupon = ({ params }) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Validity <span className="text-red-500">*</span>
+                        Validity <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input type="date" {...field} />

@@ -173,7 +173,7 @@ const MediaContent = () => {
                 {status === 'pending' ? (
                     <div>Loading...</div>
                 ) : status === 'error' ? (
-                    <div className="text-red-500 text-sm">{error.message}</div>
+                    <div className="text-destructive text-sm">{error.message}</div>
                 ) : (
                     <>
                         {data.pages.flatMap(page => page.mediaData.map(media => media._id)).length === 0 && (

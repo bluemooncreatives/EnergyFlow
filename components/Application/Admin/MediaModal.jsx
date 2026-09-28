@@ -70,7 +70,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                             :
                             isError ?
                                 <div className='size-full flex justify-center items-center'>
-                                    <span className='text-red-500'>{error.message}</span>
+                                    <span className='text-destructive'>{error.message}</span>
                                 </div>
                                 :
                                 <>

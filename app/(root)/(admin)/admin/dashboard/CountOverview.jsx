@@ -80,7 +80,7 @@ const CountOverview = () => {
                                                 <TrendingUp className="h-3 w-3" />
                                             </span>
                                         ) : (
-                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+                                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                                                 <TrendingDown className="h-3 w-3" />
                                             </span>
                                         )}

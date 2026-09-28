@@ -1197,17 +1197,6 @@ body {
   .ef-badge--soft    { background: var(--surface-card); color: var(--brand-primary); box-shadow: var(--elev-1); }
   .ef-badge--inverse { background: var(--brand-primary); color: var(--on-brand); }
 
-  /* ── Status tones ──────────────────────────────────────────── */
-  /* Order / payment / shipment states, drawn from the palette by phase:
-     waiting = sunflower, in progress = olive, on the move = pine,
-     done = forest, problem = danger. Pair with a border + padding. Every
-     colour here is a token that flips, so the tones hold up in dark mode. */
-  .ef-tone--sun    { border-color: rgb(242 201 76 / 0.55); background-color: rgb(242 201 76 / 0.18); color: var(--brand-amber-ink); }
-  .ef-tone--olive  { border-color: color-mix(in srgb, var(--brand-olive) 40%, transparent); background-color: color-mix(in srgb, var(--brand-olive) 12%, transparent); color: var(--brand-olive-deep); }
-  .ef-tone--pine   { border-color: color-mix(in srgb, var(--ink-strong) 28%, transparent); background-color: color-mix(in srgb, var(--ink-strong) 7%, transparent); color: var(--ink-strong); }
-  .ef-tone--forest { border-color: color-mix(in srgb, var(--success) 32%, transparent); background-color: color-mix(in srgb, var(--success) 11%, transparent); color: var(--success); }
-  .ef-tone--danger { border-color: color-mix(in srgb, var(--destructive) 32%, transparent); background-color: color-mix(in srgb, var(--destructive) 10%, transparent); color: var(--destructive); }
-
   /* ── Cards ─────────────────────────────────────────────────── */
   .ef-card {
     position: relative;
@@ -1266,6 +1255,19 @@ body {
     overflow: hidden;
   }
 }
+
+/* ── Status tones ──────────────────────────────────────────── */
+/* Order / payment / shipment states, drawn from the palette by phase:
+   waiting = sunflower, in progress = olive, on the move = pine,
+   done = forest, problem = danger. Pair with a border + padding. Every
+   colour here is a token that flips, so the tones hold up in dark mode.
+   Unlayered on purpose: they must beat the colour utilities a Badge
+   variant carries (e.g. outline's `border-border text-foreground`). */
+.ef-tone--sun    { border-color: rgb(242 201 76 / 0.55); background-color: rgb(242 201 76 / 0.18); color: var(--brand-amber-ink); }
+.ef-tone--olive  { border-color: color-mix(in srgb, var(--brand-olive) 40%, transparent); background-color: color-mix(in srgb, var(--brand-olive) 12%, transparent); color: var(--brand-olive-deep); }
+.ef-tone--pine   { border-color: color-mix(in srgb, var(--ink-strong) 28%, transparent); background-color: color-mix(in srgb, var(--ink-strong) 7%, transparent); color: var(--ink-strong); }
+.ef-tone--forest { border-color: color-mix(in srgb, var(--success) 32%, transparent); background-color: color-mix(in srgb, var(--success) 11%, transparent); color: var(--success); }
+.ef-tone--danger { border-color: color-mix(in srgb, var(--destructive) 32%, transparent); background-color: color-mix(in srgb, var(--destructive) 10%, transparent); color: var(--destructive); }
 
 /* Motion safety — storefront transitions collapse for users who ask. */
 @media (prefers-reduced-motion: reduce) {

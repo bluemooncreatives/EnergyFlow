@@ -82,7 +82,7 @@ const OTPVerification = ({ email, onSubmit, loading }) => {
                         <ButtonLoading loading={loading} type="submit" text="Verify" variant="brand" className="h-12 w-full rounded-[var(--radius-control)] text-[0.9375rem] font-medium cursor-pointer" />
                         <div className='text-center mt-5'>
                             {!isResendingOtp ?
-                                <button onClick={resendOTP} type='button' className='text-blue-500 cursor-pointer hover:underline'>Resend OTP</button>
+                                <button onClick={resendOTP} type='button' className='text-[var(--brand-primary)] cursor-pointer hover:underline'>Resend OTP</button>
                                 :
                                 <span className='text-md'>Resending....</span>
                             }

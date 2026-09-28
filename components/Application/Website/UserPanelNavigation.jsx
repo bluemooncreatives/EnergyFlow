@@ -113,10 +113,10 @@ const UserPanelNavigation = () => {
                 <button
                     type="button"
                     onClick={handleLogout}
-                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-red-50"
+                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-destructive/10"
                 >
-                    <LogOut className="size-3.5 shrink-0 text-foreground/40 group-hover:text-red-500" />
-                    <span className="text-base font-semibold text-foreground/60 group-hover:text-red-600">
+                    <LogOut className="size-3.5 shrink-0 text-foreground/40 group-hover:text-destructive" />
+                    <span className="text-base font-semibold text-foreground/60 group-hover:text-destructive">
                         Logout
                     </span>
                 </button>

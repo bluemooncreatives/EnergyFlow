@@ -43,7 +43,7 @@ const ContactDetail = ({ params }) => {
 
         {!loading && !contact && (
           <div className="flex justify-center items-center py-24">
-            <p className="text-red-500 text-lg font-medium">Message not found.</p>
+            <p className="text-destructive text-lg font-medium">Message not found.</p>
           </div>
         )}
 
@@ -63,7 +63,7 @@ const ContactDetail = ({ params }) => {
                     Read
                   </Badge>
                 ) : (
-                  <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300">
+                  <Badge className="ef-tone--pine border">
                     New
                   </Badge>
                 )}
@@ -90,7 +90,7 @@ const ContactDetail = ({ params }) => {
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">Email</p>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="font-medium text-sm text-blue-600 hover:underline dark:text-blue-400"
+                    className="font-medium text-sm text-[var(--brand-primary)] hover:underline"
                   >
                     {contact.email}
                   </a>
@@ -104,7 +104,7 @@ const ContactDetail = ({ params }) => {
                   {contact.phone ? (
                     <a
                       href={`tel:${contact.phone}`}
-                      className="font-medium text-sm text-blue-600 hover:underline dark:text-blue-400"
+                      className="font-medium text-sm text-[var(--brand-primary)] hover:underline"
                     >
                       {contact.phone}
                     </a>
