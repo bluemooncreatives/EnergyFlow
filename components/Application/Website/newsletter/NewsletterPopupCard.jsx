@@ -31,6 +31,7 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
         popup,
         preview = false,
         previewState = 'form',
+        previewCoupon = PREVIEW_COUPON,
         onClose,
         onDecline,
         Title = 'h2',
@@ -42,7 +43,7 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
 
     const shown = preview
         ? previewState === 'success'
-            ? { couponCode: popup.offer.enabled ? PREVIEW_COUPON : null, alreadySubscribed: false }
+            ? { couponCode: popup.offer.enabled ? previewCoupon : null, alreadySubscribed: false }
             : null
         : result
 

@@ -17,14 +17,14 @@ import { CodeReveal, NewsletterBadge, NewsletterTitle, PerkCheck, SuccessSeal } 
  * `preview` renders it inside the admin customiser without submitting;
  * `previewState` shows the form or the success view there.
  */
-const NewsletterSectionClient = ({ section, offer, preview = false, previewState = 'form' }) => {
+const NewsletterSectionClient = ({ section, offer, preview = false, previewState = 'form', previewCoupon = 'WELCOME10' }) => {
     const sectionRef = useRef(null)
     const [result, setResult] = useState(null)
     useReveal(sectionRef)
 
     const perks = (section.perks || []).filter(Boolean)
     const shown = preview
-        ? previewState === 'success' ? { couponCode: offer ? 'WELCOME10' : null } : null
+        ? previewState === 'success' ? { couponCode: offer ? previewCoupon : null } : null
         : result
 
     return (

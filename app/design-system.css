@@ -1450,7 +1450,9 @@ body {
     margin: 0;
     font-family: var(--font-display);
     font-weight: var(--weight-display);
-    font-size: clamp(1.875rem, 1.3rem + 2.2vw, 2.75rem);
+    /* A token so the admin preview can pin it per device (vw would follow
+       the admin's own viewport, not the preview frame). */
+    font-size: var(--nl-title-size, clamp(1.875rem, 1.3rem + 2.2vw, 2.75rem));
     line-height: 0.98;
     letter-spacing: var(--tracking-display);
     word-spacing: var(--word-spacing-display);
