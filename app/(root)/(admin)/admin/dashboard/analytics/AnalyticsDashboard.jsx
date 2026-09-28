@@ -27,7 +27,10 @@ import ProductsCatalogueTab from './tabs/ProductsCatalogueTab'
 // ── Constants ─────────────────────────────────────────────────────────
 const PRESETS = [
     { id: 'today', label: 'Today' },
+    { id: 'yesterday', label: 'Yesterday' },
     { id: '7d', label: '7D' },
+    { id: 'this_month', label: 'This Month' },
+    { id: 'last_month', label: 'Last Month' },
     { id: '30d', label: '30D' },
     { id: '90d', label: '90D' },
     { id: '12m', label: '12M' },
@@ -98,10 +101,16 @@ const AnalyticsDashboard = () => {
         router.replace(`${pathname}?${q.toString()}`, { scroll: false })
     }
 
+    const year = params.get('year') || ''
+    const month = params.get('month') || ''
+    const date = params.get('date') || ''
+
     const { data, isLoading, isFetching, isError, error, refetch, dataUpdatedAt } = useQuery({
-        queryKey: ['admin-analytics', range, from, to],
+        queryKey: ['admin-analytics', range, from, to, year, month, date],
         queryFn: async () => {
-            const { data: res } = await axios.get('/api/dashboard/admin/analytics', { params: { range, from, to } })
+            const { data: res } = await axios.get('/api/dashboard/admin/analytics', {
+                params: { range, from, to, year, month, date }
+            })
             if (!res.success) throw new Error(res.message)
             return res.data
         },
