@@ -2135,6 +2135,11 @@ body {
   .ef-nl-dialog .ef-nl-check { width: 1.125rem; height: 1.125rem; }
   .ef-nl-dialog .ef-nl-check svg { width: 0.6875rem; height: 0.6875rem; }
   .ef-nl-dialog .ef-nl-success { gap: 0.875rem; }
+  /* Stacked form in the popup: full-width email field, full-width button below.
+     Slightly shorter controls keep the stack compact. */
+  .ef-nl-dialog .ef-nl-row { gap: 0.5rem; }
+  .ef-nl-dialog .ef-nl-field { height: 2.875rem; }
+  .ef-nl-dialog .ef-nl-submit { min-height: 2.875rem; }
   .ef-nl-dialog .ef-nl-code__value { font-size: 1.375rem; }
   @container nl-stage (min-width: 40rem) {
     .ef-nl-dialog .ef-nl-title { font-size: 2.25rem; }

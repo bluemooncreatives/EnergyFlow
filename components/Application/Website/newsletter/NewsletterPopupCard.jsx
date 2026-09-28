@@ -147,7 +147,6 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
                                 ref={emailRef}
                                 source="popup"
                                 preview={preview}
-                                capsule
                                 placeholder={popup.placeholder}
                                 buttonText={popup.buttonText}
                                 collectName={popup.collectName}
