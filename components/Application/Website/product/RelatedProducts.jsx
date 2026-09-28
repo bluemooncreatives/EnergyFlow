@@ -1,23 +1,28 @@
 'use client'
 
+import { useRef } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import ProductBox from '@/components/Application/Website/ProductBox'
 import RailControls from '@/components/Application/Website/storefront/RailControls'
 import { useScrollRail } from '@/hooks/useScrollRail'
+import { useReveal } from '@/hooks/useReveal'
 import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 
 // "You may also like" as a swipeable rail with arrow controls (hidden when
-// every card already fits). Renders nothing without products.
+// every card already fits). Renders nothing without products. It hydrates
+// late (LazyHydrate), so it runs its own scroll reveal.
 const RelatedProducts = ({ products, category }) => {
     const rail = useScrollRail()
+    const scopeRef = useRef(null)
+    useReveal(scopeRef)
     if (!products?.length) return null
 
     const moreHref = category?.slug ? WEBSITE_CATEGORY(category.slug) : WEBSITE_SHOP
     const moreLabel = category?.name ? `More ${category.name}` : 'Shop everything'
 
     return (
-        <section aria-labelledby="related-title" className="ef-section">
+        <section ref={scopeRef} aria-labelledby="related-title" className="ef-section">
             <div className="ef-container">
                 <div className="mb-[var(--section-gap)] flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div data-reveal className="flex flex-col items-start gap-4">

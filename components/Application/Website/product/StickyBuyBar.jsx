@@ -20,6 +20,7 @@ import { Stepper } from './ProductBuyBox'
  */
 const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
     const barRef = useRef(null)
+    const thumbRef = useRef(null)
     const [visible, setVisible] = useState(false)
 
     useEffect(() => {
@@ -70,6 +71,7 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
         >
             <div className="mx-auto flex max-w-[var(--container-max)] items-center gap-3">
                 <button
+                    ref={thumbRef}
                     type="button"
                     onClick={backToTop}
                     aria-label="Back to top of the product"
@@ -118,7 +120,7 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
                         <button type="button" onClick={() => cart.buyNow(1)} className="ef-btn ef-btn--accent hidden h-11 px-5 text-xs sm:inline-flex">
                             <Zap aria-hidden="true" /> Buy now
                         </button>
-                        <button type="button" onClick={() => onAdd(1)} className="ef-btn ef-btn--primary h-11 px-4 text-xs sm:px-5">
+                        <button type="button" onClick={() => onAdd(1, thumbRef.current)} className="ef-btn ef-btn--primary h-11 px-4 text-xs sm:px-5">
                             <ShoppingBag aria-hidden="true" /> Add<span className="hidden sm:inline"> to cart</span>
                         </button>
                     </div>
