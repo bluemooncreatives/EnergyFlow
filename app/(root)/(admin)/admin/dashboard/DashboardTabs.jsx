@@ -8,6 +8,7 @@ import AnalyticsDashboard from './analytics/AnalyticsDashboard'
 
 // Tab state lives in ?tab= so "Analytics" links, refreshes and the back
 // button all land on the view the admin was looking at.
+// Default is always "overview" so the overview panel opens first.
 const TabsInner = ({ overview }) => {
     const params = useSearchParams()
     const router = useRouter()
@@ -28,8 +29,8 @@ const TabsInner = ({ overview }) => {
                     <TabsTrigger value="analytics" className="gap-1.5"><BarChart3 className="size-4" aria-hidden="true" /> Analytics &amp; reports</TabsTrigger>
                 </TabsList>
             </div>
-            <TabsContent value="analytics"><AnalyticsDashboard /></TabsContent>
             <TabsContent value="overview">{overview}</TabsContent>
+            <TabsContent value="analytics"><AnalyticsDashboard /></TabsContent>
         </Tabs>
     )
 }
