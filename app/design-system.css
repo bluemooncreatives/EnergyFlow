@@ -2093,7 +2093,7 @@ body {
     position: fixed;
     left: max(1rem, env(safe-area-inset-left, 0px));
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    z-index: calc(var(--z-sticky) + 1);
+    z-index: 40;   /* under the header (50) and the cart / search sheets */
     display: flex;
     align-items: center;
     border-radius: 9999px;

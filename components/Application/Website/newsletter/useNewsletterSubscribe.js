@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import axios from 'axios'
-import { NEWSLETTER_EMAIL_REGEX } from '@/lib/newsletterConfig'
+import { NEWSLETTER_EMAIL_REGEX } from '@/lib/newsletterShared'
 
 /* ── Per-visitor memory ─────────────────────────────────────────
    What this browser has done with the newsletter, so the popup never nags a

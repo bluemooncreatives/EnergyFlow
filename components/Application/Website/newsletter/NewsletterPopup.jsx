@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { Gift, Mail, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { isNewsletterPathAllowed } from '@/lib/newsletterConfig'
+import { isNewsletterPathAllowed } from '@/lib/newsletterShared'
 import NewsletterPopupCard from './NewsletterPopupCard'
 import {
     NEWSLETTER_SUBSCRIBED_EVENT,

@@ -9,8 +9,10 @@ import { cn } from '@/lib/utils'
    footer strip. Styling lives in design-system.css §24 (.ef-nl-*). */
 
 // Two-tone headline; the accent half gets a hand-drawn sunflower swash.
+// `id` is only forwarded when given: Radix's Dialog.Title supplies its own id
+// for aria-labelledby, and an explicit undefined would override it.
 export const NewsletterTitle = ({ as: Tag = 'h2', title, accent, id, className }) => (
-    <Tag id={id} className={cn('ef-nl-title', className)}>
+    <Tag {...(id ? { id } : {})} className={cn('ef-nl-title', className)}>
         {title}
         {accent && (
             <>
