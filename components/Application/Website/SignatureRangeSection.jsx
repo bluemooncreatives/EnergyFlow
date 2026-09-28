@@ -1,153 +1,61 @@
-'use client'
+import dynamic from 'next/dynamic'
+import { getSignatureShowcase } from '@/lib/services/categoryService'
+import { CATEGORY_ART, GIFTING_ART } from './storefront/categoryArt'
 
-import { useRef } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
-import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
-import { useReveal } from '@/hooks/useReveal'
-import { cn } from '@/lib/utils'
-import Section from './storefront/Section'
-import SectionHeader from './storefront/SectionHeader'
-import { ChocolateBox, GheeJar, OilBottle } from './storefront/ProductIllustrations'
+// GSAP-driven client logic is split into its own chunk so it does not block
+// parsing/hydration of the critical path.
+const SignatureRangeClient = dynamic(() => import('./SignatureRangeClient'))
 
-// The three lines Energyflow leads with. Each tile deep-links into a filtered
-// shop view. Set `image` on a tile (a /public path or Cloudinary URL) and it
-// replaces the illustration with real photography — no layout change needed.
-const RANGES = [
-    {
-        key: 'ghee',
-        eyebrow: 'A2 Gir cow · Bilona',
-        title: 'Bilona Ghee',
-        copy: 'Curd from A2 Gir cow milk, hand-churned and slow-simmered the traditional way. Grainy, aromatic and deeply rich.',
-        cta: 'Shop ghee',
-        href: `${WEBSITE_SHOP}?q=ghee`,
-        term: 'ghee',
-        enquire: 'Enquire about ghee',
-        tint: 'var(--tint-honey)',
-        Art: GheeJar,
-        image: null,
-    },
-    {
-        key: 'oils',
-        eyebrow: 'Wood & expeller pressed',
-        title: 'Cold Pressed Oils',
-        copy: 'Pressed at low temperature. Never refined, bleached or deodorised.',
-        cta: 'Shop oils',
-        href: `${WEBSITE_SHOP}?q=oil`,
-        term: 'oil',
-        enquire: 'Enquire about oils',
-        tint: 'var(--tint-pistachio)',
-        Art: OilBottle,
-        image: null,
-    },
-    {
-        key: 'chocolates',
-        eyebrow: 'Festive & corporate',
-        title: 'Gift Chocolates',
-        copy: 'Chocolate and dry fruit boxes for Diwali, weddings and teams.',
-        cta: 'Shop gifts',
-        href: `${WEBSITE_SHOP}?q=chocolate`,
-        term: 'chocolate',
-        enquire: 'Plan a gift order',
-        tint: 'var(--tint-almond)',
-        Art: ChocolateBox,
-        image: null,
-    },
-]
+const countLabel = (count) => `${count} ${count === 1 ? 'product' : 'products'}`
 
-// While a range has nothing in the catalogue yet, its tile becomes an enquiry
-// (these are the lines the brand leads with, so interest is worth capturing)
-// rather than a search that returns no results.
-const resolveLink = (range, availability) =>
-    !availability?.terms || availability.terms[range.term] !== false
-        ? { href: range.href, label: range.cta }
-        : { href: '/contact', label: range.enquire }
-
-const RangeTile = ({ range, featured, availability }) => {
-    const { Art } = range
-    const link = resolveLink(range, availability)
-
-    return (
-        <Link
-            href={link.href}
-            data-reveal
-            className={cn(
-                'ef-tile ef-focus group/tile @container/tile flex min-h-[15rem] flex-col p-6 sm:p-8',
-                featured ? 'lg:row-span-2 lg:min-h-[34rem] lg:p-10' : 'lg:min-h-0'
-            )}
-            style={{ background: range.tint }}
-            aria-label={`${range.title} — ${link.label}`}
-        >
-            {/* soft light pooling behind the art */}
-            <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-1/4 -right-1/4 -z-10 aspect-square w-[80%] rounded-full bg-white/45 blur-2xl dark:bg-white/[0.04]"
-            />
-
-            <div className={cn('relative z-10 flex max-w-[62%] flex-col gap-3', featured && 'lg:max-w-[70%]')}>
-                <span className="ef-eyebrow self-start">{range.eyebrow}</span>
-                <h3
-                    className={cn(
-                        'font-medium leading-[1.05] text-ink-strong',
-                        featured ? 'text-[clamp(1.75rem,1.2rem+2.2vw,3.25rem)]' : 'text-[clamp(1.5rem,1.2rem+1.1vw,2.125rem)]'
-                    )}
-                >
-                    {range.title}
-                </h3>
-                <p className={cn('text-[0.9375rem] leading-relaxed text-ink-body', !featured && 'hidden @[26rem]/tile:block')}>
-                    {range.copy}
-                </p>
-            </div>
-
-            <span className="relative z-10 mt-auto inline-flex items-center gap-2 pt-6 text-[0.9375rem] font-medium text-brand">
-                <span className="flex size-10 items-center justify-center rounded-full bg-brand text-on-brand transition-transform duration-300 group-hover/tile:rotate-45 motion-reduce:transition-none">
-                    <ArrowUpRight className="size-[1.1rem]" aria-hidden="true" />
-                </span>
-                {link.label}
-            </span>
-
-            <div
-                aria-hidden="true"
-                className={cn(
-                    'pointer-events-none absolute bottom-0 right-0 transition-transform duration-700 ease-out group-hover/tile:-translate-y-2 group-hover/tile:scale-[1.03] motion-reduce:transition-none',
-                    featured
-                        ? 'w-[40%] max-w-[15rem] sm:max-w-[17rem] lg:w-[50%] lg:max-w-[21rem] lg:right-6 lg:bottom-4'
-                        : 'w-[42%] max-w-[13rem] lg:w-[40%]'
-                )}
-            >
-                {range.image ? (
-                    <div className="relative aspect-square">
-                        <Image src={range.image} alt="" fill sizes="(max-width: 1024px) 45vw, 26rem" className="object-contain" />
-                    </div>
-                ) : (
-                    <Art className="h-auto w-full drop-shadow-[0_18px_24px_rgba(8,58,47,0.14)]" />
-                )}
-            </div>
-        </Link>
-    )
+// With nothing to pick from the catalogue (empty, or the lookup failed) the
+// fourth tile still holds the grid: hampers are quoted, so it's an enquiry.
+const HAMPER_TILE = {
+    key: 'hampers',
+    eyebrow: 'Festive & corporate',
+    title: 'Gift Hampers',
+    href: '/contact',
+    label: 'Plan a hamper',
+    price: null,
+    badge: 'Made to order',
+    tint: 'var(--tint-sage)',
+    media: { kind: 'cover', ...GIFTING_ART },
 }
 
-const SignatureRangeSection = ({ availability = null, tone = 'page' }) => {
-    const sectionRef = useRef(null)
-    useReveal(sectionRef)
+// The catalogue's pick for the fourth tile. Always a live category with
+// products and a photo (see getSignatureShowcase); art-directed photography
+// wins over its product photo when there is some.
+const toPickTile = (pick) => {
+    if (!pick) return HAMPER_TILE
+    const art = CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null)
+
+    return {
+        key: `category-${pick.slug}`,
+        eyebrow: pick.gifting ? 'Boxed & ready to gift' : 'Customer favourite',
+        title: pick.name,
+        href: pick.href,
+        label: `Shop ${pick.name}`,
+        price: pick.priceFrom,
+        badge: pick.productCount ? countLabel(pick.productCount) : null,
+        tint: 'var(--tint-sage)',
+        media: { kind: 'cover', src: art?.src ?? pick.image, alt: art?.alt ?? pick.alt },
+    }
+}
+
+// "Made the slow way, worth gifting": the three signature lines plus one
+// category from the catalogue, as a bento grid. Live counts and "from" prices
+// come from the database; if that lookup fails the tiles fall back to the
+// page-level availability check and render without numbers.
+const SignatureRangeSection = async ({ availability = null, tone = 'page' }) => {
+    const showcase = await getSignatureShowcase().catch(() => null)
 
     return (
-        <Section ref={sectionRef} tone={tone} aria-labelledby="signature-title">
-            <SectionHeader
-                id="signature-title"
-                eyebrow="Our signature range"
-                title="Made the slow way,"
-                accent="worth gifting."
-                description="The three things we are known for: traditional bilona ghee, cold pressed oils and chocolates boxed for giving."
-            />
-
-            <div className="grid gap-[var(--grid-gap)] lg:grid-cols-[1.15fr_1fr] lg:grid-rows-2">
-                {RANGES.map((range, i) => (
-                    <RangeTile key={range.key} range={range} featured={i === 0} availability={availability} />
-                ))}
-            </div>
-        </Section>
+        <SignatureRangeClient
+            tone={tone}
+            stats={showcase?.terms ?? null}
+            availability={availability}
+            pick={toPickTile(showcase?.pick)}
+        />
     )
 }
 

@@ -1236,6 +1236,22 @@ body {
     border-color: var(--palette-cream);
     color: var(--palette-pine);
   }
+  /* Sunflower variant — the lead action in a row of ef-cta links ("Plan a
+     gift order"). Identical in both themes: sunflower fill, pine arrow box. */
+  .ef-cta--accent {
+    background: var(--brand-sun);
+    border-color: var(--brand-sun);
+    color: var(--brand-sun-ink);
+  }
+  .ef-cta--accent .ef-cta__box { background: var(--palette-pine); color: var(--palette-cream); }
+  .ef-cta--accent:hover {
+    background: var(--brand-amber-hover);
+    border-color: var(--brand-amber-hover);
+    color: var(--brand-sun-ink);
+    box-shadow: 0 14px 30px -12px rgb(242 201 76 / 0.6);
+  }
+  .ef-cta--accent:hover .ef-cta__box,
+  .dark .ef-cta--accent:hover .ef-cta__box { background: var(--palette-pine); color: var(--palette-cream); }
 
   /* Round icon button — carousel arrows, quick actions */
   .ef-icon-btn {

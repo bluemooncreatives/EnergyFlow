@@ -7,6 +7,7 @@ import BestsellersSection from '@/components/Application/Website/BestsellersSect
 import CategoryArchiveSection from '@/components/Application/Website/CategoryArchiveSection'
 import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
 import DailyBestSellsSection from '@/components/Application/Website/DailyBestSellsSection'
+import SignatureRangeSection from '@/components/Application/Website/SignatureRangeSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
 import NewsletterSection from '@/components/Application/Website/newsletter/NewsletterSection'
 import { getStorefrontAvailability } from '@/lib/services/categoryService'
@@ -15,7 +16,6 @@ import { getStorefrontAvailability } from '@/lib/services/categoryService'
 // so they don't block parsing and hydration of the above-fold critical path.
 const PromiseTicker = dynamic(() => import('@/components/Application/Website/PromiseTicker'))
 const PantryMarquee = dynamic(() => import('@/components/Application/Website/PantryMarquee'))
-const SignatureRangeSection = dynamic(() => import('@/components/Application/Website/SignatureRangeSection'))
 const AboutUsSection = dynamic(() => import('@/components/Application/Website/AboutUsSection'))
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
 const FAQSection = dynamic(() => import('@/components/Application/Website/FAQSection'))
