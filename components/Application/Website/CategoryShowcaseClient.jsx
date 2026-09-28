@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import gsap from 'gsap'
@@ -20,105 +20,176 @@ const PANEL_COUNT = 4
 const GROW_ACTIVE = 2.8   // flex-grow of the hovered panel …
 const GROW_REST = 0.8     // … and of the others while one is open
 
-const pad = (n) => String(n).padStart(2, '0')
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`
+
+// Notch geometry for the count chip, in px.
+const NOTCH_GAP = 6      // clear space between the chip and the cut edge
+const NOTCH_FILLET = 10  // radius of the two curves where the cut meets the card
+
+// SVG path for a W×H card with radius-R corners and a notch cut out of the
+// top-right corner, nw wide and nh tall. Clockwise from the top-left:
+//   top edge → convex curve down into the notch → notch side → concave
+//   fillet → notch floor → convex corner → right edge → bottom → left edge.
+// Arc sweep 1 = convex (clockwise on screen), 0 = the concave inner fillet.
+const notchPath = (W, H, nw, nh, R, r) => {
+    const x0 = W - nw // notch's left wall
+    const y0 = nh     // notch's floor
+    const f = Math.max(0, Math.min(r, nh / 2, (W - nw - R) / 2))
+    const c = Math.max(0, Math.min(R, (H - nh) / 2))
+    return [
+        `M 0 ${R}`,
+        `A ${R} ${R} 0 0 1 ${R} 0`,
+        `H ${x0 - f}`,
+        `A ${f} ${f} 0 0 1 ${x0} ${f}`,
+        `V ${y0 - f}`,
+        `A ${f} ${f} 0 0 0 ${x0 + f} ${y0}`,
+        `H ${W - c}`,
+        `A ${c} ${c} 0 0 1 ${W} ${y0 + c}`,
+        `V ${H - R}`,
+        `A ${R} ${R} 0 0 1 ${W - R} ${H}`,
+        `H ${R}`,
+        `A ${R} ${R} 0 0 1 0 ${H - R}`,
+        'Z',
+    ].join(' ')
+}
+
+// Keeps the card's clip-path cut exactly around the chip. The cards resize
+// continuously (swipe width on phones, the flex-grow tween on desktop), so a
+// ResizeObserver recomputes the path in px and writes it straight to the
+// element — no React re-render per frame.
+const useNotchClip = (panelRef, cardRef, chipRef) => {
+    useEffect(() => {
+        const panel = panelRef.current
+        const card = cardRef.current
+        const chip = chipRef.current
+        if (!panel || !card || !chip) return
+
+        const update = () => {
+            const W = panel.clientWidth
+            const H = panel.clientHeight
+            if (!W || !H) return
+            const R = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 12
+            const nw = chip.offsetWidth + NOTCH_GAP
+            const nh = chip.offsetHeight + NOTCH_GAP
+            card.style.clipPath = `path('${notchPath(W, H, nw, nh, R, NOTCH_FILLET)}')`
+        }
+
+        update()
+        const ro = new ResizeObserver(update)
+        ro.observe(panel)
+        ro.observe(chip)
+        return () => ro.disconnect()
+    }, [panelRef, cardRef, chipRef])
+}
 
 // One category panel. The same markup serves both layouts:
 //   desktop — [data-label] shows collapsed; GSAP swaps it for [data-details]
 //   phones  — a swipeable card with [data-details] always shown (CSS only)
-const Panel = ({ item, index, panelRef }) => {
+const Panel = ({ item, panelRef }) => {
     const from = formatINR(item.priceFrom)
+    const liRef = useRef(null)
+    const cardRef = useRef(null)
+    const chipRef = useRef(null)
+    useNotchClip(liRef, cardRef, chipRef)
+
+    // The li keeps sizing, hover events and the GSAP reveal wipe (which
+    // animates the li's own clip-path); the notch clip lives on the inner card
+    // so the two never fight.
+    const setLiRef = (el) => {
+        liRef.current = el
+        panelRef(el)
+    }
 
     return (
         <li
-            ref={panelRef}
-            className="group/panel relative isolate h-[31rem] w-[84vw] shrink-0 snap-start overflow-hidden rounded-card bg-pine sm:w-[26rem] lg:h-full lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
+            ref={setLiRef}
+            className="group/panel relative h-[31rem] w-[84vw] shrink-0 snap-start sm:w-[26rem] lg:h-full lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
         >
-            {/* Photo (oversized so the pointer parallax never shows an edge) */}
-            <div data-img className="absolute -inset-[4%] -z-10 will-change-transform">
-                <Image
-                    src={item.previewImage}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1024px) 84vw, 50vw"
-                    className="object-cover"
-                />
-            </div>
-            <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(4_26_20/0.92)_0%,rgb(4_26_20/0.45)_42%,rgb(4_26_20/0.05)_70%)]" />
-
-            {/* Top row: index + count. The scrim is thinnest up here and the
-                photos are light, so both sit on solid pine chips (fixed
-                palette: legible over any photo, in either theme). */}
-            <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between text-[0.75rem] font-semibold text-[var(--palette-cream)]">
-                <span className="rounded-[var(--radius-control)] bg-[var(--palette-pine)]/85 px-2 py-1 tabular-nums shadow-[0_0_0_1px_rgb(247_243_232/0.14)] backdrop-blur-sm">{pad(index + 1)}</span>
-                <span className="rounded-[var(--radius-control)] bg-[var(--palette-pine)]/85 px-2.5 py-1 shadow-[0_0_0_1px_rgb(247_243_232/0.14)] backdrop-blur-sm">
-                    {plural(item.count, 'product', 'products')}
-                </span>
-            </div>
-
-            {/* Collapsed label (desktop only). Its link covers the panel, so a
-                click anywhere opens the category, and keyboard focus on it opens
-                the panel. */}
-            <div data-label className="absolute inset-x-4 bottom-4 hidden text-white lg:block">
-                <Link
-                    href={item.href}
-                    aria-label={`Shop ${item.name}`}
-                    className="ef-focus block text-[1.125rem] font-medium leading-tight tracking-[-0.01em] after:absolute after:inset-0 after:content-['']"
-                >
-                    {item.name}
-                </Link>
-                {from && <span className="mt-1 block text-[0.8125rem] text-white/75">From {from}</span>}
-            </div>
-
-            {/* Expanded details */}
-            <div
-                data-details
-                className="absolute inset-x-4 bottom-4 z-10 flex flex-col gap-4 text-white lg:invisible lg:inset-x-6 lg:bottom-6 lg:flex-row lg:items-end lg:justify-between lg:gap-6 lg:opacity-0"
+            {/* Product count, sitting in the notch cut from the card's corner. */}
+            <span
+                ref={chipRef}
+                className="pointer-events-none absolute right-0 top-0 z-20 inline-flex h-7 items-center rounded-card bg-[var(--palette-pine)] px-3 text-[0.75rem] font-semibold leading-none text-[var(--palette-cream)] dark:bg-[var(--brand-sun)] dark:text-[var(--palette-pine)]"
             >
-                <div className="flex min-w-0 flex-col gap-3 lg:max-w-[20rem]">
-                    <h3 data-d className="text-[1.625rem] font-medium leading-[1.1] lg:text-[2rem]">
-                        {item.name}
-                    </h3>
-                    <p data-d className="flex flex-wrap gap-x-3 gap-y-1 text-[0.875rem] text-white/80">
-                        {from && <span>From <strong className="font-medium text-white">{from}</strong></span>}
-                        {item.maxDiscount > 0 && <span>Up to <strong className="font-medium text-khaki">{item.maxDiscount}% off</strong></span>}
-                    </p>
+                {plural(item.count, 'product', 'products')}
+            </span>
+
+            <div ref={cardRef} data-card className="absolute inset-0 isolate overflow-hidden rounded-card bg-pine">
+                {/* Photo (oversized so the pointer parallax never shows an edge) */}
+                <div data-img className="absolute -inset-[4%] -z-10 will-change-transform">
+                    <Image
+                        src={item.previewImage}
+                        alt=""
+                        fill
+                        sizes="(max-width: 1024px) 84vw, 50vw"
+                        className="object-cover"
+                    />
+                </div>
+                <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(4_26_20/0.92)_0%,rgb(4_26_20/0.45)_42%,rgb(4_26_20/0.05)_70%)]" />
+
+                {/* Collapsed label (desktop only). Its link covers the panel, so a
+                    click anywhere opens the category, and keyboard focus on it opens
+                    the panel. */}
+                <div data-label className="absolute inset-x-4 bottom-4 hidden text-white lg:block">
                     <Link
-                        data-d
                         href={item.href}
-                        className="ef-focus group/cta mt-1 inline-flex h-11 w-fit items-center gap-2 rounded-[var(--radius-control)] bg-khaki px-5 text-[0.9375rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)]"
+                        aria-label={`Shop ${item.name}`}
+                        className="ef-focus block text-[1.125rem] font-medium leading-tight tracking-[-0.01em] after:absolute after:inset-0 after:content-['']"
                     >
-                        Shop {item.name}
-                        <ArrowRight className="size-4 transition-transform duration-300 group-hover/cta:translate-x-1" aria-hidden="true" />
+                        {item.name}
                     </Link>
+                    {from && <span className="mt-1 block text-[0.8125rem] text-white/75">From {from}</span>}
                 </div>
 
-                {item.products.length > 0 && (
-                    <div data-d className="w-full rounded-card bg-white/12 p-3 backdrop-blur-md shadow-[inset_0_0_0_1px_rgb(255_255_255/0.18)] lg:w-[15.5rem] lg:shrink-0">
-                        <p className="px-1 pb-2 text-[0.6875rem] font-medium uppercase text-white/70">Popular picks</p>
-                        <ul className="flex list-none flex-col gap-1 p-0">
-                            {item.products.map((product) => (
-                                <li key={product.slug} data-row>
-                                    <Link
-                                        href={WEBSITE_PRODUCT_DETAILS(product.slug)}
-                                        className="ef-focus group/row flex items-center gap-2.5 rounded-well p-1 transition-colors hover:bg-white/10"
-                                    >
-                                        <span className="relative size-10 shrink-0 overflow-hidden rounded-[calc(var(--radius-well)-3px)] bg-white/20">
-                                            <Image src={product.image} alt="" fill sizes="40px" className="object-cover" />
-                                        </span>
-                                        <span className="min-w-0 flex-1">
-                                            <span className="block truncate text-[0.8125rem] font-medium">{product.name}</span>
-                                            <span className="block text-[0.75rem] text-white/70">
-                                                {formatINR(product.price)}{product.size ? ` · ${product.size}` : ''}
-                                            </span>
-                                        </span>
-                                        <ArrowUpRight className="size-3.5 shrink-0 text-white/60 transition-colors group-hover/row:text-white" aria-hidden="true" />
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                {/* Expanded details */}
+                <div
+                    data-details
+                    className="absolute inset-x-4 bottom-4 z-10 flex flex-col gap-4 text-white lg:invisible lg:inset-x-6 lg:bottom-6 lg:flex-row lg:items-end lg:justify-between lg:gap-6 lg:opacity-0"
+                >
+                    <div className="flex min-w-0 flex-col gap-3 lg:max-w-[20rem]">
+                        <h3 data-d className="text-[1.625rem] font-medium leading-[1.1] lg:text-[2rem]">
+                            {item.name}
+                        </h3>
+                        <p data-d className="flex flex-wrap gap-x-3 gap-y-1 text-[0.875rem] text-white/80">
+                            {from && <span>From <strong className="font-medium text-white">{from}</strong></span>}
+                            {item.maxDiscount > 0 && <span>Up to <strong className="font-medium text-khaki">{item.maxDiscount}% off</strong></span>}
+                        </p>
+                        <Link
+                            data-d
+                            href={item.href}
+                            className="ef-focus group/cta mt-1 inline-flex h-11 w-fit items-center gap-2 rounded-[var(--radius-control)] bg-khaki px-5 text-[0.9375rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)]"
+                        >
+                            Shop {item.name}
+                            <ArrowRight className="size-4 transition-transform duration-300 group-hover/cta:translate-x-1" aria-hidden="true" />
+                        </Link>
                     </div>
-                )}
+
+                    {item.products.length > 0 && (
+                        <div data-d className="w-full rounded-card bg-white/12 p-3 backdrop-blur-md shadow-[inset_0_0_0_1px_rgb(255_255_255/0.18)] lg:w-[15.5rem] lg:shrink-0">
+                            <p className="px-1 pb-2 text-[0.6875rem] font-medium uppercase text-white/70">Popular picks</p>
+                            <ul className="flex list-none flex-col gap-1 p-0">
+                                {item.products.map((product) => (
+                                    <li key={product.slug} data-row>
+                                        <Link
+                                            href={WEBSITE_PRODUCT_DETAILS(product.slug)}
+                                            className="ef-focus group/row flex items-center gap-2.5 rounded-well p-1 transition-colors hover:bg-white/10"
+                                        >
+                                            <span className="relative size-10 shrink-0 overflow-hidden rounded-[calc(var(--radius-well)-3px)] bg-white/20">
+                                                <Image src={product.image} alt="" fill sizes="40px" className="object-cover" />
+                                            </span>
+                                            <span className="min-w-0 flex-1">
+                                                <span className="block truncate text-[0.8125rem] font-medium">{product.name}</span>
+                                                <span className="block text-[0.75rem] text-white/70">
+                                                    {formatINR(product.price)}{product.size ? ` · ${product.size}` : ''}
+                                                </span>
+                                            </span>
+                                            <ArrowUpRight className="size-3.5 shrink-0 text-white/60 transition-colors group-hover/row:text-white" aria-hidden="true" />
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
             </div>
         </li>
     )
@@ -275,7 +346,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                 className="no-scrollbar flex list-none gap-[var(--grid-gap)] overflow-x-auto p-0 max-lg:-mx-[var(--website-gutter)] max-lg:snap-x max-lg:snap-mandatory max-lg:px-[var(--website-gutter)] max-lg:scroll-px-[var(--website-gutter)] lg:h-[clamp(28rem,36vw,34rem)] lg:overflow-visible"
             >
                 {panels.map((item, i) => (
-                    <Panel key={item.id} item={item} index={i} panelRef={(el) => { panelsRef.current[i] = el }} />
+                    <Panel key={item.id} item={item} panelRef={(el) => { panelsRef.current[i] = el }} />
                 ))}
             </ul>
 
