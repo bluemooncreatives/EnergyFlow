@@ -23,14 +23,14 @@ const usefulLinks = [
     { label: 'Home', href: WEBSITE_HOME },
     { label: 'Shop', href: WEBSITE_SHOP },
     { label: 'About', href: '/about-us' },
-    { label: 'Register', href: WEBSITE_REGISTER },
-    { label: 'Login', href: WEBSITE_LOGIN },
+    { label: 'Contact', href: '/contact' },
+    { label: 'FAQs', href: `${WEBSITE_HOME}#faq` },
 ]
 
 const helpLinks = [
-    { label: 'Register', href: WEBSITE_REGISTER },
-    { label: 'Login', href: WEBSITE_LOGIN },
     { label: 'My Account', href: USER_DASHBOARD },
+    { label: 'Login', href: WEBSITE_LOGIN },
+    { label: 'Register', href: WEBSITE_REGISTER },
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Terms & Conditions', href: '/terms-and-conditions' },
 ]
@@ -178,7 +178,7 @@ const Footer = ({ categoryLinks = [] }) => {
                 <FooterWordmark />
             </div>
 
-            {/* ───── Bottom bar (purple) ───── */}
+            {/* ───── Bottom bar ───── */}
             <div className='bg-[var(--brand-ink-soft)] text-[var(--brand-cream)]'>
                 <div className='website-gutter py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm'>
                     <div className='flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3'>

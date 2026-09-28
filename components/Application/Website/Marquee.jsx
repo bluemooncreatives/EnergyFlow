@@ -7,7 +7,14 @@ import { ArrowRight } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
+// A scrolling strip of short phrases (the store's promises on the homepage).
+// `items` is one set; it is repeated `repeatCount` times (kept even, because
+// the seamless wrap measures half the track). Screen readers get the set once
+// as a plain list; the moving copy is decorative.
+const Marquee = ({ items = [], label, repeatCount = 6, speed = 1 }) => {
+    const sets = repeatCount % 2 ? repeatCount + 1 : repeatCount
+    const parts = Array.from({ length: sets }).flatMap(() => items)
+
     const containerRef = useRef(null)
     const innerRef = useRef(null)
     const arrowsRef = useRef([])
@@ -134,13 +141,16 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
         <section
             ref={containerRef}
             className='marquee-shell relative overflow-hidden bg-[var(--brand-primary)] py-4 text-[var(--brand-cream)] sm:py-5'
-            aria-label={text}
+            aria-label={label}
         >
+            <ul className='sr-only'>
+                {items.map((item) => <li key={item}>{item}</li>)}
+            </ul>
             <div className='marquee__inner' ref={innerRef} aria-hidden='true'>
-                {Array.from({ length: repeatCount }).map((_, index) => (
+                {parts.map((item, index) => (
                     <div key={index} className='marquee__part flex items-center flex-shrink-0 px-1 whitespace-nowrap'>
                         <span className='marquee__label whitespace-nowrap'>
-                            {text}
+                            {item}
                         </span>
                         <div
                             ref={(el) => (arrowsRef.current[index] = el)}
@@ -169,7 +179,6 @@ const Marquee = ({ text = 'freshly arrived', repeatCount = 12, speed = 1 }) => {
                     font-weight: 500;
                     letter-spacing: -0.01em;
                     line-height: 1;
-                    text-transform: capitalize;
                 }
                 .marquee__part {
                     display: flex;

@@ -35,41 +35,12 @@ const CONTENT = {
             src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911945/270e856f021e3e06a3dd84d344bdc8d1.jpg.jpg',
             alt: 'Nuts and seeds from the Energyflow range',
         },
-        giftBox: {
-            src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913710/Elegant_Dry_Fruit_Box.jpg',
-            alt: 'An Energyflow dry fruit gift box',
-        },
-        dryFruits: {
-            src: '/assets/images/banner/dry-fruits.jpg',
-            alt: 'A spread of assorted dry fruits',
-        },
     },
-    // Each point is a run of [text, accent?] segments; accents read in olive.
-    why: [
-        [['Every lot', true], [' checked for freshness & grade']],
-        [['Dry fruits to ', false], ['A2 bilona ghee', true], [', under one roof']],
-        [['Real growers,', true], [' not faceless supply chains']],
-        [['Pan-India', true], [' delivery, packed fresh']],
-    ],
 }
-
-// Zig-zag placement on desktop: 01 and 03 on the first row, 02 and 04 on the
-// second, so the four points read as a staggered checkerboard.
-const WHY_PLACEMENT = [
-    'lg:col-start-1 lg:row-start-1',
-    'lg:col-start-2 lg:row-start-2 lg:mt-10',
-    'lg:col-start-3 lg:row-start-1',
-    'lg:col-start-4 lg:row-start-2 lg:mt-10',
-]
-
-const pad = (n) => String(n).padStart(2, '0')
 
 // SplitText masks clip at the line box, which trims descenders (g, y, p) on
 // tight display leading. Give every mask a little room below the baseline.
-const MASK_ROOM =
-    '[&_.ef-w-mask]:pb-[0.14em] [&_.ef-w-mask]:-mb-[0.14em] ' +
-    '[&_.ef-c-mask]:pb-[0.14em] [&_.ef-c-mask]:-mb-[0.14em] ' +
-    '[&_.ef-l-mask]:pb-[0.1em] [&_.ef-l-mask]:-mb-[0.1em]'
+const MASK_ROOM = '[&_.ef-w-mask]:pb-[0.14em] [&_.ef-w-mask]:-mb-[0.14em]'
 
 // Photo frame used across the section. Three layers so each motion owns its
 // own transform: the frame is clipped open, the middle layer drifts on scroll
@@ -97,7 +68,7 @@ const Frame = ({ image, sizes, reveal = 'up', parallax = 0, className, imgClassN
     </div>
 )
 
-const AboutUsSection = () => {
+const AboutUsSection = ({ tone = 'sunken' }) => {
     const sectionRef = useRef(null)
 
     useGSAP(() => {
@@ -136,25 +107,6 @@ const AboutUsSection = () => {
                             start: 'top 82%',
                             once: true,
                         },
-                    })
-                })
-
-                // "Why Energyflow": letter by letter, words kept intact so it
-                // never breaks mid-word.
-                q('[data-rise-chars]').forEach((el) => {
-                    const split = SplitText.create(el, {
-                        type: 'words,chars',
-                        mask: 'chars',
-                        charsClass: 'ef-c',
-                        tag: 'span',
-                        aria: 'none',
-                    })
-                    gsap.from(split.chars, {
-                        yPercent: 120,
-                        duration: 1.1,
-                        ease: 'expo.out',
-                        stagger: 0.035,
-                        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
                     })
                 })
 
@@ -235,36 +187,6 @@ const AboutUsSection = () => {
                         .fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'none' })
                         .fromTo(tail, { opacity: 0.16 }, { opacity: 1, stagger: 0.1, ease: 'none' })
                 }
-
-                // ── Why points: number slides in, lines rise from their masks ──
-                q('[data-why-item]').forEach((item) => {
-                    const trigger = () => ({ trigger: item, start: 'top 88%', once: true })
-                    gsap.from(item.querySelector('[data-why-num]'), {
-                        autoAlpha: 0,
-                        x: -10,
-                        duration: 0.9,
-                        ease: 'power3.out',
-                        scrollTrigger: trigger(),
-                    })
-                    // Lines depend on the loaded font and the width, so let
-                    // SplitText re-split on resize / font load; returning the
-                    // tween hands its progress over to the new split.
-                    SplitText.create(item.querySelector('[data-why-text]'), {
-                        type: 'lines',
-                        mask: 'lines',
-                        linesClass: 'ef-l',
-                        aria: 'none',
-                        autoSplit: true,
-                        onSplit: (self) => gsap.from(self.lines, {
-                            yPercent: 110,
-                            duration: 1.15,
-                            ease: 'expo.out',
-                            stagger: 0.09,
-                            delay: 0.1,
-                            scrollTrigger: trigger(),
-                        }),
-                    })
-                })
             }
         )
 
@@ -285,7 +207,7 @@ const AboutUsSection = () => {
     const { images } = CONTENT
 
     return (
-        <Section ref={sectionRef} tone="sunken" aria-labelledby="about-title" className={cn('overflow-hidden', MASK_ROOM)}>
+        <Section ref={sectionRef} tone={tone} aria-labelledby="about-title" className={cn('overflow-hidden', MASK_ROOM)}>
 
             {/* ── Display heading: an indented olive kicker over a line that
                    splits across the grid, its second half starting where the
@@ -367,56 +289,6 @@ const AboutUsSection = () => {
                     <span className="sr-only">, </span>
                     <span data-mission-words>{CONTENT.missionTail}</span>
                 </p>
-            </div>
-
-            {/* ── Why Energyflow ── */}
-            <div className="mt-[clamp(5rem,10vw,9rem)]">
-                <div className="flex items-start justify-between gap-6">
-                    <h3
-                        data-rise-chars
-                        className="m-0 text-[clamp(3rem,1.2rem+7vw,8rem)] font-medium leading-[0.95] tracking-[-0.045em] text-ink-strong"
-                    >
-                        Why Energyflow
-                    </h3>
-                    <div data-float="36" className="shrink-0">
-                        <Frame
-                            image={images.giftBox}
-                            parallax={8}
-                            sizes="(max-width: 640px) 112px, 176px"
-                            className="aspect-[4/5] w-[clamp(6.5rem,14vw,11rem)]"
-                        />
-                    </div>
-                </div>
-
-                <ol className="mt-[clamp(2.5rem,5vw,4rem)] grid list-none grid-cols-1 gap-x-6 gap-y-10 p-0 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_auto]">
-                    {CONTENT.why.map((segments, i) => (
-                        <li key={i} data-why-item className={cn('flex flex-col gap-3', WHY_PLACEMENT[i])}>
-                            <span data-why-num className="text-[0.6875rem] tabular-nums text-ink-muted">
-                                ({pad(i + 1)})
-                            </span>
-                            <div
-                                data-why-text
-                                className="max-w-[16ch] text-[clamp(1.125rem,0.9rem+0.8vw,1.5rem)] font-medium uppercase leading-[1.08] tracking-[-0.01em] text-ink-strong"
-                            >
-                                {segments.map(([text, accent], j) => (
-                                    <span key={j} className={accent ? 'text-fern' : undefined}>{text}</span>
-                                ))}
-                            </div>
-                        </li>
-                    ))}
-
-                    {/* Small photo tucked under point 01, desktop only */}
-                    <li aria-hidden="true" className="hidden lg:col-start-1 lg:row-start-2 lg:block lg:self-end">
-                        <div data-float="20">
-                            <Frame
-                                image={images.dryFruits}
-                                reveal="left"
-                                sizes="96px"
-                                className="aspect-[4/3] w-[clamp(4.5rem,6vw,6rem)]"
-                            />
-                        </div>
-                    </li>
-                </ol>
             </div>
         </Section>
     )

@@ -92,8 +92,8 @@ const BestsellerCard = ({ product, position }) => {
                 {/* Perforation with side notches (the notches take the band colour) */}
                 <div className="relative z-10 mt-auto pt-4">
                     <div className="relative border-t border-dashed border-line-strong">
-                        <span aria-hidden="true" className="absolute -left-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-surface-sunken" />
-                        <span aria-hidden="true" className="absolute -right-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-surface-sunken" />
+                        <span aria-hidden="true" className="absolute -left-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-[var(--section-bg,var(--surface-sunken))]" />
+                        <span aria-hidden="true" className="absolute -right-[1.4375rem] top-0 size-3.5 -translate-y-1/2 rounded-full bg-[var(--section-bg,var(--surface-sunken))]" />
                     </div>
 
                     <div className="mt-4 flex items-center gap-2">
@@ -134,7 +134,7 @@ const BestsellerCard = ({ product, position }) => {
     )
 }
 
-const BestsellersSectionClient = ({ products = [] }) => {
+const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
     const sectionRef = useRef(null)
     const rail = useScrollRail()
     useReveal(sectionRef, [products.length])
@@ -142,7 +142,7 @@ const BestsellersSectionClient = ({ products = [] }) => {
     if (!products.length) return null
 
     return (
-        <Section ref={sectionRef} tone="sunken" aria-labelledby="bestsellers-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="bestsellers-title">
             <SectionHeader
                 id="bestsellers-title"
                 eyebrow="Most reordered"

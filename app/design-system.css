@@ -856,9 +856,12 @@ body {
     padding-block: var(--section-space);
   }
   .ef-section--tight   { padding-block: calc(var(--section-space) * 0.6); }
-  .ef-section--page    { background: var(--surface-page); }
-  .ef-section--sunken  { background: var(--surface-sunken); }
+  /* --section-bg lets children that "cut into" the band (ticket notches,
+     medallion rings) match whichever tone the page assigns the section. */
+  .ef-section--page    { --section-bg: var(--surface-page);   background: var(--section-bg); }
+  .ef-section--sunken  { --section-bg: var(--surface-sunken); background: var(--section-bg); }
   .ef-section--inverse {
+    --section-bg: var(--surface-inverse);
     background: var(--surface-inverse);
     color: var(--ink-on-inverse);
     --focus-color: var(--brand-amber);

@@ -282,7 +282,13 @@ const HeroSection = ({ availability = null }) => {
     } catch {
       // storage blocked — the loader simply plays
     }
-    setCanAutoplay(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    // Auto-advance only where hover can pause it (mouse / trackpad). On touch
+    // screens a slide changing under the thumb causes mis-taps, so phones and
+    // tablets advance by swipe and tabs alone.
+    setCanAutoplay(
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches
+    );
   }, []);
 
   const handleLoaderReady = useCallback(() => setLoaderComplete(true), []);
@@ -481,13 +487,20 @@ const HeroSection = ({ availability = null }) => {
   );
 
   // ── Input ─────────────────────────────────────────────────────────
+  // A slide the shopper picks stays put: any manual navigation ends
+  // autoplay (the play button brings it back).
+  const choose = (index, direction) => {
+    setUserPaused(true);
+    goTo(index, direction);
+  };
+
   const onTabKeyDown = (event) => {
     const keys = { ArrowRight: 1, ArrowLeft: -1, Home: "home", End: "end" };
     const k = keys[event.key];
     if (k === undefined) return;
     event.preventDefault();
     const next = k === "home" ? 0 : k === "end" ? TOTAL - 1 : (active + k + TOTAL) % TOTAL;
-    goTo(next, k === "home" ? -1 : k === "end" ? 1 : k);
+    choose(next, k === "home" ? -1 : k === "end" ? 1 : k);
     event.currentTarget.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
@@ -503,7 +516,7 @@ const HeroSection = ({ availability = null }) => {
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
     if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-    goTo(activeRef.current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    choose(activeRef.current + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
   };
 
   // Pause for keyboard focus only — a mouse click on a tab also focuses it,
@@ -636,7 +649,7 @@ const HeroSection = ({ availability = null }) => {
                       tabIndex={-1}
                       className={cn(styles.thumb, i === active && styles.thumbActive)}
                       ref={(el) => { thumbsRef.current[i] = el; }}
-                      onClick={() => goTo(i)}
+                      onClick={() => choose(i)}
                     >
                       <span className={styles.thumbImg}>
                         <Image src={slide.plate} alt="" fill sizes="80px" />
@@ -685,7 +698,7 @@ const HeroSection = ({ availability = null }) => {
                   aria-controls={`hero-slide-${i}`}
                   tabIndex={i === active ? 0 : -1}
                   className={cn(styles.tab, "ef-focus")}
-                  onClick={() => goTo(i)}
+                  onClick={() => choose(i)}
                 >
                   <span className={styles.track} aria-hidden="true">
                     <span className={styles.fill} ref={(el) => { fillsRef.current[i] = el; }} />

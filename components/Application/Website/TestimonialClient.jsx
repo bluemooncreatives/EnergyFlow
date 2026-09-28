@@ -21,7 +21,7 @@ const clampRating = (rating) => Math.max(0, Math.min(5, Math.round(Number(rating
 const initials = (name = '') =>
     name.trim().split(/\s+/).slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join('') || '•'
 
-const TestimonialClient = ({ testimonials = [] }) => {
+const TestimonialClient = ({ testimonials = [], tone = 'page' }) => {
     const TOTAL = testimonials.length
 
     const [active, setActive] = useState(0)
@@ -137,7 +137,7 @@ const TestimonialClient = ({ testimonials = [] }) => {
     const multi = TOTAL > 1
 
     return (
-        <Section ref={sectionRef} aria-labelledby="reviews-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="reviews-title">
             <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
 
                 {/* ── Heading + controls ── */}

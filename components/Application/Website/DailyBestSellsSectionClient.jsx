@@ -12,7 +12,7 @@ import ProductCard from './storefront/ProductCard'
 
 const DEAL_BANNER = {
     title: 'Gift Boxes, Ready To Send',
-    copy: 'Get the best deal before close.',
+    copy: 'Festive, wedding and team gifting, packed and ready to go.',
     image: '/assets/images/banner/gift-box-deal.jpg',
     alt: 'A wooden gift tray of raisins, cashews, almonds and pistachios beside a ribboned box',
     href: WEBSITE_SHOP,
@@ -87,7 +87,7 @@ const Countdown = ({ remaining }) => {
     )
 }
 
-const DailyBestSellsSectionClient = ({ products = [] }) => {
+const DailyBestSellsSectionClient = ({ products = [], tone = 'sunken' }) => {
     const sectionRef = useRef(null)
     const remaining = useDealCountdown()
     useReveal(sectionRef, [products.length])
@@ -102,12 +102,13 @@ const DailyBestSellsSectionClient = ({ products = [] }) => {
     const bannerSpan = products.length % 2 === 0 ? 'col-span-2' : 'col-span-1'
 
     return (
-        <Section ref={sectionRef} tone="sunken" aria-labelledby="deals-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="deals-title">
             <SectionHeader
                 id="deals-title"
                 eyebrow="Limited time"
-                title="Daily"
-                accent="best sells"
+                description="Our deepest markdowns right now, while stock lasts."
+                title="Deals of"
+                accent="the month"
                 action={<Countdown remaining={remaining} />}
             />
 

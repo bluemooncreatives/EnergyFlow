@@ -26,7 +26,7 @@ const mapCategory = (category) => ({
     products: category.products || [],
 })
 
-const CategoryArchiveSection = async () => {
+const CategoryArchiveSection = async ({ tone }) => {
     const categories = await getCategoryShowcase()
 
     const items = (categories || []).map(mapCategory)
@@ -35,7 +35,7 @@ const CategoryArchiveSection = async () => {
     // render an empty showcase on the live storefront.
     if (items.length === 0) return null
 
-    return <CategoryShowcaseClient items={items} writeup={WRITEUP} />
+    return <CategoryShowcaseClient items={items} writeup={WRITEUP} tone={tone} />
 }
 
 export default CategoryArchiveSection

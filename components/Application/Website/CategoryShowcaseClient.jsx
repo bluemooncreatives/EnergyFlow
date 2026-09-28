@@ -136,7 +136,7 @@ const Panel = ({ item, index, panelRef }) => {
 //   • gsap.quickTo drives a pointer parallax on the open panel's photo
 //   • ScrollTrigger reveals the panels with a clip-path wipe on first view
 // Reduced motion keeps the same states, just without the movement.
-const CategoryShowcaseClient = ({ items = [], writeup }) => {
+const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
     const sectionRef = useRef(null)
     const listRef = useRef(null)
     const panelsRef = useRef([])
@@ -257,7 +257,7 @@ const CategoryShowcaseClient = ({ items = [], writeup }) => {
     if (!panels.length) return null
 
     return (
-        <Section ref={sectionRef} tone="sunken" aria-labelledby="categories-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="categories-title">
             <SectionHeader
                 id="categories-title"
                 eyebrow="Categories"

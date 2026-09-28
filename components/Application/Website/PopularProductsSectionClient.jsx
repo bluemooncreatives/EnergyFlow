@@ -13,14 +13,16 @@ import { StoreLink } from './storefront/StoreButton'
 import { rowTrimClass } from './storefront/format'
 
 // Each banner carries its own scrim: enough ivory behind the copy to keep it
-// legible, faded out by ~60% so the photograph itself stays contrasty.
+// legible, faded out by ~60% so the photograph itself stays contrasty. A banner
+// opens the shop filtered to its `category`, or the whole shop while that
+// category has no products (same rule as the hero's links).
 const PROMO_BANNERS = [
     {
         title: 'Fruit Jellies',
         image: '/assets/images/banner/fruit-jellies.jpg',
         alt: 'Assorted real-fruit jelly cubes surrounded by fresh fruit',
         discount: '30%',
-        href: WEBSITE_SHOP,
+        category: 'healthy-candies-and-sweets',
         scrim: 'linear-gradient(90deg, rgb(251 248 242 / 0.94) 0%, rgb(251 248 242 / 0.55) 34%, transparent 62%)',
     },
     {
@@ -28,14 +30,19 @@ const PROMO_BANNERS = [
         image: '/assets/images/banner/dry-fruits.jpg',
         alt: 'Almonds, cashews, walnuts and pecans on a warm background',
         discount: '25%',
-        href: WEBSITE_SHOP,
+        category: 'dry-fruits-and-nuts',
         scrim: 'linear-gradient(90deg, rgb(251 248 242 / 0.75) 0%, rgb(251 248 242 / 0.25) 30%, transparent 55%)',
     },
 ]
 
-const PromoBanner = ({ banner }) => (
+const bannerHref = (banner, availability) =>
+    !availability || availability.categories?.includes(banner.category)
+        ? `${WEBSITE_SHOP}?category=${banner.category}`
+        : WEBSITE_SHOP
+
+const PromoBanner = ({ banner, availability }) => (
     <Link
-        href={banner.href}
+        href={bannerHref(banner, availability)}
         data-reveal
         className="ef-tile ef-focus group/promo relative flex min-h-[13.5rem] items-center sm:min-h-[15rem]"
     >
@@ -61,16 +68,16 @@ const PromoBanner = ({ banner }) => (
     </Link>
 )
 
-const PopularProductsSectionClient = ({ products = [] }) => {
+const PopularProductsSectionClient = ({ products = [], tone = 'page', availability = null }) => {
     const sectionRef = useRef(null)
     useReveal(sectionRef, [products.length])
 
     return (
-        <Section ref={sectionRef} aria-labelledby={products.length ? 'popular-title' : undefined}>
+        <Section ref={sectionRef} tone={tone} aria-labelledby={products.length ? 'popular-title' : undefined}>
             {/* ── Promo banners ── */}
             <div className="grid gap-[var(--grid-gap)] md:grid-cols-2">
                 {PROMO_BANNERS.map((banner) => (
-                    <PromoBanner key={banner.title} banner={banner} />
+                    <PromoBanner key={banner.title} banner={banner} availability={availability} />
                 ))}
             </div>
 

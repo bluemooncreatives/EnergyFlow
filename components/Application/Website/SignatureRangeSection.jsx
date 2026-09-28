@@ -128,12 +128,12 @@ const RangeTile = ({ range, featured, availability }) => {
     )
 }
 
-const SignatureRangeSection = ({ availability = null }) => {
+const SignatureRangeSection = ({ availability = null, tone = 'page' }) => {
     const sectionRef = useRef(null)
     useReveal(sectionRef)
 
     return (
-        <Section ref={sectionRef} aria-labelledby="signature-title">
+        <Section ref={sectionRef} tone={tone} aria-labelledby="signature-title">
             <SectionHeader
                 id="signature-title"
                 eyebrow="Our signature range"
