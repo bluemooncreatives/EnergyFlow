@@ -10,7 +10,7 @@ import { OrderPipeline, PaymentMix, BuyingHeatmap, RecentOrders } from '../Panel
 
 const SectionLabel = ({ icon: Icon, bg, fg = 'var(--primary-foreground)', title, description }) => (
     <div className="mb-3 flex items-center gap-3">
-        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
+        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
             <Icon className="size-4" />
         </span>
         <div>

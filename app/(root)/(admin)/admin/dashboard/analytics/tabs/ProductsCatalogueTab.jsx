@@ -10,7 +10,7 @@ import { TopProducts, CategoryPerformance, CatalogueHealth, ReviewsPanel } from 
 
 const SectionLabel = ({ icon: Icon, bg, fg = 'var(--primary-foreground)', title, description }) => (
     <div className="mb-3 flex items-center gap-3">
-        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
+        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
             <Icon className="size-4" />
         </span>
         <div>
@@ -20,26 +20,29 @@ const SectionLabel = ({ icon: Icon, bg, fg = 'var(--primary-foreground)', title,
     </div>
 )
 
-const ProductsCatalogueTab = ({ data, isLoading }) => (
-    <div className="flex flex-col gap-6">
-        {/* Top products + category performance */}
-        <div>
-            <SectionLabel icon={ShoppingBag} bg="var(--chart-1)" title="Product Performance" description="Top-selling products and category revenue breakdown" />
-            <div className="grid gap-4 lg:grid-cols-3">
-                <TopProducts items={data?.topProducts} totalSales={(data?.categories || []).reduce((s, c) => s + c.sales, 0)} />
-                <CategoryPerformance categories={data?.categories} />
-                <CatalogueHealth catalogue={data?.catalogue} />
-            </div>
-        </div>
+const ProductsCatalogueTab = ({ data, isLoading }) => {
+    const totalSales = (data?.categories || []).reduce((s, c) => s + c.sales, 0)
 
-        {/* Reviews & ratings */}
-        <div>
-            <SectionLabel icon={Star} bg="var(--chart-2)" fg="#0A2F24" title="Ratings & Reviews" description="Customer sentiment trends and low-rated products" />
-            <div className="grid gap-4 lg:grid-cols-3">
-                <ReviewsPanel reviews={data?.reviews} kpis={data?.kpis} />
-                {/* Category breakdown summary card */}
-                <div className="rounded-xl border bg-card p-4 sm:p-5">
-                    <p className="mb-3 text-sm font-semibold text-foreground">Category Sales Share</p>
+    return (
+        <div className="flex flex-col gap-6">
+            {/* Top products + category performance */}
+            <div>
+                <SectionLabel icon={ShoppingBag} bg="var(--chart-1)" title="Product Performance" description="Top-selling products and category revenue breakdown" />
+                <div className="grid gap-4 lg:grid-cols-3">
+                    <TopProducts items={data?.topProducts} totalSales={totalSales} />
+                    <CategoryPerformance categories={data?.categories} />
+                    <CatalogueHealth catalogue={data?.catalogue} />
+                </div>
+            </div>
+
+            {/* Reviews & ratings */}
+            <div>
+                <SectionLabel icon={Star} bg="var(--chart-2)" fg="#0A2F24" title="Ratings & Reviews" description="Customer sentiment trends and low-rated products" />
+                <div className="grid gap-4 lg:grid-cols-3">
+                    <ReviewsPanel reviews={data?.reviews} kpis={data?.kpis} />
+                    {/* Category breakdown summary card */}
+                    <div className="rounded-xl border bg-card p-4 sm:p-5">
+                        <p className="mb-3 text-sm font-semibold text-foreground">Category Sales Share</p>
                         {(data?.categories || []).slice(0, 8).length > 0 ? (
                             <ul className="space-y-2.5">
                                 {(data?.categories || []).slice(0, 8).map((cat, i) => {
