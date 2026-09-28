@@ -57,6 +57,10 @@
   /* Two classes so it beats .ef-nl's flat fill whatever the CSS chunk order. */
   .ef-nl.ef-auth-art { background: var(--nl-bg-art); }
   .ef-auth-art .ef-nl-art { z-index: -1; }
+  /* The popup's floating seals are placed for an empty panel. The short phone
+     band keeps only the dotted field and rings, and on desktop the ones that
+     would sit behind the headline and lead are dropped. */
+  .ef-auth-art .ef-nl-art__float { display: none; }
   .ef-auth-art__top {
     display: flex;
     align-items: flex-start;
@@ -312,6 +316,9 @@
       min-height: min(40rem, calc(100svh - 5rem));
     }
     .ef-auth-art { height: auto; padding: 2.25rem 2.5rem 2.5rem; }
+    .ef-auth-art .ef-nl-art__float:nth-child(3),
+    .ef-auth-art .ef-nl-art__float:nth-child(4),
+    .ef-auth-art .ef-nl-art__float:nth-child(6) { display: block; }
     .ef-auth-logo img { width: 4.25rem; }
     .ef-auth-art__foot { display: grid; gap: 1.125rem; }
     .ef-auth-art__foot .ef-nl-title { font-size: clamp(2rem, 1.2rem + 1.8vw, 2.75rem); }
@@ -320,7 +327,7 @@
 
     .ef-auth-seal {
       --nl-badge-size: 6.5rem;
-      top: 2.5rem;
+      top: 6rem;   /* below the art panel's "Back to store" row */
       right: auto;
       left: calc(var(--auth-split) - var(--nl-badge-size) * 0.5);
     }

@@ -1,12 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
-import { ArrowRight, Loader2, MailCheck, X } from 'lucide-react'
+import { Loader2, MailCheck, X } from 'lucide-react'
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import AuthShell from '@/components/Application/Auth/AuthShell'
-import { AuthHeader, AuthStep } from '@/components/Application/Auth/AuthParts'
+import { AuthAction, AuthHeader, AuthStep } from '@/components/Application/Auth/AuthParts'
 import { SuccessSeal } from '@/components/Application/Website/newsletter/NewsletterParts'
 
 const ART = {
@@ -87,10 +86,7 @@ const EmailVerification = () => {
                     <AuthHeader {...copy} />
                 </div>
                 {status !== 'loading' && (
-                    <Link href={WEBSITE_LOGIN} className="ef-nl-submit" data-auth-item>
-                        <span>{status === 'success' ? 'Sign in' : 'Go to sign in'}</span>
-                        <ArrowRight aria-hidden="true" />
-                    </Link>
+                    <AuthAction href={WEBSITE_LOGIN}>{status === 'success' ? 'Sign in' : 'Go to sign in'}</AuthAction>
                 )}
             </AuthStep>
         </AuthShell>

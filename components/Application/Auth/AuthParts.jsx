@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Link from 'next/link'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { useWatch } from 'react-hook-form'
@@ -19,6 +20,9 @@ gsap.registerPlugin(useGSAP)
 
 // One screen of a flow (sign in → code, email → code → new password). Key it
 // by step so each new screen mounts fresh and staggers its items in.
+// data-auth-item must not go on an element with its own CSS transform
+// transition (the buttons): the two fight and the tween ends off-position,
+// so those are wrapped (see AuthSubmit / AuthAction).
 export const AuthStep = ({ children, className }) => {
     const ref = useRef(null)
 
@@ -31,6 +35,7 @@ export const AuthStep = ({ children, className }) => {
                 ease: 'power3.out',
                 stagger: 0.06,
                 delay: 0.2,
+                clearProps: 'transform,opacity,visibility',
             })
         })
     }, { scope: ref })
@@ -148,19 +153,31 @@ export const PasswordRules = ({ control, name = 'password' }) => {
 }
 
 export const AuthSubmit = ({ loading, loadingText = 'Please wait…', children }) => (
-    <button type="submit" className="ef-nl-submit" disabled={loading} aria-busy={loading} data-auth-item>
-        {loading ? (
-            <>
-                <Loader2 className="animate-spin" aria-hidden="true" />
-                <span>{loadingText}</span>
-            </>
-        ) : (
-            <>
-                <span>{children}</span>
-                <ArrowRight aria-hidden="true" />
-            </>
-        )}
-    </button>
+    <div data-auth-item>
+        <button type="submit" className="ef-nl-submit" disabled={loading} aria-busy={loading}>
+            {loading ? (
+                <>
+                    <Loader2 className="animate-spin" aria-hidden="true" />
+                    <span>{loadingText}</span>
+                </>
+            ) : (
+                <>
+                    <span>{children}</span>
+                    <ArrowRight aria-hidden="true" />
+                </>
+            )}
+        </button>
+    </div>
+)
+
+// The primary link on a finished screen ("Go to sign in"), styled as the submit.
+export const AuthAction = ({ href, children }) => (
+    <div data-auth-item>
+        <Link href={href} className="ef-nl-submit">
+            <span>{children}</span>
+            <ArrowRight aria-hidden="true" />
+        </Link>
+    </div>
 )
 
 export const AuthDivider = ({ children = 'or' }) => (
@@ -168,10 +185,12 @@ export const AuthDivider = ({ children = 'or' }) => (
 )
 
 export const GoogleButton = ({ onClick, children = 'Continue with Google' }) => (
-    <button type="button" className="ef-auth-social" onClick={onClick} data-auth-item>
-        <FcGoogle aria-hidden="true" />
-        {children}
-    </button>
+    <div data-auth-item>
+        <button type="button" className="ef-auth-social" onClick={onClick}>
+            <FcGoogle aria-hidden="true" />
+            {children}
+        </button>
+    </div>
 )
 
 // "New here? Create an account" — the switch between auth pages.

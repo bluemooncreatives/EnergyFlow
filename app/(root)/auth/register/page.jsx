@@ -5,13 +5,13 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import axios from 'axios'
 import Link from 'next/link'
-import { ArrowRight, LockKeyhole, Mail, Sprout, User } from 'lucide-react'
+import { LockKeyhole, Mail, Sprout, User } from 'lucide-react'
 import { zSchema } from '@/lib/zodSchema'
 import { Form } from "@/components/ui/form"
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import { showToast } from '@/lib/showToast'
 import AuthShell from '@/components/Application/Auth/AuthShell'
-import { AuthAlt, AuthField, AuthHeader, AuthStep, AuthSubmit, PasswordRules } from '@/components/Application/Auth/AuthParts'
+import { AuthAction, AuthAlt, AuthField, AuthHeader, AuthStep, AuthSubmit, PasswordRules } from '@/components/Application/Auth/AuthParts'
 import { SuccessSeal } from '@/components/Application/Website/newsletter/NewsletterParts'
 
 const ART = {
@@ -143,10 +143,7 @@ const RegisterPage = () => {
                             />
                         )}
                     </div>
-                    <Link href={WEBSITE_LOGIN} className="ef-nl-submit" data-auth-item>
-                        <span>Go to sign in</span>
-                        <ArrowRight aria-hidden="true" />
-                    </Link>
+                    <AuthAction href={WEBSITE_LOGIN}>Go to sign in</AuthAction>
                     <AuthAlt>
                         Wrong address? <button type="button" className="ef-auth-link" onClick={() => setRegistered(null)}>Start again</button>
                     </AuthAlt>
