@@ -1353,3 +1353,853 @@ body {
   .ef-cta, .ef-cta__box, .ef-cta__box svg { transition: none !important; }
   .ef-card--interactive:hover { transform: none; }
 }
+
+
+/* ================================================================
+   24. NEWSLETTER — popup, homepage band, footer strip
+   Every surface is themed through local --nl-* tokens so the admin's
+   three themes (pine / sunflower / cream) are one class swap. Pine and
+   sunflower use the fixed palette (same in both modes, like the
+   sunflower band); cream follows the site theme.
+   Layout switches use container queries on .ef-nl-stage / .ef-nl-wrap,
+   so the admin's desktop/mobile preview frames render exactly what a
+   real viewport of that width gets.
+   React: components/Application/Website/newsletter
+   ================================================================ */
+@layer components {
+
+  /* ── Themes ─────────────────────────────────────────────────── */
+  .ef-nl--pine {
+    --nl-bg: var(--palette-pine);
+    --nl-bg-art: var(--brand-panel-gradient), var(--palette-pine);
+    --nl-ink: var(--palette-cream);
+    --nl-muted: rgb(247 243 232 / 0.78);
+    --nl-accent: var(--palette-sunflower);
+    --nl-line: rgb(247 243 232 / 0.16);
+    --nl-field-bg: rgb(247 243 232 / 0.07);
+    --nl-field-line: rgb(247 243 232 / 0.28);
+    --nl-field-line-hover: rgb(247 243 232 / 0.55);
+    --nl-placeholder: rgb(247 243 232 / 0.5);
+    --nl-btn-bg: var(--palette-sunflower);
+    --nl-btn-ink: var(--palette-pine);
+    --nl-btn-hover: var(--brand-amber-hover);
+    --nl-check-bg: var(--palette-sunflower);
+    --nl-check-ink: var(--palette-pine);
+    --nl-ticket-bg: var(--palette-sunflower);
+    --nl-ticket-ink: var(--palette-pine);
+    --nl-error: #FFB4A9;
+    --focus-color: var(--palette-sunflower);
+  }
+  .ef-nl--sun {
+    --nl-bg: var(--palette-sunflower);
+    --nl-bg-art: radial-gradient(120% 90% at 0% 100%, rgb(255 255 255 / 0.45), transparent 60%), radial-gradient(90% 70% at 100% 0%, rgb(140 122 59 / 0.28), transparent 70%), var(--palette-sunflower);
+    --nl-ink: var(--palette-pine);
+    --nl-muted: rgb(11 61 46 / 0.8);
+    --nl-accent: var(--palette-forest);
+    --nl-line: rgb(11 61 46 / 0.16);
+    --nl-field-bg: rgb(255 255 255 / 0.6);
+    --nl-field-line: rgb(11 61 46 / 0.28);
+    --nl-field-line-hover: rgb(11 61 46 / 0.6);
+    --nl-placeholder: rgb(11 61 46 / 0.5);
+    --nl-btn-bg: var(--palette-pine);
+    --nl-btn-ink: var(--palette-cream);
+    --nl-btn-hover: var(--brand-pine-hover);
+    --nl-check-bg: var(--palette-pine);
+    --nl-check-ink: var(--palette-sunflower);
+    --nl-ticket-bg: var(--palette-pine);
+    --nl-ticket-ink: var(--palette-sunflower);
+    --nl-error: #8E1B14;
+    --focus-color: var(--palette-pine);
+  }
+  .ef-nl--cream {
+    --nl-bg: var(--surface-card);
+    --nl-bg-art: radial-gradient(110% 80% at 0% 100%, var(--tint-almond), transparent 65%), radial-gradient(90% 70% at 100% 0%, var(--tint-sage), transparent 70%), var(--surface-sunken);
+    --nl-ink: var(--ink-strong);
+    --nl-muted: var(--ink-body);
+    --nl-accent: var(--brand-primary-bright);
+    --nl-line: var(--line-soft);
+    --nl-field-bg: var(--surface-page);
+    --nl-field-line: var(--line-strong);
+    --nl-field-line-hover: var(--ink-muted);
+    --nl-placeholder: var(--form-field-placeholder);
+    --nl-btn-bg: var(--brand-primary);
+    --nl-btn-ink: var(--on-brand);
+    --nl-btn-hover: var(--brand-primary-hover);
+    --nl-check-bg: var(--brand-sun);
+    --nl-check-ink: var(--brand-sun-ink);
+    --nl-ticket-bg: var(--brand-sun);
+    --nl-ticket-ink: var(--brand-sun-ink);
+    --nl-error: var(--destructive);
+  }
+
+  .ef-nl {
+    background: var(--nl-bg);
+    color: var(--nl-ink);
+  }
+
+  /* ── Typography ─────────────────────────────────────────────── */
+  .ef-nl .ef-eyebrow {
+    background: color-mix(in srgb, var(--nl-ink) 9%, transparent);
+    box-shadow: inset 0 0 0 1px var(--nl-line);
+    color: var(--nl-ink);
+  }
+  .ef-nl--pine .ef-eyebrow::before { background: var(--palette-sunflower); box-shadow: none; }
+  .ef-nl--sun .ef-eyebrow::before  { background: var(--palette-pine); box-shadow: none; }
+
+  .ef-nl-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--weight-display);
+    font-size: clamp(1.875rem, 1.3rem + 2.2vw, 2.75rem);
+    line-height: 0.98;
+    letter-spacing: var(--tracking-display);
+    word-spacing: var(--word-spacing-display);
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--nl-ink);
+  }
+  /* The accent half sits on a hand-drawn swash (NewsletterSwash). */
+  .ef-nl-title__accent {
+    position: relative;
+    display: inline-block;
+    color: var(--nl-accent);
+    white-space: nowrap;
+  }
+  .ef-nl-swash {
+    position: absolute;
+    left: -2%;
+    bottom: -0.22em;
+    width: 104%;
+    height: 0.34em;
+    color: var(--nl-accent);
+    overflow: visible;
+  }
+  .ef-nl-swash path {
+    stroke-dasharray: 260;
+    stroke-dashoffset: 260;
+    animation: ef-nl-draw 900ms var(--ease-out) 380ms forwards;
+  }
+
+  .ef-nl-lead {
+    margin: 0;
+    font-size: var(--type-lead);
+    line-height: 1.55;
+    color: var(--nl-muted);
+    text-wrap: pretty;
+  }
+
+  /* ── Perks ──────────────────────────────────────────────────── */
+  .ef-nl-perks {
+    display: grid;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ef-nl-perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: var(--type-body);
+    font-weight: var(--weight-medium);
+    color: var(--nl-ink);
+  }
+  .ef-nl-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 9999px;
+    background: var(--nl-check-bg);
+    color: var(--nl-check-ink);
+  }
+  .ef-nl-check svg { width: 0.8rem; height: 0.8rem; stroke-width: 3; }
+
+  /* Chip row variant (homepage band) */
+  .ef-nl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ef-nl-chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.5rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--nl-ink) 8%, transparent);
+    box-shadow: inset 0 0 0 1px var(--nl-line);
+    font-size: var(--type-small);
+    font-weight: 600;
+    color: var(--nl-ink);
+  }
+
+  /* ── Form ───────────────────────────────────────────────────── */
+  .ef-nl-form { display: grid; gap: 0.75rem; container-type: inline-size; }
+
+  .ef-nl-field {
+    width: 100%;
+    height: 3.25rem;
+    padding: 0 1.125rem 0 2.875rem;
+    border: 1px solid var(--nl-field-line);
+    border-radius: var(--radius-control);
+    background: var(--nl-field-bg);
+    color: var(--nl-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-in-out),
+                box-shadow var(--duration-fast) var(--ease-in-out),
+                background-color var(--duration-fast) var(--ease-in-out);
+  }
+  .ef-nl-field::placeholder { color: var(--nl-placeholder); }
+  .ef-nl-field:hover:not(:disabled) { border-color: var(--nl-field-line-hover); }
+  .ef-nl-field:focus-visible {
+    border-color: var(--nl-ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-color, var(--nl-ink)) 35%, transparent);
+  }
+  .ef-nl-field[aria-invalid='true'] { border-color: var(--nl-error); }
+  .ef-nl-field--plain { padding-left: 1.125rem; }
+
+  .ef-nl-input-wrap { position: relative; display: block; }
+  .ef-nl-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    width: 1.125rem;
+    height: 1.125rem;
+    translate: 0 -50%;
+    color: var(--nl-placeholder);
+    pointer-events: none;
+    transition: color var(--duration-fast);
+  }
+  .ef-nl-input-wrap:focus-within .ef-nl-input-icon { color: var(--nl-ink); }
+
+  .ef-nl-submit {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    height: 3.25rem;
+    padding-inline: 1.5rem;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: var(--nl-btn-bg);
+    color: var(--nl-btn-ink);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-in-out),
+                transform var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-normal) var(--ease-out);
+  }
+  .ef-nl-submit:hover:not(:disabled) {
+    background: var(--nl-btn-hover);
+    box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--nl-btn-bg) 85%, transparent);
+  }
+  .ef-nl-submit:active:not(:disabled) { transform: translateY(1px); }
+  .ef-nl-submit:disabled { cursor: progress; opacity: 0.85; }
+  .ef-nl-submit svg { width: 1.05em; height: 1.05em; transition: transform var(--duration-normal) var(--ease-out); }
+  .ef-nl-submit:hover:not(:disabled) svg:last-child { transform: translateX(3px); }
+  /* Gloss sweep across the button on hover. */
+  .ef-nl-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 -60%;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.4), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+  }
+  .ef-nl-submit:hover:not(:disabled)::after { animation: ef-nl-gloss 750ms var(--ease-out); }
+  .ef-nl-submit:focus-visible,
+  .ef-nl-link:focus-visible,
+  .ef-nl-close:focus-visible,
+  .ef-nl-copy:focus-visible {
+    outline: 2px solid var(--focus-color, var(--nl-ink));
+    outline-offset: 3px;
+  }
+
+  /* Capsule: email + button share one bordered pill when there's room. */
+  @container (min-width: 26rem) {
+    .ef-nl-form--capsule .ef-nl-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0.3125rem;
+      border: 1px solid var(--nl-field-line);
+      border-radius: calc(var(--radius-control) + 0.3125rem);
+      background: var(--nl-field-bg);
+      transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+    }
+    .ef-nl-form--capsule .ef-nl-row:hover { border-color: var(--nl-field-line-hover); }
+    .ef-nl-form--capsule .ef-nl-row:focus-within {
+      border-color: var(--nl-ink);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-color, var(--nl-ink)) 30%, transparent);
+    }
+    .ef-nl-form--capsule .ef-nl-row .ef-nl-input-wrap { flex: 1; min-width: 0; }
+    .ef-nl-form--capsule .ef-nl-row .ef-nl-field {
+      height: 2.875rem;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .ef-nl-form--capsule .ef-nl-row .ef-nl-submit { width: auto; height: 2.875rem; }
+  }
+  .ef-nl-row { display: grid; gap: 0.625rem; }
+
+  .ef-nl-error {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0;
+    font-size: var(--type-small);
+    font-weight: 600;
+    color: var(--nl-error);
+  }
+  .ef-nl-fine {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--nl-muted);
+    opacity: 0.9;
+  }
+  .ef-nl-link {
+    padding: 0.25rem;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--type-small);
+    font-weight: 500;
+    color: var(--nl-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--nl-muted) 45%, transparent);
+    cursor: pointer;
+    transition: color var(--duration-fast);
+  }
+  .ef-nl-link:hover { color: var(--nl-ink); }
+
+  /* Visually hidden honeypot — kept in the DOM, off-screen for people. */
+  .ef-nl-hp {
+    position: absolute !important;
+    left: -10000px !important;
+    width: 1px; height: 1px;
+    overflow: hidden;
+  }
+
+  /* ── Offer seal (rotating ring text around a scalloped seal) ─── */
+  .ef-nl-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--nl-badge-size, 8.5rem);
+    height: var(--nl-badge-size, 8.5rem);
+    flex-shrink: 0;
+    filter: drop-shadow(0 14px 24px rgb(4 28 21 / 0.28));
+  }
+  .ef-nl-badge__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: ef-nl-spin 18s linear infinite;
+  }
+  .ef-nl-badge__ring text {
+    font-family: var(--font-body);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    fill: currentColor;
+  }
+  .ef-nl-badge .ef-seal {
+    width: 66%;
+    height: 66%;
+    flex-direction: column;
+    gap: 0.1rem;
+    text-align: center;
+    animation: ef-nl-wobble 5s var(--ease-in-out) infinite;
+  }
+  .ef-nl-badge__big {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--nl-badge-size, 8.5rem) * 0.15);
+    line-height: 0.9;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ef-nl-badge__small {
+    font-size: calc(var(--nl-badge-size, 8.5rem) * 0.07);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .ef-nl-badge .ef-seal svg { width: 40%; height: 40%; }
+
+  /* ── Popup stage + dialog ───────────────────────────────────── */
+  .ef-nl-stage {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: end center;
+    container-type: inline-size;
+    container-name: nl-stage;
+    pointer-events: none;
+  }
+  .ef-nl-stage.is-preview { position: absolute; z-index: 1; }
+  .ef-nl-stage--modal { pointer-events: auto; }
+
+  .ef-nl-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(4 28 21 / 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .ef-nl-backdrop[data-state='open']   { animation: ef-nl-fade 320ms var(--ease-out) both; }
+  .ef-nl-backdrop[data-state='closed'] { animation: ef-nl-fade 220ms var(--ease-in) reverse both; }
+
+  .ef-nl-dialog {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 92svh;
+    overflow: hidden;
+    border-radius: 1.5rem 1.5rem 0 0;
+    box-shadow: 0 -18px 60px -20px rgb(4 28 21 / 0.55);
+    pointer-events: auto;
+    outline: none;
+  }
+  .ef-nl-stage.is-preview .ef-nl-dialog { max-height: 94%; }
+  .ef-nl-dialog[data-state='open']   { animation: ef-nl-sheet-in 520ms var(--ease-spring) both; }
+  .ef-nl-dialog[data-state='closed'] { animation: ef-nl-sheet-out 240ms var(--ease-in) both; }
+
+  /* Grab handle on the mobile sheet (visual affordance only). */
+  .ef-nl-dialog::before {
+    content: '';
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    z-index: 3;
+    width: 2.75rem;
+    height: 0.3125rem;
+    translate: -50% 0;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.7);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  }
+
+  .ef-nl-scroll {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .ef-nl-scroll::-webkit-scrollbar { display: none; }
+
+  .ef-nl-close {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 9999px;
+    background: rgb(4 28 21 / 0.45);
+    color: var(--palette-cream);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+    transition: background-color var(--duration-fast), transform var(--duration-normal) var(--ease-out);
+  }
+  .ef-nl-close:hover { background: rgb(4 28 21 / 0.7); transform: rotate(90deg); }
+  .ef-nl-close svg { width: 1.125rem; height: 1.125rem; }
+  /* Over the body (no media above it) the close button takes the theme ink. */
+  .ef-nl-close--on-body {
+    background: color-mix(in srgb, var(--nl-ink) 10%, transparent);
+    color: var(--nl-ink);
+  }
+  .ef-nl-close--on-body:hover { background: color-mix(in srgb, var(--nl-ink) 18%, transparent); }
+
+  /* Media / art panel */
+  .ef-nl-media {
+    position: relative;
+    flex-shrink: 0;
+    height: 9.5rem;
+    background: var(--nl-bg-art);
+    isolation: isolate;
+  }
+  .ef-nl-media__img { object-fit: cover; }
+  .ef-nl-media::after {
+    /* Soft fade so the seal and close button always read over a photo. */
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgb(4 28 21 / 0.28), transparent 38%, transparent 60%, rgb(4 28 21 / 0.3));
+    pointer-events: none;
+  }
+  .ef-nl-art {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background-image: radial-gradient(color-mix(in srgb, var(--nl-ink) 14%, transparent) 1.2px, transparent 1.4px);
+    background-size: 18px 18px;
+  }
+  .ef-nl-art__ring {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1.5px dashed color-mix(in srgb, var(--nl-ink) 25%, transparent);
+  }
+  .ef-nl-art__float {
+    position: absolute;
+    animation: ef-nl-float 6s var(--ease-in-out) infinite;
+  }
+  .ef-nl-art__float:nth-child(2n) { animation-duration: 7.5s; animation-delay: -2s; }
+  .ef-nl-art__float:nth-child(3n) { animation-duration: 8.5s; animation-delay: -4s; }
+
+  .ef-nl-media .ef-nl-badge {
+    --nl-badge-size: 6.75rem;
+    position: absolute;
+    left: 1.25rem;
+    bottom: -2.75rem;
+    z-index: 2;
+  }
+
+  .ef-nl-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    padding: 1.75rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  }
+  .ef-nl-media + .ef-nl-body { padding-top: 3.5rem; }
+
+  /* Offer strip — a ticket with notched ends. */
+  .ef-nl-ticket {
+    --notch: 0.625rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 1.125rem;
+    border-radius: var(--radius-control);
+    background: var(--nl-ticket-bg);
+    color: var(--nl-ticket-ink);
+    -webkit-mask: radial-gradient(circle var(--notch) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+                  radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+            mask: radial-gradient(circle var(--notch) at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
+                  radial-gradient(circle var(--notch) at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+  }
+  .ef-nl-ticket__big {
+    padding-right: 0.875rem;
+    border-right: 2px dashed color-mix(in srgb, currentColor 45%, transparent);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ef-nl-ticket__note { font-size: var(--type-small); font-weight: 600; line-height: 1.35; }
+
+  /* Code reveal after sign-up */
+  .ef-nl-code {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.625rem 0.625rem 0.625rem 1.125rem;
+    border: 2px dashed color-mix(in srgb, var(--nl-ink) 45%, transparent);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--nl-ink) 6%, transparent);
+  }
+  .ef-nl-code__label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nl-muted);
+  }
+  .ef-nl-code__value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+    color: var(--nl-ink);
+    word-break: break-all;
+  }
+  .ef-nl-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+    height: 2.75rem;
+    padding-inline: 1rem;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: var(--nl-btn-bg);
+    color: var(--nl-btn-ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color var(--duration-fast), transform var(--duration-fast);
+  }
+  .ef-nl-copy:hover { background: var(--nl-btn-hover); }
+  .ef-nl-copy svg { width: 1rem; height: 1rem; }
+
+  /* Success seal pop + confetti */
+  .ef-nl-success { position: relative; display: flex; flex-direction: column; gap: 1.125rem; }
+  .ef-nl-success__seal { animation: ef-nl-pop-in 700ms var(--ease-spring) both; }
+  .ef-nl-confetti {
+    position: absolute;
+    top: 2rem;
+    left: 2.5rem;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .ef-nl-confetti i {
+    position: absolute;
+    width: var(--s, 8px);
+    height: calc(var(--s, 8px) * 0.45);
+    border-radius: 2px;
+    background: var(--c);
+    opacity: 0;
+    animation: ef-nl-confetti 1100ms cubic-bezier(0.15, 0.7, 0.3, 1) var(--d, 0ms) forwards;
+  }
+
+  /* ── Desktop: centred modal ──────────────────────────────────── */
+  @container nl-stage (min-width: 40rem) {
+    .ef-nl-stage { place-items: center; padding: 1.5rem; }
+    .ef-nl-dialog {
+      max-height: min(40rem, calc(100svh - 3rem));
+      border-radius: var(--radius-tile);
+      box-shadow: var(--elev-3), 0 40px 90px -30px rgb(4 28 21 / 0.6);
+    }
+    .ef-nl-stage.is-preview .ef-nl-dialog { max-height: calc(100% - 2rem); }
+    .ef-nl-dialog::before { display: none; }
+    .ef-nl-dialog[data-state='open']   { animation: ef-nl-pop-in 560ms var(--ease-spring) both; }
+    .ef-nl-dialog[data-state='closed'] { animation: ef-nl-pop-out 200ms var(--ease-in) both; }
+    .ef-nl-body { padding: 2.5rem 2.5rem 2.25rem; gap: 1.25rem; }
+
+    /* Split: media column + body */
+    .ef-nl-dialog--split { width: min(56rem, 100%); }
+    .ef-nl-dialog--split .ef-nl-scroll { flex-direction: row; overflow: hidden; }
+    .ef-nl-dialog--split .ef-nl-media { width: 42%; height: auto; min-height: 30rem; }
+    .ef-nl-dialog--split .ef-nl-media .ef-nl-badge {
+      --nl-badge-size: 8.5rem;
+      left: auto;
+      right: -4.25rem;
+      bottom: 2.25rem;
+    }
+    .ef-nl-dialog--split .ef-nl-media + .ef-nl-body { padding: 2.75rem 2.75rem 2.25rem 5.5rem; }
+    .ef-nl-dialog--split .ef-nl-body { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; }
+    .ef-nl-dialog--split.is-img-right .ef-nl-scroll { flex-direction: row-reverse; }
+    .ef-nl-dialog--split.is-img-right .ef-nl-media .ef-nl-badge { right: auto; left: -4.25rem; }
+    .ef-nl-dialog--split.is-img-right .ef-nl-media + .ef-nl-body { padding: 2.75rem 5.5rem 2.25rem 2.75rem; }
+    /* Image on the left: the close button now sits over the body copy. */
+    .ef-nl-dialog--split:not(.is-img-right) .ef-nl-close {
+      background: color-mix(in srgb, var(--nl-ink) 10%, transparent);
+      color: var(--nl-ink);
+    }
+
+    .ef-nl-dialog--centered { width: min(32rem, 100%); }
+    .ef-nl-dialog--centered .ef-nl-body { padding: 4.75rem 2.5rem 2.25rem; }
+  }
+
+  /* Centred layout: the seal crowns the card, half above its top edge. */
+  .ef-nl-dialog--centered { overflow: visible; margin-top: 3.5rem; }
+  .ef-nl-dialog--centered .ef-nl-scroll { border-radius: inherit; }
+  .ef-nl-dialog--centered::before { display: none; }
+  .ef-nl-dialog--centered > .ef-nl-badge {
+    --nl-badge-size: 7rem;
+    position: absolute;
+    top: -3.5rem;
+    left: 50%;
+    z-index: 3;
+    translate: -50% 0;
+  }
+  .ef-nl-dialog--centered .ef-nl-body { align-items: center; text-align: center; padding-top: 4.25rem; }
+  .ef-nl-dialog--centered .ef-nl-perks { justify-items: center; }
+  .ef-nl-dialog--centered .ef-nl-form { width: 100%; text-align: left; }
+  .ef-nl-dialog--centered .ef-nl-fine { text-align: center; }
+
+  /* Slide-in: small, non-modal card in the corner */
+  .ef-nl-dialog--slide {
+    width: calc(100% - 1.5rem);
+    margin: 0 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    border-radius: var(--radius-tile);
+    box-shadow: var(--elev-3), 0 24px 60px -20px rgb(4 28 21 / 0.5);
+  }
+  .ef-nl-dialog--slide::before { display: none; }
+  .ef-nl-dialog--slide .ef-nl-body { padding: 1.5rem 1.25rem 1.25rem; gap: 0.875rem; }
+  .ef-nl-dialog--slide .ef-nl-title { font-size: 1.625rem; }
+  @container nl-stage (min-width: 40rem) {
+    .ef-nl-stage--slide { place-items: end start; padding: 1.5rem; }
+    .ef-nl-dialog--slide { width: 24rem; margin: 0; }
+    .ef-nl-dialog--slide[data-state='open']   { animation: ef-nl-slide-in 560ms var(--ease-spring) both; }
+    .ef-nl-dialog--slide[data-state='closed'] { animation: ef-nl-slide-out 220ms var(--ease-in) both; }
+  }
+
+  /* ── Teaser pill (re-opens a dismissed popup) ─────────────────── */
+  .ef-nl-teaser {
+    position: fixed;
+    left: max(1rem, env(safe-area-inset-left, 0px));
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: calc(var(--z-sticky) + 1);
+    display: flex;
+    align-items: center;
+    border-radius: 9999px;
+    background: var(--palette-sunflower);
+    color: var(--palette-pine);
+    box-shadow: 0 16px 34px -14px rgb(4 28 21 / 0.55), inset 0 0 0 1.5px var(--palette-pine);
+    animation: ef-nl-teaser-in 600ms var(--ease-spring) both;
+  }
+  .ef-nl-teaser.is-preview { position: absolute; }
+  .ef-nl-teaser__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding: 0 0.5rem 0 0.4375rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .ef-nl-teaser__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    background: var(--palette-pine);
+    color: var(--palette-sunflower);
+    animation: ef-nl-wiggle 3.2s var(--ease-in-out) 1.2s infinite;
+  }
+  .ef-nl-teaser__icon svg { width: 1.05rem; height: 1.05rem; }
+  .ef-nl-teaser__dismiss {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 3rem;
+    margin-right: 0.25rem;
+    border: 0;
+    border-left: 1px solid rgb(11 61 46 / 0.2);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .ef-nl-teaser__dismiss:hover { opacity: 1; }
+  .ef-nl-teaser__dismiss svg { width: 0.9rem; height: 0.9rem; }
+  .ef-nl-teaser button:focus-visible { outline: 2px solid var(--palette-pine); outline-offset: 2px; border-radius: 9999px; }
+
+  /* ── Homepage band ──────────────────────────────────────────── */
+  .ef-nl-band {
+    position: relative;
+    z-index: 1;
+    color: var(--nl-bg);   /* WaveEdge paints in currentColor */
+    background: var(--nl-bg);
+  }
+  .ef-nl-band > .ef-container { color: var(--nl-ink); }
+  .ef-nl-wrap { container-type: inline-size; container-name: nl-band; }
+  .ef-nl-band__grid {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+  }
+  .ef-nl-band__card {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-tile);
+    background: color-mix(in srgb, var(--nl-ink) 7%, transparent);
+    box-shadow: inset 0 0 0 1px var(--nl-line);
+  }
+  .ef-nl-band .ef-nl-badge {
+    --nl-badge-size: 7rem;
+    position: absolute;
+    top: -3rem;
+    right: -0.5rem;
+  }
+  .ef-nl-band__deco {
+    position: absolute;
+    pointer-events: none;
+    color: color-mix(in srgb, var(--nl-ink) 12%, transparent);
+  }
+  @container nl-band (min-width: 56rem) {
+    .ef-nl-band__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      align-items: center;
+      gap: 4rem;
+    }
+    .ef-nl-band__card { padding: 2.25rem; }
+    .ef-nl-band .ef-nl-badge { --nl-badge-size: 8.5rem; top: -4.25rem; right: -2rem; }
+  }
+  .ef-nl-band .ef-nl-title { font-size: var(--type-display); }
+}
+
+/* ── Newsletter keyframes ─────────────────────────────────────── */
+@keyframes ef-nl-fade      { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ef-nl-pop-in    { from { opacity: 0; transform: translateY(28px) scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes ef-nl-pop-out   { to { opacity: 0; transform: translateY(12px) scale(0.97); } }
+@keyframes ef-nl-sheet-in  { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes ef-nl-sheet-out { to { transform: translateY(100%); } }
+@keyframes ef-nl-slide-in  { from { opacity: 0; transform: translate(-24px, 24px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes ef-nl-slide-out { to { opacity: 0; transform: translate(-16px, 16px) scale(0.97); } }
+@keyframes ef-nl-spin      { to { rotate: 360deg; } }
+@keyframes ef-nl-wobble    { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+@keyframes ef-nl-float     { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(8deg); } }
+@keyframes ef-nl-draw      { to { stroke-dashoffset: 0; } }
+@keyframes ef-nl-gloss     { to { left: 130%; } }
+@keyframes ef-nl-teaser-in { from { opacity: 0; transform: translateX(-120%); } to { opacity: 1; transform: none; } }
+@keyframes ef-nl-wiggle    { 0%, 70%, 100% { rotate: 0deg; } 75% { rotate: -14deg; } 82% { rotate: 12deg; } 89% { rotate: -8deg; } 95% { rotate: 4deg; } }
+@keyframes ef-nl-confetti {
+  0%   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+  100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ef-nl-badge__ring, .ef-nl-badge .ef-seal, .ef-nl-art__float,
+  .ef-nl-teaser__icon, .ef-nl-confetti i { animation: none !important; }
+  .ef-nl-swash path { animation: none; stroke-dashoffset: 0; }
+  .ef-nl-dialog[data-state], .ef-nl-backdrop[data-state], .ef-nl-teaser,
+  .ef-nl-success__seal { animation-duration: 1ms !important; }
+  .ef-nl-submit::after { display: none; }
+}
