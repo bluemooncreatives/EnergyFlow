@@ -8,7 +8,7 @@ import { useGSAP } from "@gsap/react";
 import { ArrowRight, Cherry, Gift, Leaf, Pause, Play, Sprout } from "lucide-react";
 
 import PageLoader from "./PageLoader";
-import { WEBSITE_SHOP } from "@/routes/WebsiteRoute";
+import { WEBSITE_CATEGORY, WEBSITE_SHOP } from "@/routes/WebsiteRoute";
 import { cn } from "@/lib/utils";
 import styles from "./HeroSection.module.css";
 
@@ -23,7 +23,7 @@ const LOADER_SESSION_KEY = "energyflow_loader_seen";
 const plateUrl = (version, id) =>
   `https://res.cloudinary.com/g5wdpcrr/image/upload/f_auto,q_auto,w_900/v${version}/${id}.png`;
 
-const shopCategory = (slug) => `${WEBSITE_SHOP}?category=${slug}`;
+const shopCategory = (slug) => WEBSITE_CATEGORY(slug);
 
 // Three slides sell straight into the shop (filtered to their category); the
 // gifting slide leads to an enquiry instead, because hampers and corporate

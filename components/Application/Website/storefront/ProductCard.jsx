@@ -5,7 +5,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Check, ChevronLeft, ChevronRight, Eye, Plus, ShoppingBag, Star, Zap } from 'lucide-react'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
-import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
+import { formatCategoryName, formatProductName } from '@/lib/seo'
 import { useCartProduct } from '@/hooks/useCartProduct'
 import { cn } from '@/lib/utils'
 import { discountPercent, formatINR } from './format'
@@ -73,7 +74,7 @@ const ProductCard = ({
     if (!product) return null
 
     const href = WEBSITE_PRODUCT_DETAILS(product.slug)
-    const name = product.name || 'Product'
+    const name = formatProductName(product.name) || 'Product'
 
     // Show what "Add" actually puts in the cart: the default variant's pack
     // and price, falling back to the product-level price.
@@ -168,10 +169,10 @@ const ProductCard = ({
                 <div className="flex min-h-[1.125rem] items-center justify-between gap-2">
                     {product.category?.name ? (
                         <Link
-                            href={`${WEBSITE_SHOP}?category=${encodeURIComponent(product.category.slug)}`}
+                            href={WEBSITE_CATEGORY(product.category.slug)}
                             className="ef-focus truncate text-[12px] text-ink-muted transition-colors hover:text-brand"
                         >
-                            {product.category.name}
+                            {formatCategoryName(product.category.name)}
                         </Link>
                     ) : <span />}
                     <Rating value={product.ratingAvg} count={product.ratingCount} className="shrink-0" />

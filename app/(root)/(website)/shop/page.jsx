@@ -1,18 +1,43 @@
 import ShopClient from '@/components/Application/Website/ShopClient'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
 
-const DESCRIPTION =
-    'Browse the full Energyflow range. Premium dry fruits and nuts, seeds and super foods, roasted healthy snacks, millets and pulses, muesli and oats, berries, organic wellness products, cold pressed oils, A2 Gir cow bilona ghee, herbal powders and honey. Filter by category, pack size and price.'
+import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 
-export const metadata = {
-    title: 'Shop Dry Fruits, Nuts, Seeds, Super Foods & Healthy Snacks',
+const DESCRIPTION =
+    'Shop dry fruits, nuts, dried berries, seeds, superfoods, flavoured makhana, healthy snacks, Ayurvedic herbs, chocolates and dry fruit gift boxes online. Delivered across India.'
+
+const TITLE = 'Shop Dry Fruits, Nuts & Healthy Snacks Online'
+
+const BASE_METADATA = {
+    title: TITLE,
     description: DESCRIPTION,
     alternates: { canonical: '/shop' },
     openGraph: {
-        title: 'Shop Dry Fruits, Nuts, Seeds & Super Foods | Energyflow',
+        title: `${TITLE} | Energyflow`,
         description: DESCRIPTION,
         url: '/shop',
     },
+    twitter: {
+        title: `${TITLE} | Energyflow`,
+        description: DESCRIPTION,
+    },
+}
+
+// Only bare /shop is an indexable document. A single-category view is the
+// same listing as its /category/… landing page, so it points its canonical
+// there; searches, filters, sorts and pages are endless permutations that
+// stay crawlable (follow) but out of the index.
+export async function generateMetadata({ searchParams }) {
+    const params = (await searchParams) ?? {}
+    const keys = Object.keys(params).filter((key) => params[key] !== undefined && params[key] !== '')
+    if (keys.length === 0) return BASE_METADATA
+
+    const category = typeof params.category === 'string' ? params.category : ''
+    if (keys.length === 1 && category && !category.includes(',')) {
+        return { ...BASE_METADATA, alternates: { canonical: WEBSITE_CATEGORY(category.toLowerCase()) } }
+    }
+
+    return { ...BASE_METADATA, robots: { index: false, follow: true } }
 }
 
 const buildSearchParamString = (searchParams) => {

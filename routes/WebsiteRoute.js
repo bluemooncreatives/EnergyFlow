@@ -5,6 +5,10 @@ export const WEBSITE_RESETPASSWORD = "/auth/reset-password"
 
 export const WEBSITE_SHOP = "/shop"
 
+// Indexable category landing page (keyword title, buying guide, FAQ).
+// Filtering and multi-category views still live on /shop?category=…
+export const WEBSITE_CATEGORY = (slug) => `/category/${slug}`
+
 export const WEBSITE_PRODUCT_DETAILS = (slug) => slug ? `/product/${slug}` : '/product'
 
 export const WEBSITE_CART = "/cart"

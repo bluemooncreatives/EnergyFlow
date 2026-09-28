@@ -21,7 +21,7 @@ import {
     Truck,
     Zap,
 } from 'lucide-react'
-import { WEBSITE_BUY_NOW, WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from "@/routes/WebsiteRoute"
+import { WEBSITE_BUY_NOW, WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_CATEGORY, WEBSITE_SHOP } from "@/routes/WebsiteRoute"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link, { useLinkStatus } from "next/link"
@@ -196,7 +196,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                                 <>
                                     <BreadcrumbSeparator />
                                     <BreadcrumbItem>
-                                        <BreadcrumbLink href={`${WEBSITE_SHOP}?category=${encodeURIComponent(product.category.slug)}`}>
+                                        <BreadcrumbLink href={WEBSITE_CATEGORY(product.category.slug)}>
                                             {product.category.name}
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
@@ -305,7 +305,7 @@ const ProductDetails = ({ product, variant, sizes, reviewCount, ratingAvg, relat
                     <div className="flex flex-col">
                         {product?.category?.name ? (
                             <Link
-                                href={`${WEBSITE_SHOP}?category=${encodeURIComponent(product.category.slug)}`}
+                                href={WEBSITE_CATEGORY(product.category.slug)}
                                 className="ef-eyebrow ef-focus w-fit transition-colors hover:text-brand-hover"
                             >
                                 {product.category.name}

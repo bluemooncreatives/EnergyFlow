@@ -4,36 +4,36 @@ import ThemeProvider from "@/components/Application/Admin/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const SITE_NAME = 'Energyflow';
-const SITE_URL = 'https://www.energyflow.in';
+import { RETURN_POLICY, SITE_NAME, SITE_URL, serializeJsonLd } from "@/lib/seo";
 
 // One canonical description, reused by the document head, Open Graph and the
-// Twitter card so search and social previews can never drift apart.
+// organisation schema so search and social previews can never drift apart.
 const SITE_DESCRIPTION =
-  'Buy premium dry fruits, nuts, seeds, super foods and healthy snacks online at Energyflow. Shop millets, muesli, berries, cold pressed oils, A2 Gir cow bilona ghee, herbal powders, honey and festive gift hampers, all quality checked and delivered across India.';
+  'Buy premium dry fruits, nuts, dried berries, seeds, superfoods, flavoured makhana, healthy snacks and dry fruit gift boxes online. Delivered across India.';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Energyflow | Buy Premium Dry Fruits, Nuts, Seeds & Super Foods Online',
+    default: 'Energyflow | Buy Dry Fruits, Nuts & Superfoods Online',
     template: '%s | Energyflow',
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   keywords: [
-    'dry fruits online',
-    'buy dry fruits',
-    'premium nuts',
-    'super foods',
-    'healthy snacks',
-    'seeds and super foods',
-    'millets and pulses',
-    'muesli and oats',
-    'cold pressed oil',
-    'A2 Gir cow bilona ghee',
-    'organic wellness products',
-    'herbal powders',
-    'natural honey',
+    'buy dry fruits online',
+    'premium dry fruits',
+    'almonds online',
+    'cashew nuts online',
+    'dried berries online',
+    'chia seeds online',
+    'superfoods online',
+    'flavoured makhana online',
+    'healthy snacks online',
+    'flavoured nuts',
+    'millets online',
+    'ayurvedic herbs online',
+    'dry fruit gift box',
+    'diwali dry fruit hampers',
     'corporate gifting dry fruits',
     'Energyflow',
   ],
@@ -57,7 +57,7 @@ export const metadata = {
     type: 'website',
     locale: 'en_IN',
     siteName: SITE_NAME,
-    title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
+    title: 'Energyflow | Premium Dry Fruits, Nuts & Superfoods',
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     images: [
@@ -65,14 +65,15 @@ export const metadata = {
         url: '/assets/images/hero/01.webp',
         width: 1200,
         height: 630,
-        alt: 'Energyflow premium dry fruits, nuts, seeds and super foods',
+        alt: 'Energyflow premium dry fruits, nuts, seeds and superfoods',
       },
     ],
   },
+  // Only the card type and fallback image live here. A root twitter title or
+  // description would be inherited by every page that sets only Open Graph,
+  // so pages declare their own and X falls back to og:title otherwise.
   twitter: {
     card: 'summary_large_image',
-    title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
-    description: SITE_DESCRIPTION,
     images: ['/assets/images/hero/01.webp'],
   },
   icons: {
@@ -91,10 +92,12 @@ export const viewport = {
 
 // Organisation-level structured data, emitted sitewide rather than per page so
 // crawlers can attach the brand, its legal name and its founding date to every
-// URL they reach. This is what feeds the brand knowledge panel.
+// URL they reach. This is what feeds the brand knowledge panel and merchant
+// listings (OnlineStore is the Organization subtype Google reads for them).
 const organizationSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'OnlineStore',
+  '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   legalName: 'Energy Flow Supply Hub Pvt. Ltd.',
   url: SITE_URL,
@@ -104,6 +107,7 @@ const organizationSchema = {
   slogan: 'Fuel Your Health, Energize Your Life.',
   email: 'energyflow0001@gmail.com',
   telephone: '+91-9289657742',
+  areaServed: { '@type': 'Country', name: 'India' },
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Rangpuri, Mahipalpur',
@@ -112,6 +116,15 @@ const organizationSchema = {
     postalCode: '110037',
     addressCountry: 'IN',
   },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    telephone: '+91-9289657742',
+    email: 'energyflow0001@gmail.com',
+    areaServed: 'IN',
+    availableLanguage: ['English', 'Hindi'],
+  },
+  hasMerchantReturnPolicy: RETURN_POLICY,
 };
 
 export default function RootLayout({ children }) {
@@ -134,7 +147,7 @@ export default function RootLayout({ children }) {
       <body className="antialiased">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationSchema) }}
         />
         {/* One theme for the whole app: the storefront and the admin panel
             share the light/dark choice (stored by next-themes). */}

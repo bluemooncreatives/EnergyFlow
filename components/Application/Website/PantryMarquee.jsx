@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Pause, Play } from 'lucide-react'
-import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import Section from './storefront/Section'
 import Marquee, { usePrefersReducedMotion } from './storefront/Marquee'
 import mixedNuts from '@/public/assets/images/marquee/mixed-nuts.webp'
@@ -15,10 +15,10 @@ import bilonaGhee from '@/public/assets/images/marquee/bilona-ghee.webp'
 // names what must be in stock (see getStorefrontAvailability); until it is,
 // the link opens the full shop instead of an empty results page.
 const LINES = [
-    { label: 'Mixed Nuts', image: mixedNuts, href: `${WEBSITE_SHOP}?category=dry-fruits-and-nuts`, requires: { category: 'dry-fruits-and-nuts' } },
+    { label: 'Mixed Nuts', image: mixedNuts, href: WEBSITE_CATEGORY('dry-fruits-and-nuts'), requires: { category: 'dry-fruits-and-nuts' } },
     { label: 'Cashews', image: cashews, href: `${WEBSITE_SHOP}?q=cashew`, requires: { term: 'cashew' } },
     { label: 'Chocolates', image: chocolates, href: `${WEBSITE_SHOP}?q=chocolate`, requires: { term: 'chocolate' } },
-    { label: 'Fruit Jellies', image: fruitJellies, href: `${WEBSITE_SHOP}?category=healthy-candies-and-sweets`, requires: { category: 'healthy-candies-and-sweets' } },
+    { label: 'Fruit Jellies', image: fruitJellies, href: WEBSITE_CATEGORY('healthy-candies-and-sweets'), requires: { category: 'healthy-candies-and-sweets' } },
     { label: 'Bilona Ghee', image: bilonaGhee, href: `${WEBSITE_SHOP}?q=ghee`, requires: { term: 'ghee' } },
 ]
 

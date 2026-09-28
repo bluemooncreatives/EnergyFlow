@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useReveal } from '@/hooks/useReveal'
 import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
@@ -38,7 +38,7 @@ const PROMO_BANNERS = [
 
 const bannerHref = (banner, availability) =>
     !availability || availability.categories?.includes(banner.category)
-        ? `${WEBSITE_SHOP}?category=${banner.category}`
+        ? WEBSITE_CATEGORY(banner.category)
         : WEBSITE_SHOP
 
 const PromoBanner = ({ banner, availability }) => (

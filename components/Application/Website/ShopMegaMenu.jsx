@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { tintAt } from './storefront/format'
 
 /* ================================================================
-   Header "Shop" menu — every live category, linked to /shop?category=…
+   Header "Shop" menu — every live category, linked to its /category/… landing page
    Desktop: a mega-menu under the header (hover with intent delays,
    click/keyboard for touch laptops and screen readers) with a live
    preview of the hovered category. Mobile: an accordion inside the
