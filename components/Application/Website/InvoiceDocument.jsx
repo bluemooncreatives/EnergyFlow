@@ -11,8 +11,9 @@ import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 const BRAND = {
     name: 'ENERGYFLOW',
     tagline: 'Fuel Your Health, Energize Your Life.',
-    email: 'support@energyflow.com',
-    web: 'www.energyflow.com',
+    email: 'energyflow0001@gmail.com',
+    phone: '+91 92896 57742',
+    address: 'Rangpuri, Mahipalpur, New Delhi - 110037',
 }
 
 const BRAND_COLOR = '#083A2F'   // pine — matches --brand-primary
@@ -125,7 +126,8 @@ const InvoiceDocument = ({ order = {} }) => {
                     <View>
                         <Text style={s.brandName}>{BRAND.name}</Text>
                         <Text style={s.brandTag}>{BRAND.tagline}</Text>
-                        <Text style={s.brandMeta}>{BRAND.web}   ·   {BRAND.email}</Text>
+                        <Text style={s.brandMeta}>{BRAND.address}</Text>
+                        <Text style={s.brandMeta}>{BRAND.phone}   ·   {BRAND.email}</Text>
                     </View>
                     <View style={s.invTitleWrap}>
                         <Text style={s.invTitle}>INVOICE</Text>

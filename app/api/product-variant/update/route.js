@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
 import { zSchema } from "@/lib/zodSchema"
 import { validatePricing } from "@/lib/pricing"
+import { normalizePackSize } from "@/lib/utils"
 import ProductModel from "@/models/Product.model"
 import ProductVariantModel from "@/models/ProductVariant.model"
 
@@ -34,6 +35,9 @@ export async function PUT(request) {
         }
 
         const validatedData = validate.data
+        // Admins can type custom pack sizes; store one canonical spelling so the
+        // shop filter doesn't list "1 KG" and "1kg" separately.
+        validatedData.size = normalizePackSize(validatedData.size)
 
         // Server is authoritative on pricing: enforce SP <= MRP and derive the
         // discount, ignoring whatever the client sent.

@@ -5,14 +5,15 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import Link from 'next/link'
-import { MapPin, Mail, Instagram, Facebook, Twitter, Globe, ArrowRight } from 'lucide-react'
+import { MapPin, Mail, Phone, Instagram, Facebook, Twitter, Globe, ArrowRight } from 'lucide-react'
 
 import { USER_DASHBOARD, WEBSITE_HOME, WEBSITE_LOGIN, WEBSITE_REGISTER, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import FooterWordmark from '@/components/Application/Website/FooterWordmark'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CONTACT_EMAIL = 'energyflow.official@gmail.com'
+const CONTACT_EMAIL = 'energyflow0001@gmail.com'
+const CONTACT_PHONE = '+919289657742'
 
 // Shown when the catalogue has no categories yet, so the column is never empty.
 const fallbackCategoryLinks = [
@@ -150,7 +151,11 @@ const Footer = ({ categoryLinks = [] }) => {
                         <ul className='space-y-2.5 text-[0.9375rem] text-white/80'>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <MapPin className='size-5 shrink-0 lg:order-2' />
-                                <span>Pune, Maharashtra 411047</span>
+                                <span>Rangpuri, Mahipalpur, New Delhi - 110037</span>
+                            </li>
+                            <li className='flex lg:justify-end items-center gap-2'>
+                                <Phone className='size-5 shrink-0 lg:order-2' />
+                                <Link href={`tel:${CONTACT_PHONE}`} className='transition-colors hover:text-[var(--brand-amber)]'>+91 92896 57742</Link>
                             </li>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <Mail className='size-5 shrink-0 lg:order-2' />
@@ -199,7 +204,7 @@ const Footer = ({ categoryLinks = [] }) => {
                     </div>
                     <div className='flex items-center flex-wrap justify-center gap-x-8 gap-y-2'>
                         <span className='flex items-center gap-1.5'>
-                            <Globe className='size-4' /> Pune, India
+                            <Globe className='size-4' /> New Delhi, India
                         </span>
                         {socialLinks.map(({ label, href }) => (
                             <Link key={`bar-${label}`} href={href} target='_blank' rel='noopener noreferrer' className='hover:text-[var(--brand-white)] transition-colors'>

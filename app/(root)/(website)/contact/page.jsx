@@ -256,15 +256,23 @@ const ContactPage = () => {
               <div className={styles.sectionLabel}><p>Where</p></div>
               <div className={styles.divider} />
               <div className={styles.item}><p>Energyflow</p></div>
-              <div className={styles.item}><p>Pune, Maharashtra</p></div>
-              <div className={styles.item}><p>411047</p></div>
+              <div className={styles.item}><p>Rangpuri, Mahipalpur</p></div>
+              <div className={styles.item}><p>New Delhi - 110037</p></div>
+            </div>
+
+            <div>
+              <div className={styles.sectionLabel}><p>Call</p></div>
+              <div className={styles.divider} />
+              <div className={styles.item}>
+                <a href="tel:+919289657742">+91 92896 57742</a>
+              </div>
             </div>
 
             <div>
               <div className={styles.sectionLabel}><p>Mail</p></div>
               <div className={styles.divider} />
               <div className={styles.item}>
-                <a href="mailto:energyflow.official@gmail.com">energyflow.official@gmail.com</a>
+                <a href="mailto:energyflow0001@gmail.com">energyflow0001@gmail.com</a>
               </div>
             </div>
 

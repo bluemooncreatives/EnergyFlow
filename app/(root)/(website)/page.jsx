@@ -46,13 +46,13 @@ const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Energyflow',
-    url: 'https://www.energyflow.com',
+    url: 'https://www.energyflow.in',
     description: HOME_DESCRIPTION,
     potentialAction: {
         '@type': 'SearchAction',
         target: {
             '@type': 'EntryPoint',
-            urlTemplate: 'https://www.energyflow.com/shop?q={search_term_string}',
+            urlTemplate: 'https://www.energyflow.in/shop?q={search_term_string}',
         },
         'query-input': 'required name=search_term_string',
     },

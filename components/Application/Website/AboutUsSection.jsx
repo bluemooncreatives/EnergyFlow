@@ -18,7 +18,7 @@ const CONTENT = {
     titleTail: 'easy to trust.',
     label: 'A bit about us',
     brandName: 'Energyflow',
-    intro: 'is a healthy food brand from Pune bringing premium dry fruits, nuts, seeds, super foods, millets, cold pressed oils and A2 Gir cow bilona ghee under one roof.',
+    intro: 'is a healthy food brand from New Delhi bringing premium dry fruits, nuts, seeds, super foods, millets, cold pressed oils and A2 Gir cow bilona ghee under one roof.',
     caption: 'We source from growers we can vouch for, check every lot for freshness and grade, and pack it to protect taste on the way to you.',
     missionLead: 'Our promise is simple: food that is honest, fresh and fairly priced',
     missionTail: 'nothing we would not serve at home.',

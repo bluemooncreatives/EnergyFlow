@@ -47,7 +47,7 @@ const buildProductSchema = ({ product, variant, reviewCount, ratingAvg }) => {
             priceCurrency: 'INR',
             availability: 'https://schema.org/InStock',
             itemCondition: 'https://schema.org/NewCondition',
-            url: `https://www.energyflow.com/product/${product?.slug}`,
+            url: `https://www.energyflow.in/product/${product?.slug}`,
         },
     }
 

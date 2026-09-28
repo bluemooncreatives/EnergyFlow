@@ -17,7 +17,7 @@ import Select from '@/components/Application/Select'
 import MediaModal from '@/components/Application/Admin/MediaModal'
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { sizes } from '@/lib/utils'
+import usePackSizeOptions from '@/hooks/usePackSizeOptions'
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: 'Home' },
   { href: ADMIN_PRODUCT_VARIANT_SHOW, label: 'Product Variants' },
@@ -60,6 +60,7 @@ const AddProduct = () => {
   })
 
   const selectedProductId = form.watch('product')
+  const { options: sizeOptions, addOption: addSizeOption } = usePackSizeOptions(form.watch('size'))
 
   useEffect(() => {
     if (!selectedProductId) {
@@ -278,10 +279,11 @@ const AddProduct = () => {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          options={sizes}
+                          options={sizeOptions}
                           selected={field.value}
                           setSelected={field.onChange}
                           isMulti={false}
+                          onCreate={addSizeOption}
                         />
                       </FormControl>
                       <FormMessage />

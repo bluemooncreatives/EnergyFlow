@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const SITE_NAME = 'Energyflow';
-const SITE_URL = 'https://www.energyflow.com';
+const SITE_URL = 'https://www.energyflow.in';
 
 // One canonical description, reused by the document head, Open Graph and the
 // Twitter card so search and social previews can never drift apart.
@@ -94,8 +94,14 @@ const organizationSchema = {
   description: SITE_DESCRIPTION,
   foundingDate: '2025-11-19',
   slogan: 'Fuel Your Health, Energize Your Life.',
+  email: 'energyflow0001@gmail.com',
+  telephone: '+91-9289657742',
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Rangpuri, Mahipalpur',
+    addressLocality: 'New Delhi',
+    addressRegion: 'Delhi',
+    postalCode: '110037',
     addressCountry: 'IN',
   },
 };

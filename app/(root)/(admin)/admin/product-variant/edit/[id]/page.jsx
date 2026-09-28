@@ -16,7 +16,7 @@ import useFetch from '@/hooks/useFetch'
 import Select from '@/components/Application/Select'
 import MediaModal from '@/components/Application/Admin/MediaModal'
 import Image from 'next/image'
-import { sizes } from '@/lib/utils'
+import usePackSizeOptions from '@/hooks/usePackSizeOptions'
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: 'Home' },
@@ -64,6 +64,8 @@ const EditProductVariant = ({ params }) => {
       discountPercentage: '',
     },
   })
+
+  const { options: sizeOptions, addOption: addSizeOption } = usePackSizeOptions(form.watch('size'))
 
   useEffect(() => {
     if (getVariant && getVariant.success) {
@@ -185,10 +187,11 @@ const EditProductVariant = ({ params }) => {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          options={sizes}
+                          options={sizeOptions}
                           selected={field.value}
                           setSelected={field.onChange}
                           isMulti={false}
+                          onCreate={addSizeOption}
                         />
                       </FormControl>
                       <FormMessage />

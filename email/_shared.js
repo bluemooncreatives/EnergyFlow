@@ -45,7 +45,7 @@ export const BRAND_NAME = "Energyflow";
  * production domain so links never break even if the var is unset.
  */
 export const siteUrl = () => {
-    const raw = process.env.NEXT_PUBLIC_BASE_URL || "https://www.energyflow.com";
+    const raw = process.env.NEXT_PUBLIC_BASE_URL || "https://www.energyflow.in";
     return String(raw).replace(/\/+$/, ""); // strip trailing slash
 };
 

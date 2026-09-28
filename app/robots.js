@@ -1,4 +1,4 @@
-const BASE_URL = 'https://www.energyflow.com'
+const BASE_URL = 'https://www.energyflow.in'
 
 export default function robots() {
     return {

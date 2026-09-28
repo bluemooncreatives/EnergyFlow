@@ -416,7 +416,8 @@ const Checkout = () => {
                 throw new Error('Payment gateway is not ready. Please refresh and try again.')
             }
 
-            const razorpayLogoUrl = new URL('/assets/images/razorpay-logo.png', window.location.origin).toString()
+            // Same mark as the site header, so the payment popup matches the brand.
+            const razorpayLogoUrl = new URL('/assets/images/hero/logo.png', window.location.origin).toString()
 
             const razOption = {
                 "key": process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,

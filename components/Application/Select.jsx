@@ -15,7 +15,7 @@ import {
    PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, ChevronDown, XIcon } from "lucide-react";
+import { CheckIcon, ChevronDown, PlusIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 
@@ -25,8 +25,25 @@ function Select({
    setSelected,
    placeholder = "Select options",
    isMulti = false, // Added prop to determine if multi-select is enabled
+   onCreate, // When set, typing a value that isn't listed offers an "Add" row
 }) {
    const [open, setOpen] = useState(false);
+   const [search, setSearch] = useState("");
+
+   const searchTerm = search.trim();
+   const canCreate = Boolean(onCreate) && searchTerm.length > 0
+       && !options.some((o) => String(o.label).toLowerCase() === searchTerm.toLowerCase());
+
+   const handleOpenChange = (next) => {
+       setOpen(next);
+       if (!next) setSearch("");
+   };
+
+   const handleCreate = () => {
+       const option = onCreate(searchTerm);
+       setSearch("");
+       if (option) handleSelect(option);
+   };
 
    const handleSelect = (option) => {
        if (isMulti) {
@@ -39,7 +56,7 @@ function Select({
        } else {
            // If single-select, set the selected option directly (non-array value)
            setSelected(option.value);
-           setOpen(false); // Close the dropdown after selection in single-select
+           handleOpenChange(false); // Close the dropdown after selection in single-select
        }
    };
 
@@ -53,7 +70,7 @@ function Select({
    };
 
    return (
-       <Popover open={open} onOpenChange={setOpen}>
+       <Popover open={open} onOpenChange={handleOpenChange}>
            <PopoverTrigger className="w-full" asChild>
                <Button
                    variant="outline"
@@ -95,8 +112,12 @@ function Select({
            <PopoverContent align="start" className="p-0">
                <Command>
                    <CommandList>
-                       <CommandInput placeholder="Search options..." />
-                       <CommandEmpty>No options found.</CommandEmpty>
+                       <CommandInput
+                           placeholder={onCreate ? "Search or add new..." : "Search options..."}
+                           value={search}
+                           onValueChange={setSearch}
+                       />
+                       {!canCreate && <CommandEmpty>No options found.</CommandEmpty>}
                        <CommandGroup>
                            {options.map((option) => (
                                <CommandItem
@@ -117,6 +138,17 @@ function Select({
                                    />
                                </CommandItem>
                            ))}
+                           {/* Last, so Enter still picks a partial match first; forceMount keeps it out of cmdk's filtering. */}
+                           {canCreate && (
+                               <CommandItem
+                                   forceMount
+                                   value={`__create__${searchTerm}`}
+                                   onSelect={handleCreate}
+                               >
+                                   <PlusIcon className="h-4 w-4" />
+                                   Add &quot;{searchTerm}&quot;
+                               </CommandItem>
+                           )}
                        </CommandGroup>
                    </CommandList>
                </Command>

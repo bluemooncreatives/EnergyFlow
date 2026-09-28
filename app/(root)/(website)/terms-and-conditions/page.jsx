@@ -38,7 +38,7 @@ const TermsAndConditions = () => {
                 <div className='border-b border-line-soft pb-8'>
                     <p className='mt-5 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         Welcome to <strong>Energyflow</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). By accessing or placing an order on{' '}
-                        <strong>energyflow.com</strong> (the &quot;Website&quot;), you agree to be legally bound by these Terms &amp; Conditions
+                        <strong>energyflow.in</strong> (the &quot;Website&quot;), you agree to be legally bound by these Terms &amp; Conditions
                         (&quot;Terms&quot;). Please read them carefully before using our services. If you do not agree with any part of
                         these Terms, please discontinue use of the Website immediately.
                     </p>
@@ -51,14 +51,14 @@ const TermsAndConditions = () => {
                 <Section number="1" title="Company Information">
                     <p>
                         <strong>Business Name:</strong> Energyflow<br />
-                        <strong>Registered Address:</strong> Pune, Maharashtra 411047<br />
+                        <strong>Registered Address:</strong> Rangpuri, Mahipalpur, New Delhi - 110037<br />
                         <strong>Email:</strong>{' '}
-                        <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            energyflow.official@gmail.com
+                        <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            energyflow0001@gmail.com
                         </a><br />
                         <strong>Phone:</strong>{' '}
-                        <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            +91 82372 84906
+                        <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            +91 92896 57742
                         </a>
                     </p>
                 </Section>
@@ -68,7 +68,7 @@ const TermsAndConditions = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>You must be at least 18 years old to create an account or make a purchase. Users between 13–17 may browse with verifiable parental or guardian consent and supervision.</li>
                         <li>By registering, you represent that all information you provide is accurate, current, and complete.</li>
-                        <li>You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> if you suspect unauthorized access.</li>
+                        <li>You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a> if you suspect unauthorized access.</li>
                         <li>We reserve the right to suspend or terminate accounts that violate these Terms or engage in fraudulent activity.</li>
                         <li>One account per person. Creating multiple accounts to abuse promotions or discounts is strictly prohibited.</li>
                     </ul>
@@ -127,7 +127,7 @@ const TermsAndConditions = () => {
                         <li>Opened or partially consumed packs cannot be returned, for reasons of hygiene and food safety. This does not affect your rights where a product is damaged, expired, incorrectly supplied, or otherwise not of satisfactory quality.</li>
                         <li>If a product arrives damaged, leaking, expired, or is not what you ordered, contact us within 48 hours of delivery with photographs of the pack, seal and batch details, and we will replace it or refund you in full.</li>
                         <li>Custom gift hampers and personalised or branded bulk orders cannot be returned unless they arrive defective or damaged.</li>
-                        <li>To initiate a return, contact us at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> with your order number and photos of the item.</li>
+                        <li>To initiate a return, contact us at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a> with your order number and photos of the item.</li>
                         <li>Approved refunds are processed within 5–10 business days to the original payment method.</li>
                         <li>Return shipping costs are the customer&apos;s responsibility unless the return is due to our error (wrong item, defective product).</li>
                         <li>Exchanges are subject to stock availability. If the desired item is unavailable, a store credit or refund will be offered.</li>
@@ -173,7 +173,7 @@ const TermsAndConditions = () => {
                         <li>
                             <strong>GDPR (EU/EEA Customers):</strong> If you are located in the European Union or European Economic Area, you have the right to access,
                             rectify, erase, restrict, or port your personal data, and to withdraw consent at any time. To exercise these rights, contact us at{' '}
-                            <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.
+                            <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a>.
                         </li>
                         <li>
                             <strong>CCPA (California Customers):</strong> California residents have the right to know what personal information we collect, to request deletion,
@@ -227,7 +227,7 @@ const TermsAndConditions = () => {
                 <Section number="15" title="Governing Law & Jurisdiction">
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions.</li>
-                        <li>Any disputes arising in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Pune, Maharashtra, India.</li>
+                        <li>Any disputes arising in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of New Delhi, India.</li>
                         <li>If you are a consumer based in the EU, UK, or Australia, mandatory local consumer protection laws of your country may also apply and are not overridden by this clause.</li>
                     </ul>
                 </Section>
@@ -235,7 +235,7 @@ const TermsAndConditions = () => {
                 {/* Section 16 */}
                 <Section number="16" title="Dispute Resolution">
                     <ul className='list-disc ps-6 space-y-2'>
-                        <li>We encourage you to contact us first at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a> to resolve any dispute informally within 30 days.</li>
+                        <li>We encourage you to contact us first at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a> to resolve any dispute informally within 30 days.</li>
                         <li>If informal resolution is unsuccessful, disputes shall be settled by binding arbitration under the Arbitration and Conciliation Act 1996 (India), with a sole arbitrator mutually agreed upon.</li>
                         <li>EU customers may also use the EU Online Dispute Resolution platform at <strong>ec.europa.eu/consumers/odr</strong>.</li>
                         <li>Class action waiver: You agree to resolve disputes on an individual basis and waive the right to participate in class action lawsuits to the extent permitted by applicable law.</li>
@@ -275,16 +275,16 @@ const TermsAndConditions = () => {
                     </p>
                     <ul className='mt-4 space-y-2 text-base lg:text-[17px] text-ink-body'>
                         <li><strong>Email:</strong>{' '}
-                            <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                                energyflow.official@gmail.com
+                            <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                                energyflow0001@gmail.com
                             </a>
                         </li>
                         <li><strong>Phone:</strong>{' '}
-                            <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                                +91 82372 84906
+                            <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                                +91 92896 57742
                             </a>
                         </li>
-                        <li><strong>Address:</strong> Energyflow, Pune, Maharashtra 411047</li>
+                        <li><strong>Address:</strong> Energyflow, Rangpuri, Mahipalpur, New Delhi - 110037</li>
                     </ul>
                     <p className='mt-6 text-sm text-ink-muted'>
                         Thank you for choosing Energyflow. We are committed to providing you with a safe, reliable, and enjoyable shopping experience.

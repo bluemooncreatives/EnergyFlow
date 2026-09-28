@@ -42,7 +42,7 @@ const PrivacyPolicy = () => {
                         and the rights you have over your data.
                     </p>
                     <p className='mt-3 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
-                        By visiting <strong>energyflow.com</strong> (the &quot;Website&quot;) or placing an order with us, you acknowledge
+                        By visiting <strong>energyflow.in</strong> (the &quot;Website&quot;) or placing an order with us, you acknowledge
                         that you have read and understood this Privacy Policy. If you do not agree, please discontinue use of the Website.
                     </p>
                     <p className='mt-3 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
@@ -57,14 +57,14 @@ const PrivacyPolicy = () => {
                     <p>
                         The data controller responsible for your personal information is:<br /><br />
                         <strong>Business Name:</strong> Energyflow<br />
-                        <strong>Registered Address:</strong> Pune, Maharashtra 411047<br />
+                        <strong>Registered Address:</strong> Rangpuri, Mahipalpur, New Delhi - 110037<br />
                         <strong>Email:</strong>{' '}
-                        <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            energyflow.official@gmail.com
+                        <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            energyflow0001@gmail.com
                         </a><br />
                         <strong>Phone:</strong>{' '}
-                        <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            +91 82372 84906
+                        <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            +91 92896 57742
                         </a>
                     </p>
                     <p>
@@ -207,7 +207,7 @@ const PrivacyPolicy = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Right to Know:</strong> Request disclosure of the categories and specific pieces of personal information we have collected about you.</li>
                         <li><strong>Right to Delete:</strong> Request deletion of personal information we have collected, subject to certain exceptions.</li>
-                        <li><strong>Right to Opt-Out of Sale:</strong> We do not sell personal information. You may still submit an opt-out request at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.</li>
+                        <li><strong>Right to Opt-Out of Sale:</strong> We do not sell personal information. You may still submit an opt-out request at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a>.</li>
                         <li><strong>Right to Non-Discrimination:</strong> We will not discriminate against you for exercising your CCPA rights.</li>
                         <li><strong>Right to Correct:</strong> Request correction of inaccurate personal information.</li>
                     </ul>
@@ -216,7 +216,7 @@ const PrivacyPolicy = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Right to Access:</strong> Request a summary of personal data held and its processing activities.</li>
                         <li><strong>Right to Correction & Erasure:</strong> Request correction of inaccurate data or erasure of data no longer necessary for its original purpose.</li>
-                        <li><strong>Right to Grievance Redressal:</strong> Submit grievances to our Data Protection Officer via <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.</li>
+                        <li><strong>Right to Grievance Redressal:</strong> Submit grievances to our Data Protection Officer via <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a>.</li>
                         <li><strong>Right to Nominate:</strong> Nominate another individual to exercise rights on your behalf in the event of death or incapacity.</li>
                     </ul>
 
@@ -228,8 +228,8 @@ const PrivacyPolicy = () => {
 
                     <p className='mt-3'>
                         To exercise any of the above rights, please contact us at{' '}
-                        <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            energyflow.official@gmail.com
+                        <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            energyflow0001@gmail.com
                         </a>{' '}
                         with the subject line <strong>&quot;Privacy Rights Request&quot;</strong>. We will respond within 30 days (or 72 hours for urgent GDPR requests).
                     </p>
@@ -240,7 +240,7 @@ const PrivacyPolicy = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>Our Website is not directed to children under the age of 13. We do not knowingly collect personal information from children under 13.</li>
                         <li>If we become aware that a child under 13 has provided us with personal data without verifiable parental consent, we will delete that information promptly.</li>
-                        <li>If you are a parent or guardian and believe your child has provided us with personal information, please contact us at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.</li>
+                        <li>If you are a parent or guardian and believe your child has provided us with personal information, please contact us at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a>.</li>
                     </ul>
                 </Section>
 
@@ -256,7 +256,7 @@ const PrivacyPolicy = () => {
                 <Section number="13" title="Marketing Communications & Opt-Out">
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>With your consent, we may send you promotional emails about new products, sales, and events.</li>
-                        <li>You can unsubscribe from marketing emails at any time by clicking the &quot;Unsubscribe&quot; link in any email or by contacting us at <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow.official@gmail.com</a>.</li>
+                        <li>You can unsubscribe from marketing emails at any time by clicking the &quot;Unsubscribe&quot; link in any email or by contacting us at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a>.</li>
                         <li>Opting out of marketing emails will not affect transactional emails related to your orders (e.g., order confirmation, shipping updates).</li>
                         <li>We comply with the CAN-SPAM Act (USA), CASL (Canada), and applicable Indian regulations on unsolicited commercial communications.</li>
                     </ul>
@@ -279,16 +279,16 @@ const PrivacyPolicy = () => {
                     </p>
                     <ul className='mt-4 space-y-2 text-base lg:text-[17px] text-ink-body'>
                         <li><strong>Email:</strong>{' '}
-                            <a href="mailto:energyflow.official@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                                energyflow.official@gmail.com
+                            <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                                energyflow0001@gmail.com
                             </a>
                         </li>
                         <li><strong>Phone:</strong>{' '}
-                            <a href="tel:+918237284906" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                                +91 82372 84906
+                            <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                                +91 92896 57742
                             </a>
                         </li>
-                        <li><strong>Address:</strong> Energyflow, Pune, Maharashtra 411047</li>
+                        <li><strong>Address:</strong> Energyflow, Rangpuri, Mahipalpur, New Delhi - 110037</li>
                     </ul>
                     <p className='mt-4 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         You may also review our{' '}
