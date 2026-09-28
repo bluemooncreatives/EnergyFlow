@@ -10,12 +10,12 @@ import { OrderPipeline, PaymentMix, BuyingHeatmap, RecentOrders } from '../Panel
 
 const SectionLabel = ({ icon: Icon, bg, fg = 'var(--primary-foreground)', title, description }) => (
     <div className="mb-3 flex items-center gap-3">
-        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
             <Icon className="size-4" />
         </span>
         <div>
             <p className="text-sm font-semibold text-foreground">{title}</p>
-            {description && <p className="text-xs text-muted-foreground">{description}</p>}
+            {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
         </div>
     </div>
 )
@@ -38,8 +38,8 @@ const OrdersFulfillmentTab = ({ data, isLoading }) => (
             <div className="grid gap-4 lg:grid-cols-3">
                 <BuyingHeatmap heatmap={data?.heatmap} />
                 {/* Courier status summary */}
-                <div className="rounded-xl border bg-card p-5">
-                    <p className="mb-3 text-sm font-semibold">Courier Status Summary</p>
+                <div className="rounded-xl border bg-card p-4 sm:p-5">
+                    <p className="mb-3 text-sm font-semibold text-foreground">Courier Status Summary</p>
                     {data?.shipmentCounts && Object.keys(data.shipmentCounts).length > 0 ? (
                         <ul className="space-y-2">
                             {Object.entries(data.shipmentCounts).sort((a, b) => b[1] - a[1]).map(([status, count]) => (

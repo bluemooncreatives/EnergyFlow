@@ -76,8 +76,8 @@ const SalesTrend = ({ data, kpis }) => {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="text-right">
-                        <p className="font-header text-xl font-semibold tabular-nums leading-none">{metric.format(total)}</p>
-                        <p className="mt-1 text-[0.6875rem] text-muted-foreground">{metricId === 'aov' ? 'average in range' : 'total in range'}</p>
+                        <p className="text-2xl sm:text-3xl font-bold tabular-nums leading-none tracking-tight">{metric.format(total)}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{metricId === 'aov' ? 'average in range' : 'total in range'}</p>
                     </div>
                     <Delta change={change} />
                 </div>
@@ -97,7 +97,7 @@ const SalesTrend = ({ data, kpis }) => {
             ) : view === 'table' ? (
                 <div className="max-h-[18rem] overflow-auto rounded-lg border">
                     <table className="w-full text-sm">
-                        <thead className="sticky top-0 bg-muted text-left text-[0.6875rem] uppercase tracking-[0.06em] text-muted-foreground">
+                        <thead className="sticky top-0 bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                             <tr>
                                 <th className="px-3 py-2 font-semibold">{granularity === 'hour' ? 'Hour' : granularity === 'month' ? 'Month' : granularity === 'week' ? 'Week' : 'Day'}</th>
                                 <th className="px-3 py-2 text-right font-semibold">{metric.label}</th>
@@ -107,9 +107,9 @@ const SalesTrend = ({ data, kpis }) => {
                         <tbody>
                             {timeline.map((row) => (
                                 <tr key={row.key} className="border-t">
-                                    <td className="px-3 py-1.5">{bucketLabel(row.key, granularity, true)}</td>
-                                    <td className="px-3 py-1.5 text-right tabular-nums">{metric.format(row[metricId])}</td>
-                                    {metric.compare ? <td className="px-3 py-1.5 text-right tabular-nums text-muted-foreground">{metric.format(row[metric.compare])}</td> : null}
+                                    <td className="px-3 py-2 text-xs sm:text-sm">{bucketLabel(row.key, granularity, true)}</td>
+                                    <td className="px-3 py-2 text-right text-xs sm:text-sm tabular-nums font-medium">{metric.format(row[metricId])}</td>
+                                    {metric.compare ? <td className="px-3 py-2 text-right text-xs sm:text-sm tabular-nums text-muted-foreground">{metric.format(row[metric.compare])}</td> : null}
                                 </tr>
                             ))}
                         </tbody>

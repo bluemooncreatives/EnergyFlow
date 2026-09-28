@@ -74,7 +74,7 @@ export const ActionCenter = ({ actions, loading }) => {
     return (
         <section aria-labelledby="actions-title" className="rounded-xl border bg-card">
             <header className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3 sm:px-5">
-                <h3 id="actions-title" className="flex items-center gap-2 text-[0.9375rem] font-semibold">
+                <h3 id="actions-title" className="flex items-center gap-2 text-sm font-semibold">
                     Needs attention
                     {!loading && (
                         <span className={cn('rounded-full border px-2 py-0.5 text-[0.6875rem] font-semibold', open.length ? 'ef-tone--sun' : 'ef-tone--forest')}>
@@ -93,7 +93,7 @@ export const ActionCenter = ({ actions, loading }) => {
                                 <span className={cn('flex size-8 items-center justify-center rounded-lg border', active ? `ef-tone--${tone}` : 'border-transparent bg-muted text-muted-foreground')}>
                                     <Icon className="size-4" aria-hidden="true" />
                                 </span>
-                                <span className={cn('font-header text-xl font-semibold tabular-nums leading-none', !active && !info && 'text-muted-foreground')}>
+                                <span className={cn('text-xl font-bold tabular-nums leading-none', !active && !info && 'text-muted-foreground')}>
                                     {loading ? <span className="inline-block h-5 w-10 animate-pulse rounded bg-muted" /> : money ? inr(value, { compact: true }) : num(value)}
                                 </span>
                                 <span className="text-xs leading-snug text-muted-foreground group-hover:text-foreground">{label}</span>
@@ -234,16 +234,16 @@ export const PaymentMix = ({ paymentMethods = [], paymentStatuses = [] }) => {
                 <EmptyState icon={Wallet} title="No payments in this range" />
             ) : view === 'table' ? (
                 <table className="w-full text-sm">
-                    <thead className="text-left text-[0.6875rem] uppercase tracking-[0.06em] text-muted-foreground">
+                    <thead className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                         <tr><th className="pb-2 font-semibold">Method</th><th className="pb-2 text-right font-semibold">Orders</th><th className="pb-2 text-right font-semibold">Sales</th><th className="pb-2 text-right font-semibold">Share</th></tr>
                     </thead>
                     <tbody>
                         {methods.map((m) => (
                             <tr key={m.method} className="border-t">
-                                <td className="py-2">{PAYMENT_METHOD_LABEL[m.method] || m.method}</td>
-                                <td className="py-2 text-right tabular-nums">{num(m.orders)}</td>
-                                <td className="py-2 text-right tabular-nums">{inr(m.sales)}</td>
-                                <td className="py-2 text-right tabular-nums">{pct(share(m.sales, total), 0)}</td>
+                                <td className="py-2.5 text-xs sm:text-sm">{PAYMENT_METHOD_LABEL[m.method] || m.method}</td>
+                                <td className="py-2.5 text-right text-xs sm:text-sm tabular-nums">{num(m.orders)}</td>
+                                <td className="py-2.5 text-right text-xs sm:text-sm tabular-nums font-medium">{inr(m.sales)}</td>
+                                <td className="py-2.5 text-right text-xs sm:text-sm tabular-nums text-muted-foreground">{pct(share(m.sales, total), 0)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -266,8 +266,8 @@ export const PaymentMix = ({ paymentMethods = [], paymentStatuses = [] }) => {
                             </PieChart>
                         </ResponsiveContainer>
                         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                            <span className="font-header text-lg font-semibold tabular-nums">{inr(total, { compact: true })}</span>
-                            <span className="text-[0.6875rem] text-muted-foreground">net sales</span>
+                            <span className="text-2xl font-bold tabular-nums leading-none">{inr(total, { compact: true })}</span>
+                            <span className="mt-1 text-xs text-muted-foreground">net sales</span>
                         </div>
                     </div>
                     <ul className="w-full space-y-2.5">
@@ -522,8 +522,8 @@ export const ReviewsPanel = ({ reviews, kpis }) => {
                 <>
                     <div className="flex items-center gap-5">
                         <div className="text-center">
-                            <p className="font-header text-4xl font-semibold tabular-nums leading-none">{avg.toFixed(1)}</p>
-                            <p className="mt-1 flex justify-center gap-0.5" aria-label={`${avg.toFixed(1)} out of 5`}>
+                            <p className="text-3xl sm:text-4xl font-bold tabular-nums leading-none">{avg.toFixed(1)}</p>
+                            <p className="mt-1.5 flex justify-center gap-0.5" aria-label={`${avg.toFixed(1)} out of 5`}>
                                 {Array.from({ length: 5 }).map((_, i) => <Star key={i} aria-hidden="true" className={cn('size-3', i < Math.round(avg) ? 'fill-[var(--brand-gold)] text-[var(--brand-gold)]' : 'text-foreground/20')} />)}
                             </p>
                         </div>
@@ -572,7 +572,7 @@ export const AudiencePanel = ({ audience, kpis }) => {
                 {stats.map(({ label, value, icon: Icon, href }) => (
                     <Link key={label} href={href} className="rounded-lg border p-3 transition hover:border-primary/40 hover:bg-muted/40">
                         <Icon className="size-4 text-muted-foreground" aria-hidden="true" />
-                        <p className="mt-2 font-header text-xl font-semibold tabular-nums leading-none">{num(value)}</p>
+                        <p className="mt-2 text-xl font-bold tabular-nums leading-none">{num(value)}</p>
                         <p className="mt-1 text-xs text-muted-foreground">{label}</p>
                     </Link>
                 ))}
@@ -605,7 +605,7 @@ export const CatalogueHealth = ({ catalogue }) => {
             ) : (
                 <>
                     <div className="flex items-end justify-between gap-3">
-                        <p><span className="font-header text-3xl font-semibold tabular-nums">{pct(share(sold, total), 0)}</span> <span className="text-sm text-muted-foreground">of products sold</span></p>
+                        <p><span className="text-2xl sm:text-3xl font-bold tabular-nums">{pct(share(sold, total), 0)}</span> <span className="text-sm text-muted-foreground">of products sold</span></p>
                         <p className="text-right text-xs text-muted-foreground">{num(sold)} sold · {num(unsold)} not yet</p>
                     </div>
                     <ShareBar value={sold} max={total} className="mt-2 h-2.5" />
