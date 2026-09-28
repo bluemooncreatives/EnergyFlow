@@ -16,7 +16,7 @@ const breadcrumbData = [
 const ShowOrder = () => {
 
     const columns = useMemo(() => {
-        return columnConfig(DT_ORDER_COLUMN)
+        return columnConfig(DT_ORDER_COLUMN, true)
     }, [])
 
     const action = useCallback((row, deleteType, handleDelete) => {
