@@ -1,32 +1,30 @@
 'use client'
 
+/**
+ * Analytics & Reports — 4 sub-tabs:
+ *   Sales & Revenue  |  Orders & Fulfillment  |  Customers  |  Products & Catalogue
+ *
+ * All tabs share a single API fetch (admin-analytics) for efficiency.
+ * Range + active tab both live in the URL (?range=30d&anTab=sales).
+ */
+
 import { useEffect, useMemo, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { AlertTriangle, CalendarRange, Download, Loader2, Printer, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { ADMIN_CUSTOMERS_SHOW, ADMIN_ORDER_SHOW } from '@/routes/AdminPanelRoute'
-import { inr, num, pct, relative, shortDate } from './format'
-import { KpiTile } from './ui'
-import SalesTrend from './SalesTrend'
 import {
-    ActionCenter,
-    AudiencePanel,
-    BuyingHeatmap,
-    CatalogueHealth,
-    CategoryPerformance,
-    CustomerInsights,
-    MoneyFlow,
-    OrderPipeline,
-    PaymentMix,
-    RecentOrders,
-    Regions,
-    ReviewsPanel,
-    TopProducts,
-} from './Panels'
+    AlertTriangle, CalendarRange, Download, Loader2, Printer, RefreshCw,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
+import { relative, shortDate, inr, num, pct } from './format'
+import SalesRevenueTab from './tabs/SalesRevenueTab'
+import OrdersFulfillmentTab from './tabs/OrdersFulfillmentTab'
+import CustomersTab from './tabs/CustomersTab'
+import ProductsCatalogueTab from './tabs/ProductsCatalogueTab'
 
+// ── Constants ─────────────────────────────────────────────────────────
 const PRESETS = [
     { id: 'today', label: 'Today' },
     { id: '7d', label: '7D' },
@@ -37,48 +35,50 @@ const PRESETS = [
     { id: 'all', label: 'All' },
 ]
 
+const AN_TABS = [
+    { id: 'sales', label: 'Sales & Revenue' },
+    { id: 'orders', label: 'Orders & Fulfillment' },
+    { id: 'customers', label: 'Customers' },
+    { id: 'products', label: 'Products & Catalogue' },
+]
+
 const todayIst = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10)
 
-// Flat CSV of the whole report: section, metric, value.
 const buildCsv = (d) => {
     const rows = [['Section', 'Metric', 'Value']]
     const add = (section, metric, value) => rows.push([section, metric, value])
-    add('Report', 'Range', `${d.range.label} (${shortDate(d.range.start)} – ${shortDate(new Date(new Date(d.range.end).getTime() - 1))})`)
+    add('Report', 'Range', `${d.range.label} (${shortDate(d.range.start)} to ${shortDate(new Date(new Date(d.range.end).getTime() - 1))})`)
     add('Report', 'Generated', new Date(d.generatedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }))
     const k = d.kpis
-    add('Sales', 'Net sales', k.sales.value); add('Sales', 'Net sales (previous period)', k.sales.previous)
-    add('Sales', 'Orders', k.orders.value); add('Sales', 'Average order value', k.aov.value)
-    add('Sales', 'Units sold', k.units.value); add('Sales', 'Coupon discounts', k.discounts.value)
-    add('Sales', 'Collected', k.collected.value); add('Sales', 'Outstanding', k.outstanding.value)
-    add('Sales', 'Cancellation rate %', k.cancelRate.value)
+    add('Sales', 'Net sales', k.sales.value); add('Sales', 'Orders', k.orders.value)
+    add('Sales', 'Average order value', k.aov.value); add('Sales', 'Units sold', k.units.value)
+    add('Sales', 'Coupon discounts', k.discounts.value); add('Sales', 'Collected', k.collected.value)
+    add('Sales', 'Outstanding', k.outstanding.value); add('Sales', 'Cancellation rate %', k.cancelRate.value)
     add('Customers', 'Buyers', k.customers.value); add('Customers', 'New accounts', k.newCustomers.value)
     add('Customers', 'Returning buyer rate %', k.returningRate.value)
-    d.timeline.forEach((t) => { add('Timeline', `${t.key} net sales`, t.sales); add('Timeline', `${t.key} orders`, t.orders) })
-    d.topProducts.forEach((p) => add('Top products', p.name, `${p.sales} (${p.units} units)`))
-    d.categories.forEach((c) => add('Categories', c.name, c.sales))
-    d.regions.forEach((r) => add('Regions', r.state, `${r.sales} (${r.orders} orders)`))
-    d.paymentMethods.forEach((p) => add('Payments', p.method, `${p.sales} (${p.orders} orders)`))
-    Object.entries(d.statusCounts).forEach(([s, c]) => add('Order status', s, c))
-    return rows.map((r) => r.map((cell) => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\n')
+    d.topProducts?.forEach((p) => add('Top products', p.name, `${p.sales} (${p.units} units)`))
+    d.categories?.forEach((c) => add('Categories', c.name, c.sales))
+    d.regions?.forEach((r) => add('Regions', r.state, `${r.sales} (${r.orders} orders)`))
+    d.paymentMethods?.forEach((p) => add('Payments', p.method, `${p.sales} (${p.orders} orders)`))
+    return rows.map((r) => r.map((cell) => '"' + String(cell ?? '').replace(/"/g, '""') + '"').join(',')).join('\n')
 }
 
-/**
- * Store analytics & reports. Range lives in the URL (?range=30d or
- * ?range=custom&from=…&to=…) so a report can be bookmarked or shared.
- * Previous data stays on screen while a new range loads.
- */
+// ── Main component ────────────────────────────────────────────────────
 const AnalyticsDashboard = () => {
     const router = useRouter()
     const pathname = usePathname()
     const params = useSearchParams()
+
     const range = params.get('range') || '30d'
     const from = params.get('from') || ''
     const to = params.get('to') || ''
+    const validTabs = AN_TABS.map(t => t.id)
+    const anTab = validTabs.includes(params.get('anTab')) ? params.get('anTab') : 'sales'
+
     const [customOpen, setCustomOpen] = useState(range === 'custom')
     const [draft, setDraft] = useState({ from: from || '', to: to || todayIst() })
     const [, forceTick] = useState(0)
 
-    // Keep "Updated 3 min ago" honest without refetching.
     useEffect(() => {
         const id = setInterval(() => forceTick((n) => n + 1), 30000)
         return () => clearInterval(id)
@@ -86,7 +86,14 @@ const AnalyticsDashboard = () => {
 
     const setQuery = (next) => {
         const q = new URLSearchParams(params.toString())
-        Object.entries(next).forEach(([key, value]) => (value ? q.set(key, value) : q.delete(key)))
+        Object.entries(next).forEach(([k, v]) => (v ? q.set(k, v) : q.delete(k)))
+        q.set('tab', 'analytics')
+        router.replace(`${pathname}?${q.toString()}`, { scroll: false })
+    }
+
+    const onTabChange = (value) => {
+        const q = new URLSearchParams(params.toString())
+        q.set('anTab', value)
         q.set('tab', 'analytics')
         router.replace(`${pathname}?${q.toString()}`, { scroll: false })
     }
@@ -103,42 +110,27 @@ const AnalyticsDashboard = () => {
         refetchOnWindowFocus: true,
     })
 
-    const kpis = data?.kpis
-    const timeline = data?.timeline
-
     const exportCsv = () => {
         if (!data) return
-        const blob = new Blob([`﻿${buildCsv(data)}`], { type: 'text/csv;charset=utf-8' })
+        const blob = new Blob(['\uFEFF' + buildCsv(data)], { type: 'text/csv;charset=utf-8' })
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
-        a.href = url
-        a.download = `energyflow-report-${data.range.key}-${todayIst()}.csv`
-        a.click()
-        URL.revokeObjectURL(url)
+        a.href = url; a.download = `energyflow-report-${data.range.key}-${todayIst()}.csv`
+        a.click(); URL.revokeObjectURL(url)
     }
 
-    const applyCustom = (event) => {
-        event.preventDefault()
+    const applyCustom = (e) => {
+        e.preventDefault()
         if (!draft.from || !draft.to || draft.from > draft.to) return
         setQuery({ range: 'custom', from: draft.from, to: draft.to })
     }
 
-    const tiles = useMemo(() => kpis ? [
-        { label: 'Net sales', value: inr(kpis.sales.value), change: kpis.sales.change, hint: `vs ${inr(kpis.sales.previous)} before`, spark: timeline, sparkKey: 'sales', href: ADMIN_ORDER_SHOW },
-        { label: 'Orders', value: num(kpis.orders.value), change: kpis.orders.change, hint: `${num(data.breakdown.placed)} placed · ${num(data.breakdown.cancelled)} cancelled`, spark: timeline, sparkKey: 'orders', href: ADMIN_ORDER_SHOW },
-        { label: 'Average order value', value: inr(kpis.aov.value), change: kpis.aov.change, hint: `${kpis.unitsPerOrder.value} units per order`, spark: timeline, sparkKey: 'aov' },
-        { label: 'Units sold', value: num(kpis.units.value), change: kpis.units.change, hint: `${inr(kpis.discounts.value)} in coupon discounts`, spark: timeline, sparkKey: 'units' },
-        { label: 'Buyers', value: num(kpis.customers.value), change: kpis.customers.change, hint: 'Unique customers who ordered', href: ADMIN_CUSTOMERS_SHOW },
-        { label: 'New accounts', value: num(kpis.newCustomers.value), change: kpis.newCustomers.change, hint: 'Customer sign-ups', spark: timeline, sparkKey: 'signups', href: ADMIN_CUSTOMERS_SHOW },
-        { label: 'Returning buyers', value: pct(kpis.returningRate.value), hint: 'Had ordered before this range' },
-        { label: 'Cancellation rate', value: pct(kpis.cancelRate.value), change: kpis.cancelRate.change, inverse: true, hint: 'Of orders placed' },
-    ] : Array.from({ length: 8 }, (_, i) => ({ label: ['Net sales', 'Orders', 'Average order value', 'Units sold', 'Buyers', 'New accounts', 'Returning buyers', 'Cancellation rate'][i], spark: i < 4 ? [] : undefined })), [kpis, timeline, data])
-
     return (
-        <div className="flex flex-col gap-6 print:gap-4">
-            {/* ── Controls card — same card language as Overview ── */}
+        <div className="flex flex-col gap-5 print:gap-4">
+
+            {/* ── Controls card ─────────────────────────────────────── */}
             <div className="rounded-lg bg-card ring-1 ring-foreground/10 print:hidden">
-                {/* Card header: icon badge + title/description + action buttons */}
+                {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
                     <div className="flex items-center gap-3">
                         <span
@@ -152,7 +144,7 @@ const AnalyticsDashboard = () => {
                             <p className="text-sm font-semibold text-foreground">Analytics &amp; Reports</p>
                             <p className="text-xs text-muted-foreground">
                                 {data
-                                    ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} &ndash; {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} &ndash; {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — narrow for exact figures</span>}</>
+                                    ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} – {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} – {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — narrow for exact figures</span>}</>
                                     : 'Select a date range to load the report'
                                 }
                             </p>
@@ -162,14 +154,14 @@ const AnalyticsDashboard = () => {
                         <span className="hidden text-xs text-muted-foreground md:inline" aria-live="polite">
                             {isFetching ? 'Updating…' : dataUpdatedAt ? `Updated ${relative(dataUpdatedAt)}` : ''}
                         </span>
-                        <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={() => refetch()} disabled={isFetching} aria-label="Refresh report">
+                        <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={() => refetch()} disabled={isFetching} aria-label="Refresh">
                             {isFetching ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
                             <span className="hidden sm:inline">Refresh</span>
                         </Button>
                         <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={exportCsv} disabled={!data}>
-                            <Download className="size-3.5" /> <span className="hidden sm:inline">Export CSV</span>
+                            <Download className="size-3.5" /><span className="hidden sm:inline">Export CSV</span>
                         </Button>
-                        <Button variant="outline" className="h-8 px-2.5 text-xs" onClick={() => window.print()} disabled={!data} aria-label="Print report">
+                        <Button variant="outline" className="h-8 px-2.5 text-xs" onClick={() => window.print()} disabled={!data} aria-label="Print">
                             <Printer className="size-3.5" />
                         </Button>
                     </div>
@@ -179,26 +171,16 @@ const AnalyticsDashboard = () => {
                     <div className="flex flex-wrap rounded-lg bg-muted p-1" role="tablist" aria-label="Date range">
                         {PRESETS.map((p) => (
                             <button
-                                key={p.id}
-                                type="button"
-                                role="tab"
-                                aria-selected={range === p.id}
+                                key={p.id} type="button" role="tab" aria-selected={range === p.id}
                                 onClick={() => { setCustomOpen(false); setQuery({ range: p.id, from: '', to: '' }) }}
                                 className={cn('rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === p.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
-                            >
-                                {p.label}
-                            </button>
+                            >{p.label}</button>
                         ))}
                         <button
-                            type="button"
-                            role="tab"
-                            aria-selected={range === 'custom'}
-                            aria-expanded={customOpen}
+                            type="button" role="tab" aria-selected={range === 'custom'} aria-expanded={customOpen}
                             onClick={() => setCustomOpen((v) => !v)}
                             className={cn('flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === 'custom' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
-                        >
-                            <CalendarRange className="size-3.5" aria-hidden="true" /> Custom
-                        </button>
+                        ><CalendarRange className="size-3.5" aria-hidden="true" /> Custom</button>
                     </div>
                     {customOpen && (
                         <form onSubmit={applyCustom} className="flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-left-1 duration-200">
@@ -213,109 +195,47 @@ const AnalyticsDashboard = () => {
                 </div>
             </div>
 
-            {isError && !data ? (
+            {/* ── Error state ───────────────────────────────────────── */}
+            {isError && !data && (
                 <div className="flex flex-col items-center rounded-lg bg-card ring-1 ring-foreground/10 px-6 py-16 text-center">
-                    <span
-                        className="inline-flex h-12 w-12 items-center justify-center rounded-full"
-                        style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
-                        aria-hidden="true"
-                    >
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full" style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }} aria-hidden="true">
                         <AlertTriangle className="size-5" />
                     </span>
-                    <p className="mt-4 font-semibold">Couldn’t build the report</p>
+                    <p className="mt-4 font-semibold">Couldn't build the report</p>
                     <p className="mt-1 text-sm text-muted-foreground">{error?.response?.data?.message || error?.message || 'Please try again.'}</p>
                     <Button variant="outline" className="mt-5 h-9 gap-2 px-4" onClick={() => refetch()}><RefreshCw className="size-4" /> Retry</Button>
                 </div>
-            ) : (
-                <div className={cn('flex flex-col gap-6 transition-opacity', isFetching && data && 'opacity-70')} aria-busy={isFetching}>
-                    <ActionCenter actions={data?.actions} loading={isLoading} />
+            )}
 
-                    {/* KPI tiles — same border-left card language as CountOverview */}
-                    <div>
-                        <div className="mb-3 flex items-center gap-3">
-                            <span
-                                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                                style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
-                                aria-hidden="true"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                            </span>
-                            <div>
-                                <p className="text-sm font-semibold text-foreground">Key Performance Indicators</p>
-                                <p className="text-xs text-muted-foreground">Compared with the previous period of equal length</p>
-                            </div>
+            {/* ── 4-tab analytics body ──────────────────────────────── */}
+            {(!isError || data) && (
+                <div className={cn('transition-opacity', isFetching && data && 'opacity-60')} aria-busy={isFetching}>
+                    <Tabs value={anTab} onValueChange={onTabChange} className="space-y-5">
+                        <div className="w-full overflow-x-auto">
+                            <TabsList className="gap-1">
+                                {AN_TABS.map(({ id, label }) => (
+                                    <TabsTrigger key={id} value={id} className="text-xs sm:text-sm">{label}</TabsTrigger>
+                                ))}
+                            </TabsList>
                         </div>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                            {tiles.map((tile, index) => <KpiTile index={index} key={tile.label} {...tile} loading={isLoading || !data} />)}
-                        </div>
-                    </div>
 
-                    {data && (
-                        <>
-                            <div className="grid gap-4 lg:grid-cols-3">
-                                <SalesTrend data={data} kpis={data.kpis} />
-                                <MoneyFlow breakdown={data.breakdown} />
-                            </div>
+                        <TabsContent value="sales">
+                            <SalesRevenueTab data={data} isLoading={isLoading} kpis={data?.kpis} timeline={data?.timeline} />
+                        </TabsContent>
+                        <TabsContent value="orders">
+                            <OrdersFulfillmentTab data={data} isLoading={isLoading} />
+                        </TabsContent>
+                        <TabsContent value="customers">
+                            <CustomersTab data={data} isLoading={isLoading} kpis={data?.kpis} timeline={data?.timeline} />
+                        </TabsContent>
+                        <TabsContent value="products">
+                            <ProductsCatalogueTab data={data} isLoading={isLoading} />
+                        </TabsContent>
+                    </Tabs>
 
-                            {/* Orders & Payments section */}
-                            <div>
-                                <div className="mb-3 flex items-center gap-3">
-                                    <span
-                                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                                        style={{ backgroundColor: 'var(--chart-2)', color: '#0A2F24' }}
-                                        aria-hidden="true"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                                    </span>
-                                    <div>
-                                        <p className="text-sm font-semibold text-foreground">Orders &amp; Payments</p>
-                                        <p className="text-xs text-muted-foreground">Pipeline status, payment breakdown and latest orders</p>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4 lg:grid-cols-3">
-                                    <OrderPipeline statusCounts={data.statusCounts} shipmentCounts={data.shipmentCounts} placed={data.breakdown.placed} />
-                                    <PaymentMix paymentMethods={data.paymentMethods} paymentStatuses={data.paymentStatuses} />
-                                    <RecentOrders orders={data.recentOrders} />
-                                </div>
-                            </div>
-
-                            <div className="grid gap-4 lg:grid-cols-3">
-                                <BuyingHeatmap heatmap={data.heatmap} />
-                                <CustomerInsights customerMix={data.customerMix} topCustomers={data.topCustomers} kpis={data.kpis} audience={data.audience} />
-                            </div>
-
-                            {/* Catalogue & Regions section */}
-                            <div>
-                                <div className="mb-3 flex items-center gap-3">
-                                    <span
-                                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                                        style={{ backgroundColor: 'var(--chart-3)', color: 'var(--primary-foreground)' }}
-                                        aria-hidden="true"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                                    </span>
-                                    <div>
-                                        <p className="text-sm font-semibold text-foreground">Catalogue &amp; Regions</p>
-                                        <p className="text-xs text-muted-foreground">Top-selling products, category breakdown and geographic reach</p>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4 lg:grid-cols-3">
-                                    <TopProducts items={data.topProducts} totalSales={data.categories.reduce((s, c) => s + c.sales, 0)} />
-                                    <CategoryPerformance categories={data.categories} />
-                                    <Regions regions={data.regions} />
-                                </div>
-                            </div>
-
-                            <div className="grid gap-4 lg:grid-cols-3">
-                                <ReviewsPanel reviews={data.reviews} kpis={data.kpis} />
-                                <AudiencePanel audience={data.audience} kpis={data.kpis} />
-                                <CatalogueHealth catalogue={data.catalogue} />
-                            </div>
-                        </>
-                    )}
-
+                    {/* Loading skeleton */}
                     {isLoading && (
-                        <div className="grid gap-4 lg:grid-cols-3" aria-hidden="true">
+                        <div className="mt-6 grid gap-4 lg:grid-cols-3" aria-hidden="true">
                             <div className="h-[26rem] animate-pulse rounded-xl bg-muted lg:col-span-2" />
                             <div className="h-[26rem] animate-pulse rounded-xl bg-muted" />
                         </div>

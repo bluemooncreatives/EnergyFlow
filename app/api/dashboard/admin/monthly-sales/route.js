@@ -25,6 +25,7 @@ export async function GET() {
                         month: { $month: "$createdAt" },
                     },
                     totalSales: { $sum: '$totalAmount' },
+                    orderCount: { $sum: 1 },
                 }
             },
             {
