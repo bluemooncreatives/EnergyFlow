@@ -59,6 +59,10 @@ export const ADMIN_ORDER_DETAILS = (order_id) => order_id ? `/admin/orders/detai
 export const ADMIN_CONTACTS_SHOW = '/admin/contacts'
 export const ADMIN_CONTACT_DETAILS = (id) => id ? `/admin/contacts/details/${id}` : ''
 
+// Newsletter routes (subscribers list + popup / band / footer customiser)
+export const ADMIN_NEWSLETTER_SHOW = '/admin/newsletter'
+export const ADMIN_NEWSLETTER_SETTINGS = '/admin/newsletter/settings'
+
 // Trash route
 
 export const ADMIN_TRASH = '/admin/trash'

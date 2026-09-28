@@ -1463,7 +1463,6 @@ body {
     position: relative;
     display: inline-block;
     color: var(--nl-accent);
-    white-space: nowrap;
   }
   .ef-nl-swash {
     position: absolute;
@@ -1710,11 +1709,21 @@ body {
     flex-shrink: 0;
     filter: drop-shadow(0 14px 24px rgb(4 28 21 / 0.28));
   }
+  /* Deep-pine disc behind the ring text, so the badge reads on a photo,
+     on pine and on sunflower alike. */
+  .ef-nl-badge__disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--brand-cocoa-deep);
+    box-shadow: inset 0 0 0 2px rgb(242 201 76 / 0.55), inset 0 0 0 7px var(--brand-cocoa-deep), inset 0 0 0 8px rgb(242 201 76 / 0.25);
+  }
   .ef-nl-badge__ring {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    color: var(--palette-sunflower);
     animation: ef-nl-spin 18s linear infinite;
   }
   .ef-nl-badge__ring text {
@@ -1736,40 +1745,49 @@ body {
   .ef-nl-badge__big {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: calc(var(--nl-badge-size, 8.5rem) * 0.15);
-    line-height: 0.9;
+    font-size: calc(var(--nl-badge-size, 8.5rem) * 0.16);
+    line-height: 0.92;
     text-transform: uppercase;
     white-space: nowrap;
-  }
-  .ef-nl-badge__small {
-    font-size: calc(var(--nl-badge-size, 8.5rem) * 0.07);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
   .ef-nl-badge .ef-seal svg { width: 40%; height: 40%; }
 
   /* ── Popup stage + dialog ───────────────────────────────────── */
+  /* Stage = the Radix Content: a full-screen, click-through container that
+     the layout queries. Frame = the grid that places the dialog (a container
+     can't query itself, so placement lives one level down). */
   .ef-nl-stage {
     position: fixed;
     inset: 0;
     z-index: var(--z-modal);
-    display: grid;
-    place-items: end center;
     container-type: inline-size;
     container-name: nl-stage;
     pointer-events: none;
+    outline: none;
   }
   .ef-nl-stage.is-preview { position: absolute; z-index: 1; }
-  .ef-nl-stage--modal { pointer-events: auto; }
+  /* Radix unmounts after the Content's own animation ends: hold the stage
+     for the length of the dialog's exit animation. */
+  .ef-nl-stage[data-state='closed'] { animation: ef-nl-hold 240ms linear both; }
+
+  .ef-nl-frame {
+    display: grid;
+    place-items: end center;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .ef-nl-stage--modal .ef-nl-frame { pointer-events: auto; }
 
   .ef-nl-backdrop {
-    position: absolute;
+    position: fixed;
     inset: 0;
+    z-index: var(--z-modal);
     background: rgb(4 28 21 / 0.55);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
+  .ef-nl-backdrop.is-preview { position: absolute; z-index: 1; }
   .ef-nl-backdrop[data-state='open']   { animation: ef-nl-fade 320ms var(--ease-out) both; }
   .ef-nl-backdrop[data-state='closed'] { animation: ef-nl-fade 220ms var(--ease-in) reverse both; }
 
@@ -1786,8 +1804,8 @@ body {
     outline: none;
   }
   .ef-nl-stage.is-preview .ef-nl-dialog { max-height: 94%; }
-  .ef-nl-dialog[data-state='open']   { animation: ef-nl-sheet-in 520ms var(--ease-spring) both; }
-  .ef-nl-dialog[data-state='closed'] { animation: ef-nl-sheet-out 240ms var(--ease-in) both; }
+  .ef-nl-stage[data-state='open'] .ef-nl-dialog   { animation: ef-nl-sheet-in 520ms var(--ease-spring) both; }
+  .ef-nl-stage[data-state='closed'] .ef-nl-dialog { animation: ef-nl-sheet-out 240ms var(--ease-in) both; }
 
   /* Grab handle on the mobile sheet (visual affordance only). */
   .ef-nl-dialog::before {
@@ -1979,8 +1997,8 @@ body {
   .ef-nl-success__seal { animation: ef-nl-pop-in 700ms var(--ease-spring) both; }
   .ef-nl-confetti {
     position: absolute;
-    top: 2rem;
-    left: 2.5rem;
+    top: 50%;
+    left: 50%;
     width: 0;
     height: 0;
     pointer-events: none;
@@ -1997,7 +2015,7 @@ body {
 
   /* ── Desktop: centred modal ──────────────────────────────────── */
   @container nl-stage (min-width: 40rem) {
-    .ef-nl-stage { place-items: center; padding: 1.5rem; }
+    .ef-nl-frame { place-items: center; padding: 1.5rem; }
     .ef-nl-dialog {
       max-height: min(40rem, calc(100svh - 3rem));
       border-radius: var(--radius-tile);
@@ -2005,8 +2023,8 @@ body {
     }
     .ef-nl-stage.is-preview .ef-nl-dialog { max-height: calc(100% - 2rem); }
     .ef-nl-dialog::before { display: none; }
-    .ef-nl-dialog[data-state='open']   { animation: ef-nl-pop-in 560ms var(--ease-spring) both; }
-    .ef-nl-dialog[data-state='closed'] { animation: ef-nl-pop-out 200ms var(--ease-in) both; }
+    .ef-nl-stage[data-state='open'] .ef-nl-dialog   { animation: ef-nl-pop-in 560ms var(--ease-spring) both; }
+    .ef-nl-stage[data-state='closed'] .ef-nl-dialog { animation: ef-nl-pop-out 200ms var(--ease-in) both; }
     .ef-nl-body { padding: 2.5rem 2.5rem 2.25rem; gap: 1.25rem; }
 
     /* Split: media column + body */
@@ -2062,10 +2080,10 @@ body {
   .ef-nl-dialog--slide .ef-nl-body { padding: 1.5rem 1.25rem 1.25rem; gap: 0.875rem; }
   .ef-nl-dialog--slide .ef-nl-title { font-size: 1.625rem; }
   @container nl-stage (min-width: 40rem) {
-    .ef-nl-stage--slide { place-items: end start; padding: 1.5rem; }
+    .ef-nl-stage--slide .ef-nl-frame { place-items: end start; }
     .ef-nl-dialog--slide { width: 24rem; margin: 0; }
-    .ef-nl-dialog--slide[data-state='open']   { animation: ef-nl-slide-in 560ms var(--ease-spring) both; }
-    .ef-nl-dialog--slide[data-state='closed'] { animation: ef-nl-slide-out 220ms var(--ease-in) both; }
+    .ef-nl-stage--slide[data-state='open'] .ef-nl-dialog   { animation: ef-nl-slide-in 560ms var(--ease-spring) both; }
+    .ef-nl-stage--slide[data-state='closed'] .ef-nl-dialog { animation: ef-nl-slide-out 220ms var(--ease-in) both; }
   }
 
   /* ── Teaser pill (re-opens a dismissed popup) ─────────────────── */
@@ -2177,6 +2195,7 @@ body {
 
 /* ── Newsletter keyframes ─────────────────────────────────────── */
 @keyframes ef-nl-fade      { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ef-nl-hold      { from { opacity: 1; } to { opacity: 1; } }
 @keyframes ef-nl-pop-in    { from { opacity: 0; transform: translateY(28px) scale(0.94); } to { opacity: 1; transform: none; } }
 @keyframes ef-nl-pop-out   { to { opacity: 0; transform: translateY(12px) scale(0.97); } }
 @keyframes ef-nl-sheet-in  { from { transform: translateY(100%); } to { transform: none; } }
@@ -2199,7 +2218,8 @@ body {
   .ef-nl-badge__ring, .ef-nl-badge .ef-seal, .ef-nl-art__float,
   .ef-nl-teaser__icon, .ef-nl-confetti i { animation: none !important; }
   .ef-nl-swash path { animation: none; stroke-dashoffset: 0; }
-  .ef-nl-dialog[data-state], .ef-nl-backdrop[data-state], .ef-nl-teaser,
+  .ef-nl-stage[data-state], .ef-nl-stage[data-state] .ef-nl-dialog,
+  .ef-nl-backdrop[data-state], .ef-nl-teaser,
   .ef-nl-success__seal { animation-duration: 1ms !important; }
   .ef-nl-submit::after { display: none; }
 }

@@ -9,6 +9,7 @@ import { MapPin, Mail, Phone, Instagram, Facebook, Twitter, Globe, ArrowRight } 
 
 import { USER_DASHBOARD, WEBSITE_HOME, WEBSITE_LOGIN, WEBSITE_REGISTER, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import FooterWordmark from '@/components/Application/Website/FooterWordmark'
+import NewsletterFooterStrip from '@/components/Application/Website/newsletter/NewsletterFooterStrip'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -59,7 +60,7 @@ const LinkColumn = ({ title, links }) => (
     </div>
 )
 
-const Footer = ({ categoryLinks = [] }) => {
+const Footer = ({ categoryLinks = [], newsletter = null }) => {
     const rootRef = useRef(null)
     const categories = categoryLinks.length ? categoryLinks : fallbackCategoryLinks
 
@@ -140,6 +141,9 @@ const Footer = ({ categoryLinks = [] }) => {
                         </div>
                     </div>
                 </div>
+
+                {/* ───── Newsletter strip (Admin → Newsletter → Customise) ───── */}
+                {newsletter && <NewsletterFooterStrip footer={newsletter} />}
 
                 {/* ───── Middle row: link columns + contact / office ───── */}
                 <div className='footer-cols mt-14 grid grid-cols-2 gap-x-8 gap-y-12 border-t border-white/10 pt-12 lg:grid-cols-4'>
