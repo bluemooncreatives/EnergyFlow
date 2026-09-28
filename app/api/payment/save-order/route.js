@@ -1,4 +1,5 @@
 import { orderNotification } from "@/email/orderNotification";
+import { orderAdminNotification } from "@/email/orderAdminNotification";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import { sendMail } from "@/lib/sendMail";
@@ -10,6 +11,16 @@ import UserModel from "@/models/User.model";
 import { MAX_CART_QTY } from "@/lib/cartConstants";
 import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils";
 import { z } from "zod";
+
+const STORE_PAYMENT_LABEL = { cod: 'COD', full: 'Paid', partial: 'Part-paid' }
+
+// Where "new order" alerts go: ORDER_NOTIFICATION_EMAIL (comma-separated for
+// several people), falling back to the store mailbox the site sends from.
+const orderNotificationRecipients = () =>
+    String(process.env.ORDER_NOTIFICATION_EMAIL || process.env.NODEMAILER_EMAIL || '')
+        .split(',')
+        .map((address) => address.trim())
+        .filter((address) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))
 
 export async function POST(request) {
     try {
@@ -263,10 +274,13 @@ export async function POST(request) {
             }
         }
 
-        // Order confirmation email. Best-effort only — the order is already saved,
-        // so a mail failure must never fail the request. All money values here are
-        // the server-computed ones (not the client's), so the email can never show
-        // a tampered total.
+        // Emails: the customer's confirmation and the store's "new order" alert.
+        // Best-effort only — the order is already saved, so a mail failure must
+        // never fail the request. All money values here are the server-computed
+        // ones (not the client's), so neither email can show a tampered total.
+        // Sent in parallel so one slow/failed send never holds up the other.
+        // (A retried request returned early above as a duplicate, so the store
+        // is alerted exactly once per order.)
         try {
             const mailData = {
                 name: validatedData.name,
@@ -294,8 +308,48 @@ export async function POST(request) {
                 },
             }
 
-            await sendMail('Your Energyflow order is confirmed', validatedData.email, orderNotification(mailData))
+            const storeInbox = orderNotificationRecipients()
+            const needsVerification = !paymentVerification
+            const alertSubject = [
+                needsVerification ? '⚠ VERIFY PAYMENT —' : '🛒 New order',
+                orderId,
+                '·',
+                totalAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }),
+                '·',
+                STORE_PAYMENT_LABEL[paymentMethod] || paymentMethod,
+                '·',
+                validatedData.name,
+            ].join(' ')
 
+            const [customerMail, storeMail] = await Promise.allSettled([
+                sendMail('Your Energyflow order is confirmed', validatedData.email, orderNotification(mailData)),
+                storeInbox.length
+                    ? sendMail(
+                        alertSubject,
+                        storeInbox,
+                        orderAdminNotification({
+                            ...mailData,
+                            email: validatedData.email,
+                            couponCode: couponDiscountAmount > 0 ? validatedData.couponCode : '',
+                            payment_id: paymentId,
+                            ordernote: validatedData.ordernote,
+                            needsVerification,
+                            placedAt: new Date(),
+                        }),
+                        // "Reply" in the store inbox goes straight to the customer.
+                        { replyTo: validatedData.email }
+                    )
+                    : Promise.resolve({ success: false, message: 'No order notification recipient configured.' }),
+            ])
+
+            // sendMail never throws; it reports. Log failures so a broken SMTP
+            // setup shows up in the server logs instead of silently losing alerts.
+            for (const [who, result] of [['customer', customerMail], ['store', storeMail]]) {
+                const outcome = result.status === 'fulfilled' ? result.value : { success: false, message: result.reason?.message }
+                if (!outcome?.success) {
+                    console.error(`Order ${orderId}: ${who} email not sent —`, outcome?.message)
+                }
+            }
         } catch (error) {
             console.log(error)
         }
