@@ -118,7 +118,7 @@ const AddProduct = () => {
       setSelectedMedia([])
       showToast('success', response.message)
     } catch (error) {
-      showToast('error', error.message)
+      showToast('error', error.response?.data?.message || error.message)
     } finally {
       setLoading(false)
     }
