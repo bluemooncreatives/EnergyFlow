@@ -15,7 +15,7 @@ import styles from "./HeroSection.module.css";
 gsap.registerPlugin(useGSAP);
 
 // Long enough to read a headline, a line of copy and reach the button.
-const AUTO_MS = 6500;
+const AUTO_MS = 5500;
 const SWIPE_PX = 48;
 const LOADER_SESSION_KEY = "energyflow_loader_seen";
 
