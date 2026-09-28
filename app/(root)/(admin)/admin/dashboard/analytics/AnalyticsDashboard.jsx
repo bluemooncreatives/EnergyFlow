@@ -146,12 +146,12 @@ const AnalyticsDashboard = () => {
         <div className="flex flex-col gap-5 print:gap-4">
 
             {/* ── Controls card ─────────────────────────────────────── */}
-            <div className="rounded-lg bg-card ring-1 ring-foreground/10 print:hidden">
+            <div className="rounded-xl border bg-card text-card-foreground shadow-xs print:hidden">
                 {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
                     <div className="flex items-center gap-3">
                         <span
-                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                            className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
                             style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
                             aria-hidden="true"
                         >
@@ -159,7 +159,7 @@ const AnalyticsDashboard = () => {
                         </span>
                         <div>
                             <p className="text-sm font-semibold text-foreground">Analytics &amp; Reports</p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                                 {data
                                     ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} – {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} – {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — narrow for exact figures</span>}</>
                                     : 'Select a date range to load the report'
@@ -190,18 +190,18 @@ const AnalyticsDashboard = () => {
                             <button
                                 key={p.id} type="button" role="tab" aria-selected={range === p.id}
                                 onClick={() => { setCustomOpen(false); setQuery({ range: p.id, from: '', to: '', year: '', month: '', date: '' }) }}
-                                className={cn('rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === p.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
+                                className={cn('rounded-md px-2.5 py-1 text-xs font-medium transition sm:px-3', range === p.id ? 'bg-card text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground')}
                             >{p.label}</button>
                         ))}
                         <button
                             type="button" role="tab" aria-selected={range === 'custom'} aria-expanded={customOpen}
                             onClick={() => setCustomOpen((v) => !v)}
-                            className={cn('flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold transition sm:px-3', range === 'custom' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
+                            className={cn('flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition sm:px-3', range === 'custom' ? 'bg-card text-foreground shadow-xs font-semibold' : 'text-muted-foreground hover:text-foreground')}
                         ><CalendarRange className="size-3.5" aria-hidden="true" /> Custom</button>
                     </div>
 
                     {/* Direct Month dropdown */}
-                    <div className="flex items-center gap-1 rounded-md border bg-background px-2 py-1 text-xs">
+                    <div className="flex items-center gap-1 rounded-md border border-input bg-background px-2 py-1 text-xs shadow-xs">
                         <span className="text-muted-foreground font-medium">Month:</span>
                         <select
                             value={range === 'month' && month ? `${year || todayIst().slice(0, 4)}-${month}` : ''}
@@ -211,7 +211,7 @@ const AnalyticsDashboard = () => {
                                 setCustomOpen(false)
                                 setQuery({ range: 'month', year: y, month: m, date: '', from: '', to: '' })
                             }}
-                            className="bg-transparent text-xs font-semibold text-foreground focus:outline-hidden"
+                            className="bg-transparent text-xs font-medium text-foreground focus:outline-hidden"
                         >
                             <option value="">Month</option>
                             {[...Array(12)].map((_, i) => {
@@ -224,7 +224,7 @@ const AnalyticsDashboard = () => {
                     </div>
 
                     {/* Direct Year dropdown */}
-                    <div className="flex items-center gap-1 rounded-md border bg-background px-2 py-1 text-xs">
+                    <div className="flex items-center gap-1 rounded-md border border-input bg-background px-2 py-1 text-xs shadow-xs">
                         <span className="text-muted-foreground font-medium">Year:</span>
                         <select
                             value={range === 'year' && year ? year : ''}
@@ -233,7 +233,7 @@ const AnalyticsDashboard = () => {
                                 setCustomOpen(false)
                                 setQuery({ range: 'year', year: e.target.value, month: '', date: '', from: '', to: '' })
                             }}
-                            className="bg-transparent text-xs font-semibold text-foreground focus:outline-hidden"
+                            className="bg-transparent text-xs font-medium text-foreground focus:outline-hidden"
                         >
                             <option value="">Year</option>
                             {['2027', '2026', '2025', '2024'].map((y) => (
@@ -245,10 +245,10 @@ const AnalyticsDashboard = () => {
                     {customOpen && (
                         <form onSubmit={applyCustom} className="flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-left-1 duration-200">
                             <label className="sr-only" htmlFor="an-from">From</label>
-                            <input id="an-from" type="date" max={draft.to || todayIst()} value={draft.from} onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))} className="h-8 rounded-md border border-input bg-background px-2 text-xs" required />
+                            <input id="an-from" type="date" max={draft.to || todayIst()} value={draft.from} onChange={(e) => setDraft((d) => ({ ...d, from: e.target.value }))} className="h-8 rounded-md border border-input bg-background px-2 text-xs font-medium shadow-xs" required />
                             <span className="text-xs text-muted-foreground">to</span>
                             <label className="sr-only" htmlFor="an-to">To</label>
-                            <input id="an-to" type="date" min={draft.from} max={todayIst()} value={draft.to} onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))} className="h-8 rounded-md border border-input bg-background px-2 text-xs" required />
+                            <input id="an-to" type="date" min={draft.from} max={todayIst()} value={draft.to} onChange={(e) => setDraft((d) => ({ ...d, to: e.target.value }))} className="h-8 rounded-md border border-input bg-background px-2 text-xs font-medium shadow-xs" required />
                             <Button type="submit" className="h-8 px-3 text-xs" disabled={!draft.from || !draft.to || draft.from > draft.to}>Apply</Button>
                         </form>
                     )}
@@ -257,13 +257,13 @@ const AnalyticsDashboard = () => {
 
             {/* ── Error state ───────────────────────────────────────── */}
             {isError && !data && (
-                <div className="flex flex-col items-center rounded-lg bg-card ring-1 ring-foreground/10 px-6 py-16 text-center">
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full" style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }} aria-hidden="true">
+                <div className="flex flex-col items-center rounded-xl border bg-card px-6 py-16 text-center">
+                    <span className="inline-flex size-12 items-center justify-center rounded-full" style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }} aria-hidden="true">
                         <AlertTriangle className="size-5" />
                     </span>
-                    <p className="mt-4 font-semibold">Couldn't build the report</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{error?.response?.data?.message || error?.message || 'Please try again.'}</p>
-                    <Button variant="outline" className="mt-5 h-9 gap-2 px-4" onClick={() => refetch()}><RefreshCw className="size-4" /> Retry</Button>
+                    <p className="mt-4 font-semibold text-foreground">Couldn't build the report</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{error?.response?.data?.message || error?.message || 'Please try again.'}</p>
+                    <Button variant="outline" className="mt-5 h-8 gap-2 px-3 text-xs" onClick={() => refetch()}><RefreshCw className="size-3.5" /> Retry</Button>
                 </div>
             )}
 
@@ -273,8 +273,11 @@ const AnalyticsDashboard = () => {
                     <Tabs value={anTab} onValueChange={onTabChange} className="space-y-5">
                         <div className="w-full overflow-x-auto">
                             <TabsList className="gap-1">
-                                {AN_TABS.map(({ id, label }) => (
-                                    <TabsTrigger key={id} value={id} className="text-xs sm:text-sm">{label}</TabsTrigger>
+                                {AN_TABS.map(({ id, label, icon: Icon }) => (
+                                    <TabsTrigger key={id} value={id} className="gap-1.5 text-xs sm:text-sm">
+                                        <Icon className="size-3.5" aria-hidden="true" />
+                                        {label}
+                                    </TabsTrigger>
                                 ))}
                             </TabsList>
                         </div>

@@ -38,7 +38,7 @@ const OverviewInner = () => {
             <div className="w-full overflow-x-auto">
                 <TabsList className="gap-1">
                     {TABS.map(({ id, label, icon: Icon }) => (
-                        <TabsTrigger key={id} value={id} className="gap-1.5">
+                        <TabsTrigger key={id} value={id} className="gap-1.5 text-xs sm:text-sm">
                             <Icon className="size-3.5" aria-hidden="true" />
                             {label}
                         </TabsTrigger>
