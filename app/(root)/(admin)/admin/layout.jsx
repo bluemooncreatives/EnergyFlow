@@ -6,6 +6,20 @@ import Main from '@/components/Application/Admin/layout/Main'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
+export const metadata = {
+    title: 'Administration',
+    robots: {
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: {
+            index: false,
+            follow: false,
+            noimageindex: true,
+        },
+    },
+}
+
 // Theme (light/dark) comes from the root layout, shared with the storefront.
 const layout = ({ children }) => {
     return (

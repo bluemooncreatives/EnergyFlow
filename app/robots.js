@@ -7,21 +7,16 @@ export default function robots() {
                 userAgent: '*',
                 allow: '/',
                 // Keep crawlers out of private, transactional and API routes —
-                // they're either auth-gated (middleware redirects them to login)
-                // or meaningless in search results.
+                // API responses are not search documents. Private HTML routes
+                // remain crawlable so bots can read their explicit `noindex`
+                // response headers and metadata; access control is enforced by
+                // middleware, never by robots.txt.
                 disallow: [
-                    '/admin',
                     '/api/',
-                    '/auth/',
-                    '/cart',
-                    '/checkout',
-                    '/my-account',
-                    '/profile',
-                    '/orders',
-                    '/order-details/',
                 ],
             },
         ],
         sitemap: `${BASE_URL}/sitemap.xml`,
+        host: BASE_URL,
     }
 }

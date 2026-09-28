@@ -36,6 +36,23 @@ const securityHeaders = [
     { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
 ]
 
+// These pages are useful to shoppers but must never become search results.
+// The HTTP header covers client-rendered pages and redirect responses, while
+// their route layouts also emit an HTML robots meta tag for crawler parity.
+const privatePageHeaders = [
+    '/admin/:path*',
+    '/auth/:path*',
+    '/cart',
+    '/checkout/:path*',
+    '/my-account/:path*',
+    '/profile/:path*',
+    '/orders/:path*',
+    '/order-details/:path*',
+].map((source) => ({
+    source,
+    headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
+}))
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     compress: true,
@@ -73,6 +90,7 @@ const nextConfig = {
                 source: '/assets/images/:path*',
                 headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=86400' }],
             },
+            ...privatePageHeaders,
         ]
     },
     images: {

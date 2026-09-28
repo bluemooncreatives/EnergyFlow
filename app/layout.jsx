@@ -38,9 +38,10 @@ export const metadata = {
     'Energyflow',
   ],
   category: 'Food & Nutrition',
-  alternates: {
-    canonical: '/',
-  },
+  // Canonicals are route-specific and are declared by each public page.
+  // A root canonical would otherwise be inherited by private and utility
+  // routes, incorrectly telling crawlers that those URLs duplicate the home
+  // page.
   robots: {
     index: true,
     follow: true,
