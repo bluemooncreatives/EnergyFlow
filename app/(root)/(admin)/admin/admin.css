@@ -191,3 +191,34 @@
 @media (prefers-reduced-motion: reduce) {
   .admin-table__progress { animation: none; width: 100%; opacity: 0.5; }
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Analytics chart tokens (dashboard → Analytics).
+   Categorical slots validated with the dataviz palette checker
+   (all-pairs, 3 slots): light on #FFFFFF, dark on #0C2A21. Slot 2 is
+   under 3:1 on white and the dark pair sits in the CVD warn band, so
+   every multi-series chart also carries direct labels / a legend and
+   a table view. Single-measure charts use --viz-1 only.
+   ──────────────────────────────────────────────────────────────── */
+.admin-theme {
+  --viz-1: #2E8B57;      /* green  — primary measure, slot 1 */
+  --viz-2: #C98A12;      /* amber  — slot 2 */
+  --viz-3: #3A6FB0;      /* blue   — slot 3 */
+  --viz-prev: #9AA59C;   /* previous-period comparison line */
+  --viz-grid: rgb(11 61 46 / 0.08);
+  --viz-axis: #5A6A5F;
+  --viz-fill: rgb(46 139 87 / 0.14);
+  --viz-good: #2F6B3F;
+  --viz-bad: #B3261E;
+}
+.dark .admin-theme {
+  --viz-1: #3E9E63;
+  --viz-2: #B8871C;
+  --viz-3: #5585CF;
+  --viz-prev: #6F7F74;
+  --viz-grid: rgb(247 243 232 / 0.08);
+  --viz-axis: #B2BCA9;
+  --viz-fill: rgb(62 158 99 / 0.2);
+  --viz-good: #7CC28E;
+  --viz-bad: #F2665C;
+}
