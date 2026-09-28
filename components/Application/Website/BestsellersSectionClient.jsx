@@ -149,14 +149,9 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
                 title="Our"
                 accent="bestsellers"
                 description="Ranked by what our customers come back for, again and again."
-                action={
-                    // Shop button on top, rail arrows beneath it (right-aligned
-                    // once the header sits side by side on desktop).
-                    <div className="flex flex-col items-start gap-3 md:items-end">
-                        <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`}>Shop all bestsellers</StoreLink>
-                        <RailControls rail={rail} label="bestsellers" className="hidden sm:flex" />
-                    </div>
-                }
+                // Rail arrows stay by the heading; the shop button closes the
+                // section, centred under the rail.
+                action={<RailControls rail={rail} label="bestsellers" className="hidden sm:flex" />}
             />
 
             {/* Native scroller: swipe on touch, arrows on desktop, snap on both.
@@ -174,6 +169,11 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
                     </li>
                 ))}
             </ol>
+
+            {/* mt clears the rail's negative bottom margin (room for card shadows). */}
+            <div data-reveal className="mt-12 flex justify-center sm:mt-14">
+                <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`}>Shop all bestsellers</StoreLink>
+            </div>
         </Section>
     )
 }
