@@ -12,7 +12,7 @@
  * URL state is synchronized seamlessly across both Overview and Analytics tabs.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, Suspense } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
     Calendar,
@@ -60,7 +60,7 @@ const todayIst = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0,
 const currentYearIst = () => new Date(Date.now() + 330 * 60000).getUTCFullYear()
 const currentMonthIst = () => new Date(Date.now() + 330 * 60000).getUTCMonth() + 1
 
-const DashboardDateFilter = ({ className, compact = false }) => {
+const DashboardDateFilterInner = ({ className, compact = false }) => {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -496,5 +496,11 @@ const DashboardDateFilter = ({ className, compact = false }) => {
         </div>
     )
 }
+
+const DashboardDateFilter = (props) => (
+    <Suspense fallback={<div className="h-16 animate-pulse rounded-xl bg-muted" />}>
+        <DashboardDateFilterInner {...props} />
+    </Suspense>
+)
 
 export default DashboardDateFilter

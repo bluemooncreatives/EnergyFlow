@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import DashboardTabs from './DashboardTabs'
 import OverviewTabs from './overview/OverviewTabs'
+import DashboardDateFilter from './DashboardDateFilter'
 import { ADMIN_PRODUCT_ADD, ADMIN_MEDIA_SHOW } from '@/routes/AdminPanelRoute'
 
 const AdminDashboard = () => {
@@ -25,6 +26,8 @@ const AdminDashboard = () => {
                     </>
                 }
             />
+
+            <DashboardDateFilter />
 
             <DashboardTabs overview={<OverviewTabs />} />
         </div>
