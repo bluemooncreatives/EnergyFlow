@@ -1,16 +1,19 @@
-import AboutUsClient from "./AboutUsClient";
+// Server-rendered on purpose: the story, sourcing and leadership copy must be
+// in the HTML for crawlers. It was previously loaded with ssr:false, which
+// left the page with no headings or text until JavaScript ran.
+import AboutUsContent from "./AboutUsContent";
 import { getBestsellerProducts } from "@/lib/services/productService";
 import { pickRandom } from "@/lib/utils";
 
 const DESCRIPTION =
-  "Energy Flow Supply Hub Pvt. Ltd. was registered in November 2025 and opened its first dry fruits and super food store. Meet the directors, read how we source, and see the retail and franchise network we are building across India.";
+  "Energyflow is a Delhi-based dry fruits and superfoods brand by Energy Flow Supply Hub Pvt. Ltd. Read how we source and quality check every lot, and meet our directors.";
 
 export const metadata = {
-  title: "About Us | Our Story, Vision & Leadership",
+  title: { absolute: "About Energyflow | Dry Fruits & Superfoods Brand, Delhi" },
   description: DESCRIPTION,
   alternates: { canonical: "/about-us" },
   openGraph: {
-    title: "About Energyflow | Our Story, Vision & Leadership",
+    title: "About Energyflow | Dry Fruits & Superfoods Brand, Delhi",
     description: DESCRIPTION,
     url: "/about-us",
   },
@@ -23,5 +26,5 @@ export const dynamic = "force-dynamic";
 export default async function AboutUsPage() {
   // "You May Also Like" — 4 random picks from the storefront bestseller pool.
   const products = await getBestsellerProducts();
-  return <AboutUsClient products={pickRandom(products ?? [], 4)} />;
+  return <AboutUsContent products={pickRandom(products ?? [], 4)} />;
 }

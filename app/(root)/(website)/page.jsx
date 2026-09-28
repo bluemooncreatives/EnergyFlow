@@ -11,6 +11,7 @@ import SignatureRangeSection from '@/components/Application/Website/SignatureRan
 import Testimonial from '@/components/Application/Website/Testimonial'
 import NewsletterSection from '@/components/Application/Website/newsletter/NewsletterSection'
 import { getStorefrontAvailability } from '@/lib/services/categoryService'
+import { serializeJsonLd } from '@/lib/seo'
 
 // Defer all GSAP/ScrollTrigger and media-heavy sections into separate JS chunks
 // so they don't block parsing and hydration of the above-fold critical path.
@@ -20,22 +21,23 @@ const AboutUsSection = dynamic(() => import('@/components/Application/Website/Ab
 const BenefitsSection = dynamic(() => import('@/components/Application/Website/BenefitsSection'))
 const FAQSection = dynamic(() => import('@/components/Application/Website/FAQSection'))
 
+const HOME_TITLE = 'Buy Dry Fruits, Nuts & Superfoods Online | Energyflow'
 const HOME_DESCRIPTION =
-    'Shop premium dry fruits, nuts, seeds and super foods at Energyflow. Almonds, cashews, walnuts, pistachios, chia and pumpkin seeds, roasted healthy snacks, millets, muesli, berries, cold pressed oils, A2 Gir cow bilona ghee, herbal powders and honey. Freshly sourced, quality checked and delivered across India.'
+    'Buy premium dry fruits and nuts online: badam, kaju, pista, dried berries, chia seeds, flavoured nuts, makhana, healthy snacks and dry fruit gift boxes. Delivered across India.'
 
 export const metadata = {
-    title: 'Buy Premium Dry Fruits, Nuts, Seeds & Super Foods Online',
+    title: { absolute: HOME_TITLE },
     description: HOME_DESCRIPTION,
     alternates: {
         canonical: '/',
     },
     openGraph: {
-        title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
+        title: HOME_TITLE,
         description: HOME_DESCRIPTION,
         url: '/',
     },
     twitter: {
-        title: 'Energyflow | Premium Dry Fruits, Nuts, Seeds & Super Foods',
+        title: HOME_TITLE,
         description: HOME_DESCRIPTION,
     },
 }
@@ -46,7 +48,9 @@ export const metadata = {
 const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': 'https://www.energyflow.in/#website',
     name: 'Energyflow',
+    publisher: { '@id': 'https://www.energyflow.in/#organization' },
     url: 'https://www.energyflow.in',
     description: HOME_DESCRIPTION,
     potentialAction: {
@@ -68,7 +72,7 @@ const Home = async () => {
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+                dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
             />
             {/* 1 · Hero: what we sell, with one clear action per slide. */}
             <HeroSection availability={availability} />

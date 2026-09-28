@@ -552,7 +552,7 @@ const HeroSection = ({ availability = null }) => {
         onPointerUp={onPointerUp}
         onPointerCancel={() => { pointerRef.current = null; }}
       >
-        <h1 className="sr-only">Energyflow: premium dry fruits, nuts, seeds, super foods and gifts</h1>
+        <h1 className="sr-only">Energyflow: buy premium dry fruits, nuts, superfoods, healthy snacks and gift boxes online</h1>
 
         <div className={cn("ef-container", styles.inner)}>
           <div className={styles.layout}>
