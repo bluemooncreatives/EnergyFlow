@@ -6,9 +6,9 @@ const PageHeader = ({ title, description, actions, breadcrumb, className }) => {
             {breadcrumb}
             <div className="flex flex-wrap items-end justify-between gap-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">{title}</h2>
                     {description ? (
-                        <p className="text-muted-foreground">{description}</p>
+                        <p className="mt-1 text-xs sm:text-sm text-muted-foreground">{description}</p>
                     ) : null}
                 </div>
                 {actions ? <div className="flex items-center gap-2">{actions}</div> : null}

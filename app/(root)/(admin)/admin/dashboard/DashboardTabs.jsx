@@ -25,8 +25,8 @@ const TabsInner = ({ overview }) => {
         <Tabs value={tab} onValueChange={onChange} className="space-y-4">
             <div className="w-full overflow-x-auto print:hidden">
                 <TabsList>
-                    <TabsTrigger value="overview" className="gap-1.5"><LayoutDashboard className="size-4" aria-hidden="true" /> Overview</TabsTrigger>
-                    <TabsTrigger value="analytics" className="gap-1.5"><BarChart3 className="size-4" aria-hidden="true" /> Analytics &amp; reports</TabsTrigger>
+                    <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm"><LayoutDashboard className="size-3.5 sm:size-4" aria-hidden="true" /> Overview</TabsTrigger>
+                    <TabsTrigger value="analytics" className="gap-1.5 text-xs sm:text-sm"><BarChart3 className="size-3.5 sm:size-4" aria-hidden="true" /> Analytics &amp; Reports</TabsTrigger>
                 </TabsList>
             </div>
             <TabsContent value="overview">{overview}</TabsContent>

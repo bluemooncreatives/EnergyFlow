@@ -39,7 +39,7 @@ const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 // icon badge
 const IconBadge = ({ icon: Icon, bg = 'var(--chart-1)', fg = 'var(--primary-foreground)' }) => (
     <span
-        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+        className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
         style={{ backgroundColor: bg, color: fg }}
         aria-hidden="true"
     >

@@ -23,12 +23,12 @@ import notFound from '@/public/assets/images/not-found.png'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import {
     ShoppingBag, Star, Users, Clock, CheckCircle2,
-    Truck, PackageX, AlertCircle, Hash,
+    Truck, PackageX, AlertCircle, Hash, FolderKanban, Package,
 } from 'lucide-react'
 
 // ── helper ────────────────────────────────────────────────────────────
 const IconBadge = ({ icon: Icon, bg = 'var(--chart-1)', fg = 'var(--primary-foreground)' }) => (
-    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
+    <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }} aria-hidden="true">
         <Icon className="size-4" />
     </span>
 )
@@ -216,16 +216,16 @@ const LatestReviewsCard = () => {
                     <ul className="divide-y">
                         {reviews.map(review => (
                             <li key={review._id} className="flex items-center gap-3 py-2.5">
-                                <Avatar className="h-9 w-9 shrink-0">
+                                <Avatar className="size-9 shrink-0">
                                     <AvatarImage src={review?.product?.media?.[0]?.secure_url || imgPlaceholder.src} />
                                 </Avatar>
                                 <div className="min-w-0 flex-1">
-                                    <p className="truncate text-sm font-medium">{review?.product?.name || 'Product'}</p>
+                                    <p className="truncate text-xs sm:text-sm font-medium">{review?.product?.name || 'Product'}</p>
                                     <div className="mt-0.5 flex gap-0.5">
                                         {Array.from({ length: 5 }).map((_, i) => (
                                             <Star
                                                 key={i}
-                                                className={`size-3 ${i < review.rating ? 'fill-[var(--chart-2)] text-[var(--chart-2)]' : 'text-muted-foreground/30'}`}
+                                                className={`size-3 ${i < review.rating ? 'fill-[var(--brand-gold,#F59E0B)] text-[var(--brand-gold,#F59E0B)]' : 'text-muted-foreground/30'}`}
                                             />
                                         ))}
                                     </div>
@@ -244,10 +244,10 @@ const LatestReviewsCard = () => {
 const StoreCountsCard = () => {
     const { data: countData, loading } = useFetch('/api/dashboard/admin/count')
     const metrics = [
-        { label: 'Categories', value: countData?.data?.category, icon: '📁' },
-        { label: 'Products', value: countData?.data?.product, icon: '👕' },
-        { label: 'Customers', value: countData?.data?.customer, icon: '👥' },
-        { label: 'Orders', value: countData?.data?.order, icon: '📦' },
+        { label: 'Categories', value: countData?.data?.category, icon: FolderKanban, bg: 'var(--chart-1)', fg: 'var(--primary-foreground)' },
+        { label: 'Products', value: countData?.data?.product, icon: ShoppingBag, bg: 'var(--chart-2)', fg: '#0A2F24' },
+        { label: 'Customers', value: countData?.data?.customer, icon: Users, bg: 'var(--chart-3)', fg: 'var(--primary-foreground)' },
+        { label: 'Orders', value: countData?.data?.order, icon: Package, bg: 'var(--chart-4)', fg: 'var(--primary-foreground)' },
     ]
 
     return (
@@ -264,15 +264,17 @@ const StoreCountsCard = () => {
                 }
             />
             <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
-                <div className="grid grid-cols-2 gap-3">
-                    {metrics.map(({ label, value, icon }) => (
-                        <div key={label} className="flex items-center gap-3 rounded-lg border p-3">
-                            <span className="text-xl">{icon}</span>
-                            <div>
-                                <p className="text-xl font-bold tabular-nums leading-none">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {metrics.map(({ label, value, icon: Icon, bg, fg }) => (
+                        <div key={label} className="flex items-center gap-3 rounded-xl border p-3.5 transition hover:border-primary/30 hover:bg-muted/40">
+                            <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
+                                <Icon className="size-4" />
+                            </span>
+                            <div className="min-w-0">
+                                <p className="text-xl sm:text-2xl font-bold tabular-nums leading-none">
                                     {loading ? <span className="inline-block h-6 w-12 animate-pulse rounded bg-muted" /> : (value ?? 0).toLocaleString('en-IN')}
                                 </p>
-                                <p className="mt-1 text-xs text-muted-foreground">{label}</p>
+                                <p className="mt-1 text-xs text-muted-foreground truncate">{label}</p>
                             </div>
                         </div>
                     ))}
