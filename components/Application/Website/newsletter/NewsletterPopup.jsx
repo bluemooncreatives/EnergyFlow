@@ -18,6 +18,8 @@ const DAY_MS = 24 * 60 * 60 * 1000
 // When every trigger is switched off the popup opens right after the page
 // settles, not in the same frame as hydration.
 const IMMEDIATE_MS = 1200
+// Scroll depth that opens the popup on phones when the admin set none.
+const MOBILE_SCROLL_PERCENT = 50
 
 const withinDays = (timestamp, days) => Boolean(timestamp) && Date.now() - timestamp < days * DAY_MS
 

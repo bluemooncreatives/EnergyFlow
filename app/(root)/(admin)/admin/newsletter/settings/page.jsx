@@ -498,7 +498,7 @@ const NewsletterSettingsPage = () => {
 
                 <FieldGroup title="Triggers" description="The popup opens on whichever enabled trigger happens first.">
                   <div className="grid gap-5 sm:grid-cols-2">
-                    <TextField control={control} name="behavior.delaySeconds" type="number" label="Time on page (seconds)" hint="0 turns the timer off." />
+                    <TextField control={control} name="behavior.delaySeconds" type="number" label="Time on page (seconds)" hint="0 turns the timer off. Desktop only: on phones the popup waits for scroll depth (50% if none is set), so it never covers a page while it loads." />
                     <TextField control={control} name="behavior.scrollPercent" type="number" label="Scroll depth (%)" hint="0 turns scroll tracking off." />
                   </div>
                   <SwitchField control={control} name="behavior.exitIntent" label="Exit intent (desktop)" description="Opens when the cursor heads for the tabs or close button." />
