@@ -8,9 +8,9 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
+import { useSearchParams } from "next/navigation"
 import useFetch from "@/hooks/useFetch"
-
 
 const chartConfig = {
     status: {
@@ -43,10 +43,30 @@ const chartConfig = {
 }
 
 export function OrderStatus() {
+    const searchParams = useSearchParams()
+    const range = searchParams.get('range')
+    const from = searchParams.get('from')
+    const to = searchParams.get('to')
+    const year = searchParams.get('year')
+    const month = searchParams.get('month')
+    const date = searchParams.get('date')
+
+    const queryString = useMemo(() => {
+        const q = new URLSearchParams()
+        if (range) q.set('range', range)
+        if (from) q.set('from', from)
+        if (to) q.set('to', to)
+        if (year) q.set('year', year)
+        if (month) q.set('month', month)
+        if (date) q.set('date', date)
+        const s = q.toString()
+        return s ? `?${s}` : ''
+    }, [range, from, to, year, month, date])
+
     const [chartData, setChartData] = useState([])
     const [statusCount, setStatusCount] = useState()
     const [totalCount, setTotalCount] = useState(0)
-    const { data: orderStatus } = useFetch('/api/dashboard/admin/order-status')
+    const { data: orderStatus } = useFetch(`/api/dashboard/admin/order-status${queryString}`)
     const statusList = [
         { key: 'pending', label: 'Pending', colorVar: '--chart-1' },
         { key: 'processing', label: 'Processing', colorVar: '--chart-2' },

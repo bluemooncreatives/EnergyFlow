@@ -15,6 +15,7 @@ import {
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import useFetch from '@/hooks/useFetch'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { ADMIN_ORDER_SHOW, ADMIN_ORDER_DETAILS, ADMIN_REVIEW_SHOW, ADMIN_CUSTOMERS_SHOW } from '@/routes/AdminPanelRoute'
 import { statusBadge } from '@/lib/helperFunction'
@@ -57,8 +58,25 @@ const STATUS_META = [
 ]
 
 const OrderStatusSummaryCard = () => {
+    const searchParams = useSearchParams()
+    const range = searchParams.get('range')
+    const from = searchParams.get('from')
+    const to = searchParams.get('to')
+    const year = searchParams.get('year')
+    const month = searchParams.get('month')
+    const date = searchParams.get('date')
+
+    const queryString = [
+        range && `range=${range}`,
+        from && `from=${from}`,
+        to && `to=${to}`,
+        year && `year=${year}`,
+        month && `month=${month}`,
+        date && `date=${date}`,
+    ].filter(Boolean).join('&')
+
     const [counts, setCounts] = useState({})
-    const { data: orderStatus } = useFetch('/api/dashboard/admin/order-status')
+    const { data: orderStatus } = useFetch(`/api/dashboard/admin/order-status${queryString ? `?${queryString}` : ''}`)
 
     useEffect(() => {
         if (orderStatus?.success) {
@@ -68,13 +86,15 @@ const OrderStatusSummaryCard = () => {
         }
     }, [orderStatus])
 
+    const hasFilter = Boolean(range && range !== 'all' || year || month || date || (from && to))
+
     return (
         <Card>
             <PanelHeader
                 icon={ShoppingBag}
                 iconBg="var(--chart-1)"
                 title="Order Status Breakdown"
-                description="All-time counts by current status"
+                description={hasFilter ? "Filtered counts for selected period" : "All-time counts by current status"}
                 action={
                     <Button variant="ghost" className="h-8 text-xs" asChild>
                         <Link href={ADMIN_ORDER_SHOW}>View All</Link>
