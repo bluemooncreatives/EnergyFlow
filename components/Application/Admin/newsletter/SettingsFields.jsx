@@ -107,14 +107,15 @@ export const SwitchField = ({ control, name, label, description }) => (
         control={control}
         name={name}
         render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between gap-4 rounded-lg border p-3">
-                <div className="flex flex-col gap-0.5">
+            <FormItem className="flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-lg border p-3">
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <FormLabel className="text-sm font-medium">{label}</FormLabel>
                     {description && <FormDescription className="text-xs">{description}</FormDescription>}
                 </div>
                 <FormControl>
                     <Switch checked={Boolean(field.value)} onCheckedChange={field.onChange} label={label} />
                 </FormControl>
+                <FormMessage className="basis-full" />
             </FormItem>
         )}
     />

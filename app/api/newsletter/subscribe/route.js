@@ -80,6 +80,12 @@ export async function POST(request) {
             })
         }
 
+        // Someone toggling unsubscribe → re-subscribe shouldn't get a fresh
+        // welcome email every time.
+        const welcomedRecently = Boolean(
+            existing?.subscribedAt && Date.now() - new Date(existing.subscribedAt).getTime() < 24 * 60 * 60 * 1000
+        )
+
         let subscriber
         if (existing) {
             // Re-subscribe (after an unsubscribe or an admin trash).
@@ -119,7 +125,7 @@ export async function POST(request) {
         // sendMail never throws.
         const unsubscribeUrl = `${siteUrl()}/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`
         const mails = []
-        if (settings.emails.welcomeEnabled) {
+        if (settings.emails.welcomeEnabled && !welcomedRecently) {
             mails.push(
                 sendMail(
                     settings.emails.welcomeSubject,

@@ -13,6 +13,8 @@ import { useNewsletterSubscribe } from './useNewsletterSubscribe'
  * - `preview`  admin preview: renders identically but never submits.
  * - `onSuccess(result)` lets the parent swap in its own success view; the
  *   form renders nothing once subscribed so the parent owns that state.
+ * - `footer`   a node placed on the same row as the fine print (the popup's
+ *              "Maybe later"), keeping the popup short.
  */
 const NewsletterForm = forwardRef(function NewsletterForm(
     {
@@ -24,6 +26,7 @@ const NewsletterForm = forwardRef(function NewsletterForm(
         capsule = false,
         preview = false,
         onSuccess,
+        footer = null,
         className,
     },
     emailRef
@@ -115,20 +118,24 @@ const NewsletterForm = forwardRef(function NewsletterForm(
                 </button>
             </div>
 
-            {/* Honeypot — invisible to people, irresistible to bots. */}
+            {/* Honeypot — invisible to people, irresistible to bots. Named so
+                browser/password-manager autofill never fills it (a field
+                called "company" would be, silently dropping real sign-ups). */}
             <label className="ef-nl-hp" aria-hidden="true">
-                Company
+                Leave this empty
                 <input
                     type="text"
-                    name="company"
+                    name="ef_nl_trap"
                     tabIndex={-1}
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    data-1p-ignore
+                    data-lpignore="true"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                 />
             </label>
 
-            <div aria-live="polite">
+            <div aria-live="polite" className="ef-nl-live">
                 {error && (
                     <p id={errorId} className="ef-nl-error">
                         <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
@@ -137,7 +144,13 @@ const NewsletterForm = forwardRef(function NewsletterForm(
                 )}
             </div>
 
-            {consentText && <p id={consentId} className="ef-nl-fine">{consentText}</p>}
+            {consentText && !footer && <p id={consentId} className="ef-nl-fine">{consentText}</p>}
+            {footer && (
+                <div className="ef-nl-foot">
+                    {consentText && <p id={consentId} className="ef-nl-fine">{consentText}</p>}
+                    {footer}
+                </div>
+            )}
         </form>
     )
 })

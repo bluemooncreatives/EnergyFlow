@@ -10,7 +10,8 @@ import { NEWSLETTER_EMAIL_REGEX } from '@/lib/newsletterShared'
    subscriber and respects the admin's "don't show again for N days".
    Storage can throw (private mode, blocked site data); every access is
    guarded and a failure simply behaves like a first visit. */
-const STORAGE_KEY = 'energyflow:newsletter'
+export const NEWSLETTER_STORAGE_KEY = 'energyflow:newsletter'
+const STORAGE_KEY = NEWSLETTER_STORAGE_KEY
 export const NEWSLETTER_SUBSCRIBED_EVENT = 'energyflow:newsletter-subscribed'
 
 export const readNewsletterState = () => {
@@ -52,13 +53,18 @@ export const useNewsletterSubscribe = ({ source }) => {
         setStatus('loading')
         setError('')
         try {
-            const { data } = await axios.post('/api/newsletter/subscribe', {
-                email: cleanEmail,
-                name: String(name || '').trim(),
-                company,
-                source,
-                pagePath: pathname,
-            })
+            const { data } = await axios.post(
+                '/api/newsletter/subscribe',
+                {
+                    email: cleanEmail,
+                    name: String(name || '').trim(),
+                    company,
+                    source,
+                    pagePath: pathname,
+                },
+                // A hung request must not leave the button spinning forever.
+                { timeout: 15000 }
+            )
             if (!data?.success) throw new Error(data?.message || 'Something went wrong. Please try again.')
 
             const next = { ...(data.data || {}), message: data.message }
@@ -69,10 +75,15 @@ export const useNewsletterSubscribe = ({ source }) => {
             return next
         } catch (err) {
             setStatus('error')
+            const offline = typeof navigator !== 'undefined' && navigator.onLine === false
             setError(
-                axios.isAxiosError(err) && !err.response
-                    ? 'Network error. Please check your connection and try again.'
-                    : err.message || 'Something went wrong. Please try again.'
+                offline
+                    ? "You're offline. Reconnect and try again."
+                    : axios.isAxiosError(err) && err.code === 'ECONNABORTED'
+                        ? 'That took too long. Please try again.'
+                        : axios.isAxiosError(err) && !err.response
+                            ? 'Network error. Please check your connection and try again.'
+                            : err.message || 'Something went wrong. Please try again.'
             )
             return null
         }

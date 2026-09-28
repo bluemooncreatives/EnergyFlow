@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { isNewsletterPathAllowed } from '@/lib/newsletterShared'
 import NewsletterPopupCard from './NewsletterPopupCard'
 import {
+    NEWSLETTER_STORAGE_KEY,
     NEWSLETTER_SUBSCRIBED_EVENT,
     readNewsletterState,
     writeNewsletterState,
@@ -25,6 +26,13 @@ const otherDialogOpen = () =>
     Boolean(document.querySelector('[role="dialog"][data-state="open"]:not(.ef-nl-stage)'))
 
 const isMobileViewport = () => window.matchMedia('(max-width: 767px)').matches
+
+// Focus is in a text field somewhere on the page.
+const userIsTyping = () => {
+    const el = document.activeElement
+    if (!el || el === document.body) return false
+    return el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
+}
 
 /**
  * Site-wide newsletter popup. Opens on whichever admin-enabled trigger fires
@@ -47,14 +55,26 @@ const NewsletterPopup = ({ settings }) => {
     const isSlide = popup.layout === 'slide-in'
     const allowedHere = isNewsletterPathAllowed(pathname, behavior)
 
-    // Hide everything the moment another sign-up form (band, footer) succeeds.
+    // Hide everything the moment another sign-up form (band, footer) succeeds —
+    // in this tab (custom event) or in another tab of the site (storage event).
     useEffect(() => {
         const onSubscribed = () => {
             setSubscribed(true)
             setTeaser(false)
         }
+        const onStorage = (event) => {
+            if (event.key === NEWSLETTER_STORAGE_KEY && readNewsletterState().subscribed) {
+                onSubscribed()
+                // Only close if this tab isn't mid-way through its own sign-up.
+                setOpen((wasOpen) => (wasOpen && !document.querySelector('.ef-nl-success') ? false : wasOpen))
+            }
+        }
         window.addEventListener(NEWSLETTER_SUBSCRIBED_EVENT, onSubscribed)
-        return () => window.removeEventListener(NEWSLETTER_SUBSCRIBED_EVENT, onSubscribed)
+        window.addEventListener('storage', onStorage)
+        return () => {
+            window.removeEventListener(NEWSLETTER_SUBSCRIBED_EVENT, onSubscribed)
+            window.removeEventListener('storage', onStorage)
+        }
     }, [])
 
     useEffect(() => {
@@ -65,8 +85,9 @@ const NewsletterPopup = ({ settings }) => {
         }
 
         if (!popup.enabled || !allowedHere) {
-            // Client navigation onto an excluded page (e.g. checkout).
-            if (isSlide) setOpen(false)
+            // Client navigation onto an excluded page (e.g. back button into
+            // checkout while the popup is up): get out of the way.
+            setOpen(false)
             setTeaser(false)
             return
         }
@@ -94,8 +115,9 @@ const NewsletterPopup = ({ settings }) => {
                 cleanup()
                 return
             }
-            // Don't stack on top of the search dialog or the cart — try again shortly.
-            if (otherDialogOpen()) {
+            // Don't stack on top of the search dialog or the cart, and don't
+            // interrupt someone typing (search box, contact form) — retry shortly.
+            if (otherDialogOpen() || userIsTyping()) {
                 const retry = setTimeout(fire, 2500)
                 cleanups.push(() => clearTimeout(retry))
                 return
@@ -125,6 +147,13 @@ const NewsletterPopup = ({ settings }) => {
             }
             window.addEventListener('scroll', onScroll, { passive: true })
             cleanups.push(() => window.removeEventListener('scroll', onScroll))
+
+            // A page too short to scroll never emits a scroll event: if that's
+            // still true once content has loaded, treat the depth as reached.
+            const shortPage = setTimeout(() => {
+                if (document.documentElement.scrollHeight - window.innerHeight <= 8) fire()
+            }, 4000)
+            cleanups.push(() => clearTimeout(shortPage))
         }
 
         if (exit) {

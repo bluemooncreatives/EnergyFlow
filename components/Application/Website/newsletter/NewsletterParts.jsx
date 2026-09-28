@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { Check, Copy, Heart, Leaf, Mail, Sparkles, Sprout } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -45,6 +45,9 @@ export const NewsletterBadge = ({ offer, className, style }) => {
         ? 'Welcome gift ✦ Join the club ✦ Welcome gift ✦ Join the club ✦ '
         : 'Join the club ✦ Fresh drops ✦ Member deals ✦ '
     const [line1, line2] = splitBadge(offer?.badge)
+    // Scale the text to the longest line so "FREE SHIPPING" fits as well as "10%".
+    const longest = Math.max(line1.length, line2.length, 1)
+    const bigStyle = { fontSize: `calc(var(--nl-badge-size, 8.5rem) * ${Math.min(0.16, 0.8 / longest).toFixed(3)})` }
 
     return (
         <div className={cn('ef-nl-badge', className)} style={style} aria-hidden="true">
@@ -60,8 +63,8 @@ export const NewsletterBadge = ({ offer, className, style }) => {
             <span className="ef-seal ef-seal--sun">
                 {offer ? (
                     <>
-                        <span className="ef-nl-badge__big">{line1}</span>
-                        {line2 && <span className="ef-nl-badge__big">{line2}</span>}
+                        <span className="ef-nl-badge__big" style={bigStyle}>{line1}</span>
+                        {line2 && <span className="ef-nl-badge__big" style={bigStyle}>{line2}</span>}
                     </>
                 ) : (
                     <Mail strokeWidth={2} />
@@ -95,23 +98,56 @@ export const NewsletterArt = () => (
     </div>
 )
 
+// Clipboard API needs a secure context and permission; fall back to the
+// legacy selection + execCommand path (older Safari, in-app browsers, http).
+// `host` must be inside the open dialog: a textarea on <body> would be
+// outside the modal's focus trap, which steals focus back mid-copy.
+const copyText = async (text, host = document.body) => {
+    try {
+        if (navigator.clipboard?.writeText && window.isSecureContext) {
+            await navigator.clipboard.writeText(text)
+            return true
+        }
+    } catch {
+        // fall through to the legacy path
+    }
+    try {
+        const area = document.createElement('textarea')
+        area.value = text
+        area.setAttribute('readonly', '')
+        area.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'
+        host.appendChild(area)
+        area.select()
+        area.setSelectionRange(0, text.length)
+        const ok = document.execCommand('copy')
+        area.remove()
+        return ok
+    } catch {
+        return false
+    }
+}
+
 // The welcome code after sign-up, with one-tap copy.
 export const CodeReveal = ({ code, className }) => {
     const [copied, setCopied] = useState(false)
+    const timerRef = useRef(null)
+    const rootRef = useRef(null)
+
+    useEffect(() => () => clearTimeout(timerRef.current), [])
 
     const copy = async () => {
-        try {
-            await navigator.clipboard.writeText(code)
+        if (await copyText(code, rootRef.current || undefined)) {
             setCopied(true)
             toast.success(`Code ${code} copied — apply it at checkout.`)
-            setTimeout(() => setCopied(false), 2200)
-        } catch {
-            toast.error("Couldn't copy. Please copy the code manually.")
+            clearTimeout(timerRef.current)
+            timerRef.current = setTimeout(() => setCopied(false), 2200)
+        } else {
+            toast.error("Couldn't copy. Press and hold the code to copy it.")
         }
     }
 
     return (
-        <div className={cn('ef-nl-code', className)}>
+        <div ref={rootRef} className={cn('ef-nl-code', className)}>
             <span className="min-w-0">
                 <span className="ef-nl-code__label">Your welcome code</span>
                 <span className="ef-nl-code__value">{code}</span>

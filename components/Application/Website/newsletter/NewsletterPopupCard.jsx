@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Ticket, X } from 'lucide-react'
@@ -40,6 +40,17 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
     emailRef
 ) {
     const [result, setResult] = useState(null)
+    // A deleted / unreachable image falls back to the illustrated panel.
+    const [imageFailed, setImageFailed] = useState(false)
+    const successRef = useRef(null)
+
+    useEffect(() => setImageFailed(false), [popup.image?.url])
+
+    // The form (and the focused email field) unmounts on success: move focus
+    // to the success message so keyboard and screen-reader users aren't lost.
+    useEffect(() => {
+        if (result) successRef.current?.focus({ preventScroll: true })
+    }, [result])
 
     const shown = preview
         ? previewState === 'success'
@@ -68,13 +79,14 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
             <div className="ef-nl-scroll" data-lenis-prevent>
                 {hasMedia && (
                     <div className="ef-nl-media">
-                        {popup.image?.url ? (
+                        {popup.image?.url && !imageFailed ? (
                             <Image
                                 src={popup.image.url}
                                 alt={popup.image.alt || ''}
                                 fill
                                 sizes="(min-width: 640px) 380px, 100vw"
                                 className="ef-nl-media__img"
+                                onError={() => setImageFailed(true)}
                             />
                         ) : (
                             <NewsletterArt />
@@ -85,10 +97,10 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
 
                 <div className="ef-nl-body">
                     {shown ? (
-                        <div className="ef-nl-success" role="status">
-                            <SuccessSeal size={isSlide ? '3.25rem' : '4.25rem'} />
+                        <div ref={successRef} tabIndex={-1} className="ef-nl-success outline-none" role="status">
+                            <SuccessSeal size={isSlide ? '3rem' : '3.5rem'} />
                             <Title className="ef-nl-title">{popup.successTitle}</Title>
-                            <Description className="ef-nl-lead">
+                            <Description className="ef-nl-lead ef-nl-keep">
                                 {shown.alreadySubscribed
                                     ? "You're already on the list — welcome back!"
                                     : popup.successMessage}
@@ -113,8 +125,8 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
 
                             {!isSlide && perks.length > 0 && (
                                 <ul className="ef-nl-perks">
-                                    {perks.map((perk) => (
-                                        <li key={perk}><PerkCheck />{perk}</li>
+                                    {perks.map((perk, i) => (
+                                        <li key={i}><PerkCheck />{perk}</li>
                                     ))}
                                 </ul>
                             )}
@@ -135,23 +147,19 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
                                 ref={emailRef}
                                 source="popup"
                                 preview={preview}
-                                capsule={!isSlide}
+                                capsule
                                 placeholder={popup.placeholder}
                                 buttonText={popup.buttonText}
                                 collectName={popup.collectName}
                                 consentText={popup.consentText}
                                 onSuccess={setResult}
+                                footer={popup.declineText ? (
+                                    <button type="button" className="ef-nl-link" onClick={onDecline}>
+                                        {popup.declineText}
+                                    </button>
+                                ) : null}
                             />
 
-                            {popup.declineText && (
-                                <button
-                                    type="button"
-                                    className={cn('ef-nl-link w-fit', popup.layout === 'centered' ? 'self-center' : 'self-start -ml-1')}
-                                    onClick={onDecline}
-                                >
-                                    {popup.declineText}
-                                </button>
-                            )}
                         </>
                     )}
                 </div>
