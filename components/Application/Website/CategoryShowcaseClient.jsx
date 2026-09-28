@@ -20,11 +20,10 @@ const PANEL_COUNT = 4
 const GROW_ACTIVE = 2.8   // flex-grow of the hovered panel …
 const GROW_REST = 0.8     // … and of the others while one is open
 
-const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`
-
-// Notch geometry for the count chip, in px.
-const NOTCH_GAP = 6      // clear space between the chip and the cut edge
-const NOTCH_FILLET = 10  // radius of the two curves where the cut meets the card
+// Clear space between the count chip and the cut edge, in px. Every curve in
+// the notch uses the card's own corner radius (--radius-control, 8px), so the
+// cut, the chip and the card corners all share one radius.
+const NOTCH_GAP = 8
 
 // SVG path for a W×H card with radius-R corners and a notch cut out of the
 // top-right corner, nw wide and nh tall. Clockwise from the top-left:
@@ -71,7 +70,7 @@ const useNotchClip = (panelRef, cardRef, chipRef) => {
             const R = parseFloat(getComputedStyle(card).borderTopLeftRadius) || 12
             const nw = chip.offsetWidth + NOTCH_GAP
             const nh = chip.offsetHeight + NOTCH_GAP
-            card.style.clipPath = `path('${notchPath(W, H, nw, nh, R, NOTCH_FILLET)}')`
+            card.style.clipPath = `path('${notchPath(W, H, nw, nh, R, R)}')`
         }
 
         update()
@@ -108,12 +107,13 @@ const Panel = ({ item, panelRef }) => {
             {/* Product count, sitting in the notch cut from the card's corner. */}
             <span
                 ref={chipRef}
-                className="pointer-events-none absolute right-0 top-0 z-20 inline-flex h-7 items-center rounded-card bg-[var(--palette-pine)] px-3 text-[0.75rem] font-semibold leading-none text-[var(--palette-cream)] dark:bg-[var(--brand-sun)] dark:text-[var(--palette-pine)]"
+                className="pointer-events-none absolute right-0 top-0 z-20 inline-flex h-10 items-center gap-1.5 rounded-[var(--radius-control)] bg-[var(--palette-pine)] px-4 font-header text-[0.9375rem] font-medium leading-none text-[var(--palette-cream)] dark:bg-[var(--brand-sun)] dark:text-[var(--palette-pine)]"
             >
-                {plural(item.count, 'product', 'products')}
+                <span className="font-semibold tabular-nums">{item.count}</span>
+                {item.count === 1 ? 'product' : 'products'}
             </span>
 
-            <div ref={cardRef} data-card className="absolute inset-0 isolate overflow-hidden rounded-card bg-pine">
+            <div ref={cardRef} data-card className="absolute inset-0 isolate overflow-hidden rounded-[var(--radius-control)] bg-pine">
                 {/* Photo (oversized so the pointer parallax never shows an edge) */}
                 <div data-img className="absolute -inset-[4%] -z-10 will-change-transform">
                     <Image
@@ -133,11 +133,11 @@ const Panel = ({ item, panelRef }) => {
                     <Link
                         href={item.href}
                         aria-label={`Shop ${item.name}`}
-                        className="ef-focus block text-[1.125rem] font-medium leading-tight tracking-[-0.01em] after:absolute after:inset-0 after:content-['']"
+                        className="ef-focus block font-header text-[1.5rem] font-semibold leading-[1.1] after:absolute after:inset-0 after:content-['']"
                     >
                         {item.name}
                     </Link>
-                    {from && <span className="mt-1 block text-[0.8125rem] text-white/75">From {from}</span>}
+                    {from && <span className="mt-1.5 block text-[0.9375rem] text-white/80">From <strong className="font-semibold text-white">{from}</strong></span>}
                 </div>
 
                 {/* Expanded details */}
