@@ -22,6 +22,11 @@ const IST = 'Asia/Kolkata'
 // Bucket key ("2026-09-28", "2026-09") → axis / tooltip label.
 export const bucketLabel = (key, granularity, long = false) => {
     if (!key) return ''
+    if (granularity === 'hour') {
+        const h = Number(key.slice(11, 13))
+        const label = `${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}`
+        return long ? `${label} – ${(h + 1) % 12 || 12} ${h + 1 < 12 || h + 1 === 24 ? 'AM' : 'PM'}` : label
+    }
     if (granularity === 'month') {
         const [y, m] = key.split('-').map(Number)
         return new Date(Date.UTC(y, m - 1, 15)).toLocaleDateString('en-IN', { month: long ? 'long' : 'short', year: long ? 'numeric' : '2-digit', timeZone: 'UTC' })
