@@ -14,6 +14,7 @@ import axios from 'axios'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import {
     AlertTriangle, CalendarRange, Download, Loader2, Printer, RefreshCw,
+    TrendingUp, Truck, Users, ShoppingBag,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -39,10 +40,10 @@ const PRESETS = [
 ]
 
 const AN_TABS = [
-    { id: 'sales', label: 'Sales & Revenue' },
-    { id: 'orders', label: 'Orders & Fulfillment' },
-    { id: 'customers', label: 'Customers' },
-    { id: 'products', label: 'Products & Catalogue' },
+    { id: 'sales', label: 'Sales & Revenue', icon: TrendingUp },
+    { id: 'orders', label: 'Orders & Fulfillment', icon: Truck },
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'products', label: 'Products & Catalogue', icon: ShoppingBag },
 ]
 
 const todayIst = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10)

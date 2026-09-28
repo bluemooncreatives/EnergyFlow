@@ -34,13 +34,13 @@ const IconBadge = ({ icon: Icon, bg = 'var(--chart-1)', fg = 'var(--primary-fore
 )
 
 const PanelHeader = ({ icon, iconBg, iconFg, title, description, action }) => (
-    <CardHeader className="pb-2">
+    <CardHeader className="px-4 py-3 sm:px-5 pb-3">
         <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
                 <IconBadge icon={icon} bg={iconBg} fg={iconFg} />
                 <div>
                     <CardTitle className="text-sm font-semibold">{title}</CardTitle>
-                    {description && <CardDescription className="mt-0.5 text-xs">{description}</CardDescription>}
+                    {description && <CardDescription className="mt-0.5 text-xs text-muted-foreground">{description}</CardDescription>}
                 </div>
             </div>
             {action}
@@ -89,7 +89,7 @@ const OrderStatusSummaryCard = () => {
     const hasFilter = Boolean(range && range !== 'all' || year || month || date || (from && to))
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={ShoppingBag}
                 iconBg="var(--chart-1)"
@@ -101,7 +101,7 @@ const OrderStatusSummaryCard = () => {
                     </Button>
                 }
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
                     {STATUS_META.map(({ key, label, icon: Icon, bg, fg }) => (
                         <Link key={key} href={ADMIN_ORDER_SHOW} className="group flex flex-col items-center gap-1.5 rounded-xl border p-3.5 text-center transition hover:border-primary/30 hover:bg-muted/40">
@@ -128,7 +128,7 @@ const LatestOrdersCard = () => {
     }, [data])
 
     return (
-        <Card className="lg:col-span-2">
+        <Card className="rounded-xl lg:col-span-2">
             <PanelHeader
                 icon={Hash}
                 iconBg="var(--chart-3)"
@@ -140,7 +140,7 @@ const LatestOrdersCard = () => {
                     </Button>
                 }
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 {loading ? (
                     <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">Loading…</div>
                 ) : !orders.length ? (
@@ -191,7 +191,7 @@ const LatestReviewsCard = () => {
     }, [data])
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={Star}
                 iconBg="var(--chart-2)"
@@ -204,7 +204,7 @@ const LatestReviewsCard = () => {
                     </Button>
                 }
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 {loading ? (
                     <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">Loading…</div>
                 ) : !reviews.length ? (
@@ -251,7 +251,7 @@ const StoreCountsCard = () => {
     ]
 
     return (
-        <Card>
+        <Card className="rounded-xl">
             <PanelHeader
                 icon={Users}
                 iconBg="var(--chart-4)"
@@ -263,7 +263,7 @@ const StoreCountsCard = () => {
                     </Button>
                 }
             />
-            <CardContent>
+            <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <div className="grid grid-cols-2 gap-3">
                     {metrics.map(({ label, value, icon }) => (
                         <div key={label} className="flex items-center gap-3 rounded-lg border p-3">
