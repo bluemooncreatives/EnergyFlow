@@ -129,14 +129,14 @@ export function OrderStatus() {
                                             <tspan
                                                 x={viewBox.cx}
                                                 y={viewBox.cy}
-                                                className="fill-foreground text-3xl font-bold"
+                                                className="fill-foreground text-2xl sm:text-3xl font-bold"
                                             >
                                                 {totalCount}
                                             </tspan>
                                             <tspan
                                                 x={viewBox.cx}
-                                                y={(viewBox.cy || 0) + 24}
-                                                className="fill-muted-foreground"
+                                                y={(viewBox.cy || 0) + 20}
+                                                className="fill-muted-foreground text-xs"
                                             >
                                                 Orders
                                             </tspan>
@@ -150,15 +150,15 @@ export function OrderStatus() {
             </ChartContainer>
 
             <div>
-                <ul className="space-y-3 text-sm">
+                <ul className="space-y-2.5 text-xs sm:text-sm">
                     {statusList.map((status) => (
                         <li key={status.key} className="flex items-center justify-between">
                             <span className="text-muted-foreground">{status.label}</span>
                             <span
-                                className="rounded-full px-3 py-1 text-xs font-semibold"
+                                className="rounded-full px-2.5 py-0.5 text-xs font-semibold tabular-nums"
                                 style={{
                                     backgroundColor: `var(${status.colorVar})`,
-                                    color: 'var(--primary-foreground)',
+                                    color: status.colorVar === '--chart-2' ? '#0A2F24' : 'var(--primary-foreground)',
                                 }}
                             >
                                 {statusCount?.[status.key] || 0}

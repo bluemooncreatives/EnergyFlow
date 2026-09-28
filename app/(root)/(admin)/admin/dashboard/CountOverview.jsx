@@ -74,22 +74,34 @@ const CountOverview = () => {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {cards.map((card) => (
                 <Link key={card.title} href={card.href} aria-label={`${card.title}: ${card.value}`}>
-                        <Card className={`border-l-4 hover:border-l-8`} style={{ borderLeftColor: `var(${card.chartVar})` }}> 
-                                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                            <div className="flex items-center gap-2">
-                                                <CardTitle className={`text-sm font-medium text-foreground`}>{card.title}</CardTitle>
-                                            </div>
-                                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${card.chartVar})`, color: card.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }} aria-hidden>
-                                                <card.icon className="h-4 w-4" />
-                                            </span>
-                                        </CardHeader>
-                            <CardContent>
-                                <div className="text-4xl font-bold">{loading || !countData ? <span className="inline-block h-9 w-16 animate-pulse rounded bg-muted" aria-label="Loading" /> : card.value}</div>
-                                <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-success/15 text-success"><CircleCheck className="h-3 w-3" /></span>
-                                    <span className="ml-1">Current store total</span>
-                                </p>
-                            </CardContent>
+                    <Card
+                        className="rounded-xl border-l-4 p-4 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
+                        style={{ borderLeftColor: `var(${card.chartVar})` }}
+                    >
+                        <div className="flex items-start justify-between gap-2">
+                            <p className="text-sm font-medium text-foreground">{card.title}</p>
+                            <span
+                                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
+                                style={{
+                                    backgroundColor: `var(${card.chartVar})`,
+                                    color: card.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)'
+                                }}
+                                aria-hidden
+                            >
+                                <card.icon className="size-4" />
+                            </span>
+                        </div>
+                        <p className="mt-3 text-2xl sm:text-3xl font-bold leading-none tracking-tight tabular-nums">
+                            {loading || !countData ? (
+                                <span className="inline-block h-7 w-20 animate-pulse rounded bg-muted align-middle" aria-label="Loading" />
+                            ) : (
+                                Number(card.value).toLocaleString('en-IN')
+                            )}
+                        </p>
+                        <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <CircleCheck className="size-3 shrink-0 text-primary" />
+                            <span>{card.sub}</span>
+                        </p>
                     </Card>
                 </Link>
             ))}

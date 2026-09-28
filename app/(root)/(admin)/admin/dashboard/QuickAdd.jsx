@@ -38,13 +38,13 @@ const QuickAdd = () => {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {quickLinks.map((link) => (
                 <Link key={link.title} href={link.href}>
-                    <Card style={{ borderLeftColor: `var(${link.chartVar})` }}>
-                        <div className="flex flex-col">
+                    <Card className="rounded-xl border-l-4 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ borderLeftColor: `var(${link.chartVar})` }}>
+                        <div className="flex flex-col pr-8">
                             <div className="text-sm font-medium text-foreground">{link.title}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5">{link.description}</div>
+                            <div className="mt-0.5 text-xs text-muted-foreground">{link.description}</div>
                         </div>
-                        <span className="absolute top-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: link.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }}>
-                            <link.icon className="h-4 w-4" />
+                        <span className="absolute top-3 right-3 inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: link.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }}>
+                            <link.icon className="size-4" />
                         </span>
                     </Card>
                 </Link>

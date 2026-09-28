@@ -127,6 +127,7 @@ export function OrderOverview() {
                         tickMargin={10}
                         axisLine={false}
                         tickFormatter={(value) => value.slice(0, 3)}
+                        tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                     />
                     <ChartTooltip
                         cursor={false}
