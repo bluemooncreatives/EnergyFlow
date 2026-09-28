@@ -135,10 +135,47 @@ const AnalyticsDashboard = () => {
     ] : Array.from({ length: 8 }, (_, i) => ({ label: ['Net sales', 'Orders', 'Average order value', 'Units sold', 'Buyers', 'New accounts', 'Returning buyers', 'Cancellation rate'][i], spark: i < 4 ? [] : undefined })), [kpis, timeline, data])
 
     return (
-        <div className="flex flex-col gap-4 print:gap-3">
-            {/* Controls */}
-            <div className="flex flex-col gap-3 rounded-lg bg-card ring-1 ring-foreground/10 p-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
-                <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col gap-6 print:gap-4">
+            {/* ── Controls card — same card language as Overview ── */}
+            <div className="rounded-lg bg-card ring-1 ring-foreground/10 print:hidden">
+                {/* Card header: icon badge + title/description + action buttons */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 sm:px-5">
+                    <div className="flex items-center gap-3">
+                        <span
+                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                            style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
+                            aria-hidden="true"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </span>
+                        <div>
+                            <p className="text-sm font-semibold text-foreground">Analytics &amp; Reports</p>
+                            <p className="text-xs text-muted-foreground">
+                                {data
+                                    ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} &ndash; {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} &ndash; {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — narrow for exact figures</span>}</>
+                                    : 'Select a date range to load the report'
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                        <span className="hidden text-xs text-muted-foreground md:inline" aria-live="polite">
+                            {isFetching ? 'Updating…' : dataUpdatedAt ? `Updated ${relative(dataUpdatedAt)}` : ''}
+                        </span>
+                        <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={() => refetch()} disabled={isFetching} aria-label="Refresh report">
+                            {isFetching ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
+                            <span className="hidden sm:inline">Refresh</span>
+                        </Button>
+                        <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={exportCsv} disabled={!data}>
+                            <Download className="size-3.5" /> <span className="hidden sm:inline">Export CSV</span>
+                        </Button>
+                        <Button variant="outline" className="h-8 px-2.5 text-xs" onClick={() => window.print()} disabled={!data} aria-label="Print report">
+                            <Printer className="size-3.5" />
+                        </Button>
+                    </div>
+                </div>
+                {/* Date range selectors */}
+                <div className="flex flex-wrap items-center gap-2 px-4 py-3 sm:px-5">
                     <div className="flex flex-wrap rounded-lg bg-muted p-1" role="tablist" aria-label="Date range">
                         {PRESETS.map((p) => (
                             <button
@@ -174,44 +211,45 @@ const AnalyticsDashboard = () => {
                         </form>
                     )}
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="hidden text-xs text-muted-foreground md:inline" aria-live="polite">
-                        {isFetching ? 'Updating…' : dataUpdatedAt ? `Updated ${relative(dataUpdatedAt)}` : ''}
-                    </span>
-                    <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={() => refetch()} disabled={isFetching} aria-label="Refresh report">
-                        {isFetching ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-                        <span className="hidden sm:inline">Refresh</span>
-                    </Button>
-                    <Button variant="outline" className="h-8 gap-1.5 px-2.5 text-xs" onClick={exportCsv} disabled={!data}>
-                        <Download className="size-3.5" /> <span className="hidden sm:inline">Export CSV</span>
-                    </Button>
-                    <Button variant="outline" className="h-8 px-2.5 text-xs" onClick={() => window.print()} disabled={!data} aria-label="Print report">
-                        <Printer className="size-3.5" />
-                    </Button>
-                </div>
             </div>
 
-            {data && (
-                <p className="-mt-1 text-xs text-muted-foreground">
-                    <b className="font-semibold text-foreground">{data.range.label}</b> · {shortDate(data.range.start)} – {shortDate(new Date(new Date(data.range.end).getTime() - 1))}
-                    {' '}· compared with {shortDate(data.range.previousStart)} – {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}
-                    {data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — totals capped; narrow the range for exact figures</span>}
-                </p>
-            )}
+
 
             {isError && !data ? (
                 <div className="flex flex-col items-center rounded-lg bg-card ring-1 ring-foreground/10 px-6 py-16 text-center">
-                    <AlertTriangle className="size-8 text-destructive" aria-hidden="true" />
-                    <p className="mt-3 font-semibold">Couldn’t build the report</p>
+                    <span
+                        className="inline-flex h-12 w-12 items-center justify-center rounded-full"
+                        style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
+                        aria-hidden="true"
+                    >
+                        <AlertTriangle className="size-5" />
+                    </span>
+                    <p className="mt-4 font-semibold">Couldn’t build the report</p>
                     <p className="mt-1 text-sm text-muted-foreground">{error?.response?.data?.message || error?.message || 'Please try again.'}</p>
                     <Button variant="outline" className="mt-5 h-9 gap-2 px-4" onClick={() => refetch()}><RefreshCw className="size-4" /> Retry</Button>
                 </div>
             ) : (
-                <div className={cn('flex flex-col gap-4 transition-opacity', isFetching && data && 'opacity-70')} aria-busy={isFetching}>
+                <div className={cn('flex flex-col gap-6 transition-opacity', isFetching && data && 'opacity-70')} aria-busy={isFetching}>
                     <ActionCenter actions={data?.actions} loading={isLoading} />
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        {tiles.map((tile, index) => <KpiTile index={index} key={tile.label} {...tile} loading={isLoading || !data} />)}
+                    {/* KPI tiles — same border-left card language as CountOverview */}
+                    <div>
+                        <div className="mb-3 flex items-center gap-3">
+                            <span
+                                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                                style={{ backgroundColor: 'var(--chart-1)', color: 'var(--primary-foreground)' }}
+                                aria-hidden="true"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </span>
+                            <div>
+                                <p className="text-sm font-semibold text-foreground">Key Performance Indicators</p>
+                                <p className="text-xs text-muted-foreground">Compared with the previous period of equal length</p>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            {tiles.map((tile, index) => <KpiTile index={index} key={tile.label} {...tile} loading={isLoading || !data} />)}
+                        </div>
                     </div>
 
                     {data && (
@@ -221,10 +259,26 @@ const AnalyticsDashboard = () => {
                                 <MoneyFlow breakdown={data.breakdown} />
                             </div>
 
-                            <div className="grid gap-4 lg:grid-cols-3">
-                                <OrderPipeline statusCounts={data.statusCounts} shipmentCounts={data.shipmentCounts} placed={data.breakdown.placed} />
-                                <PaymentMix paymentMethods={data.paymentMethods} paymentStatuses={data.paymentStatuses} />
-                                <RecentOrders orders={data.recentOrders} />
+                            {/* Orders & Payments section */}
+                            <div>
+                                <div className="mb-3 flex items-center gap-3">
+                                    <span
+                                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                                        style={{ backgroundColor: 'var(--chart-2)', color: '#0A2F24' }}
+                                        aria-hidden="true"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                    </span>
+                                    <div>
+                                        <p className="text-sm font-semibold text-foreground">Orders &amp; Payments</p>
+                                        <p className="text-xs text-muted-foreground">Pipeline status, payment breakdown and latest orders</p>
+                                    </div>
+                                </div>
+                                <div className="grid gap-4 lg:grid-cols-3">
+                                    <OrderPipeline statusCounts={data.statusCounts} shipmentCounts={data.shipmentCounts} placed={data.breakdown.placed} />
+                                    <PaymentMix paymentMethods={data.paymentMethods} paymentStatuses={data.paymentStatuses} />
+                                    <RecentOrders orders={data.recentOrders} />
+                                </div>
                             </div>
 
                             <div className="grid gap-4 lg:grid-cols-3">
@@ -232,10 +286,26 @@ const AnalyticsDashboard = () => {
                                 <CustomerInsights customerMix={data.customerMix} topCustomers={data.topCustomers} kpis={data.kpis} audience={data.audience} />
                             </div>
 
-                            <div className="grid gap-4 lg:grid-cols-3">
-                                <TopProducts items={data.topProducts} totalSales={data.categories.reduce((s, c) => s + c.sales, 0)} />
-                                <CategoryPerformance categories={data.categories} />
-                                <Regions regions={data.regions} />
+                            {/* Catalogue & Regions section */}
+                            <div>
+                                <div className="mb-3 flex items-center gap-3">
+                                    <span
+                                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                                        style={{ backgroundColor: 'var(--chart-3)', color: 'var(--primary-foreground)' }}
+                                        aria-hidden="true"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                                    </span>
+                                    <div>
+                                        <p className="text-sm font-semibold text-foreground">Catalogue &amp; Regions</p>
+                                        <p className="text-xs text-muted-foreground">Top-selling products, category breakdown and geographic reach</p>
+                                    </div>
+                                </div>
+                                <div className="grid gap-4 lg:grid-cols-3">
+                                    <TopProducts items={data.topProducts} totalSales={data.categories.reduce((s, c) => s + c.sales, 0)} />
+                                    <CategoryPerformance categories={data.categories} />
+                                    <Regions regions={data.regions} />
+                                </div>
                             </div>
 
                             <div className="grid gap-4 lg:grid-cols-3">
