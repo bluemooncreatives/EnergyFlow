@@ -12,6 +12,7 @@ import { useCartProduct } from '@/hooks/useCartProduct'
 import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import RailControls from './storefront/RailControls'
+import RailPager from './storefront/RailPager'
 import { Price } from './storefront/ProductCard'
 import CartQtyStepper from './storefront/CartQtyStepper'
 import { StoreLink } from './storefront/StoreButton'
@@ -140,7 +141,7 @@ const BestsellerCard = ({ product, position }) => {
 
 const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
     const sectionRef = useRef(null)
-    const rail = useScrollRail()
+    const rail = useScrollRail({ nudge: 'bestsellers' })
     useReveal(sectionRef, [products.length])
 
     if (!products.length) return null
@@ -174,8 +175,12 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
                 ))}
             </ol>
 
+            {/* Phones: the heading arrows are hidden, so position + arrows sit
+                under the rail. mt clears the rail's negative bottom margin. */}
+            <RailPager rail={rail} label="bestsellers" className="mt-9 sm:hidden" />
+
             {/* mt clears the rail's negative bottom margin (room for card shadows). */}
-            <div data-reveal className="mt-12 flex justify-center sm:mt-14">
+            <div data-reveal className="mt-8 flex justify-center sm:mt-14">
                 <StoreLink href={`${WEBSITE_SHOP}?bestseller=true`}>Shop all bestsellers</StoreLink>
             </div>
         </Section>

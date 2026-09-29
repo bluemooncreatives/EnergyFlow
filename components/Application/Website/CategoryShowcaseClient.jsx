@@ -9,9 +9,11 @@ import { useGSAP } from '@gsap/react'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useReveal } from '@/hooks/useReveal'
+import { useScrollRail } from '@/hooks/useScrollRail'
 import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import { StoreLink } from './storefront/StoreButton'
+import RailPager from './storefront/RailPager'
 import { formatINR } from './storefront/format'
 import { formatProductName } from '@/lib/seo'
 
@@ -103,7 +105,7 @@ const Panel = ({ item, panelRef }) => {
     return (
         <li
             ref={setLiRef}
-            className="group/panel relative h-[31rem] w-[84vw] shrink-0 snap-start sm:w-[26rem] lg:h-full lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
+            className="group/panel relative h-[31rem] w-[78vw] max-w-[22rem] shrink-0 snap-start sm:w-[26rem] sm:max-w-none lg:h-full lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
         >
             {/* Product count, sitting in the notch cut from the card's corner. */}
             <span
@@ -231,8 +233,10 @@ const Panel = ({ item, panelRef }) => {
 
 // "Shop by category": four equal photo panels; hovering (or focusing) one
 // widens it and reveals its data — price floor, best markdown, three popular
-// products and a clear shop action. Phones get the same cards as a swipeable
-// rail with the details always visible.
+// products and a clear shop action. Phones and tablets get the same cards as a
+// swipeable rail with the details always visible. The next card peeks in, a
+// pager under the rail shows the position with prev / next buttons, and on
+// first view the rail nudges sideways once, so it is plain that it scrolls.
 //
 // GSAP, desktop only (gsap.matchMedia):
 //   • one flex-grow tween re-proportions all panels (debounced by a short
@@ -245,7 +249,8 @@ const Panel = ({ item, panelRef }) => {
 // Reduced motion keeps the same states, just without the movement.
 const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
     const sectionRef = useRef(null)
-    const listRef = useRef(null)
+    const rail = useScrollRail({ nudge: 'categories' })
+    const listRef = rail.railRef
     const panelsRef = useRef([])
     useReveal(sectionRef, [items.length])
 
@@ -383,6 +388,8 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                     <Panel key={item.id} item={item} panelRef={(el) => { panelsRef.current[i] = el }} />
                 ))}
             </ul>
+
+            <RailPager rail={rail} label="categories" className="mt-5 lg:hidden" />
 
             {more.length > 0 && (
                 <nav data-reveal aria-label="More categories" className="mt-6 flex flex-wrap items-center gap-2">

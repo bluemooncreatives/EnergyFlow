@@ -84,6 +84,33 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
         setPage(0)
     }, [searchParamString, sorting, pageSize])
 
+    // Page one of a different result set is a different set of products, so
+    // put the visitor at the top of the grid — where paging lands them too —
+    // rather than leaving them somewhere in the middle of results that have
+    // been replaced under them. Not on mount: arriving at /shop?category=x is
+    // a navigation, and the route handles where that opens. Not while the
+    // mobile filter sheet is open either, since the page behind it is scroll
+    // locked and the visitor is still choosing; that scrolls on close.
+    const resultKeyRef = useRef(null)
+    const deferredScrollRef = useRef(false)
+    useEffect(() => {
+        const key = `${searchParamString}|${sorting}`
+        if (resultKeyRef.current === key) return
+        const first = resultKeyRef.current === null
+        resultKeyRef.current = key
+        if (first) return
+        if (isMobileFilter) deferredScrollRef.current = true
+        else scrollToElement(gridTopRef.current)
+    }, [searchParamString, sorting, isMobileFilter])
+
+    useEffect(() => {
+        if (isMobileFilter || !deferredScrollRef.current) return
+        deferredScrollRef.current = false
+        // Wait out the sheet's close animation, which holds the scroll lock.
+        const timer = setTimeout(() => scrollToElement(gridTopRef.current), 250)
+        return () => clearTimeout(timer)
+    }, [isMobileFilter])
+
     const fetchProduct = useCallback(async (pageParam) => {
         const { data: getProduct } = await axios.get('/api/shop', {
             params: {

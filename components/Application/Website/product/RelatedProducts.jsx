@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import ProductBox from '@/components/Application/Website/ProductBox'
 import RailControls from '@/components/Application/Website/storefront/RailControls'
+import RailPager from '@/components/Application/Website/storefront/RailPager'
 import { useScrollRail } from '@/hooks/useScrollRail'
 import { useReveal } from '@/hooks/useReveal'
 import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
@@ -13,7 +14,7 @@ import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 // every card already fits). Renders nothing without products. It hydrates
 // late (LazyHydrate), so it runs its own scroll reveal.
 const RelatedProducts = ({ products, category }) => {
-    const rail = useScrollRail()
+    const rail = useScrollRail({ nudge: 'related' })
     const scopeRef = useRef(null)
     useReveal(scopeRef)
     if (!products?.length) return null
@@ -52,6 +53,10 @@ const RelatedProducts = ({ products, category }) => {
                         </li>
                     ))}
                 </ul>
+
+                {/* Below md the heading arrows are hidden: position + arrows
+                    under the rail instead (mt clears its shadow margin). */}
+                <RailPager rail={rail} label="products" className="mt-9 md:hidden" />
             </div>
         </section>
     )
