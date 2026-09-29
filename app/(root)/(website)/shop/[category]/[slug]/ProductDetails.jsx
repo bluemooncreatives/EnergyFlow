@@ -130,8 +130,8 @@ const ProductDetails = ({
                         </BreadcrumbList>
                     </Breadcrumb>
 
-                    <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-20">
-                        <div className="lg:sticky lg:top-28">
+                    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-20">
+                        <div className="min-w-0 lg:sticky lg:top-28">
                             <ProductGallery
                                 ref={stageRef}
                                 images={images}

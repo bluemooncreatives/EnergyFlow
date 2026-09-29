@@ -213,7 +213,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
                 )}
             </div>
 
-            <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-12">
+            <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-12">
                 {/* Summary */}
                 <aside ref={summaryRef} className="rounded-[var(--radius-tile)] bg-surface-inverse p-6 text-[var(--ink-on-inverse)] lg:sticky lg:top-28 lg:p-8" style={{ backgroundImage: 'var(--brand-panel-gradient)' }}>
                     {summary.isError ? (

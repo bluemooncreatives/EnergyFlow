@@ -3,9 +3,9 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, Plus, Zap } from 'lucide-react'
+import { Plus, Zap } from 'lucide-react'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
-import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useReveal } from '@/hooks/useReveal'
 import { useScrollRail } from '@/hooks/useScrollRail'
 import { useCartProduct } from '@/hooks/useCartProduct'
@@ -13,6 +13,7 @@ import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import RailControls from './storefront/RailControls'
 import { Price } from './storefront/ProductCard'
+import CartQtyStepper from './storefront/CartQtyStepper'
 import { StoreLink } from './storefront/StoreButton'
 import { discountPercent } from './storefront/format'
 import { formatProductName } from '@/lib/seo'
@@ -33,7 +34,7 @@ const rank = (n) => String(n).padStart(2, '0')
 // straddles the photo's edge, a discount reads as a round price sticker, and
 // the actions sit below a notched, perforated line like a shop tag.
 const BestsellerCard = ({ product, position }) => {
-    const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
+    const { variant, inCart, qty, atMax, increase, decrease, canAdd, addToCart, buyNow } = useCartProduct(product)
     const name = formatProductName(product.name) || 'Product'
     const href = WEBSITE_PRODUCT_DETAILS(product)
     const image = product.media?.find((m) => m?.secure_url) || { secure_url: imgPlaceholder.src }
@@ -103,19 +104,21 @@ const BestsellerCard = ({ product, position }) => {
                             onClick={buyNow}
                             disabled={!canAdd}
                             aria-label={canAdd ? `Buy now: ${name}` : `Unavailable: ${name}`}
-                            className="ef-focus inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-khaki px-4 text-[0.8125rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
+                            title={canAdd ? 'Buy now' : 'Unavailable'}
+                            className={`ef-focus inline-flex h-10 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-khaki text-[0.8125rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40 ${inCart ? 'w-10 shrink-0' : 'flex-1 px-4'}`}
                         >
-                            <Zap className="size-3.5" aria-hidden="true" /> {canAdd ? 'Buy now' : 'Unavailable'}
+                            <Zap className="size-3.5" aria-hidden="true" />
+                            {!inCart && (canAdd ? ' Buy now' : ' Unavailable')}
                         </button>
                         {inCart ? (
-                            <Link
-                                href={WEBSITE_CART}
-                                aria-label={`${name} is in your cart. View cart`}
-                                title="In cart — view cart"
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-fern text-white"
-                            >
-                                <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
-                            </Link>
+                            <CartQtyStepper
+                                qty={qty}
+                                atMax={atMax}
+                                onIncrease={increase}
+                                onDecrease={decrease}
+                                name={name}
+                                className="min-w-0 flex-1"
+                            />
                         ) : (
                             <button
                                 type="button"

@@ -197,7 +197,7 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                                 <Link
                                     href={item.url}
                                     data-tile
-                                    className="ef-cta h-9 gap-2.5 py-1 pl-3.5 pr-1 text-xs"
+                                    className="ef-cta h-9 min-h-9 gap-2.5 py-1 pl-3.5 pr-1 text-xs"
                                 >
                                     Shop all
                                     <span className="ef-cta__box size-7 [&_svg]:size-3.5">

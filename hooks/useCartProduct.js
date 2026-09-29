@@ -2,19 +2,19 @@
 
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import { addIntoCart } from '@/store/reducer/cartReducer'
 import { showToast } from '@/lib/showToast'
-import { useHydrated } from '@/hooks/useHydrated'
+import { useCartLine } from '@/hooks/useCartLine'
 import { WEBSITE_BUY_NOW } from '@/routes/WebsiteRoute'
 
 // One place for a card's purchase actions. Storefront cards quick-add
 // the product's default (cheapest) variant — the cart keys lines on variantId, so
 // a product without a variant cannot be added and `canAdd` is false.
 //
-// The selector returns a boolean rather than the cart array, so a card only
-// re-renders when ITS in-cart state flips, not on every cart change.
+// Once the pack is in the cart the card swaps its add button for a − / +
+// stepper bound to that line (see useCartLine).
 export const useCartProduct = (product) => {
     const dispatch = useDispatch()
     const router = useRouter()
@@ -22,13 +22,7 @@ export const useCartProduct = (product) => {
     const productId = product?._id
     const variantId = variant?._id
 
-    const hydrated = useHydrated()
-    const inCartStored = useSelector((store) =>
-        Boolean(variantId) &&
-        store.cartStore.products.some((item) => item.productId === productId && item.variantId === variantId)
-    )
-    // The persisted cart is client-only; match the server's empty cart until hydrated.
-    const inCart = hydrated && inCartStored
+    const line = useCartLine(productId, variantId)
 
     const addToCart = useCallback((event) => {
         event?.preventDefault?.()
@@ -63,7 +57,17 @@ export const useCartProduct = (product) => {
         return true
     }, [router, variant])
 
-    return { variant, inCart, canAdd: Boolean(variant), addToCart, buyNow }
+    return {
+        variant,
+        inCart: line.inCart,
+        qty: line.qty,
+        atMax: line.atMax,
+        increase: line.increase,
+        decrease: line.decrease,
+        canAdd: Boolean(variant),
+        addToCart,
+        buyNow,
+    }
 }
 
 export default useCartProduct

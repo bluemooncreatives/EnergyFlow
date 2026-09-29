@@ -8,33 +8,89 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import Image from "next/image"
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
-import { removeFromCart } from "@/store/reducer/cartReducer"
+import { selectCartSummary } from "@/store/reducer/cartReducer"
 import Link from "next/link"
 import { WEBSITE_CART, WEBSITE_CHECKOUT, WEBSITE_SHOP } from "@/routes/WebsiteRoute"
 import { BrandButton, BrandOutlineButton } from "@/components/Application/Website/BrandButton"
 import { useEffect, useState } from "react"
 import { showToast } from "@/lib/showToast"
 import { formatProductName } from '@/lib/seo'
+import { useCartLine } from '@/hooks/useCartLine'
+import CartQtyStepper from '@/components/Application/Website/storefront/CartQtyStepper'
 
 const fmt = (n) => n?.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
 
+// One drawer row. Owns its own cart-line hook so a − / + here re-renders just
+// this row; stepping below one removes it (with Undo), like everywhere else.
+const DrawerLine = ({ product }) => {
+    const name = formatProductName(product.name)
+    const { qty, atMax, increase, decrease, remove } = useCartLine(product.productId, product.variantId)
+    const lineTotal = (Number(product.sellingPrice) || 0) * qty
+
+    return (
+        <div className="group relative flex items-stretch gap-3 rounded-xs border border-border/40 bg-background p-3 transition-all duration-200 hover:border-border/70 hover:shadow-[0_4px_16px_rgba(0,0,0,0.07)]">
+            {/* Thumbnail */}
+            <div className="relative w-[80px] flex-shrink-0 overflow-hidden rounded-xs border border-border/30">
+                <Image
+                    src={product?.media || imgPlaceholder.src}
+                    fill
+                    sizes="80px"
+                    alt={name}
+                    className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
+                />
+            </div>
+
+            {/* Details */}
+            <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
+                <div className="flex items-start justify-between gap-2">
+                    <h4 className="line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground">
+                        {name}
+                    </h4>
+                    <button
+                        type="button"
+                        onClick={remove}
+                        className="ef-focus -mr-1 -mt-0.5 shrink-0 cursor-pointer rounded-sm px-1 text-[0.75rem] text-ink-muted transition-colors hover:text-destructive"
+                        aria-label={`Remove ${name} from cart`}
+                    >
+                        Remove
+                    </button>
+                </div>
+                <span className="w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
+                    {product.size && <>{product.size} · </>}{fmt(Number(product.sellingPrice) || 0)} each
+                </span>
+                <div className="mt-0.5 flex items-center justify-between gap-2">
+                    <CartQtyStepper
+                        qty={qty}
+                        atMax={atMax}
+                        onIncrease={increase}
+                        onDecrease={decrease}
+                        name={name}
+                        tone="soft"
+                        size="sm"
+                    />
+                    <span className="font-neue text-[14px] font-semibold tabular-nums text-foreground">
+                        {fmt(lineTotal)}
+                    </span>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const Cart = () => {
     const [open, setOpen] = useState(false)
-    const [subtotal, setSubTotal] = useState(0)
     const [mounted, setMounted] = useState(false)
     useEffect(() => setMounted(true), [])
 
-    const cart = useSelector(store => store.cartStore)
-    const dispatch = useDispatch()
-    const cartCount = mounted ? cart.count : 0
-
-    useEffect(() => {
-        const cartProducts = cart.products
-        setSubTotal(cartProducts.reduce((s, p) => s + p.sellingPrice * p.qty, 0))
-    }, [cart])
+    const products = useSelector(store => store.cartStore.products)
+    const summary = useSelector(selectCartSummary)
+    // Units, not lines: two of one pack reads as "2 items", as on the cart
+    // page and the bottom bar.
+    const cartCount = mounted ? summary.units : 0
+    const subtotal = summary.subtotal
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -68,7 +124,7 @@ const Cart = () => {
 
                 {/* Scrollable product list */}
                 <div className="no-scrollbar flex-1 overflow-y-auto px-5 py-5">
-                    {cart.count === 0 ? (
+                    {products.length === 0 ? (
                         <div className="flex flex-col items-center rounded-lg border border-border/60 bg-background px-6 py-12 text-center shadow-sm sm:py-14">
                             <div className="flex size-16 items-center justify-center rounded-full bg-tint-honey text-[var(--brand-primary)]">
                                 <ShoppingCartIcon className="size-8" strokeWidth={1.5} />
@@ -90,48 +146,8 @@ const Cart = () => {
                         </div>
                     ) : (
                         <div className="space-y-3">
-                            {cart.products?.map(product => (
-                                <div
-                                    key={product.variantId}
-                                    className="group relative flex items-stretch gap-3 rounded-xs border border-border/40 bg-background p-3 transition-all duration-200 hover:border-border/70 hover:shadow-[0_4px_16px_rgba(0,0,0,0.07)]"
-                                >
-                                    {/* Thumbnail */}
-                                    <div className="relative w-[80px] flex-shrink-0 overflow-hidden rounded-xs border border-border/30">
-                                        <Image
-                                            src={product?.media || imgPlaceholder.src}
-                                            fill
-                                            sizes="80px"
-                                            alt={formatProductName(product.name)}
-                                            className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
-                                        />
-                                    </div>
-
-                                    {/* Details */}
-                                    <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-                                        <h4 className="line-clamp-2 font-neue text-[13px] font-semibold leading-snug text-foreground">
-                                            {formatProductName(product.name)}
-                                        </h4>
-                                        <span className="w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
-                                            {product.size}
-                                        </span>
-                                        <div className="flex items-center justify-between">
-                                            <span className="rounded-xs bg-brand/10 px-1.5 py-0.5 font-neue text-[10px] font-semibold text-brand">
-                                                ×{product.qty}
-                                            </span>
-                                            <span className="font-neue text-[14px] font-semibold text-foreground">
-                                                {fmt(product.sellingPrice)}
-                                            </span>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => dispatch(removeFromCart({ productId: product.productId, variantId: product.variantId }))}
-                                            className="ef-focus w-fit cursor-pointer rounded-sm text-[0.8125rem] text-ink-muted transition-colors hover:text-destructive"
-                                            aria-label={`Remove ${formatProductName(product.name)} from cart`}
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                </div>
+                            {products.map(product => (
+                                <DrawerLine key={product.variantId} product={product} />
                             ))}
                         </div>
                     )}
@@ -139,14 +155,20 @@ const Cart = () => {
 
                 {/* Footer */}
                 <div className="flex-shrink-0 border-t border-border/50 bg-background px-6 pb-6 pt-5">
-                    {cart.count > 0 ? (
+                    {products.length > 0 ? (
                         <>
                             {/* Price summary */}
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <span className="font-neue text-[15px] text-muted-foreground">Subtotal</span>
-                                    <span className="font-neue text-[15px] font-medium text-foreground">{fmt(subtotal)}</span>
+                                    <span className="font-neue text-[15px] font-medium text-foreground">{fmt(summary.mrpTotal)}</span>
                                 </div>
+                                {summary.savings > 0 && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-neue text-[15px] text-muted-foreground">You save</span>
+                                        <span className="font-neue text-[15px] font-medium text-brand-bright">−{fmt(summary.savings)}</span>
+                                    </div>
+                                )}
 
                                 <div className="my-1 border-t border-border/40" />
 
@@ -185,7 +207,7 @@ const Cart = () => {
                             className="text-[13px] tracking-wide sm:text-base sm:tracking-normal"
                             onClick={() => setOpen(false)}
                         >
-                            {cart.count ? (
+                            {products.length ? (
                                 <Link href={WEBSITE_CHECKOUT}>Checkout</Link>
                             ) : (
                                 <span onClick={(e) => { e.preventDefault(); showToast('error', 'Your cart is empty!') }}>

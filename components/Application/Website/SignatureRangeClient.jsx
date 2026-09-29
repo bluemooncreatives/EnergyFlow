@@ -445,11 +445,11 @@ const SignatureRangeClient = ({ tone = 'page', stats = null, availability = null
                 </h3>
                 <div className="grid gap-3 md:grid-cols-3">
                     {MORE_LINKS.map((link) => (
-                        <StoreLink key={link.href} href={link.href} data-reveal className="h-14 w-full justify-between">
+                        <StoreLink key={link.href} href={link.href} data-reveal className="h-14 min-h-14 w-full justify-between">
                             {link.label}
                         </StoreLink>
                     ))}
-                    <StoreLink href="/contact" data-reveal className="ef-cta--accent h-14 w-full justify-between">
+                    <StoreLink href="/contact" data-reveal className="ef-cta--accent h-14 min-h-14 w-full justify-between">
                         Plan a gift order
                     </StoreLink>
                 </div>

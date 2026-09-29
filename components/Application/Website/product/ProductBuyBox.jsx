@@ -53,11 +53,11 @@ export const Stepper = ({ value, onDec, onInc, decDisabled, incDisabled, decLabe
             onClick={onDec}
             disabled={decDisabled}
             aria-label={decLabel}
-            className="ef-focus flex h-full w-10 items-center justify-center rounded-[calc(var(--radius-control)-2px)] transition hover:bg-surface-card disabled:pointer-events-none disabled:opacity-35"
+            className="ef-focus flex h-full w-9 items-center justify-center rounded-[calc(var(--radius-control)-2px)] transition hover:bg-surface-card disabled:pointer-events-none disabled:opacity-35 sm:w-10"
         >
             <Minus className="size-4" aria-hidden="true" />
         </button>
-        <span className="w-9 select-none text-center text-[0.9375rem] font-semibold tabular-nums" aria-live="polite">
+        <span className="w-8 select-none text-center text-[0.9375rem] font-semibold tabular-nums sm:w-9" aria-live="polite">
             {value}
         </span>
         <button
@@ -65,7 +65,7 @@ export const Stepper = ({ value, onDec, onInc, decDisabled, incDisabled, decLabe
             onClick={onInc}
             disabled={incDisabled}
             aria-label="Increase quantity"
-            className="ef-focus flex h-full w-10 items-center justify-center rounded-[calc(var(--radius-control)-2px)] transition hover:bg-surface-card disabled:pointer-events-none disabled:opacity-35"
+            className="ef-focus flex h-full w-9 items-center justify-center rounded-[calc(var(--radius-control)-2px)] transition hover:bg-surface-card disabled:pointer-events-none disabled:opacity-35 sm:w-10"
         >
             <Plus className="size-4" aria-hidden="true" />
         </button>
@@ -144,13 +144,13 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
             {/* Category + share */}
             <div className="ef-pd-in flex items-center justify-between gap-3" style={{ '--i': 0 }}>
                 {product.category?.slug ? (
-                    <Link href={WEBSITE_CATEGORY(product.category.slug)} className="ef-eyebrow ef-focus transition-colors hover:text-brand-hover">
+                    <Link href={WEBSITE_CATEGORY(product.category.slug)} className="ef-eyebrow ef-focus min-w-0 whitespace-normal leading-tight transition-colors hover:text-brand-hover">
                         {product.category.name}
                     </Link>
                 ) : (
                     <span className="ef-eyebrow">Energyflow</span>
                 )}
-                <button type="button" onClick={handleShare} className="ef-icon-btn size-10" aria-label={`Share ${name}`}>
+                <button type="button" onClick={handleShare} className="ef-icon-btn size-10 shrink-0" aria-label={`Share ${name}`}>
                     <Share2 aria-hidden="true" className="!size-4" />
                 </button>
             </div>
@@ -236,7 +236,7 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
                     </>
                 ) : (
                     <>
-                        <div className="flex items-stretch gap-3">
+                        <div className="flex flex-wrap items-stretch gap-3">
                             {cart.inCart ? (
                                 <Stepper
                                     tone="cart"
@@ -257,7 +257,7 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
                             )}
 
                             {cart.inCart ? (
-                                <Link href={WEBSITE_CART} className="ef-btn ef-btn--primary ef-btn--lg flex-1 overflow-hidden">
+                                <Link href={WEBSITE_CART} className="ef-btn ef-btn--primary ef-btn--lg grow basis-[12rem] overflow-hidden">
                                     {justAdded ? (
                                         <span key="added" className="inline-flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                             <Check aria-hidden="true" strokeWidth={3} /> Added
@@ -269,7 +269,7 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
                                     )}
                                 </Link>
                             ) : (
-                                <button type="button" onClick={handleAdd} className="ef-btn ef-btn--primary ef-btn--lg flex-1">
+                                <button type="button" onClick={handleAdd} className="ef-btn ef-btn--primary ef-btn--lg grow basis-[12rem]">
                                     <ShoppingBag aria-hidden="true" /> Add to cart
                                 </button>
                             )}

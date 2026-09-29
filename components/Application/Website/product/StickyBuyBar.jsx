@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUp, ShoppingBag, Zap } from 'lucide-react'
 import cloudinaryLoader from '@/lib/cloudinaryLoader'
 import { formatINR } from '@/components/Application/Website/storefront/format'
 import { WEBSITE_CART } from '@/routes/WebsiteRoute'
+import { useClaimBottomSlot } from '@/hooks/useBottomSlot'
 import { Stepper } from './ProductBuyBox'
 
 /**
@@ -45,6 +46,9 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
             window.removeEventListener('resize', schedule)
         }
     }, [watchRef])
+
+    // While shown, the site-wide mobile cart bar steps aside (one bar at a time).
+    useClaimBottomSlot(visible)
 
     useEffect(() => {
         const root = document.documentElement

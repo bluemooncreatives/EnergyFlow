@@ -3,12 +3,13 @@
 import { memo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Check, ChevronLeft, ChevronRight, Eye, Plus, ShoppingBag, Star, Zap } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Eye, Plus, ShoppingBag, Star, Zap } from 'lucide-react'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
-import { WEBSITE_CART, WEBSITE_PRODUCT_DETAILS, WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
+import { WEBSITE_PRODUCT_DETAILS, WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 import { formatCategoryName, formatProductName } from '@/lib/seo'
 import { useCartProduct } from '@/hooks/useCartProduct'
 import { cn } from '@/lib/utils'
+import CartQtyStepper from './CartQtyStepper'
 import { discountPercent, formatINR } from './format'
 
 const DEFAULT_SIZES = '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1440px) 22vw, 300px'
@@ -58,6 +59,10 @@ export const Price = ({ price, mrp, className }) => {
  *   "full"  — Add to cart + Buy now pair (shop grid, related products)
  * gallery:  cycle through every product image with arrows + dots.
  * children: extra content pinned to the card foot (e.g. a countdown).
+ *
+ * Once the card's pack is in the cart, every layout swaps its add button for
+ * a − / + stepper bound to that cart line, so the quantity is adjusted where
+ * the shopper already is instead of on the cart page.
  */
 const ProductCard = ({
     product,
@@ -68,7 +73,7 @@ const ProductCard = ({
     className,
     children,
 }) => {
-    const { variant, inCart, canAdd, addToCart, buyNow } = useCartProduct(product)
+    const { variant, inCart, qty, atMax, increase, decrease, canAdd, addToCart, buyNow } = useCartProduct(product)
     const [imgIndex, setImgIndex] = useState(0)
 
     if (!product) return null
@@ -203,27 +208,32 @@ const ProductCard = ({
 
                     {actions === 'quick' && (
                         <div className="flex items-center gap-2">
+                            {/* In the cart, Buy now shrinks to its icon so the
+                                stepper gets the room. */}
                             <button
                                 type="button"
                                 onClick={buyNow}
                                 disabled={!canAdd}
                                 aria-label={buyLabel}
                                 title={canAdd ? 'Buy now' : 'Unavailable'}
-                                className="ef-focus flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-khaki px-4 text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
+                                className={cn(
+                                    'ef-focus flex h-10 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-khaki text-[0.8125rem] font-medium text-brand-deep shadow-elev-1 transition-[background-color,transform] hover:scale-[1.02] hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40',
+                                    inCart ? 'w-10 shrink-0' : 'flex-1 px-4'
+                                )}
                             >
                                 <Zap className="size-3.5 shrink-0" aria-hidden="true" />
-                                {canAdd ? 'Buy now' : 'Unavailable'}
+                                {!inCart && (canAdd ? 'Buy now' : 'Unavailable')}
                             </button>
 
                             {inCart ? (
-                                <Link
-                                    href={WEBSITE_CART}
-                                    aria-label={`${name} is in your cart. View cart`}
-                                    title="In cart — view cart"
-                                    className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-fern text-white shadow-elev-1 transition-transform hover:scale-105"
-                                >
-                                    <Check className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
-                                </Link>
+                                <CartQtyStepper
+                                    qty={qty}
+                                    atMax={atMax}
+                                    onIncrease={increase}
+                                    onDecrease={decrease}
+                                    name={name}
+                                    className="min-w-0 flex-1"
+                                />
                             ) : (
                                 <button
                                     type="button"
@@ -242,9 +252,15 @@ const ProductCard = ({
 
                 {actions === 'bar' && (
                     inCart ? (
-                        <Link href={WEBSITE_CART} className="ef-btn ef-btn--outline ef-btn--sm ef-btn--block mt-2">
-                            <Check aria-hidden="true" strokeWidth={2.5} /> In cart · View
-                        </Link>
+                        <CartQtyStepper
+                            qty={qty}
+                            atMax={atMax}
+                            onIncrease={increase}
+                            onDecrease={decrease}
+                            name={name}
+                            block
+                            className="mt-2"
+                        />
                     ) : (
                         <button
                             type="button"
@@ -261,9 +277,14 @@ const ProductCard = ({
                 {actions === 'full' && (
                     <div className="mt-2 grid grid-cols-1 gap-2 @[17rem]/card:grid-cols-2">
                         {inCart ? (
-                            <Link href={WEBSITE_CART} className="ef-btn ef-btn--outline ef-btn--sm ef-btn--block">
-                                <Check aria-hidden="true" strokeWidth={2.5} /> Go to cart
-                            </Link>
+                            <CartQtyStepper
+                                qty={qty}
+                                atMax={atMax}
+                                onIncrease={increase}
+                                onDecrease={decrease}
+                                name={name}
+                                block
+                            />
                         ) : (
                             <button
                                 type="button"
