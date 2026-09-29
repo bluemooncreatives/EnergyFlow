@@ -75,21 +75,25 @@ const SOURCING_FIGURE = {
 const PROMISES = [
     {
         Icon: Sprout,
+        label: 'The source',
         title: 'Sourced at origin',
         body: 'Direct from growers, mills and importers we have dealt with ourselves.',
     },
     {
         Icon: ShieldCheck,
+        label: 'The standard',
         title: 'Every lot checked',
         body: 'Graded for size, freshness and cleanliness before it earns shelf space.',
     },
     {
         Icon: PackageCheck,
+        label: 'The freshness',
         title: 'Sealed for the journey',
         body: 'Packed in small batches so the crunch and aroma survive the trip to you.',
     },
     {
         Icon: HandCoins,
+        label: 'The value',
         title: 'Priced without the chain',
         body: 'A short supply chain means the saving reaches your kitchen, not a middleman.',
     },
@@ -273,37 +277,38 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                 <div className={styles.promiseGrid}>
                     <div data-reveal className={styles.promiseLead}>
                         <span className="ef-eyebrow self-start">Why shoppers stay</span>
-                        <div className="flex items-end justify-between gap-4">
-                            <h2 className="ef-title ef-title--md">
-                                What you get<br />buying from us
+                        <div className={styles.promiseLeadContent}>
+                            <p className={styles.promiseKicker}>Good food, thoughtfully handled.</p>
+                            <h2 className={styles.promiseTitle}>
+                                Better from<br /><span>the beginning.</span>
                             </h2>
-                            <Link
-                                href={WEBSITE_SHOP}
-                                aria-label="Shop the Energyflow range"
-                                className="ef-focus flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand transition-transform hover:scale-105"
-                            >
-                                <ArrowRight className="size-5" aria-hidden="true" />
+                            <p className={styles.promiseIntro}>
+                                From the people we buy from to the pack on your doorstep, the details make the difference.
+                            </p>
+                            <Link href={WEBSITE_SHOP} className={styles.promiseLink}>
+                                Explore our range
+                                <span className={styles.promiseLinkIcon}>
+                                    <ArrowRight aria-hidden="true" />
+                                </span>
                             </Link>
                         </div>
                     </div>
 
-                    {/* The four concave corners meet in the middle and open a
-                        four-point star of the page colour between the tiles. */}
                     <div className={styles.promiseCells}>
-                        {PROMISES.map(({ Icon, title, body }, index) => (
+                        {PROMISES.map(({ Icon, label, title, body }, index) => (
                             <div
                                 key={title}
                                 data-reveal
-                                className={cn(
-                                    styles.promiseCell,
-                                    styles.cut,
-                                    [styles.cutBR, styles.cutBL, styles.cutTR, styles.cutTL][index]
-                                )}
+                                className={styles.promiseCell}
                             >
-                                <span className={styles.promiseIcon}>
-                                    <Icon aria-hidden="true" />
-                                </span>
-                                <div>
+                                <div className={styles.promiseCellTop}>
+                                    <span className={styles.promiseIcon}>
+                                        <Icon aria-hidden="true" />
+                                    </span>
+                                    <span className={styles.promiseNumber}>0{index + 1}</span>
+                                </div>
+                                <div className={styles.promiseCellCopy}>
+                                    <span className={styles.promiseCellLabel}>{label}</span>
                                     <h3>{title}</h3>
                                     <p>{body}</p>
                                 </div>
@@ -326,7 +331,14 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
 
                     <div className={styles.bento}>
                         <div data-reveal className="relative">
-                            <div className={cn(styles.bentoTab, styles.cut, styles.cutBR)}>
+                            <svg className={styles.rangeClipDef} aria-hidden="true" focusable="false">
+                                <defs>
+                                    <clipPath id="about-range-notch" clipPathUnits="objectBoundingBox">
+                                        <path d="M0 0 H1 V.84 C.9116 .84 .84 .9116 .84 1 H0 Z" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <div className={styles.bentoTab}>
                                 <span className="text-[0.75rem] font-semibold uppercase tracking-[0.08em] text-amber">
                                     Our range
                                 </span>

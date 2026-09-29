@@ -4,11 +4,8 @@
    token from design-system.css §22 so the page follows the light /
    dark theme like the rest of the site.
 
-   The signature of this page is the CONCAVE CORNER: tiles curve
-   *away* from each other so the cream canvas flows between them
-   (the 2x2 promise grid reads as a four-point star, the "Our range"
-   tab nests into the bento). It is a mask, not a clip-path, because
-   a clip-path on a scrolling image would also clip the hover zoom.
+   The range tab uses a concave corner to nest into the bento grid.
+   The promise cards use a clean grid with square inner corners.
    ================================================================ */
 
 /* ── Concave corner ───────────────────────────────────────────────
@@ -250,7 +247,7 @@
 }
 .token svg { width: 0.58em; height: 0.58em; }
 
-/* ── Promise grid: one wide card + a 2x2 that stars in the middle ── */
+/* ── Promise grid ───────────────────────────────────────────────── */
 .promiseGrid {
   display: grid;
   gap: var(--grid-gap);
@@ -262,58 +259,156 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 @media (min-width: 900px) {
-  .promiseGrid { grid-template-columns: 0.85fr 1.15fr; align-items: stretch; }
+  .promiseGrid { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: stretch; }
 }
 
 .promiseLead,
 .promiseCell {
   border-radius: var(--radius-tile);
 }
-/* Masked tiles can't carry ef-card's inset hairline (the mask would
-   cut it), so these are solid-fill tiles by design. */
 .promiseLead {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 2rem;
-  padding: clamp(1.25rem, 2.6vw, 2rem);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  min-height: 27rem;
+  padding: clamp(1.5rem, 3vw, 3rem);
   background: var(--surface-sunken);
+  background-image: radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--tint-pistachio) 75%, transparent), transparent 55%);
+  border: 1px solid var(--line-soft);
 }
+.promiseLeadContent {
+  max-width: 35rem;
+}
+.promiseKicker {
+  margin: 0 0 0.8rem;
+  font-size: var(--type-small);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  color: var(--brand-primary-bright);
+}
+.promiseTitle {
+  margin: 0;
+  color: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.45rem + 3vw, 4.25rem);
+  font-weight: var(--weight-display);
+  line-height: 0.98;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.promiseTitle span { color: var(--brand-primary-bright); }
+.promiseIntro {
+  max-width: 28rem;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  color: var(--ink-body);
+  font-size: var(--type-lead);
+  line-height: 1.6;
+}
+.promiseLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  color: var(--ink-strong);
+  font-size: var(--type-body);
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 0.25rem;
+}
+.promiseLink:hover { text-decoration: underline; }
+.promiseLink:focus-visible { outline: 2px solid var(--focus-color); outline-offset: 5px; border-radius: 2px; }
+.promiseLinkIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  color: var(--on-brand);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+.promiseLinkIcon svg { width: 1.1rem; height: 1.1rem; }
+.promiseLink:hover .promiseLinkIcon { transform: translateX(4px); }
 .promiseCell {
-  --n: clamp(1.1rem, 2.4vw, 1.9rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: clamp(1.5rem, 4vw, 2.75rem);
-  padding: clamp(1rem, 2.2vw, 1.5rem);
-  background: var(--brand-primary);
-  color: var(--on-brand);
-  min-height: clamp(9rem, 20vw, 12rem);
+  gap: 1.5rem;
+  min-width: 0;
+  min-height: 13rem;
+  padding: clamp(1.1rem, 2.1vw, 2rem);
+  background: var(--palette-sunflower);
+  color: var(--palette-pine);
+  transition: transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out);
+}
+.promiseCell:nth-child(1) { border-bottom-right-radius: 0; }
+.promiseCell:nth-child(2) { border-bottom-left-radius: 0; }
+.promiseCell:nth-child(3) { border-top-right-radius: 0; }
+.promiseCell:nth-child(4) { border-top-left-radius: 0; }
+.promiseCell:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--elev-2);
+}
+.promiseCellTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.promiseNumber {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+.promiseCellLabel {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.72;
 }
 .promiseCell h3 {
   margin: 0;
-  font-size: var(--type-body);
-  font-weight: 600;
-  line-height: 1.35;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 0.9rem + 0.9vw, 1.65rem);
+  font-weight: var(--weight-display);
+  line-height: 1.12;
+  text-transform: uppercase;
 }
 .promiseCell p {
-  margin: 0.35rem 0 0;
-  font-size: var(--type-small);
+  max-width: 32ch;
+  margin: 0.65rem 0 0;
+  font-size: 0.875rem;
   line-height: 1.5;
-  color: rgb(255 255 255 / 0.82);
+  color: var(--palette-pine);
+  opacity: 0.85;
 }
 .promiseIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-full);
-  background: rgb(255 255 255 / 0.16);
-  color: var(--on-brand);
+  background: rgb(11 61 46 / 0.1);
+  color: var(--palette-pine);
   flex-shrink: 0;
 }
-.promiseIcon svg { width: 1.05rem; height: 1.05rem; }
+.promiseIcon svg { width: 1.25rem; height: 1.25rem; }
+@media (max-width: 599px) {
+  .promiseLead { min-height: 25rem; }
+  .promiseCells { grid-template-columns: 1fr; }
+  .promiseCell { min-height: 12rem; border-radius: var(--radius-tile); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promiseCell, .promiseLinkIcon { transition: none; }
+  .promiseCell:hover, .promiseLink:hover .promiseLinkIcon { transform: none; }
+}
 
 /* ── Range bento ─────────────────────────────────────────────────── */
 .bento {
