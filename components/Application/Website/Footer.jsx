@@ -175,7 +175,7 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
                                 <Mail className='size-5 shrink-0 lg:order-2' />
                                 <Link href={`mailto:${CONTACT_EMAIL}`} className='transition-colors hover:text-[var(--brand-amber)]'>Email Us</Link>
                             </li>
-                            <li className='flex items-center gap-2 pt-2 lg:justify-end'>
+                            <li className='flex flex-wrap items-center gap-2 pt-2 lg:justify-end'>
                                 {socialLinks.map(({ label, href, Icon }) => (
                                     <Link
                                         key={label}
