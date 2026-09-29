@@ -148,19 +148,6 @@ const CONTACT = {
 
 /* ── Micro-components ─────────────────────────────────────────────── */
 
-// A round element always sits in a concave corner on this page — that is the
-// rule the notch exists for. Never place one against a square corner.
-const CornerBadge = ({ children, className }) => (
-    <span
-        className={cn(
-            'absolute z-10 flex items-center justify-center rounded-full bg-brand text-on-brand shadow-elev-2',
-            className
-        )}
-    >
-        {children}
-    </span>
-)
-
 const Stat = ({ value, label }) => (
     <div data-reveal className="flex flex-col gap-1">
         <span className="font-header text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-none text-ink-strong">
@@ -295,7 +282,14 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                     </div>
 
                     <div className={styles.promiseCells}>
-                        {PROMISES.map(({ Icon, label, title, body }, index) => (
+                        <svg className={styles.cornerClipDef} aria-hidden="true" focusable="false">
+                            <defs>
+                                <clipPath id="about-promise-notch" clipPathUnits="objectBoundingBox">
+                                    <path d="M0 0 H.672 C.7206 0 .76 .0394 .76 .088 C.76 .172 .828 .24 .912 .24 C.9606 .24 1 .2794 1 .328 V1 H0 Z" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        {PROMISES.map(({ Icon, label, title, body }) => (
                             <div
                                 key={title}
                                 data-reveal
@@ -305,8 +299,10 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                                     <span className={styles.promiseIcon}>
                                         <Icon aria-hidden="true" />
                                     </span>
-                                    <span className={styles.promiseNumber}>0{index + 1}</span>
                                 </div>
+                                <span className={styles.promiseCornerBadge} aria-hidden="true">
+                                    <ArrowUpRight />
+                                </span>
                                 <div className={styles.promiseCellCopy}>
                                     <span className={styles.promiseCellLabel}>{label}</span>
                                     <h3>{title}</h3>
@@ -331,10 +327,10 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
 
                     <div className={styles.bento}>
                         <div data-reveal className="relative">
-                            <svg className={styles.rangeClipDef} aria-hidden="true" focusable="false">
+                            <svg className={styles.cornerClipDef} aria-hidden="true" focusable="false">
                                 <defs>
                                     <clipPath id="about-range-notch" clipPathUnits="objectBoundingBox">
-                                        <path d="M0 0 H1 V.84 C.9116 .84 .84 .9116 .84 1 H0 Z" />
+                                        <path d="M0 0 H1 V.67 Q1 .73 .94 .73 C.86 .73 .83 .83 .83 .94 Q.83 1 .78 1 H0 Z" />
                                     </clipPath>
                                 </defs>
                             </svg>
@@ -346,9 +342,9 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                                     {stats.categoryCount} categories, one standard
                                 </p>
                             </div>
-                            <CornerBadge className="-bottom-1 -right-1 size-11 bg-amber text-ink-strong">
+                            <Link href={WEBSITE_SHOP} aria-label="Shop our range" className={styles.rangeBadge}>
                                 <ArrowUpRight className="size-5" aria-hidden="true" />
-                            </CornerBadge>
+                            </Link>
                         </div>
 
                         {bentoCategories.map((category) => (

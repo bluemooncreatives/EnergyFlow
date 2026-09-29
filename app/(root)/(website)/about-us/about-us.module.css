@@ -254,6 +254,7 @@
   grid-template-columns: 1fr;
 }
 .promiseCells {
+  position: relative;
   display: grid;
   gap: var(--grid-gap);
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -332,6 +333,8 @@
 .promiseLinkIcon svg { width: 1.1rem; height: 1.1rem; }
 .promiseLink:hover .promiseLinkIcon { transform: translateX(4px); }
 .promiseCell {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -339,17 +342,34 @@
   min-width: 0;
   min-height: 13rem;
   padding: clamp(1.1rem, 2.1vw, 2rem);
-  background: var(--palette-sunflower);
   color: var(--palette-pine);
-  transition: transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out);
+  transition: transform var(--duration-normal) var(--ease-out);
 }
-.promiseCell:nth-child(1) { border-bottom-right-radius: 0; }
-.promiseCell:nth-child(2) { border-bottom-left-radius: 0; }
-.promiseCell:nth-child(3) { border-top-right-radius: 0; }
-.promiseCell:nth-child(4) { border-top-left-radius: 0; }
+.promiseCell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--palette-sunflower);
+  clip-path: url(#about-promise-notch);
+}
+@supports (clip-path: shape(from 0 0, arc to 10px 10px of 10px cw, close)) {
+  .promiseCell::before {
+    clip-path: shape(
+      from 0 0,
+      line to calc(100% - 5.125rem) 0,
+      arc to calc(100% - 3.75rem) 1.375rem of 1.375rem cw,
+      arc to calc(100% - 1.375rem) 3.75rem of 2.375rem ccw,
+      arc to 100% 5.125rem of 1.375rem cw,
+      line to 100% 100%,
+      line to 0 100%,
+      close
+    );
+  }
+}
 .promiseCell:hover {
   transform: translateY(-3px);
-  box-shadow: var(--elev-2);
 }
 .promiseCellTop {
   display: flex;
@@ -357,12 +377,20 @@
   justify-content: space-between;
   gap: 1rem;
 }
-.promiseNumber {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  opacity: 0.65;
+.promiseCornerBadge {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--ink-strong);
+  color: var(--surface-page);
 }
+.promiseCornerBadge svg { width: 1.25rem; height: 1.25rem; }
 .promiseCellLabel {
   display: block;
   margin-bottom: 0.4rem;
@@ -424,6 +452,13 @@
 }
 
 /* The label tile that nests into the grid's top-left corner. */
+.cornerClipDef {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .bentoTab {
   /* Fills the grid row so its carved corner — and the round button that
      sits in it — line up with the tiles beside it rather than floating
@@ -435,12 +470,53 @@
   gap: 1.5rem;
   padding: clamp(1rem, 2.2vw, 1.5rem);
   border-radius: var(--radius-tile);
+  clip-path: url(#about-range-notch);
   background: var(--surface-inverse);
   color: var(--ink-on-inverse);
   grid-column: span 2;
 }
+
+/* The SVG above is a fallback. Two 1.375rem outer arcs meet a 2.375rem
+   concave arc at their tangents, keeping the notch smooth at every width. */
+@supports (clip-path: shape(from 0 0, arc to 10px 10px of 10px cw, close)) {
+  .bentoTab {
+    clip-path: shape(
+      from 0 0,
+      line to 100% 0,
+      line to 100% calc(100% - 5.125rem),
+      arc to calc(100% - 1.375rem) calc(100% - 3.75rem) of 1.375rem cw,
+      arc to calc(100% - 3.75rem) calc(100% - 1.375rem) of 2.375rem ccw,
+      arc to calc(100% - 5.125rem) 100% of 1.375rem cw,
+      line to 0 100%,
+      close
+    );
+  }
+}
+
 @media (min-width: 768px) {
   .bentoTab { grid-column: span 1; }
+}
+
+.rangeBadge {
+  position: absolute;
+  right: 0.2rem;
+  bottom: 0.2rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--brand-amber);
+  color: var(--palette-pine);
+  box-shadow: var(--elev-2);
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+.rangeBadge:hover { transform: translate(2px, -2px); }
+.rangeBadge:focus-visible { outline: 2px solid var(--focus-color); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .rangeBadge { transition: none; }
+  .rangeBadge:hover { transform: none; }
 }
 
 .bentoTile {
