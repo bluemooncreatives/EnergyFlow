@@ -101,18 +101,22 @@ const PROMISES = [
 
 const SOURCING_STEPS = [
     {
+        phase: 'Origin',
         title: 'We buy where it grows',
         body: 'Almonds, cashews, raisins, seeds and millets come from the growers, mills and importers behind them, so quality is settled at origin instead of inspected at the end.',
     },
     {
+        phase: 'The standard',
         title: 'Every lot is checked',
         body: 'Each batch is opened and graded for size, colour, moisture and cleanliness. What does not meet the mark does not get packed, however good the price was.',
     },
     {
+        phase: 'The pack',
         title: 'Packed in small batches',
         body: 'We pack in small runs and seal each pouch, because dry fruits and roasted snacks lose their crunch to air and humidity long before they lose their date.',
     },
     {
+        phase: 'The journey',
         title: 'Delivered across India',
         body: 'Orders are packed within 1–2 working days and reach metros in 2–4 working days and the rest of India in 4–7, with free shipping.',
     },
@@ -380,24 +384,22 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
 
             {/* ── 5 · How we source ──────────────────────────────────── */}
             <Section tone="page">
-                <SectionHeader
-                    eyebrow="How we work"
-                    title="From the grower"
-                    accent="to your kitchen"
-                    description="Four steps, and none of them are a shortcut. This is the part of the business customers never see, and the part that decides what the pack tastes like."
-                />
-                <div className={styles.sourcingGrid}>
-                    <div data-reveal className={styles.sourcingFigure}>
-                        <Image
-                            src={SOURCING_FIGURE.src}
-                            alt={SOURCING_FIGURE.alt}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 20rem"
-                            className="object-cover"
-                        />
+                <div className={styles.sourcingHeader} data-reveal>
+                    <div className={styles.sourcingHeaderMeta}>
+                        <span className="ef-eyebrow">How we work</span>
+                        <span className={styles.sourcingHeaderIndex}>The journey / four stages</span>
                     </div>
-                    <SourcingSteps steps={SOURCING_STEPS} />
+                    <div className={styles.sourcingHeaderMain}>
+                        <h2 className={styles.sourcingHeadline}>
+                            From the grower<br />
+                            <span>to your kitchen.</span>
+                        </h2>
+                        <p className={styles.sourcingLead}>
+                            Four steps, and none of them are a shortcut. This is the part of the business customers never see, and the part that decides what the pack tastes like.
+                        </p>
+                    </div>
                 </div>
+                <SourcingSteps steps={SOURCING_STEPS} figure={SOURCING_FIGURE} />
             </Section>
 
             {/* ── 6 · Leadership ─────────────────────────────────────── */}
