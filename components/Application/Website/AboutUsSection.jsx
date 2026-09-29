@@ -38,54 +38,54 @@ const CONTENT = {
     },
 }
 
-// SplitText masks clip at the line box, which trims descenders (g, y, p) on
-// tight display leading. Give every mask a little room below the baseline.
 const MASK_ROOM = '[&_.ef-w-mask]:pb-[0.14em] [&_.ef-w-mask]:-mb-[0.14em]'
 
-// Photo frame used across the section. Three layers so each motion owns its
-// own transform: the frame is clipped open, the middle layer drifts on scroll
-// (parallax), and the inner layer settles from a zoom. The <img> itself only
-// takes the hover zoom.
-const Frame = ({ image, sizes, reveal = 'up', parallax = 0, className, imgClassName }) => (
-    <div data-img-reveal={reveal} className={cn('group relative overflow-hidden rounded-well bg-surface-well', className)}>
-        <div
-            data-parallax={parallax || undefined}
-            className={cn('absolute inset-x-0', parallax ? '-top-[10%] h-[120%]' : 'inset-y-0')}
-        >
-            <div data-img-media className="absolute inset-0">
-                <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    sizes={sizes}
-                    className={cn(
-                        'object-cover transition-transform duration-[1200ms] ease-[var(--ease-spring)] group-hover:scale-[1.045] motion-reduce:transition-none',
-                        imgClassName
-                    )}
-                />
-            </div>
-        </div>
-    </div>
+// ── Four-pointed star / diamond ornament ─────────────────────────
+// Rendered at every seam junction point between scallops.
+const DiamondStar = ({ size = 40 }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 40 40"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+    >
+        {/* Outer four-pointed star */}
+        <path
+            d="M20 1 L22.5 17.5 L39 20 L22.5 22.5 L20 39 L17.5 22.5 L1 20 L17.5 17.5 Z"
+            fill="var(--brand-cream, #F7F3E8)"
+            stroke="var(--brand-primary, #0B3D2E)"
+            strokeWidth="0.8"
+        />
+        {/* Inner accent circle */}
+        <circle cx="20" cy="20" r="3" fill="var(--brand-primary-bright, #2F6B3F)" />
+    </svg>
 )
 
 const AboutUsSection = ({ tone = 'sunken' }) => {
-    const sectionRef = useRef(null)
+    const sectionRef   = useRef(null)
+    const stripRef     = useRef(null)
+    const leftRef      = useRef(null)
+    const rightRef     = useRef(null)
+    const leftWrapRef  = useRef(null)
+    const rightWrapRef = useRef(null)
 
     useGSAP(() => {
         const root = sectionRef.current
         if (!root) return
-        const q = gsap.utils.selector(root)
+        const q  = gsap.utils.selector(root)
         const mm = gsap.matchMedia()
 
         mm.add(
             {
-                motion: '(prefers-reduced-motion: no-preference)',
+                motion:  '(prefers-reduced-motion: no-preference)',
                 desktop: '(min-width: 1024px)',
             },
             ({ conditions }) => {
                 if (!conditions.motion) return
 
-                // ── Display type: words rise out of a mask, slightly tilted ──
+                // ── Display type: words rise out of a mask ──
                 q('[data-rise]').forEach((el) => {
                     const split = SplitText.create(el, {
                         type: 'words',
@@ -110,41 +110,62 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
                     })
                 })
 
-                // ── Photos: clip open, then settle from a zoom ──
-                q('[data-img-reveal]').forEach((frame, i) => {
-                    const media = frame.querySelector('[data-img-media]')
-                    const r = getComputedStyle(frame).borderTopLeftRadius || '0px'
-                    const closed = frame.dataset.imgReveal === 'left'
-                        ? `inset(0% 100% 0% 0% round ${r})`
-                        : `inset(100% 0% 0% 0% round ${r})`
+                // ── Collage strip: fade + lift on entry ──
+                const strip = stripRef.current
+                if (strip) {
+                    gsap.from(strip, {
+                        y: 48,
+                        autoAlpha: 0,
+                        duration: 1.2,
+                        ease: 'expo.out',
+                        scrollTrigger: { trigger: strip, start: 'top 88%', once: true },
+                    })
+                }
 
+                // ── Left panel: slide in from left + inner photo settle ──
+                const left = leftRef.current
+                if (left && leftWrapRef.current) {
                     gsap.timeline({
-                        scrollTrigger: { trigger: frame, start: 'top 88%', once: true },
-                        delay: (i % 3) * 0.08,
+                        scrollTrigger: { trigger: strip, start: 'top 88%', once: true },
                     })
-                        .fromTo(frame,
-                            { clipPath: closed },
-                            { clipPath: `inset(0% 0% 0% 0% round ${r})`, duration: 1.4, ease: 'expo.inOut', clearProps: 'clipPath' })
-                        .fromTo(media,
-                            { scale: 1.32 },
-                            { scale: 1, duration: 1.9, ease: 'expo.out', clearProps: 'transform' },
-                            0.15)
-                })
+                        .from(left, { x: '-15%', autoAlpha: 0, duration: 1.2, ease: 'expo.out', clearProps: 'transform,opacity' })
+                        .from(leftWrapRef.current, { scale: 1.22, duration: 1.8, ease: 'expo.out', clearProps: 'transform' }, 0)
+                }
 
-                // Parallax drift inside the frame (the layer is 120% tall, so
-                // ±8% of it never exposes an edge).
-                q('[data-parallax]').forEach((layer) => {
-                    const amount = parseFloat(layer.dataset.parallax)
-                    gsap.fromTo(layer, { yPercent: -amount }, {
-                        yPercent: amount,
-                        ease: 'none',
-                        scrollTrigger: { trigger: layer.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
+                // ── Right panel: slide in from right + inner photo settle ──
+                // NOTE: We do NOT animate clipPath here — the SVG seam clip
+                // is set as an inline style and must NOT be cleared by GSAP.
+                const right = rightRef.current
+                if (right && rightWrapRef.current) {
+                    gsap.timeline({
+                        scrollTrigger: { trigger: strip, start: 'top 88%', once: true },
+                        delay: 0.1,
                     })
-                })
+                        .from(right, { x: '15%', autoAlpha: 0, duration: 1.2, ease: 'expo.out', clearProps: 'transform,opacity' })
+                        .from(rightWrapRef.current, { scale: 1.22, duration: 1.8, ease: 'expo.out', clearProps: 'transform' }, 0)
+                }
 
-                // Whole elements floating at their own scroll speed, desktop only
-                // so the stacked phone layout stays still.
+                // ── Parallax drift on scroll (desktop only) ──
                 if (conditions.desktop) {
+                    const pairs = [
+                        [leftRef.current,  leftWrapRef.current,  -6],
+                        [rightRef.current, rightWrapRef.current,  6],
+                    ]
+                    pairs.forEach(([trigger, layer, amount]) => {
+                        if (!layer) return
+                        gsap.fromTo(layer, { yPercent: -Math.abs(amount) }, {
+                            yPercent: Math.abs(amount),
+                            ease: 'none',
+                            scrollTrigger: {
+                                trigger,
+                                start: 'top bottom',
+                                end: 'bottom top',
+                                scrub: true,
+                            },
+                        })
+                    })
+
+                    // Floating seed thumbnail drifts at its own speed
                     q('[data-float]').forEach((el) => {
                         const amount = parseFloat(el.dataset.float)
                         gsap.fromTo(el, { y: amount }, {
@@ -155,7 +176,7 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
                     })
                 }
 
-                // ── Small copy: soft fade up, batched as it enters ──
+                // ── Small copy: soft fade up ──
                 const fades = q('[data-fade]')
                 gsap.set(fades, { autoAlpha: 0, y: 22 })
                 ScrollTrigger.batch(fades, {
@@ -171,7 +192,7 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
                     }),
                 })
 
-                // ── Mission: words ink in as you scroll, the rule draws between ──
+                // ── Mission: words ink in on scroll ──
                 const mission = q('[data-mission]')[0]
                 if (mission) {
                     const [leadEl, tailEl] = mission.querySelectorAll('[data-mission-words]')
@@ -184,15 +205,12 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
                         scrollTrigger: { trigger: mission, start: 'top 85%', end: 'bottom 50%', scrub: 0.8 },
                     })
                         .fromTo(lead, { opacity: 0.16 }, { opacity: 1, stagger: 0.1, ease: 'none' })
-                        .fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'none' })
-                        .fromTo(tail, { opacity: 0.16 }, { opacity: 1, stagger: 0.1, ease: 'none' })
+                        .fromTo(rule,  { scaleX: 0 },    { scaleX: 1, duration: 0.5, ease: 'none' })
+                        .fromTo(tail,  { opacity: 0.16 }, { opacity: 1, stagger: 0.1, ease: 'none' })
                 }
             }
         )
 
-        // This section is lazy-loaded below several lazily hydrated sections,
-        // so trigger positions measured now can go stale once that content
-        // settles. Re-measure after it has.
         const lateRefresh = () => ScrollTrigger.refresh()
         const timer = setTimeout(lateRefresh, 300)
         window.addEventListener('load', lateRefresh)
@@ -207,78 +225,284 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
     const { images } = CONTENT
 
     return (
-        <Section ref={sectionRef} tone={tone} aria-labelledby="about-title" className={cn('overflow-hidden', MASK_ROOM)}>
+        <Section
+            ref={sectionRef}
+            tone={tone}
+            aria-labelledby="about-title"
+            className={cn('overflow-hidden', MASK_ROOM)}
+        >
 
-            {/* ── Display heading: an indented olive kicker over a line that
-                   splits across the grid, its second half starting where the
-                   photo columns begin. ── */}
-            <h2
-                id="about-title"
+            {/* ── HEADER: kicker + display title (left), intro text + CTA (right) ── */}
+            <div
                 data-rise-group
-                className="m-0 text-[clamp(2.25rem,0.9rem+4vw,4.5rem)] font-medium leading-[1.02] text-ink-strong"
+                className="mb-[clamp(2rem,4vw,3.5rem)] grid grid-cols-1 items-end gap-[clamp(1.5rem,3vw,2.5rem)] md:grid-cols-[1fr_auto]"
             >
-                <span data-rise className="block text-[var(--brand-primary-bright)] lg:pl-[calc(100%/12)]">
-                    {CONTENT.kicker}
-                </span>
-                <span className="block lg:grid lg:grid-cols-12 lg:gap-x-6">
-                    <span data-rise data-delay="0.12" className="lg:col-span-6 lg:whitespace-nowrap">
-                        {CONTENT.titleLead}
-                    </span>{' '}
-                    <span data-rise data-delay="0.24" className="lg:col-span-6 lg:col-start-7">
-                        {CONTENT.titleTail}
+                <div>
+                    <span
+                        data-rise
+                        className="mb-3 block font-body text-[0.75rem] font-medium uppercase tracking-[0.2em] text-[var(--brand-primary-bright)]"
+                    >
+                        {CONTENT.kicker}
                     </span>
-                </span>
-            </h2>
+                    <h2
+                        id="about-title"
+                        className="m-0 text-[clamp(2.25rem,1rem+4vw,4.5rem)] font-medium leading-[1.02] text-ink-strong"
+                    >
+                        <span data-rise data-delay="0.1" className="block">{CONTENT.titleLead}</span>
+                        <span data-rise data-delay="0.22" className="block text-[var(--brand-primary-bright)]">{CONTENT.titleTail}</span>
+                    </h2>
+                </div>
 
-            {/* ── Editorial grid ──
-                 Phone: intro, feature photo, a two-up of photos, mission.
-                 Desktop (12 cols): intro / thumbnail / mission stacked on the
-                 left, a square photo with its caption in the middle, and the
-                 large feature photo holding the full height on the right. */}
-            <div className="mt-[clamp(2.5rem,5vw,4.5rem)] grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto] lg:gap-x-6 lg:gap-y-8">
-
-                <div className="col-span-2 flex flex-col items-start gap-4 lg:col-span-4 lg:col-start-1 lg:row-start-1">
-                    <span data-fade className="text-[0.75rem] text-ink-muted">({CONTENT.label})</span>
-                    <p data-fade className="m-0 max-w-[34ch] text-[0.9375rem] leading-[1.65] text-ink-body">
-                        <strong className="font-semibold text-ink-strong">{CONTENT.brandName}</strong>{' '}{CONTENT.intro}
+                <div className="flex max-w-[32ch] flex-col gap-4 md:max-w-[28ch]">
+                    <p data-fade className="m-0 text-[0.9375rem] leading-[1.65] text-ink-body">
+                        <strong className="font-semibold text-ink-strong">{CONTENT.brandName}</strong>
+                        {' '}{CONTENT.intro}
                     </p>
                     <div data-fade>
                         <StoreLink href="/about-us">Read our story</StoreLink>
                     </div>
                 </div>
+            </div>
 
-                <Frame
-                    image={images.feature}
-                    parallax={8}
-                    sizes="(max-width: 1024px) 92vw, 40vw"
-                    imgClassName="object-top"
-                    className="col-span-2 aspect-square lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:self-start"
-                />
+            {/*
+              ═══════════════════════════════════════════════════════════════
+              CONNECTED COLLAGE STRIP — zero-gap seamless scalloped seam
 
-                <figure className="m-0 flex flex-col gap-4 lg:col-span-3 lg:col-start-5 lg:row-span-2 lg:row-start-1 lg:self-start">
-                    <Frame
-                        image={images.store}
-                        parallax={6}
-                        sizes="(max-width: 1024px) 46vw, 22vw"
-                        className="aspect-square"
-                    />
-                    <figcaption data-fade className="max-w-[30ch] text-[0.8125rem] leading-[1.55] text-ink-body">
-                        {CONTENT.caption}
-                    </figcaption>
-                </figure>
+              HOW THE GAP-FREE SEAM WORKS:
+              ──────────────────────────────
+              Instead of clipping both panels with mirrored paths (which
+              requires matching objectBoundingBox coordinates across different
+              panel widths and creates gaps at the concave parts), we:
 
-                <div data-float="28" className="lg:col-start-1 lg:row-start-2 lg:self-end">
-                    <Frame
-                        image={images.seeds}
-                        reveal="left"
-                        sizes="(max-width: 1024px) 46vw, 128px"
-                        className="aspect-square w-full lg:w-[clamp(5.5rem,9vw,8rem)]"
-                    />
+              1. LEFT panel  → plain rectangle, position absolute, 0–55 % wide.
+              2. RIGHT panel → position absolute, starts at 40 %, extends to
+                 100 %. It physically OVERLAPS the left panel by 15 %.
+              3. The RIGHT panel has a clip-path with 4 scalloped bites on its
+                 left edge. Because the left panel extends past every concave
+                 point of the right panel's clip, the left image ALWAYS shows
+                 through the bites — zero gap, zero background exposed.
+              4. z-index: right panel is on top (z-index: 1) so its clip edge
+                 is the ONLY visible seam.
+
+              CLIP-PATH COORDINATE MATH (objectBoundingBox, right panel):
+              ──────────────────────────────────────────────────────────────
+              Right panel width  = 60 % of strip  (starts at 40 %, ends 100 %)
+              Seam center        = strip 52 %
+                                 = local (52-40)/60 = 0.2000
+              Scallop depth      = strip 38 %  (14 % into left panel space)
+                                 = local (38-40)/60 = -0.0333
+
+              4 scallops → junctions at local Y = 0, 0.25, 0.50, 0.75, 1.0
+              Each scallop goes from junction (X=0.20) → depth (X=-0.033)
+              → back to junction (X=0.20).
+
+              Left panel covers 0–55 % of strip, so at scallop depth (38 %)
+              the left panel (which goes to 55 %) ALWAYS covers it. ✓ No gap.
+              ═══════════════════════════════════════════════════════════════
+            */}
+            <div
+                ref={stripRef}
+                className="relative overflow-hidden"
+                style={{
+                    marginInline: 'calc(var(--website-gutter) * -1)',
+                    height: 'clamp(20rem, 36vw, 42rem)',
+                }}
+            >
+                {/*
+                  Hidden SVG that defines the single seam clip-path.
+                  Only the RIGHT panel uses this clip. The id is specific
+                  enough to avoid conflicts if this component appears twice.
+                  We use `overflow: visible` on the svg so browsers don't
+                  silently drop the defs (some blink versions had this quirk).
+                */}
+                <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    style={{
+                        position: 'absolute',
+                        width: 0,
+                        height: 0,
+                        overflow: 'visible',
+                        pointerEvents: 'none',
+                    }}
+                >
+                    <defs>
+                        {/*
+                          4-scallop seam on the right panel's LEFT edge.
+                          Each scallop covers 25 % of the strip height.
+                          Junction X = 0.20 (strip 52 %)
+                          Bite X    = -0.033 (strip 38 %)
+
+                          Control points are chosen so the curve looks like
+                          smooth circular arcs (not pointed zigzags):
+                            C junction,0.045  bite,0.08  bite,0.125
+                            C bite,0.17       junction,0.21 junction,0.25
+                          … repeated four times.
+                        */}
+                        <clipPath id="ef-about-seam-clip" clipPathUnits="objectBoundingBox">
+                            <path d="
+                                M 1,0
+                                L 0.20,0
+                                C 0.20,0.045  -0.033,0.08  -0.033,0.125
+                                C -0.033,0.17  0.20,0.21   0.20,0.25
+                                C 0.20,0.295  -0.033,0.33  -0.033,0.375
+                                C -0.033,0.42  0.20,0.46   0.20,0.50
+                                C 0.20,0.545  -0.033,0.58  -0.033,0.625
+                                C -0.033,0.67  0.20,0.71   0.20,0.75
+                                C 0.20,0.795  -0.033,0.83  -0.033,0.875
+                                C -0.033,0.92  0.20,0.96   0.20,1.0
+                                L 1,1
+                                Z
+                            " />
+                        </clipPath>
+                    </defs>
+                </svg>
+
+                {/* ══ LEFT PANEL ══════════════════════════════════════════
+                    Plain rectangle — 0 to 55 % of strip.
+                    Extends 15 % past the seam center (strip 52 %) so the
+                    left image fills every scallop bite of the right panel.
+                    No clip-path needed: simple overflow:hidden rectangle.
+                   ══════════════════════════════════════════════════════ */}
+                <div
+                    ref={leftRef}
+                    className="group absolute inset-y-0 left-0 overflow-hidden bg-surface-well"
+                    style={{ width: '55%' }}
+                >
+                    {/* Parallax wrapper — 24 % taller so drift never exposes an edge */}
+                    <div
+                        ref={leftWrapRef}
+                        className="absolute inset-x-0"
+                        style={{ top: '-12%', bottom: '-12%' }}
+                    >
+                        <Image
+                            src={images.store.src}
+                            alt={images.store.alt}
+                            fill
+                            sizes="(max-width: 639px) 100vw, 56vw"
+                            className="object-cover object-center transition-transform duration-[1200ms] ease-[var(--ease-spring)] group-hover:scale-[1.045] motion-reduce:transition-none"
+                            priority
+                        />
+                    </div>
+
+                    {/* Brand label anchored to the bottom-left */}
+                    <div className="absolute bottom-[clamp(1rem,2vw,1.75rem)] left-[clamp(1.25rem,3vw,2.5rem)] z-[4]">
+                        <span
+                            className="inline-flex items-center gap-[0.375rem] rounded-full px-[0.75rem] py-[0.3125rem] text-[0.75rem] font-medium uppercase tracking-[0.06em] text-[var(--on-brand)] backdrop-blur-[8px]"
+                            style={{ background: 'color-mix(in srgb, var(--brand-primary) 88%, transparent)' }}
+                        >
+                            <span className="h-[6px] w-[6px] rounded-full bg-[var(--brand-amber)]" aria-hidden="true" />
+                            {CONTENT.label}
+                        </span>
+                    </div>
                 </div>
 
+                {/* ══ RIGHT PANEL ═════════════════════════════════════════
+                    Starts at 40 % — physically overlaps the left panel by
+                    15 %. The SVG clip-path creates 4 scalloped bites on the
+                    left edge; the left panel content shows through every bite.
+                    z-index:1 puts this panel on top so its clip edge is the
+                    only visible seam between the two photos.
+                   ══════════════════════════════════════════════════════ */}
+                <div
+                    ref={rightRef}
+                    className="group absolute inset-y-0 right-0 overflow-hidden bg-surface-well"
+                    style={{
+                        left: '40%',
+                        clipPath: 'url(#ef-about-seam-clip)',
+                        zIndex: 1,
+                    }}
+                >
+                    {/* Parallax wrapper */}
+                    <div
+                        ref={rightWrapRef}
+                        className="absolute inset-x-0"
+                        style={{ top: '-12%', bottom: '-12%' }}
+                    >
+                        <Image
+                            src={images.feature.src}
+                            alt={images.feature.alt}
+                            fill
+                            sizes="(max-width: 639px) 100vw, 62vw"
+                            className="object-cover object-center transition-transform duration-[1200ms] ease-[var(--ease-spring)] group-hover:scale-[1.045] motion-reduce:transition-none"
+                            priority
+                        />
+                    </div>
+
+                    {/* Glassmorphism caption pill */}
+                    <div className="absolute bottom-[clamp(1rem,2.5vw,2rem)] right-[clamp(1rem,3vw,2.5rem)] z-[4]">
+                        <span
+                            className="inline-flex items-center gap-[0.5rem] rounded-full border border-white/40 px-[1rem] py-[0.5rem] text-[0.8125rem] font-medium text-ink-strong backdrop-blur-[10px]"
+                            style={{ background: 'color-mix(in srgb, var(--surface-card) 88%, transparent)' }}
+                        >
+                            <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[var(--brand-primary-bright)]" aria-hidden="true" />
+                            Premium. Honest. Fresh.
+                        </span>
+                    </div>
+                </div>
+
+                {/*
+                  ── SEAM JUNCTION STARS ───────────────────────────────
+                  Four-pointed diamond stars sit at each scallop junction
+                  (where one scallop ends and the next begins). With 4
+                  scallops the junctions are at Y = 0%, 25%, 50%, 75%, 100%.
+                  We render 3 visible ones (25%, 50%, 75%) — the edge ones
+                  are hidden by the strip's overflow:hidden.
+
+                  Star X = seam junction X = 52% of strip width.
+                */}
+                {[25, 50, 75].map((yPct) => (
+                    <div
+                        key={yPct}
+                        className="pointer-events-none absolute z-[10]"
+                        style={{
+                            left: '52%',
+                            top: `${yPct}%`,
+                            transform: 'translate(-50%, -50%)',
+                            animation: `starPulse ${3.5 + yPct * 0.01}s ease-in-out infinite`,
+                            animationDelay: `${yPct * 0.08}s`,
+                        }}
+                        aria-hidden="true"
+                    >
+                        <DiamondStar
+                            size={yPct === 50 ? 44 : 34}
+                        />
+                    </div>
+                ))}
+
+                {/* ── FLOATING SEED THUMBNAIL ── */}
+                <div
+                    data-float="20"
+                    className="absolute z-[12] hidden sm:block"
+                    style={{
+                        bottom: 'clamp(-1.5rem, -2.5vw, -2.5rem)',
+                        left: 'clamp(1.5rem, 5vw, 5rem)',
+                    }}
+                >
+                    <div
+                        className="relative overflow-hidden rounded-[14px] border-[3px] border-[var(--surface-card)] bg-surface-well transition-transform duration-[600ms] ease-[var(--ease-spring)] hover:-translate-y-1"
+                        style={{
+                            width: 'clamp(4.5rem, 7vw, 6.5rem)',
+                            height: 'clamp(4.5rem, 7vw, 6.5rem)',
+                            boxShadow: '0 8px 24px rgb(11 61 46 / 0.18)',
+                        }}
+                    >
+                        <Image
+                            src={images.seeds.src}
+                            alt={images.seeds.alt}
+                            fill
+                            sizes="(max-width: 639px) 0vw, 7vw"
+                            className="object-cover transition-transform duration-[1200ms] ease-[var(--ease-spring)] hover:scale-[1.07]"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* ── MISSION BAND ── */}
+            <div className="mt-[clamp(3.5rem,6vw,6rem)] flex flex-wrap items-start gap-[clamp(1.5rem,3vw,3.5rem)]">
                 <p
                     data-mission
-                    className="col-span-2 m-0 max-w-[30ch] text-[clamp(1.25rem,0.95rem+0.9vw,1.75rem)] font-medium leading-[1.3] tracking-[-0.015em] text-ink-strong lg:col-span-6 lg:col-start-1 lg:row-start-3 lg:self-end"
+                    className="m-0 max-w-[36ch] flex-[1_1_28ch] text-[clamp(1.125rem,0.85rem+0.8vw,1.5rem)] font-medium leading-[1.35] tracking-[-0.015em] text-ink-strong"
                 >
                     <span data-mission-words>{CONTENT.missionLead}</span>
                     <span
@@ -288,6 +512,13 @@ const AboutUsSection = ({ tone = 'sunken' }) => {
                     />
                     <span className="sr-only">, </span>
                     <span data-mission-words>{CONTENT.missionTail}</span>
+                </p>
+
+                <p
+                    data-fade
+                    className="m-0 max-w-[26ch] flex-[0_0_auto] border-l border-[var(--line-rule,rgb(0_0_0/0.12))] pl-[1.25rem] text-[0.8125rem] leading-[1.6] text-ink-muted max-sm:border-l-0 max-sm:border-t max-sm:pl-0 max-sm:pt-4"
+                >
+                    {CONTENT.caption}
                 </p>
             </div>
         </Section>

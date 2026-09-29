@@ -30,21 +30,41 @@ import styles from './about-us.module.css'
    stand behind: sourcing and checking, not certifications we don't hold
    or health outcomes we can't promise. */
 
-const HERO_BAND = [
-    {
-        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911945/270e856f021e3e06a3dd84d344bdc8d1.jpg.jpg',
-        alt: 'Nuts and seeds from the Energyflow range',
-    },
-    {
-        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913475/WhatsApp_Image_2026-09-20_at_7.39.30_PM.jpg',
-        alt: 'Inside the Energyflow dry fruits and super food store',
-        tall: true,
-    },
-    {
+// Photos for the hero mosaic. Each is shown across several tiles — `sizes`
+// matches the width of its group, not of any one tile, because every tile in
+// a group requests the same image (so the browser fetches it once).
+const MOSAIC_ART = {
+    gift: {
         src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913710/Elegant_Dry_Fruit_Box.jpg',
-        alt: 'Assorted dry fruits gift box from Energyflow',
+        sizes: '(max-width: 768px) 67vw, 30vw',
     },
+    store: {
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913475/WhatsApp_Image_2026-09-20_at_7.39.30_PM.jpg',
+        sizes: '(max-width: 768px) 100vw, 50vw',
+        // Keep the Energyflow board and the OPEN sign in the wide crop.
+        position: '50% 60%',
+    },
+    seeds: {
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911945/270e856f021e3e06a3dd84d344bdc8d1.jpg.jpg',
+        sizes: '(max-width: 768px) 33vw, 20vw',
+    },
+}
+
+// Tile ids map to grid placements in about-us.module.css (.t1–.t9); the
+// group decides which photo shows through. t2, t6 and t7 are desktop-only.
+const MOSAIC_TILES = [
+    { id: 't1', group: 'gift' },
+    { id: 't2', group: 'gift' },
+    { id: 't3', group: 'store' },
+    { id: 't4', group: 'store' },
+    { id: 't5', group: 'store' },
+    { id: 't6', group: 'store' },
+    { id: 't7', group: 'store' },
+    { id: 't8', group: 'seeds' },
+    { id: 't9', group: 'seeds' },
 ]
+
+const GROUP_CLASS = { gift: 'gGift', store: 'gStore', seeds: 'gSeeds' }
 
 const SOURCING_FIGURE = {
     src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911947/file_00000000d82c8211bcfd587359eeba52.png',
@@ -202,43 +222,35 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                         </div>
                     </div>
 
-                    {/* Image band — three panels read as one strip. The middle
-                        panel carves a corner for the seal to sit in. */}
-                    <div className={cn(styles.band, 'mt-[clamp(2rem,4vw,3.5rem)]')}>
-                        {HERO_BAND.map((image, index) => (
-                            <div key={image.src} data-reveal className="relative">
-                                <div
-                                    className={cn(
-                                        styles.bandPanel,
-                                        image.tall && styles.bandPanelTall,
-                                        image.tall && `${styles.cut} ${styles.cutBR}`
-                                    )}
-                                >
-                                    <div
-                                        className={styles.bandMedia}
-                                        data-parallax={index === 1 ? 4 : 6}
-                                    >
+                    {/* Hero mosaic — three photos cut into one grid of rounded
+                        tiles; the cuts, stars and scalloped edge are the page
+                        showing through. One accessible image: the tiles are
+                        slices of it, not separate pictures. */}
+                    <div
+                        className={cn(styles.mosaic, 'mt-[clamp(2rem,4vw,3.5rem)]')}
+                        role="img"
+                        aria-label="A dry fruits gift box, the Energyflow store front in New Delhi, and hampers of nuts and seeds"
+                        data-parallax-scope
+                    >
+                        {MOSAIC_TILES.map(({ id, group }) => {
+                            const art = MOSAIC_ART[group]
+                            return (
+                                <div key={id} data-tile className={cn(styles.tile, styles[id], styles[GROUP_CLASS[group]])}>
+                                    <div className={styles.tileArt} data-parallax={group === 'store' ? 4 : 6}>
                                         <Image
-                                            src={image.src}
-                                            alt={image.alt}
+                                            src={art.src}
+                                            alt=""
                                             fill
-                                            priority={index === 1}
-                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            sizes={art.sizes}
+                                            priority={group === 'store'}
+                                            loading={group === 'store' ? undefined : 'eager'}
                                             className="object-cover"
+                                            style={art.position ? { objectPosition: art.position } : undefined}
                                         />
                                     </div>
                                 </div>
-
-                                {image.tall && (
-                                    <CornerBadge className="-bottom-1 -right-1 size-[clamp(3.25rem,7vw,4.25rem)] flex-col gap-0.5 text-center">
-                                        <Leaf className="size-4" aria-hidden="true" />
-                                        <span className="text-[0.5625rem] font-semibold uppercase tracking-wider">
-                                            Est. 2025
-                                        </span>
-                                    </CornerBadge>
-                                )}
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
 
                     {/* Facts, straight from the catalogue — never hand-typed, so

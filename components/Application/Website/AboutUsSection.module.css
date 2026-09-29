@@ -1,0 +1,330 @@
+/* ================================================================
+   ABOUT US — "Connected Collage"
+   Full-bleed editorial strip where two images are locked together
+   with an organic curved SVG clip on each side — no gap, no seam.
+   A four-pointed star ornament marks the junction.
+   ================================================================ */
+
+/* ── Section shell ─────────────────────────────────────────────── */
+.aboutSection {
+    overflow: hidden;
+}
+
+/* ── Editorial header row ──────────────────────────────────────── */
+.header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+@media (min-width: 768px) {
+    .header {
+        grid-template-columns: 1fr auto;
+        align-items: end;
+    }
+}
+
+.kicker {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand-primary-bright);
+    margin-bottom: 0.75rem;
+}
+
+.title {
+    margin: 0;
+    font-size: clamp(2.25rem, 1rem + 4vw, 4.5rem);
+    font-weight: var(--weight-display);
+    line-height: 1.02;
+    color: var(--ink-strong);
+}
+
+.titleAccent {
+    color: var(--brand-primary-bright);
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 32ch;
+}
+
+@media (max-width: 767px) {
+    .meta { max-width: 100%; }
+}
+
+.introText {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--ink-body);
+}
+
+.brandName {
+    font-weight: 600;
+    color: var(--ink-strong);
+}
+
+/* ── Collage strip ─────────────────────────────────────────────── */
+.collageStrip {
+    margin-inline: calc(var(--website-gutter) * -1);
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: clamp(22rem, 38vw, 44rem);
+    isolation: isolate;
+}
+
+/* ── Photo panels ──────────────────────────────────────────────── */
+.panel {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--surface-well);
+}
+
+.panelLeft {
+    width: 46%;
+    /* clip-path applied inline so the SVG id can be dynamically added */
+}
+
+.panelRight {
+    flex: 1;
+}
+
+/* ── Photo inner: parallax layer ───────────────────────────────── */
+.photoWrap {
+    position: absolute;
+    /* 24% taller so parallax never exposes an edge */
+    top: -12%;
+    bottom: -12%;
+    left: 0;
+    right: 0;
+    will-change: transform;
+}
+
+.photo {
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    transition: transform 1200ms cubic-bezier(0.071, 0.505, 0.192, 1);
+}
+
+.panel:hover .photo {
+    transform: scale(1.045);
+}
+
+/* ── Hidden SVG defs ───────────────────────────────────────────── */
+.clipDefs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* ── Star ornament at the seam ─────────────────────────────────── */
+.starSeam {
+    position: absolute;
+    top: 50%;
+    /* placed exactly at the left/right split point */
+    left: 46%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.starSvg {
+    display: block;
+    width: clamp(2.75rem, 4.5vw, 4.5rem);
+    height: clamp(2.75rem, 4.5vw, 4.5rem);
+    filter: drop-shadow(0 2px 8px rgb(0 0 0 / 0.30));
+    animation: starPulse 4s ease-in-out infinite;
+}
+
+@keyframes starPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50%       { transform: scale(1.08) rotate(15deg); }
+}
+
+/* ── Caption pill overlay on right panel ──────────────────────── */
+.captionOverlay {
+    position: absolute;
+    bottom: clamp(1rem, 2.5vw, 2rem);
+    right: clamp(1rem, 3vw, 2.5rem);
+    z-index: 4;
+}
+
+.captionPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--surface-card) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-strong);
+    white-space: nowrap;
+    border: 1px solid rgb(255 255 255 / 0.4);
+}
+
+.captionDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-primary-bright);
+    flex-shrink: 0;
+    animation: dotBlink 2.5s ease-in-out infinite;
+}
+
+@keyframes dotBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+}
+
+/* ── Floating seed thumbnail ───────────────────────────────────── */
+.seedFloat {
+    position: absolute;
+    bottom: clamp(-1.5rem, -2.5vw, -2.5rem);
+    /* tucked into the left panel, above the collage floor */
+    left: clamp(1.5rem, 5vw, 5rem);
+    z-index: 12;
+    transition: transform 600ms cubic-bezier(0.071, 0.505, 0.192, 1);
+}
+
+.seedFloat:hover {
+    transform: translateY(-4px);
+}
+
+.seedFrame {
+    width: clamp(4.5rem, 7vw, 6.5rem);
+    height: clamp(4.5rem, 7vw, 6.5rem);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--surface-well);
+    box-shadow: 0 8px 24px rgb(11 61 46 / 0.18);
+    border: 3px solid var(--surface-card);
+    position: relative;
+}
+
+/* ── Label inside left panel ───────────────────────────────────── */
+.panelLabel {
+    position: absolute;
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    left: clamp(1rem, 2.5vw, 2rem);
+    z-index: 4;
+}
+
+.labelTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3125rem 0.75rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--brand-primary) 90%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--on-brand);
+    text-transform: uppercase;
+}
+
+/* ── Mission band ──────────────────────────────────────────────── */
+.missionRow {
+    margin-top: clamp(2.5rem, 4vw, 4rem);
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+    flex-wrap: wrap;
+}
+
+.missionText {
+    margin: 0;
+    flex: 1 1 28ch;
+    font-size: clamp(1.125rem, 0.85rem + 0.8vw, 1.5rem);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: var(--ink-strong);
+}
+
+.missionRule {
+    display: inline-block;
+    height: 1px;
+    width: clamp(2.5rem, 5vw, 4.5rem);
+    margin-inline: 0.75rem;
+    background: currentColor;
+    vertical-align: middle;
+    transform-origin: left center;
+}
+
+.missionSub {
+    flex: 0 0 auto;
+    max-width: 26ch;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    padding-top: 0.3rem;
+    border-left: 1px solid var(--line-rule, rgb(0 0 0 / 0.12));
+    padding-left: 1.25rem;
+}
+
+/* ── Phone layout ──────────────────────────────────────────────── */
+@media (max-width: 639px) {
+    .header { grid-template-columns: 1fr; }
+    .meta   { max-width: 100%; }
+
+    .collageStrip {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .panelLeft {
+        width: 100%;
+        height: 62vw;
+        clip-path: none !important;
+        border-radius: 0;
+    }
+
+    .panelRight {
+        height: 58vw;
+        clip-path: none !important;
+        border-radius: 0;
+    }
+
+    .starSeam {
+        top: 62vw;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .seedFloat { display: none; }
+
+    .missionSub {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--line-rule, rgb(0 0 0 / 0.12));
+        padding-top: 1rem;
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+
+/* ── Dark mode ─────────────────────────────────────────────────── */
+:global(.dark) .captionPill {
+    background: color-mix(in srgb, var(--surface-card) 92%, transparent);
+    border-color: rgb(255 255 255 / 0.08);
+}

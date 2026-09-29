@@ -2820,9 +2820,16 @@ body {
 @keyframes ef-pd-pop     { from { opacity: 0; transform: scale(0.4) rotate(-40deg); } to { opacity: 1; transform: none; } }
 @keyframes ef-pd-lb-in   { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: none; } }
 
+/* About Us section: seam star pulse */
+@keyframes starPulse {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%       { transform: scale(1.1) rotate(12deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ef-pd-word > span, .ef-pd-in, .ef-pd-stage, .ef-pd-stage__settle,
   .ef-pd-seal, .ef-pd-seal .ef-seal, .ef-pd-skel,
   .ef-pd-lb[data-state], .ef-pd-lb__img { animation: none !important; }
   .ef-pd-bar, .ef-cartbar, .ef-pd-seg::after, .ef-pd-meter > span, .ef-pd-cursor { transition: none !important; }
 }
+
