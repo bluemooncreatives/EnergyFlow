@@ -72,13 +72,17 @@ const PAYMENT_METHOD_LABEL = {
 
 const OrderDetails = async ({ params }) => {
     const { orderid } = await params
-    const orderData = await getOrderDetailsByOrderId(orderid)
+    // Independent lookups — the order query does not feed the session read — so
+    // they run together rather than one after the other.
+    const [orderData, currentUser] = await Promise.all([
+        getOrderDetailsByOrderId(orderid),
+        getCurrentUser(),
+    ])
 
     if (!orderData) notFound()
 
     // Authorization: only the order's owner (or an admin) may view its details.
     // Prevents one logged-in user from reading another customer's order PII by id.
-    const currentUser = await getCurrentUser()
     if (!userCanViewOrder(orderData, currentUser)) notFound()
 
     const status = orderData?.status || 'pending'

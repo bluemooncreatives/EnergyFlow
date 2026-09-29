@@ -16,7 +16,7 @@ export async function GET(request, { params }) {
         const size = searchParams.get('size')
 
         const resolved = await resolveProductRoute(slug)
-        const productData = resolved ? await getProductDetailsBySlug(resolved.slug, size) : null
+        const productData = resolved ? await getProductDetailsBySlug(resolved.slug, size, resolved._id) : null
         if (!productData) {
             return response(false, 404, 'Product not found.', {}, { status: 404, headers: { 'Cache-Control': 'no-store' } })
         }

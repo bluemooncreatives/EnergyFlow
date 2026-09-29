@@ -83,7 +83,7 @@ export async function generateMetadata({ params, searchParams }) {
         permanentRedirect(withProductQuery(WEBSITE_PRODUCT_DETAILS(resolved), query))
     }
     const size = typeof query.size === 'string' ? query.size : undefined
-    const productData = await getProductDetailsBySlug(slug, size)
+    const productData = await getProductDetailsBySlug(slug, size, resolved._id)
     if (!productData) return { title: 'Product not found', robots: { index: false } }
 
     const product = normalizeProduct(productData.product)
@@ -172,18 +172,19 @@ const ProductPage = async ({ params, searchParams }) => {
     }
     const size = typeof query.size === 'string' ? query.size : undefined
 
-
-    const productData = await getProductDetailsBySlug(slug, size)
+    // The resolved route already carries the product and category ids, so the
+    // recommendation pool does not have to wait for the details query — both
+    // legs run at once instead of one after the other.
+    const [productData, relatedPool] = await Promise.all([
+        getProductDetailsBySlug(slug, size, resolved._id),
+        getRelatedProducts(resolved._id, resolved.category?._id),
+    ])
 
     if (!productData) notFound()
 
     const product = normalizeProduct(productData.product)
 
-    // Fetch the cached pool, then randomly pick 8 so the rail varies each visit.
-    const relatedPool = await getRelatedProducts(
-        product._id,
-        product.category?._id
-    )
+    // Randomly pick 8 from the cached pool so the rail varies each visit.
     const relatedProducts = pickRandom(relatedPool, 8)
 
     // Every live pack size, for the instant size switcher. Older cache

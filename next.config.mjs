@@ -1,5 +1,32 @@
 import path from "node:path"
+import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
+
+// Which user agents get a *blocking* metadata render (metadata guaranteed inside
+// <head>) rather than metadata streamed in behind the shell.
+//
+// This used to be /.*/ — every request blocked — which meant real browsers got
+// no HTML at all until generateMetadata had finished its database work. On a
+// cold cache that held the whole product document back behind the metadata
+// queries, and the segment's loading.jsx could not paint either.
+//
+// Next's own default already covers every link-preview and HTML-limited crawler
+// (Twitterbot, facebookexternalhit, Slackbot, WhatsApp, Bingbot, the -Google
+// crawlers…). It deliberately omits the main Googlebot because that one renders
+// JavaScript and reads streamed metadata fine — but this file previously opted
+// Googlebot in on purpose, so we keep it in the blocking set and only let real
+// browsers stream. If the internal list ever moves, fall back to the old
+// block-everything behaviour: slower, never wrong.
+const htmlLimitedBots = (() => {
+    try {
+        const { HTML_LIMITED_BOT_UA_RE } = createRequire(import.meta.url)(
+            "next/dist/shared/lib/router/utils/html-bots.js"
+        )
+        return new RegExp(`${HTML_LIMITED_BOT_UA_RE.source}|Googlebot`, "i")
+    } catch {
+        return /.*/
+    }
+})()
 
 
 // Content-Security-Policy scoped to the third parties this app actually uses:
@@ -62,12 +89,8 @@ const nextConfig = {
     // react-pdf relies on native-ish deps (fontkit, yoga-layout wasm) that must not
     // be bundled — keep it external so it runs correctly in the Node server runtime.
     serverExternalPackages: ['@react-pdf/renderer'],
-    // Next 15 streams generateMetadata output into <body> for user agents it
-    // does not treat as HTML-limited, Googlebot included. Every dynamic page
-    // here reads the same cached data for its metadata as for its content, so
-    // blocking costs nothing and guarantees <title>, description, canonical
-    // and robots sit in <head> for every crawler and link-preview bot.
-    htmlLimitedBots: /.*/,
+    // Crawlers block on metadata, browsers stream it — see the definition above.
+    htmlLimitedBots,
     // The parent folder holds several projects. Pin the workspace root to this
     // app so a lockfile anywhere above it can't make Turbopack infer the wrong
     // root (which breaks module resolution and HMR caching).

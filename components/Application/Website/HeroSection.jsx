@@ -272,8 +272,14 @@ const HeroSection = ({ availability = null }) => {
     return () => mq.removeEventListener("change", apply);
   }, []);
 
-  // ── Loader handshake (unchanged behaviour: once per session) ──────
-  useEffect(() => {
+  // ── Loader handshake (once per session) ───────────────────────────
+  // Layout effect, not a passive one: `showLoader` has to start `true` to match
+  // the server-rendered markup, so on a return visit to the homepage (a soft
+  // navigation back from a product, or a second load in the same tab) this is
+  // what takes the full-screen overlay away again. Running it before paint
+  // means the overlay is never actually shown, instead of appearing for a frame
+  // and then being torn down.
+  useIsoLayoutEffect(() => {
     try {
       if (window.sessionStorage.getItem(LOADER_SESSION_KEY) === "1") {
         setShowLoader(false);
@@ -282,6 +288,9 @@ const HeroSection = ({ availability = null }) => {
     } catch {
       // storage blocked — the loader simply plays
     }
+  }, []);
+
+  useEffect(() => {
     // Auto-advance only where hover can pause it (mouse / trackpad). On touch
     // screens a slide changing under the thumb causes mis-taps, so phones and
     // tablets advance by swipe and tabs alone.
