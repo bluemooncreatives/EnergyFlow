@@ -298,7 +298,7 @@ const AnalyticsDashboard = () => {
 
                     {/* Loading skeleton */}
                     {isLoading && (
-                        <div className="mt-6 grid gap-4 lg:grid-cols-3" aria-hidden="true">
+                        <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3" aria-hidden="true">
                             <div className="h-[26rem] animate-pulse rounded-xl bg-muted lg:col-span-2" />
                             <div className="h-[26rem] animate-pulse rounded-xl bg-muted" />
                         </div>

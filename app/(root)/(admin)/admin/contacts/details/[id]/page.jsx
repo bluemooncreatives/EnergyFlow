@@ -75,7 +75,7 @@ const ContactDetail = ({ params }) => {
             </div>
 
             {/* Meta grid */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <div className="rounded-lg border p-4 flex gap-3">
                 <User className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
                 <div>

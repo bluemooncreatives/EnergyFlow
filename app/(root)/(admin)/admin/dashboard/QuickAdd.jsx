@@ -35,7 +35,7 @@ const QuickAdd = () => {
     ]
 
     return (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {quickLinks.map((link) => (
                 <Link key={link.title} href={link.href}>
                     <Card className="rounded-xl border-l-4 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ borderLeftColor: `var(${link.chartVar})` }}>

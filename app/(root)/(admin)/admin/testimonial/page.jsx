@@ -265,7 +265,7 @@ const ShowTestimonials = () => {
         ))}
       </div>
 
-      <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] xl:gap-6">
+      <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] xl:gap-6">
         {/* Composer */}
         <section ref={composerRef} className="scroll-mt-24 rounded-xl border bg-card p-4 sm:p-5 xl:sticky xl:top-20" aria-labelledby="composer-title">
           <div className="mb-4 flex items-start justify-between gap-3">

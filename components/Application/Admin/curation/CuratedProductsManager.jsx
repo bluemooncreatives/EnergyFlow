@@ -217,7 +217,7 @@ const CuratedProductsManager = ({ config }) => {
                 )}
             </div>
 
-            <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] xl:gap-6">
+            <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] xl:gap-6">
                 {/* Picker */}
                 <section className="flex flex-col overflow-hidden rounded-xl border bg-card" aria-labelledby="picker-title">
                     <div className="flex flex-col gap-3 border-b p-4 sm:p-5">

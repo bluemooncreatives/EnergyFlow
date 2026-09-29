@@ -339,9 +339,13 @@
 }
 
 /* OTP: six separate keys in the popup's field styling */
-.ef-auth-otp { display: flex; gap: 0.375rem; }
+.ef-auth-otp { display: flex; width: 100%; gap: 0.375rem; }
 .ef-auth-otp [data-slot='input-otp-slot'] {
-  width: 2.75rem;
+  /* Six 2.75rem keys plus their gaps are wider than a 320-375px phone, so the
+     keys shrink to share whatever room the card has and never sit outside it. */
+  flex: 1 1 2.75rem;
+  min-width: 0;
+  max-width: 2.75rem;
   height: 3.25rem;
   border: 1px solid var(--nl-field-line);
   border-radius: var(--radius-control);
@@ -363,7 +367,7 @@
 
 @media (min-width: 480px) {
   .ef-auth-otp { gap: 0.5rem; }
-  .ef-auth-otp [data-slot='input-otp-slot'] { width: 3.25rem; height: 3.5rem; font-size: 1.5rem; }
+  .ef-auth-otp [data-slot='input-otp-slot'] { flex-basis: 3.25rem; max-width: 3.25rem; height: 3.5rem; font-size: 1.5rem; }
 }
 
 @keyframes ef-auth-failsafe { to { opacity: 1; } }

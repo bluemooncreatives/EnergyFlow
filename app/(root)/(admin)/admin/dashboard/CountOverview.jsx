@@ -71,7 +71,7 @@ const CountOverview = () => {
     if (error) return <div role="alert" className="rounded-lg bg-card p-4 ring-1 ring-foreground/10"><p className="text-sm">Could not load store totals.</p><button type="button" onClick={refetch} className="mt-2 text-sm font-medium underline">Try again</button></div>
 
     return (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {cards.map((card) => (
                 <Link key={card.title} href={card.href} aria-label={`${card.title}: ${card.value}`}>
                     <Card

@@ -45,7 +45,7 @@ const CustomersTab = ({ data, isLoading, kpis, timeline }) => {
             {/* Customer insights + audience growth */}
             <div>
                 <SectionLabel icon={UserPlus} bg="var(--chart-2)" fg="#0A2F24" title="Audience & Loyalty" description="New vs returning buyers, top spenders and newsletter growth" />
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <CustomerInsights customerMix={data?.customerMix} topCustomers={data?.topCustomers} kpis={data?.kpis} audience={data?.audience} />
                     <AudiencePanel audience={data?.audience} kpis={data?.kpis} />
                 </div>
@@ -54,7 +54,7 @@ const CustomersTab = ({ data, isLoading, kpis, timeline }) => {
             {/* Geographic reach */}
             <div>
                 <SectionLabel icon={MapPin} bg="var(--chart-3)" title="Geographic Reach" description="States by net sales volume in this range" />
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <Regions regions={data?.regions} />
                 </div>
             </div>

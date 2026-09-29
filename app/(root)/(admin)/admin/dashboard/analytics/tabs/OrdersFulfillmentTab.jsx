@@ -25,7 +25,7 @@ const OrdersFulfillmentTab = ({ data, isLoading }) => (
         {/* Pipeline + Payment */}
         <div>
             <SectionLabel icon={Package} bg="var(--chart-2)" fg="#0A2F24" title="Order Pipeline & Payments" description="Current order status flow and payment breakdown" />
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <OrderPipeline statusCounts={data?.statusCounts} shipmentCounts={data?.shipmentCounts} placed={data?.breakdown?.placed} />
                 <PaymentMix paymentMethods={data?.paymentMethods} paymentStatuses={data?.paymentStatuses} />
                 <RecentOrders orders={data?.recentOrders} />
@@ -35,7 +35,7 @@ const OrdersFulfillmentTab = ({ data, isLoading }) => (
         {/* Buying heatmap */}
         <div>
             <SectionLabel icon={Clock} bg="var(--chart-4)" title="When Customers Order" description="Orders by weekday and hour (India time) — spot your peak windows" />
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <BuyingHeatmap heatmap={data?.heatmap} />
                 {/* Courier status summary */}
                 <div className="rounded-xl border bg-card p-4 sm:p-5">

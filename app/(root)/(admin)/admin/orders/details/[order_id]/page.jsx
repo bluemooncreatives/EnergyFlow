@@ -152,7 +152,7 @@ const OrderDetails = ({ params }) => {
                                 />
                             </div>
 
-                            <div className="mt-10 grid gap-4 md:grid-cols-2">
+                            <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="rounded-lg border p-5">
                                     <h4 className="text-lg font-semibold mb-5">Shipping Address</h4>
                                     <div>

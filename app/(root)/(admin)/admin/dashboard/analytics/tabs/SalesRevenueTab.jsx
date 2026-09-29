@@ -53,7 +53,7 @@ const SalesRevenueTab = ({ data, isLoading, kpis, timeline }) => {
             {/* Sales trend + money flow */}
             <div>
                 <SectionLabel icon={TrendingUp} bg="var(--chart-3)" title="Revenue Over Time" description="Interactive trend chart with period comparison" />
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     {data ? <SalesTrend data={data} kpis={data.kpis} /> : <div className="h-64 animate-pulse rounded-xl bg-muted lg:col-span-2" />}
                     <MoneyFlow breakdown={data?.breakdown} />
                 </div>

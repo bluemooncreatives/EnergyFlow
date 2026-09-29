@@ -357,7 +357,7 @@ const SalesTab = () => {
             </div>
 
             {/* KPI row */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <KpiCard
                     label={monthData ? `${monthData.name} Sales` : `Total Revenue (${activeYear})`}
                     value={inr(monthData ? monthData.sales : totalRevenue, true)}
@@ -394,13 +394,13 @@ const SalesTab = () => {
             </div>
 
             {/* Revenue trend + quarterly radar */}
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <RevenueTrendCard monthlySales={monthlySales} activeYear={activeYear} activeMonth={activeMonth} />
                 <SalesRadarCard monthlySales={monthlySales} />
             </div>
 
             {/* Monthly order volume + AOV trend */}
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <MonthlyOrdersCard monthlySales={monthlySales} activeMonth={activeMonth} />
                 <AovTrendCard monthlySales={monthlySales} />
             </div>

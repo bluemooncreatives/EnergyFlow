@@ -187,8 +187,8 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                 </Badge>
             </div>
 
-            <div className="grid gap-4 p-5 xl:grid-cols-[1.1fr_0.9fr]">
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 p-5 xl:grid-cols-[1.1fr_0.9fr]">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     <InfoItem label="Order ID" value={orderData.order_id} />
                     <InfoItem label="Customer Name" value={orderData.name} />
                     <InfoItem label="Customer Phone" value={orderData.phone} />
@@ -205,13 +205,13 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4 px-4 py-4">
-                        <div className="grid gap-3 sm:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                             <ShipmentMeta label="AWB" value={shipment.awb || "---"} onCopy={shipment.awb ? copyAwb : undefined} />
                             <ShipmentMeta label="Courier" value={shipment.courier || "Delhivery"} />
                             <ShipmentMeta label="Shipment Status" value={labelize(shipment.shipmentStatus || "PENDING")} />
                         </div>
 
-                        <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <DimensionInput label="Length" value={dimensions.length} onChange={(value) => updateDimension("length", value)} disabled={hasAwb} />
                             <DimensionInput label="Breadth" value={dimensions.breadth} onChange={(value) => updateDimension("breadth", value)} disabled={hasAwb} />
                             <DimensionInput label="Height" value={dimensions.height} onChange={(value) => updateDimension("height", value)} disabled={hasAwb} />

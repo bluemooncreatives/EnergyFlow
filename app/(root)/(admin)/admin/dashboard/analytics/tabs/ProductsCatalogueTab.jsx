@@ -28,7 +28,7 @@ const ProductsCatalogueTab = ({ data, isLoading }) => {
             {/* Top products + category performance */}
             <div>
                 <SectionLabel icon={ShoppingBag} bg="var(--chart-1)" title="Product Performance" description="Top-selling products and category revenue breakdown" />
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <TopProducts items={data?.topProducts} totalSales={totalSales} />
                     <CategoryPerformance categories={data?.categories} />
                     <CatalogueHealth catalogue={data?.catalogue} />
@@ -38,7 +38,7 @@ const ProductsCatalogueTab = ({ data, isLoading }) => {
             {/* Reviews & ratings */}
             <div>
                 <SectionLabel icon={Star} bg="var(--chart-2)" fg="#0A2F24" title="Ratings & Reviews" description="Customer sentiment trends and low-rated products" />
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <ReviewsPanel reviews={data?.reviews} kpis={data?.kpis} />
                     {/* Category breakdown summary card */}
                     <div className="rounded-xl border bg-card p-4 sm:p-5">

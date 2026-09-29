@@ -330,7 +330,7 @@ const NewsletterSettingsPage = () => {
             </div>
           </div>
 
-          <div className="grid items-start gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          <div className="grid grid-cols-1 items-start gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
             {/* ─────────────── Settings ─────────────── */}
             <Tabs value={tab} onValueChange={setTab} className={cn('min-w-0 gap-4', loading && 'pointer-events-none opacity-60')}>
               <div className="overflow-x-auto no-scrollbar">
@@ -349,7 +349,7 @@ const NewsletterSettingsPage = () => {
 
                 <FieldGroup title="Headline & copy">
                   <TextField control={control} name="popup.eyebrow" label="Eyebrow" placeholder="The Energyflow club" maxLength={40} hint="The small pill above the headline. Leave empty to hide." />
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="popup.title" label="Headline" placeholder="Fresh drops," maxLength={40} />
                     <TextField control={control} name="popup.titleAccent" label="Accent words" placeholder="first dibs" maxLength={40} hint="Shown in the accent colour with a hand-drawn underline." />
                   </div>
@@ -359,7 +359,7 @@ const NewsletterSettingsPage = () => {
 
                 <FieldGroup title="Form">
                   <SwitchField control={control} name="popup.collectName" label="Ask for first name" description="Adds an optional name field for personalised emails." />
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="popup.placeholder" label="Email placeholder" maxLength={60} />
                     <TextField control={control} name="popup.buttonText" label="Button text" maxLength={28} />
                   </div>
@@ -368,7 +368,7 @@ const NewsletterSettingsPage = () => {
                 </FieldGroup>
 
                 <FieldGroup title="After sign-up" description="Shown in place of the form, with confetti and the welcome code when an offer is live.">
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="popup.successTitle" label="Success title" maxLength={40} />
                     <TextField control={control} name="popup.successButtonText" label="Success button" maxLength={28} hint="Links to the shop." />
                   </div>
@@ -478,7 +478,7 @@ const NewsletterSettingsPage = () => {
                         : 'This coupon no longer exists. Pick another one.'}
                     </p>
                   )}
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="popup.offer.badge" label="Badge text" placeholder="10% OFF" maxLength={14} hint="Inside the rotating seal. Two words stack best." />
                     <TextField control={control} name="popup.offer.note" label="Offer note" placeholder="On your first order." maxLength={90} />
                   </div>
@@ -497,7 +497,7 @@ const NewsletterSettingsPage = () => {
                 </div>
 
                 <FieldGroup title="Triggers" description="The popup opens on whichever enabled trigger happens first.">
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="behavior.delaySeconds" type="number" label="Time on page (seconds)" hint="0 turns the timer off. Desktop only: on phones the popup waits for scroll depth (50% if none is set), so it never covers a page while it loads." />
                     <TextField control={control} name="behavior.scrollPercent" type="number" label="Scroll depth (%)" hint="0 turns scroll tracking off." />
                   </div>
@@ -545,7 +545,7 @@ const NewsletterSettingsPage = () => {
                       </FormItem>
                     )}
                   />
-                  <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <SwitchField control={control} name="behavior.showOnDesktop" label="Desktop & tablet" />
                     <SwitchField control={control} name="behavior.showOnMobile" label="Mobile" />
                   </div>
@@ -558,7 +558,7 @@ const NewsletterSettingsPage = () => {
                   <SwitchField control={control} name="section.enabled" label="Show the band on the homepage" />
                   <ChoiceField control={control} name="section.theme" label="Colour theme" options={THEME_OPTIONS} />
                   <TextField control={control} name="section.eyebrow" label="Eyebrow" maxLength={40} />
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="section.title" label="Headline" maxLength={40} />
                     <TextField control={control} name="section.titleAccent" label="Accent words" maxLength={40} />
                   </div>
@@ -566,7 +566,7 @@ const NewsletterSettingsPage = () => {
                   <PerksField control={control} name="section.perks" label="Perk chips" />
                   <SwitchField control={control} name="section.showOffer" label="Show the welcome-offer seal" description="Only while the popup's welcome coupon is live." />
                   <SwitchField control={control} name="section.collectName" label="Ask for first name" />
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="section.placeholder" label="Email placeholder" maxLength={60} />
                     <TextField control={control} name="section.buttonText" label="Button text" maxLength={28} />
                   </div>
