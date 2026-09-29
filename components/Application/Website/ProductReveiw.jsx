@@ -12,6 +12,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { AlertCircle, Loader2, MessageSquareQuote, PenLine, RotateCcw, Star, X } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { showToast } from '@/lib/showToast'
+import { scrollToElement } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
 import { WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import ReviewList from './ReviewList'
@@ -160,7 +161,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
 
     const openComposer = () => {
         setComposing(true)
-        requestAnimationFrame(() => composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
+        requestAnimationFrame(() => scrollToElement(composerRef.current))
     }
 
     const closeComposer = () => {
@@ -273,7 +274,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
                         inert={!composing || undefined}
                     >
                         <div className="overflow-hidden">
-                            <div ref={composerRef} className="rounded-[var(--radius-tile)] bg-surface-card p-5 shadow-[inset_0_0_0_1px_var(--line-soft)] sm:p-7">
+                            <div ref={composerRef} className="scroll-mt-28 rounded-[var(--radius-tile)] bg-surface-card p-5 shadow-[inset_0_0_0_1px_var(--line-soft)] sm:p-7">
                                 <div className="mb-5 flex items-start justify-between gap-4">
                                     <div>
                                         <h3 className="font-header text-xl font-semibold uppercase text-ink-strong">Write a review</h3>

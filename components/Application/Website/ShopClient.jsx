@@ -25,6 +25,7 @@ import Link from 'next/link'
 import { PackageSearch, RotateCcw, SlidersHorizontal, Store } from 'lucide-react'
 import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
+import { scrollToElement } from '@/lib/scroll'
 
 // Storefront shows a denser 5-row (2-col) grid on phones and a 3×3 grid on
 // larger screens. The server pre-renders the first page at the desktop size,
@@ -165,7 +166,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
     const handlePageChange = (nextPageIndex) => {
         setPage(nextPageIndex)
         requestAnimationFrame(() => {
-            gridTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            scrollToElement(gridTopRef.current)
         })
     }
 

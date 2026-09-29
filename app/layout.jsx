@@ -1,5 +1,6 @@
 import GlobalProvider from "@/components/Application/GlobalProvider";
 import LenisProvider from '@/components/Application/LenisProvider'
+import RouteScrollReset from '@/components/Application/RouteScrollReset'
 import ThemeProvider from "@/components/Application/Admin/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -155,6 +156,7 @@ export default function RootLayout({ children }) {
           <GlobalProvider>
             <Toaster />
             <LenisProvider>
+              <RouteScrollReset />
               {children}
             </LenisProvider>
           </GlobalProvider>

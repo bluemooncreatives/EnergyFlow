@@ -3,6 +3,16 @@ import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
 
+// While Lenis runs it owns the scroll position: it pins `scroll-behavior:
+// auto` on <html> (so native smooth scrolling is a no-op) and writes its own
+// value back on the next frame. Anything that wants to move the page has to
+// go through it, so the running instance is published here.
+// `null` whenever Lenis is off — admin, auth, reduced motion, slow
+// connections — and callers fall back to the platform. See lib/scroll.js.
+let activeLenis = null
+
+export const getLenis = () => activeLenis
+
 export default function LenisProvider({ children }) {
   const lenisRef = useRef(null)
   const rafRef = useRef(null)
@@ -25,6 +35,7 @@ export default function LenisProvider({ children }) {
       if (lenisRef.current) {
         lenisRef.current.destroy()
         lenisRef.current = null
+        activeLenis = null
       }
       return
     }
@@ -45,6 +56,7 @@ export default function LenisProvider({ children }) {
       })
 
       lenisRef.current = lenis
+      activeLenis = lenis
 
       const onRaf = (time) => {
         lenis.raf(time)
@@ -62,6 +74,7 @@ export default function LenisProvider({ children }) {
       if (lenisRef.current) {
         lenisRef.current.destroy()
         lenisRef.current = null
+        activeLenis = null
       }
     }
   }, [pathname])

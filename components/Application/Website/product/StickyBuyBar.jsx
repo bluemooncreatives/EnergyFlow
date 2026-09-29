@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowRight, ArrowUp, ShoppingBag, Zap } from 'lucide-react'
 import cloudinaryLoader from '@/lib/cloudinaryLoader'
 import { formatINR } from '@/components/Application/Website/storefront/format'
+import { scrollToTop } from '@/lib/scroll'
 import { WEBSITE_CART } from '@/routes/WebsiteRoute'
 import { useClaimBottomSlot } from '@/hooks/useBottomSlot'
 import { Stepper } from './ProductBuyBox'
@@ -73,7 +74,7 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
         }
     }, [visible])
 
-    const backToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+    const backToTop = () => scrollToTop()
 
     return (
         <div

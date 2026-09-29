@@ -248,7 +248,7 @@ const HeroSection = ({ availability = null }) => {
   const swapTlRef = useRef(null);
   const progressRef = useRef(null);
   // Reasons autoplay is held, besides the pause button.
-  const holdRef = useRef({ hover: false, focus: false, offscreen: false, hidden: false });
+  const holdRef = useRef({ hover: false, focus: false, touch: false, offscreen: false, hidden: false });
   const pointerRef = useRef(null);
   const slotsRef = useRef(SLOTS_DESKTOP);
   const angleNow = (index, active) => angleFor(index, active, slotsRef.current);
@@ -291,13 +291,11 @@ const HeroSection = ({ availability = null }) => {
   }, []);
 
   useEffect(() => {
-    // Auto-advance only where hover can pause it (mouse / trackpad). On touch
-    // screens a slide changing under the thumb causes mis-taps, so phones and
-    // tablets advance by swipe and tabs alone.
-    setCanAutoplay(
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches
-    );
+    // Auto-advance everywhere, so the story bars fill on phones too. Touch
+    // screens have no hover to pause on; instead a finger on the hero holds
+    // the slide (see onPointerDown), so it never changes under a tap, and a
+    // tap on a bar or a swipe ends autoplay like any manual choice.
+    setCanAutoplay(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
   const handleLoaderReady = useCallback(() => setLoaderComplete(true), []);
@@ -323,7 +321,7 @@ const HeroSection = ({ availability = null }) => {
     const tween = progressRef.current;
     if (!tween) return;
     const h = holdRef.current;
-    const hold = userPaused || h.hover || h.focus || h.offscreen || h.hidden;
+    const hold = userPaused || h.hover || h.focus || h.touch || h.offscreen || h.hidden;
     if (hold) tween.pause();
     else tween.resume();
   }, [userPaused]);
@@ -513,14 +511,17 @@ const HeroSection = ({ availability = null }) => {
     event.currentTarget.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
-  // Touch swipe (mouse drags are left alone so text stays selectable).
+  // Touch swipe (mouse drags are left alone so text stays selectable). The
+  // slide is held while the finger is down.
   const onPointerDown = (event) => {
     if (event.pointerType === "mouse") return;
     pointerRef.current = { x: event.clientX, y: event.clientY };
+    hold("touch", true);
   };
   const onPointerUp = (event) => {
     const start = pointerRef.current;
     pointerRef.current = null;
+    hold("touch", false);
     if (!start) return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
@@ -536,9 +537,11 @@ const HeroSection = ({ availability = null }) => {
 
   // Hover pauses only over what is being read or operated — the hero fills
   // the viewport, so a section-wide hover would stop autoplay almost always.
+  // Real mice only: a tap fires an emulated mouseenter with no mouseleave
+  // after it, which would leave autoplay held on touch screens.
   const hoverProps = {
-    onMouseEnter: () => hold("hover", true),
-    onMouseLeave: () => hold("hover", false),
+    onPointerEnter: (event) => { if (event.pointerType === "mouse") hold("hover", true); },
+    onPointerLeave: (event) => { if (event.pointerType === "mouse") hold("hover", false); },
   };
 
   const onBlurCapture = (event) => {
@@ -559,7 +562,7 @@ const HeroSection = ({ availability = null }) => {
         onBlurCapture={onBlurCapture}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
-        onPointerCancel={() => { pointerRef.current = null; }}
+        onPointerCancel={() => { pointerRef.current = null; hold("touch", false); }}
       >
         <h1 className="sr-only">Energyflow: buy premium dry fruits, nuts, superfoods, healthy snacks and gift boxes online</h1>
 

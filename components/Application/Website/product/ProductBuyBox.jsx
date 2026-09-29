@@ -22,6 +22,7 @@ import { formatINR } from '@/components/Application/Website/storefront/format'
 import { MAX_CART_QTY } from '@/lib/cartConstants'
 import { showToast } from '@/lib/showToast'
 import { cn } from '@/lib/utils'
+import { scrollToElement } from '@/lib/scroll'
 import { WEBSITE_CART, WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 import AnimatedPrice from './AnimatedPrice'
 import PackSizePicker from './PackSizePicker'
@@ -136,7 +137,7 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
 
     const scrollTo = (id) => (event) => {
         event.preventDefault()
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        scrollToElement(id)
     }
 
     return (
