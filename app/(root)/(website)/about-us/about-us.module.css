@@ -1,327 +1,515 @@
 /* ================================================================
-   ABOUT US — dark editorial layout (August-style)
-   Scoped, page-local theme. Brand tokens still drive the footer/
-   header; this page introduces a local dark surface + lime accent.
+   ABOUT US — editorial layout built from the storefront tokens.
+   Nothing here introduces a new colour: every value resolves to a
+   token from design-system.css §22 so the page follows the light /
+   dark theme like the rest of the site.
+
+   The signature of this page is the CONCAVE CORNER: tiles curve
+   *away* from each other so the cream canvas flows between them
+   (the 2x2 promise grid reads as a four-point star, the "Our range"
+   tab nests into the bento). It is a mask, not a clip-path, because
+   a clip-path on a scrolling image would also clip the hover zoom.
    ================================================================ */
 
-.page {
-  /* Local page palette — mapped to the global homepage design tokens */
-  --about-bg:          var(--surface-page);      /* storefront ivory canvas    */
-  --about-fg:          var(--foreground);        /* near-black headings        */
-  --about-muted:       var(--text-body);         /* warm body copy             */
-  --about-line:        var(--border);            /* light hairline rules       */
-  --about-accent:      var(--brand-primary-hover); /* green brand accent       */
-  --about-accent-soft: color-mix(in srgb, var(--brand-primary-hover) 14%, transparent);
+/* ── Concave corner ───────────────────────────────────────────────
+   Three mask layers: an n x n tile at the corner holding a radial
+   gradient whose *circle* is the transparent part (so the corner is
+   carved out), plus two solid rectangles covering the rest of the
+   box. Keep the three layers in sync when editing — a gap between
+   them shows up as a hairline of missing background.
 
-  /* Section rhythm — identical to the homepage section padding so the gap
-     between blocks matches every other page. (homepage: top clamp(1.25,2.5vw,2),
-     bottom clamp(2,4vw,3.5); --about-gap = the two combined.) */
-  --about-section-pt: clamp(1.25rem, 2.5vw, 2rem);
-  --about-section-pb: clamp(2rem, 4vw, 3.5rem);
-  --about-gap:        clamp(3.25rem, 6.5vw, 5.5rem);
-
-  position: relative;
-  z-index: 1;                 /* sit above the sticky footer reveal */
-  background: var(--about-bg);
-  color: var(--about-fg);
-  overflow: clip;             /* contain the giant headline — no h-scroll */
-  /* Clear the fixed site header */
-  padding-top: clamp(7rem, 12vw, 10rem);
-  padding-bottom: var(--about-section-pb);
+   Applied only from `md` up: at phone widths the tiles stack, the
+   corners no longer meet, and a lone notch just reads as damage. */
+.cut {
+  --n: clamp(1.5rem, 3.4vw, 2.75rem);
 }
 
-.inner {
-  width: 100%;
-  max-width: none;   /* full-bleed — no auto-centering side margin */
-  margin: 0;
-  padding-left: var(--website-gutter);
-  padding-right: var(--website-gutter);
+@media (min-width: 768px) {
+  .cutTL {
+    -webkit-mask:
+      radial-gradient(circle var(--n) at 100% 100%, #0000 98%, #000 100%) 0 0 / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 100% 0 / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / 100% calc(100% - var(--n)) no-repeat;
+    mask:
+      radial-gradient(circle var(--n) at 100% 100%, #0000 98%, #000 100%) 0 0 / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 100% 0 / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / 100% calc(100% - var(--n)) no-repeat;
+  }
+
+  .cutTR {
+    -webkit-mask:
+      radial-gradient(circle var(--n) at 0 100%, #0000 98%, #000 100%) 100% 0 / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / 100% calc(100% - var(--n)) no-repeat;
+    mask:
+      radial-gradient(circle var(--n) at 0 100%, #0000 98%, #000 100%) 100% 0 / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / 100% calc(100% - var(--n)) no-repeat;
+  }
+
+  .cutBL {
+    -webkit-mask:
+      radial-gradient(circle var(--n) at 100% 0, #0000 98%, #000 100%) 0 100% / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 100% 100% / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--n)) no-repeat;
+    mask:
+      radial-gradient(circle var(--n) at 100% 0, #0000 98%, #000 100%) 0 100% / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 100% 100% / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--n)) no-repeat;
+  }
+
+  .cutBR {
+    -webkit-mask:
+      radial-gradient(circle var(--n) at 0 0, #0000 98%, #000 100%) 100% 100% / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--n)) no-repeat;
+    mask:
+      radial-gradient(circle var(--n) at 0 0, #0000 98%, #000 100%) 100% 100% / var(--n) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 100% / calc(100% - var(--n)) var(--n) no-repeat,
+      linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--n)) no-repeat;
+  }
 }
 
-/* ── Hero: centered image + flanking thumbs + giant headline ────── */
-.hero {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.centerImage {
-  position: relative;
-  width: clamp(220px, 28vw, 360px);
-  aspect-ratio: 3 / 4;
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--brand-warm-bg);
-  z-index: 2;
-  will-change: transform;
-}
-.centerImage :global(img) {
-  object-fit: cover;
-}
-
-/* Small decorative thumbnails, desktop only */
-.flankImage {
-  position: absolute;
-  top: clamp(1rem, 6vw, 4rem);
-  width: clamp(140px, 14vw, 210px);
-  aspect-ratio: 3 / 4;
-  border-radius: 3px;
-  overflow: hidden;
-  background: var(--brand-warm-bg);
-  z-index: 1;
-  will-change: transform;
-}
-.flankLeft  { left: 4%; }
-.flankRight { right: 4%; }
-.flankImage :global(img) { object-fit: cover; }
-
-/* The giant masked headline — overlaps the bottom of the center image */
-.headlineMask {
-  position: relative;
-  z-index: 3;
-  width: 100%;
-  margin-top: clamp(-2.5rem, -4vw, -3.5rem);
-  text-align: center;
-  overflow: hidden;          /* mask for the slide-up reveal */
-  line-height: 0.8;
-}
-
-.headline {
+/* ── Hero ─────────────────────────────────────────────────────────
+   Display type, sentence case. The rest of the site sets headings in
+   Clash Display capitals; the one <h1> on this page is the brand
+   speaking in its own voice, so it keeps the family and drops the
+   uppercase. */
+.heroTitle {
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--weight-display);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-display);
-  word-spacing: var(--word-spacing-display);
-  line-height: 0.8;
-  font-size: clamp(4.5rem, 21vw, 17rem);
-  color: var(--brand-primary);   /* paprika */
-  /* sits below the mask until revealed */
-  transform: translateY(110%);
+  font-size: clamp(1.9rem, 1rem + 4.4vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  color: var(--ink-strong);
+}
+.heroTitle em {
+  font-style: normal;
+  color: var(--brand-primary-bright);
+}
+
+/* Each line sits in its own overflow mask so the GSAP reveal slides
+   it up from behind the line above. `pb/mb` keeps descenders (g, y)
+   from being shaved by the mask. */
+.lineMask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* Hero image band: three panels that read as one strip. The middle
+   panel is the tallest so the strip has a centre of gravity. */
+.band {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+.bandPanel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-tile);
+  background: var(--surface-well);
+  aspect-ratio: 16 / 11;
+}
+.bandPanel img {
+  object-fit: cover;
+}
+/* The panel image drifts a little slower than the page. Transform is
+   driven by GSAP; the element only declares intent. */
+.bandMedia {
+  position: absolute;
+  inset: -8% 0;
   will-change: transform;
 }
 
-/* ── Plus marker + caption ──────────────────────────────────────── */
-.marker {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  margin: var(--about-gap) 0 var(--about-section-pt);
-}
-.marker .plus {
-  font-size: 1.25rem;
-  line-height: 1;
-  color: var(--about-fg);
-}
-.marker .rule {
-  width: 1px;
-  height: clamp(2rem, 4vw, 3rem);
-  background: var(--about-line);
-}
-.marker .caption {
-  font-size: clamp(0.8rem, 1vw, 0.95rem);
-  text-align: center;
-  color: var(--about-muted);
-  line-height: 1.45;
+@media (min-width: 768px) {
+  .band {
+    grid-template-columns: 1fr 1.25fr 1fr;
+    align-items: center;
+  }
+  .bandPanel { aspect-ratio: 4 / 5; }
+  .bandPanelTall { aspect-ratio: 4 / 3.4; }
 }
 
-/* ── Big statement + supporting copy ────────────────────────────── */
-.statementWrap {
-  max-width: 80rem;   /* wider container → much smaller auto side margin */
-  margin: 0 auto;
-  text-align: center;
-}
-
+/* ── Statement: running text with inline chips ───────────────────── */
 .statement {
   margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 3rem);
-  font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: var(--about-fg);
-}
-
-.story {
-  max-width: none;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.35rem, 0.85rem + 2.4vw, 3rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
   text-align: center;
+  text-wrap: balance;
+  color: var(--ink-strong);
 }
-.storyText {
-  margin: 0;
-  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
-  line-height: 1.7;
-  color: var(--about-muted);
-}
-
-/* ── Full-width scroll-scaled middle image (Image 2) ────────────── */
-.scrollImageWrap {
-  position: relative;
-  width: 100%;
-  height: clamp(46vh, 60vw, 80vh);
-  margin: var(--about-gap) 0;
-  overflow: hidden;
-}
-.scrollImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform-origin: center center;
-  will-change: transform;
+@media (min-width: 768px) {
+  .statement { max-width: 20ch; }
 }
 
-/* ── The family / founder profiles ──────────────────────────────── */
-.people {
-  position: relative;
-  max-width: none;
-  margin: 0;
-}
-
-.peopleHead {
-  display: flex;
-  flex-direction: column;
+/* A phrase inside the statement, ringed like a highlighter pass. */
+.chip {
+  display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  text-align: center;
-  margin-bottom: clamp(3rem, 6vw, 5.5rem);
+  gap: 0.4em;
+  padding: 0.06em 0.5em 0.14em;
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1.5px var(--brand-primary-bright);
+  color: var(--brand-primary-bright);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
-.peopleEyebrow {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-  color: var(--about-accent);
+@media (min-width: 768px) {
+  .chip { white-space: nowrap; }
 }
-.peopleHeadline {
-  margin: 0;
-  max-width: 22ch;
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--about-fg);
+.chip svg {
+  width: 0.72em;
+  height: 0.72em;
+  flex-shrink: 0;
 }
-.peopleIntro {
-  margin: 0.4rem 0 0;
-  max-width: 60ch;
-  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
-  line-height: 1.7;
-  color: var(--about-muted);
-}
-
-/* Two-column profile: image | text, alternating */
-.profile {
-  display: grid;
-  grid-template-columns: 0.78fr 1.32fr;
-  gap: clamp(2rem, 4.5vw, 4.5rem);
+/* A round token that stands in for an emoji in the reference. */
+.token {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: clamp(3.5rem, 8vw, 7rem);
-}
-.profile:last-of-type { margin-bottom: 0; }
-
-.profileImg {
-  position: relative;
-  width: 100%;
-  max-width: 460px;
-  aspect-ratio: 4 / 5;
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--brand-warm-bg);
-  will-change: clip-path;
-}
-.profileImg :global(img) {
-  object-fit: cover;
-  will-change: transform;
-}
-
-/* Avatar stand-in: the placeholder art is small and square, so it is centred
-   at a modest size on the warm panel instead of being stretched to fill. */
-.profileImgPlaceholder :global(img) {
-  object-fit: contain;
-  padding: 22%;
-  opacity: 0.55;
-}
-
-/* Reversed row: image moves to the right, text to the left.
-   Columns swap too so the image keeps the narrower track. */
-.profileReverse { grid-template-columns: 1.32fr 0.78fr; }
-.profileReverse .profileImg { order: 2; justify-self: end; }
-.profileReverse .profileBody { order: 1; }
-
-.profileBody {
-  display: flex;
-  flex-direction: column;
-}
-.profileRole {
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: clamp(0.72rem, 0.95vw, 0.85rem);
-  color: var(--about-accent);
-}
-.profileName {
-  margin: 0 0 1.1rem;
-  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--about-fg);
-}
-.profileBio {
-  margin: 0 0 0.85rem;
-  font-size: clamp(0.92rem, 1.05vw, 1rem);
-  line-height: 1.7;
-  color: var(--about-muted);
-}
-.profileBio:last-child { margin-bottom: 0; }
-
-/* ── CTA ────────────────────────────────────────────────────────── */
-.ctaWrap {
-  display: flex;
   justify-content: center;
-  margin-top: var(--about-gap);
+  width: 0.92em;
+  height: 0.92em;
+  border-radius: var(--radius-full);
+  background: var(--brand-sun);
+  color: var(--palette-pine);
+  vertical-align: baseline;
+  translate: 0 0.08em;
+}
+.token svg { width: 0.58em; height: 0.58em; }
+
+/* ── Promise grid: one wide card + a 2x2 that stars in the middle ── */
+.promiseGrid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+.promiseCells {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 900px) {
+  .promiseGrid { grid-template-columns: 0.85fr 1.15fr; align-items: stretch; }
 }
 
-/* ── Curated For You · You May Also Like ─────────────────────────── */
-.related {
-  margin-top: var(--about-gap);
+.promiseLead,
+.promiseCell {
+  border-radius: var(--radius-tile);
+}
+/* Masked tiles can't carry ef-card's inset hairline (the mask would
+   cut it), so these are solid-fill tiles by design. */
+.promiseLead {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.25rem, 2.6vw, 2rem);
+  background: var(--surface-sunken);
+}
+.promiseCell {
+  --n: clamp(1.1rem, 2.4vw, 1.9rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  background: var(--brand-primary);
+  color: var(--on-brand);
+  min-height: clamp(9rem, 20vw, 12rem);
+}
+.promiseCell h3 {
+  margin: 0;
+  font-size: var(--type-body);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.promiseCell p {
+  margin: 0.35rem 0 0;
+  font-size: var(--type-small);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.82);
+}
+.promiseIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 0.16);
+  color: var(--on-brand);
+  flex-shrink: 0;
+}
+.promiseIcon svg { width: 1.05rem; height: 1.05rem; }
+
+/* ── Range bento ─────────────────────────────────────────────────── */
+.bento {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 768px) {
+  .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* ── Shared masked line-reveal helpers (SplitType) ──────────────── */
-.lineWrapper {
-  display: block;
-  overflow: hidden;
+/* The label tile that nests into the grid's top-left corner. */
+.bentoTab {
+  /* Fills the grid row so its carved corner — and the round button that
+     sits in it — line up with the tiles beside it rather than floating
+     in the gap below a short tab. */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border-radius: var(--radius-tile);
+  background: var(--surface-inverse);
+  color: var(--ink-on-inverse);
+  grid-column: span 2;
 }
-.lineWrapper > span {
-  display: block;
+@media (min-width: 768px) {
+  .bentoTab { grid-column: span 1; }
+}
+
+.bentoTile {
   position: relative;
-  transform: translateY(115%);
-  will-change: transform;
+  overflow: hidden;
+  border-radius: var(--radius-tile);
+  background: var(--surface-well);
+  aspect-ratio: 1 / 1;
+  isolation: isolate;
+}
+.bentoTile img {
+  object-fit: cover;
+  transition: transform 600ms var(--ease-out-circ);
+}
+.bentoTile:hover img,
+.bentoTile:focus-within img {
+  transform: scale(1.06);
+}
+/* Legibility scrim — the tile label sits over a photograph. */
+.bentoTile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgb(11 61 46 / 0.78) 0%, rgb(11 61 46 / 0.22) 42%, transparent 68%);
+}
+.bentoLabel {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 1.6vw, 1rem);
+  color: var(--palette-cream);
+}
+.bentoName {
+  margin: 0;
+  font-size: var(--type-body);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.bentoCount {
+  margin: 0.15rem 0 0;
+  font-size: var(--type-eyebrow);
+  color: rgb(247 243 232 / 0.78);
+}
+.bentoGo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: rgb(247 243 232 / 0.16);
+  transition: background var(--duration-normal) var(--ease-out),
+              transform var(--duration-normal) var(--ease-out);
+}
+.bentoGo svg { width: 0.9rem; height: 0.9rem; }
+.bentoTile:hover .bentoGo,
+.bentoTile:focus-within .bentoGo {
+  background: var(--brand-amber);
+  color: var(--palette-pine);
+  transform: translate(2px, -2px);
 }
 
-/* ── Reduced motion: show everything, no transforms ─────────────── */
+/* ── Sourcing steps ──────────────────────────────────────────────── */
+.steps {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line-soft);
+}
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.875rem 1rem;
+  align-items: start;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem) 0;
+  border-bottom: 1px solid var(--line-soft);
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+/* Steps the reader has not reached yet sit back; the current one is
+   fully present. Never below 0.55 — this is decoration, not a way to
+   hide content from someone who reads ahead. */
+.step[data-active='false'] { opacity: 0.55; }
+
+.stepIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 1.75rem;
+  padding-inline: 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  color: var(--ink-muted);
+  transition: background var(--duration-normal) var(--ease-out),
+              color var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+.step[data-active='true'] .stepIndex {
+  background: var(--brand-primary);
+  box-shadow: inset 0 0 0 1px var(--brand-primary);
+  color: var(--on-brand);
+}
+.stepTitle {
+  margin: 0;
+  font-size: var(--type-h3);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink-strong);
+  text-wrap: balance;
+}
+.stepBody {
+  margin: 0.4rem 0 0;
+  font-size: var(--type-body);
+  line-height: 1.65;
+  color: var(--ink-body);
+}
+
+/* The photograph beside the list. It is a real grid column rather than
+   a floating overlay: an absolutely-positioned card sat on top of the
+   step copy at some widths, which is a layout that cannot be trusted. */
+.sourcingGrid {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1024px) {
+  .sourcingGrid { grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); align-items: start; }
+  .sourcingFigure { position: sticky; top: clamp(6rem, 9vw, 7.5rem); }
+}
+.sourcingFigure {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-tile);
+  background: var(--surface-well);
+  aspect-ratio: 4 / 3;
+}
+@media (min-width: 1024px) {
+  .sourcingFigure { aspect-ratio: 4 / 5; }
+}
+.sourcingFigure img { object-fit: cover; }
+
+/* ── Leadership ──────────────────────────────────────────────────── */
+.person {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  grid-template-columns: 1fr;
+  padding: clamp(1.25rem, 2.8vw, 2rem);
+  border-radius: var(--radius-tile);
+  background: var(--surface-card);
+  box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+@media (min-width: 768px) {
+  .person { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+}
+
+/* No stock portraits: the directors have no photographs on file, and
+   a bought-in face on an "about the founders" block is a lie. A
+   monogram is honest and reads as a deliberate mark. */
+.monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(3.5rem, 8vw, 4.5rem);
+  height: clamp(3.5rem, 8vw, 4.5rem);
+  border-radius: var(--radius-full);
+  background: var(--tint-pistachio);
+  color: var(--brand-primary);
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.02em;
+}
+
+/* ── Visit / contact band ────────────────────────────────────────── */
+.visitGrid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .visitGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.visitItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border-radius: var(--radius-tile);
+  background: rgb(247 243 232 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(247 243 232 / 0.14);
+}
+.visitLabel {
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-amber);
+}
+.visitValue {
+  font-size: var(--type-body);
+  line-height: 1.6;
+  color: var(--ink-on-inverse);
+}
+.visitValue a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgb(247 243 232 / 0.4);
+}
+.visitValue a:hover { text-decoration-color: currentColor; }
+
+/* ── Motion: the page is readable before any of it runs ──────────── */
 @media (prefers-reduced-motion: reduce) {
-  .headline { transform: none; }
-  .lineWrapper > span { transform: none; }
-}
-
-/* ── Responsive ─────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .flankImage { display: none; }
-
-  .headlineMask { margin-top: clamp(-1.5rem, -5vw, -2.25rem); }
-
-  .scrollImageWrap { height: 48vh; }
-
-  /* Stack each profile: image on top, text below (both rows) */
-  .profile {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  .profileReverse .profileImg { order: 0; }
-  .profileImg { aspect-ratio: 4 / 3; max-height: 60vh; }
-  .profileBody { text-align: left; }
+  .bentoTile img,
+  .bentoGo { transition: none; }
+  .bentoTile:hover img,
+  .bentoTile:focus-within img { transform: none; }
 }

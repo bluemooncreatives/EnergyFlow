@@ -1,461 +1,511 @@
-"use client";
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+    ArrowRight,
+    ArrowUpRight,
+    ChevronRight,
+    HandCoins,
+    Leaf,
+    Mail,
+    MapPin,
+    PackageCheck,
+    Phone,
+    ShieldCheck,
+    Sprout,
+    Star,
+} from 'lucide-react'
+import Section from '@/components/Application/Website/storefront/Section'
+import SectionHeader from '@/components/Application/Website/storefront/SectionHeader'
+import StoreButton, { StoreLink } from '@/components/Application/Website/storefront/StoreButton'
+import ProductBox from '@/components/Application/Website/ProductBox'
+import { WEBSITE_HOME, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { cn } from '@/lib/utils'
+import AboutMotion from './AboutMotion'
+import SourcingSteps from './SourcingSteps'
+import styles from './about-us.module.css'
 
-import { useEffect, useRef } from "react";
-import Image from "next/image";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import CustomEase from "gsap/CustomEase";
-import ScrollTrigger from "gsap/ScrollTrigger";
-import SplitType from "@/lib/SplitType/index";
-import StoreButton from "@/components/Application/Website/storefront/StoreButton";
-import SectionHeader from "@/components/Application/Website/storefront/SectionHeader";
-import ProductBox from "@/components/Application/Website/ProductBox";
-import styles from "./about-us.module.css";
+/* ── Content ──────────────────────────────────────────────────────────
+   Page copy lives here rather than in the markup so the writing can be
+   edited without touching layout. Every claim is one the business can
+   stand behind: sourcing and checking, not certifications we don't hold
+   or health outcomes we can't promise. */
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(CustomEase, ScrollTrigger);
-  if (!CustomEase.get("hop")) {
-    CustomEase.create(
-      "hop",
-      "M0,0 C0.354,0 0.464,0.133 0.498,0.502 0.532,0.872 0.651,1 1,1"
-    );
-  }
+const HERO_BAND = [
+    {
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911945/270e856f021e3e06a3dd84d344bdc8d1.jpg.jpg',
+        alt: 'Nuts and seeds from the Energyflow range',
+    },
+    {
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913475/WhatsApp_Image_2026-09-20_at_7.39.30_PM.jpg',
+        alt: 'Inside the Energyflow dry fruits and super food store',
+        tall: true,
+    },
+    {
+        src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913710/Elegant_Dry_Fruit_Box.jpg',
+        alt: 'Assorted dry fruits gift box from Energyflow',
+    },
+]
+
+const SOURCING_FIGURE = {
+    src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1789911947/file_00000000d82c8211bcfd587359eeba52.png',
+    alt: 'Energyflow premium dry fruits and super foods',
 }
 
-// ── Scroll-controlled middle image ──────────────────────────────────
-const SCROLL_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png";
-
-// Hero images (left thumb · center · right thumb)
-const HERO_LEFT_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913710/Elegant_Dry_Fruit_Box.jpg";
-const HERO_CENTER_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789913475/WhatsApp_Image_2026-09-20_at_7.39.30_PM.jpg";
-const HERO_RIGHT_IMAGE = "https://res.cloudinary.com/g5wdpcrr/image/upload/v1789902222/file_00000000130082118f16e12f78dc5ff0.png";
-
-// Director portraits — neutral avatar placeholder until real photos are supplied.
-const PERSON_PLACEHOLDER = "/about/person-placeholder.png";
-const DIRECTOR_ONE_IMAGE = PERSON_PLACEHOLDER;
-const DIRECTOR_TWO_IMAGE = PERSON_PLACEHOLDER;
-
-/// Brand-story paragraphs shown beneath the statement.
-const STORY = [
-  "Energy Flow Supply Hub Pvt. Ltd. was registered on 19 November 2025 with a clear ambition: to build a trusted, recognisable name in healthy food and nutrition. Not another shelf of imported packets, but a brand people could rely on for the everyday staples that actually make a difference to how they eat.",
-  "We began with our first ENERGYFLOW DRY FRUITS AND SUPER FOOD STORE, a single dedicated destination for premium dry fruits, nuts, seeds, super foods and wholesome pantry essentials. That store is the foundation of a wider retail and franchise network we are building across India.",
-  "Our approach is simple. Source from growers and producers we can vouch for. Check every lot for grade, freshness and purity. Price it fairly. Pack it so it reaches you the way it left us. Whether you are buying a 200g pack of almonds or a hundred festive hampers, the standard does not change.",
-];
-
-// The directors behind the company. `reverse` flips the image/text order.
-const PEOPLE = [
-  {
-    name: "Mr. Parveen Singla",
-    role: "Director",
-    image: DIRECTOR_ONE_IMAGE,
-    bio: [
-      "Parveen leads sourcing and operations at Energyflow, the part of the business that decides what actually earns a place on our shelf.",
-      "Their focus is on building direct, lasting relationships with growers, mills and producers, so quality is controlled at origin rather than inspected at the end. It takes longer to set up and it is far more reliable once it runs.",
-      "That same discipline shapes how we price: buy well, keep the chain short, and pass the difference on to the customer instead of spending it on middlemen.",
-    ],
-  },
-  {
-    name: "Mr. Ayush Singla",
-    role: "Director",
-    image: DIRECTOR_TWO_IMAGE,
-    reverse: true,
-    bio: [
-      "Ayush drives retail, brand and expansion, turning a single store into a network that can grow without losing what makes it work.",
-      "That means getting the fundamentals right first: a product range people genuinely want, a shopping experience that is easy online and in store, and a franchise model partners can run profitably.",
-      "The goal is a professionally managed brand rather than a chain of lookalike outlets, one where every Energyflow store, wherever it opens, means the same thing to the person walking in.",
-    ],
-  },
-];
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const AboutUsContent = ({ products = [] }) => {
-  const container = useRef(null);
-  const headlineRef = useRef(null);
-  const statementRef = useRef(null);
-  const supportRef = useRef(null);
-  const peopleRef = useRef(null);
-  const scrollImgRef = useRef(null);
-  const heroRef = useRef(null);
-  const flankLeftRef = useRef(null);
-  const flankRightRef = useRef(null);
-  const centerImgRef = useRef(null);
-
-  // ── SplitType line reveals + scroll-scrub image ──────────────────
-  useEffect(() => {
-    const reduced = prefersReducedMotion();
-    const splitInstances = [];
-    const triggers = [];
-    const tweens = [];
-    let cancelled = false;
-
-    // Wrap each split line in an overflow-hidden mask so the slide-up reads
-    // as a clean "popup from bottom" reveal.
-    const splitToMaskedLines = (root) => {
-      const targets = root.querySelectorAll("h1, h2, h3, p");
-      const spans = [];
-      targets.forEach((el) => {
-        const split = new SplitType(el, { types: "lines", tagName: "span" });
-        splitInstances.push(split);
-        split.lines.forEach((line) => {
-          const wrapper = document.createElement("div");
-          wrapper.className = styles.lineWrapper;
-          line.parentNode.insertBefore(wrapper, line);
-          wrapper.appendChild(line);
-          spans.push(line);
-        });
-      });
-      return spans;
-    };
-
-    const run = () => {
-      if (cancelled || !container.current) return;
-
-      // Statement + supporting copy: reveal when scrolled into view.
-      [statementRef.current, supportRef.current].forEach((root) => {
-        if (!root) return;
-        const spans = splitToMaskedLines(root);
-        if (reduced) {
-          gsap.set(spans, { y: 0 });
-          return;
-        }
-        gsap.set(spans, { y: "115%" });
-        const t = ScrollTrigger.create({
-          trigger: root,
-          start: "top 82%",
-          once: true,
-          onEnter: () =>
-            tweens.push(
-              gsap.to(spans, {
-                y: 0,
-                stagger: 0.05,
-                duration: 1.2,
-                ease: "power4.out",
-              })
-            ),
-        });
-        triggers.push(t);
-      });
-
-      // Profile blocks: editorial reveal — the image clips up from the bottom
-      // while its photo settles from a soft zoom, and the text lines stagger in.
-      // Each photo also gets a gentle scroll-scrub Ken-Burns drift for depth.
-      if (peopleRef.current) {
-        const profiles = peopleRef.current.querySelectorAll(`.${styles.profile}`);
-        profiles.forEach((profile) => {
-          const imgWrap = profile.querySelector(`.${styles.profileImg}`);
-          const photo = imgWrap?.querySelector("img");
-          const textEls = profile.querySelectorAll(`.${styles.profileBody} > *`);
-
-          if (reduced) {
-            if (imgWrap) gsap.set(imgWrap, { clipPath: "none" });
-            if (photo) gsap.set(photo, { scale: 1 });
-            gsap.set(textEls, { autoAlpha: 1, y: 0 });
-            return;
-          }
-
-          // Initial hidden states
-          if (imgWrap)
-            gsap.set(imgWrap, { clipPath: "inset(100% 0% 0% 0% round 6px)" });
-          if (photo) gsap.set(photo, { scale: 1.3 });
-          gsap.set(textEls, { autoAlpha: 0, y: 28 });
-
-          const tl = gsap.timeline({
-            scrollTrigger: { trigger: profile, start: "top 75%", once: true },
-          });
-          if (imgWrap)
-            tl.to(
-              imgWrap,
-              {
-                clipPath: "inset(0% 0% 0% 0% round 6px)",
-                duration: 1.1,
-                ease: "power4.out",
-              },
-              0
-            );
-          if (photo)
-            tl.to(photo, { scale: 1.04, duration: 1.3, ease: "power3.out" }, 0);
-          tl.to(
-            textEls,
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.9,
-              ease: "power3.out",
-              stagger: 0.08,
-            },
-            0.25
-          );
-
-          tweens.push(tl);
-          if (tl.scrollTrigger) triggers.push(tl.scrollTrigger);
-
-          // Ongoing Ken-Burns drift (scale 1.04 baseline gives headroom so no edge gap)
-          if (photo) {
-            const kb = gsap.fromTo(
-              photo,
-              { yPercent: -2.5 },
-              {
-                yPercent: 2.5,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: profile,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: true,
-                },
-              }
-            );
-            tweens.push(kb);
-            if (kb.scrollTrigger) triggers.push(kb.scrollTrigger);
-          }
-        });
-      }
-
-      // Hero images: layered parallax — each moves at a different rate as the
-      // page scrolls, giving depth. Side thumbs drift the most, center least.
-      if (heroRef.current && !reduced) {
-        const parallax = [
-          { el: flankLeftRef.current, y: -180 },
-          { el: flankRightRef.current, y: -260 },
-          { el: centerImgRef.current, y: -90 },
-        ];
-        parallax.forEach(({ el, y }) => {
-          if (!el) return;
-          const tween = gsap.fromTo(
-            el,
-            { yPercent: 0 },
-            {
-              y,
-              ease: "none",
-              scrollTrigger: {
-                trigger: heroRef.current,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-              },
-            }
-          );
-          tweens.push(tween);
-          if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
-        });
-      }
-
-      // Middle image: scrub-scale on scroll (skipped under reduced motion).
-      if (scrollImgRef.current && !reduced) {
-        const tween = gsap.fromTo(
-          scrollImgRef.current,
-          { scale: 1 },
-          {
-            scale: 1.4,
-            ease: "none",
-            scrollTrigger: {
-              trigger: scrollImgRef.current.parentElement,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
-        tweens.push(tween);
-        if (tween.scrollTrigger) triggers.push(tween.scrollTrigger);
-      }
-
-      // Recompute trigger positions once everything is laid out.
-      setTimeout(() => ScrollTrigger.refresh(), 100);
-    };
-
-    // Split only after fonts are ready so line breaks (and therefore the
-    // masks) match the rendered text instead of the fallback font.
-    const fontsReady = document.fonts?.ready ?? Promise.resolve();
-    fontsReady.then(run);
-
-    // A late refresh covers async image loads shifting layout.
-    const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener("load", onLoad);
-
-    return () => {
-      cancelled = true;
-      window.removeEventListener("load", onLoad);
-      tweens.forEach((t) => t.kill());
-      triggers.forEach((t) => t.kill());
-      splitInstances.forEach((s) => s.revert());
-    };
-  }, []);
-
-  // ── Intro reveal: headline slides up after mount ─────────────────
-  useGSAP(
-    () => {
-      if (prefersReducedMotion()) {
-        gsap.set(headlineRef.current, { y: 0 });
-        return;
-      }
-      gsap.to(headlineRef.current, {
-        y: 0,
-        delay: 0.35,
-        duration: 1.3,
-        ease: "hop",
-      });
+const PROMISES = [
+    {
+        Icon: Sprout,
+        title: 'Sourced at origin',
+        body: 'Direct from growers, mills and importers we have dealt with ourselves.',
     },
-    { scope: container }
-  );
+    {
+        Icon: ShieldCheck,
+        title: 'Every lot checked',
+        body: 'Graded for size, freshness and cleanliness before it earns shelf space.',
+    },
+    {
+        Icon: PackageCheck,
+        title: 'Sealed for the journey',
+        body: 'Packed in small batches so the crunch and aroma survive the trip to you.',
+    },
+    {
+        Icon: HandCoins,
+        title: 'Priced without the chain',
+        body: 'A short supply chain means the saving reaches your kitchen, not a middleman.',
+    },
+]
 
-  return (
-    <div className={styles.page} ref={container}>
-      <div className={styles.inner}>
-        {/* Hero: centered image, flanking thumbs, giant headline */}
-        <div className={styles.hero} ref={heroRef}>
-          <div className={`${styles.flankImage} ${styles.flankLeft}`} ref={flankLeftRef}>
-            <Image
-              src={HERO_LEFT_IMAGE}
-              alt="Assorted dry fruits gift box from Energyflow"
-              fill
-              sizes="130px"
-              className="object-cover"
-            />
-          </div>
-          <div className={`${styles.flankImage} ${styles.flankRight}`} ref={flankRightRef}>
-            <Image
-              src={HERO_RIGHT_IMAGE}
-              alt="Premium Energyflow dry fruits hamper"
-              fill
-              sizes="110px"
-              className="object-cover"
-            />
-          </div>
+const SOURCING_STEPS = [
+    {
+        title: 'We buy where it grows',
+        body: 'Almonds, cashews, raisins, seeds and millets come from the growers, mills and importers behind them, so quality is settled at origin instead of inspected at the end.',
+    },
+    {
+        title: 'Every lot is checked',
+        body: 'Each batch is opened and graded for size, colour, moisture and cleanliness. What does not meet the mark does not get packed, however good the price was.',
+    },
+    {
+        title: 'Packed in small batches',
+        body: 'We pack in small runs and seal each pouch, because dry fruits and roasted snacks lose their crunch to air and humidity long before they lose their date.',
+    },
+    {
+        title: 'Delivered across India',
+        body: 'Orders are packed within 1–2 working days and reach metros in 2–4 working days and the rest of India in 4–7, with free shipping.',
+    },
+]
 
-          <div className={styles.centerImage} ref={centerImgRef}>
-            <Image
-              src={HERO_CENTER_IMAGE}
-              alt="Inside the Energyflow dry fruits and super food store"
-              fill
-              priority
-              sizes="(max-width: 900px) 70vw, 360px"
-              className="object-cover"
-            />
-          </div>
+const PEOPLE = [
+    {
+        name: 'Mr. Parveen Singla',
+        initials: 'PS',
+        role: 'Director · Sourcing & operations',
+        bio: [
+            'Parveen decides what earns a place on our shelf. He builds direct, lasting relationships with growers, mills and producers so quality is controlled at origin rather than inspected at the end.',
+            'It takes longer to set up and it is far more reliable once it runs — and the same discipline shapes how we price: buy well, keep the chain short, pass the difference on.',
+        ],
+    },
+    {
+        name: 'Mr. Ayush Singla',
+        initials: 'AS',
+        role: 'Director · Retail, brand & expansion',
+        bio: [
+            'Ayush turns a single store into a network that can grow without losing what makes it work: a range people genuinely want, and a shopping experience that is easy online and in store.',
+            'The goal is a professionally managed brand rather than a chain of lookalike outlets — one where every Energyflow store means the same thing to the person walking in.',
+        ],
+    },
+]
 
-          <div className={styles.headlineMask}>
-            <h1 className={styles.headline} ref={headlineRef}>
-              about us
-            </h1>
-          </div>
-        </div>
+const CONTACT = {
+    addressLines: ['Rangpuri, Mahipalpur', 'New Delhi 110037'],
+    phone: '+91 92896 57742',
+    phoneHref: 'tel:+919289657742',
+    email: 'energyflow0001@gmail.com',
+}
 
-        {/* Plus marker + caption */}
-        <div className={styles.marker}>
-          <span className={styles.plus}>+</span>
-          <span className={styles.rule} />
-          <span className={styles.caption}>
-            Registered 19 Nov 2025 · first store open,
-            <br />
-            franchise network growing
-          </span>
-        </div>
+/* ── Micro-components ─────────────────────────────────────────────── */
 
-        {/* Big statement + brand story */}
-        <div className={styles.statementWrap}>
-          <div ref={statementRef}>
-            <h2 className={styles.statement}>
-              Energyflow isn&apos;t just a store. It&apos;s a standard for what
-              healthy food should be: honest, fresh, and worth trusting.
-            </h2>
-          </div>
-          <div className={styles.story} ref={supportRef}>
-            {STORY.map((para, i) => (
-              <p className={styles.storyText} key={i}>
-                {para}
-              </p>
-            ))}
-          </div>
-        </div>
-      </div>
+// A round element always sits in a concave corner on this page — that is the
+// rule the notch exists for. Never place one against a square corner.
+const CornerBadge = ({ children, className }) => (
+    <span
+        className={cn(
+            'absolute z-10 flex items-center justify-center rounded-full bg-brand text-on-brand shadow-elev-2',
+            className
+        )}
+    >
+        {children}
+    </span>
+)
 
-      {/* Full-width scroll-scaled middle image (Image 2) */}
-      <div className={styles.scrollImageWrap}>
-        <img
-          ref={scrollImgRef}
-          src={SCROLL_IMAGE}
-          alt="Premium dry fruits, nuts and seeds in an Energyflow gift box"
-          className={styles.scrollImage}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      <div className={styles.inner}>
-        {/* The family behind the brand */}
-        <div className={styles.people} ref={peopleRef}>
-          <div className={styles.peopleHead}>
-            <span className={styles.peopleEyebrow}>LEADERSHIP</span>
-            <h2 className={styles.peopleHeadline}>
-              Built by people who care where every product comes from.
-            </h2>
-            <p className={styles.peopleIntro}>
-              Energyflow is led by two directors who between them handle
-              sourcing, quality, retail and expansion, with a shared focus on
-              customer satisfaction, innovation and sustainable growth.
-            </p>
-          </div>
-
-          {PEOPLE.map((person) => (
-            <article
-              key={person.name}
-              className={`${styles.profile} ${
-                person.reverse ? styles.profileReverse : ""
-              }`}
-            >
-              <div
-                className={`${styles.profileImg} ${
-                  person.image === PERSON_PLACEHOLDER
-                    ? styles.profileImgPlaceholder
-                    : ""
-                }`}
-              >
-                <Image
-                  src={person.image}
-                  alt={person.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 45vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className={styles.profileBody}>
-                <span className={styles.profileRole}>{person.role}</span>
-                <h3 className={styles.profileName}>{person.name}</h3>
-                {person.bio.map((para, i) => (
-                  <p className={styles.profileBio} key={i}>
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </article>
-          ))}
-
-          {/* CTA — shared website button for consistent styling */}
-          <div className={styles.ctaWrap}>
-            <StoreButton href="/contact" arrow>Get in touch</StoreButton>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Curated For You · You May Also Like (centered) ───────────── */}
-      {products.length > 0 && (
-        <div className={styles.inner}>
-          <section className={styles.related}>
-            <SectionHeader eyebrow="Curated for you" title="You may" accent="also like" align="center" />
-
-            <div className="grid grid-cols-2 gap-[var(--grid-gap)] sm:grid-cols-3 lg:grid-cols-4">
-              {products.map((item) => (
-                <ProductBox key={item._id} product={item} />
-              ))}
-            </div>
-          </section>
-        </div>
-      )}
+const Stat = ({ value, label }) => (
+    <div data-reveal className="flex flex-col gap-1">
+        <span className="font-header text-[clamp(1.5rem,1.1rem+1.4vw,2.25rem)] leading-none text-ink-strong">
+            {value}
+        </span>
+        <span className="text-[0.8125rem] leading-snug text-ink-muted">{label}</span>
     </div>
-  );
-};
+)
 
-export default AboutUsContent;
+/* ── Page ─────────────────────────────────────────────────────────── */
+
+const AboutUsContent = ({ products = [], categories = [], stats, testimonials = [] }) => {
+    const bentoCategories = categories.slice(0, 7)
+
+    return (
+        <AboutMotion>
+            {/* ── 1 · Hero ───────────────────────────────────────────── */}
+            <section className="relative overflow-hidden bg-surface-page">
+                <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-40 -top-48 -z-10 size-[34rem] rounded-full bg-tint-pistachio opacity-70 blur-3xl"
+                />
+
+                <div className="ef-container pb-[var(--section-space)] pt-[clamp(6.25rem,10vw,8.5rem)]">
+                    <nav aria-label="Breadcrumb" className="mb-8">
+                        <ol className="flex flex-wrap items-center gap-1.5 text-[0.8125rem] text-ink-muted">
+                            <li>
+                                <Link href={WEBSITE_HOME} className="ef-focus rounded-sm transition-colors hover:text-brand">
+                                    Home
+                                </Link>
+                            </li>
+                            <li className="flex items-center gap-1.5">
+                                <ChevronRight className="size-3.5 opacity-60" aria-hidden="true" />
+                                <span aria-current="page" className="text-ink-strong">About us</span>
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+                        <div className="min-w-0 max-w-3xl">
+                            <span className="ef-eyebrow mb-6">About Energyflow</span>
+                            <h1 className={styles.heroTitle}>
+                                <span className={styles.lineMask}>
+                                    <span data-headline className="block">One honest pantry.</span>
+                                </span>
+                                <span className={styles.lineMask}>
+                                    <span data-headline className="block">
+                                        <em>Dry fruits, nuts &amp; superfoods.</em>
+                                    </span>
+                                </span>
+                            </h1>
+                        </div>
+
+                        <div data-reveal className="flex max-w-md flex-col items-start gap-5 lg:pb-2">
+                            <p className="ef-lead">
+                                Energyflow is a New Delhi dry fruits and superfood brand by Energy Flow Supply Hub
+                                Pvt. Ltd. We source at origin, check every lot, and pack it so it reaches you the
+                                way it left us.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <StoreButton href={WEBSITE_SHOP} arrow>Shop the range</StoreButton>
+                                <StoreButton href="/contact" variant="outline">Bulk &amp; gifting</StoreButton>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Image band — three panels read as one strip. The middle
+                        panel carves a corner for the seal to sit in. */}
+                    <div className={cn(styles.band, 'mt-[clamp(2rem,4vw,3.5rem)]')}>
+                        {HERO_BAND.map((image, index) => (
+                            <div key={image.src} data-reveal className="relative">
+                                <div
+                                    className={cn(
+                                        styles.bandPanel,
+                                        image.tall && styles.bandPanelTall,
+                                        image.tall && `${styles.cut} ${styles.cutBR}`
+                                    )}
+                                >
+                                    <div
+                                        className={styles.bandMedia}
+                                        data-parallax={index === 1 ? 4 : 6}
+                                    >
+                                        <Image
+                                            src={image.src}
+                                            alt={image.alt}
+                                            fill
+                                            priority={index === 1}
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                </div>
+
+                                {image.tall && (
+                                    <CornerBadge className="-bottom-1 -right-1 size-[clamp(3.25rem,7vw,4.25rem)] flex-col gap-0.5 text-center">
+                                        <Leaf className="size-4" aria-hidden="true" />
+                                        <span className="text-[0.5625rem] font-semibold uppercase tracking-wider">
+                                            Est. 2025
+                                        </span>
+                                    </CornerBadge>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Facts, straight from the catalogue — never hand-typed, so
+                        they cannot drift as the range grows. */}
+                    <dl className="mt-[clamp(2rem,4vw,3rem)] grid grid-cols-2 gap-6 border-t border-line-soft pt-8 sm:grid-cols-4">
+                        <Stat value={`${stats.categoryCount}`} label="Categories in the range" />
+                        <Stat value={`${stats.productCount}+`} label="Products on the shelf" />
+                        <Stat value="1–2 days" label="Packed and dispatched" />
+                        <Stat value="Pan-India" label="Delivered with free shipping" />
+                    </dl>
+                </div>
+            </section>
+
+            {/* ── 2 · Statement ──────────────────────────────────────── */}
+            <Section tone="sunken" containerClassName="flex flex-col items-center gap-8 text-center">
+                <p data-reveal className={styles.statement}>
+                    Hi! We&apos;re Energyflow,{' '}
+                    <span className={styles.chip}>
+                        <Leaf aria-hidden="true" />
+                        a dry fruits &amp; superfood store
+                    </span>{' '}
+                    from New Delhi. We want the food your family eats every day to be the
+                    part of the shop you never have to{' '}
+                    <span className={styles.token} aria-hidden="true"><Star /></span> second-guess.
+                </p>
+                <div data-reveal>
+                    <StoreButton href={WEBSITE_SHOP} arrow>Browse everything</StoreButton>
+                </div>
+            </Section>
+
+            {/* ── 3 · Promises ───────────────────────────────────────── */}
+            <Section tone="page">
+                <div className={styles.promiseGrid}>
+                    <div data-reveal className={styles.promiseLead}>
+                        <span className="ef-eyebrow self-start">Why shoppers stay</span>
+                        <div className="flex items-end justify-between gap-4">
+                            <h2 className="ef-title ef-title--md">
+                                What you get<br />buying from us
+                            </h2>
+                            <Link
+                                href={WEBSITE_SHOP}
+                                aria-label="Shop the Energyflow range"
+                                className="ef-focus flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-on-brand transition-transform hover:scale-105"
+                            >
+                                <ArrowRight className="size-5" aria-hidden="true" />
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* The four concave corners meet in the middle and open a
+                        four-point star of the page colour between the tiles. */}
+                    <div className={styles.promiseCells}>
+                        {PROMISES.map(({ Icon, title, body }, index) => (
+                            <div
+                                key={title}
+                                data-reveal
+                                className={cn(
+                                    styles.promiseCell,
+                                    styles.cut,
+                                    [styles.cutBR, styles.cutBL, styles.cutTR, styles.cutTL][index]
+                                )}
+                            >
+                                <span className={styles.promiseIcon}>
+                                    <Icon aria-hidden="true" />
+                                </span>
+                                <div>
+                                    <h3>{title}</h3>
+                                    <p>{body}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </Section>
+
+            {/* ── 4 · The range ──────────────────────────────────────── */}
+            {bentoCategories.length > 0 && (
+                <Section tone="sunken">
+                    <SectionHeader
+                        eyebrow="What we sell"
+                        title="One shelf for the"
+                        accent="whole pantry"
+                        description="Dry fruits and nuts, dried berries, seeds and superfoods, Ayurvedic herbs, flavoured nuts and healthy candies — with millets, pulses, chocolates, makhana and gift boxes joining the shelf as we stock them."
+                        action={<StoreLink href={WEBSITE_SHOP}>Shop all products</StoreLink>}
+                    />
+
+                    <div className={styles.bento}>
+                        <div data-reveal className="relative">
+                            <div className={cn(styles.bentoTab, styles.cut, styles.cutBR)}>
+                                <span className="text-[0.75rem] font-semibold uppercase tracking-[0.08em] text-amber">
+                                    Our range
+                                </span>
+                                <p className="font-header text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-tight">
+                                    {stats.categoryCount} categories, one standard
+                                </p>
+                            </div>
+                            <CornerBadge className="-bottom-1 -right-1 size-11 bg-amber text-ink-strong">
+                                <ArrowUpRight className="size-5" aria-hidden="true" />
+                            </CornerBadge>
+                        </div>
+
+                        {bentoCategories.map((category) => (
+                            <Link
+                                key={category.slug}
+                                href={category.href}
+                                data-reveal
+                                className={cn(styles.bentoTile, 'ef-focus group block')}
+                            >
+                                <Image
+                                    src={category.previewImage}
+                                    alt={category.alt || category.name}
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, (max-width: 1100px) 33vw, 25vw"
+                                    className="object-cover"
+                                />
+                                <span className={styles.bentoLabel}>
+                                    <span className="min-w-0">
+                                        <span className={cn(styles.bentoName, 'block')}>{category.name}</span>
+                                        <span className={cn(styles.bentoCount, 'block')}>
+                                            {category.productCount} {category.productCount === 1 ? 'product' : 'products'}
+                                        </span>
+                                    </span>
+                                    <span className={styles.bentoGo} aria-hidden="true">
+                                        <ArrowUpRight />
+                                    </span>
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                </Section>
+            )}
+
+            {/* ── 5 · How we source ──────────────────────────────────── */}
+            <Section tone="page">
+                <SectionHeader
+                    eyebrow="How we work"
+                    title="From the grower"
+                    accent="to your kitchen"
+                    description="Four steps, and none of them are a shortcut. This is the part of the business customers never see, and the part that decides what the pack tastes like."
+                />
+                <div className={styles.sourcingGrid}>
+                    <div data-reveal className={styles.sourcingFigure}>
+                        <Image
+                            src={SOURCING_FIGURE.src}
+                            alt={SOURCING_FIGURE.alt}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 20rem"
+                            className="object-cover"
+                        />
+                    </div>
+                    <SourcingSteps steps={SOURCING_STEPS} />
+                </div>
+            </Section>
+
+            {/* ── 6 · Leadership ─────────────────────────────────────── */}
+            <Section tone="sunken">
+                <SectionHeader
+                    eyebrow="Who runs it"
+                    title="Built by people who care"
+                    accent="where it comes from"
+                    description="Energy Flow Supply Hub Pvt. Ltd. was registered on 19 November 2025 and opened its first Energyflow dry fruits and super food store. Two directors run it between them."
+                />
+
+                <div className="grid gap-[var(--grid-gap)] lg:grid-cols-2">
+                    {PEOPLE.map((person) => (
+                        <article key={person.name} data-reveal className={styles.person}>
+                            <span className={styles.monogram} aria-hidden="true">{person.initials}</span>
+                            <div className="min-w-0">
+                                <h3 className="font-header text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] leading-tight text-ink-strong">
+                                    {person.name}
+                                </h3>
+                                <p className="mt-1 text-[0.8125rem] font-medium uppercase tracking-[0.06em] text-brand">
+                                    {person.role}
+                                </p>
+                                <div className="mt-4 flex flex-col gap-3">
+                                    {person.bio.map((paragraph) => (
+                                        <p key={paragraph} className="text-[0.9375rem] leading-[1.7] text-ink-body">
+                                            {paragraph}
+                                        </p>
+                                    ))}
+                                </div>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </Section>
+
+            {/* ── 7 · Testimonials — renders only once the admin adds any ─ */}
+            {testimonials.length > 0 && (
+                <Section tone="page">
+                    <SectionHeader eyebrow="In their words" title="What shoppers" accent="tell us" />
+                    <div className="grid gap-[var(--grid-gap)] md:grid-cols-2 lg:grid-cols-3">
+                        {testimonials.slice(0, 3).map((testimonial) => (
+                            <figure key={testimonial._id} data-reveal className="ef-card gap-4 p-6">
+                                <div className="flex gap-0.5 text-sun" aria-label={`${testimonial.rating} out of 5`}>
+                                    {Array.from({ length: testimonial.rating }, (_, i) => (
+                                        <Star key={i} className="size-4 fill-current" aria-hidden="true" />
+                                    ))}
+                                </div>
+                                <blockquote className="text-[0.9375rem] leading-[1.7] text-ink-body">
+                                    {testimonial.review}
+                                </blockquote>
+                                <figcaption className="mt-auto text-[0.8125rem] font-medium text-ink-strong">
+                                    {testimonial.name}
+                                </figcaption>
+                            </figure>
+                        ))}
+                    </div>
+                </Section>
+            )}
+
+            {/* ── 8 · Visit / talk to us ─────────────────────────────── */}
+            <Section tone="inverse">
+                <SectionHeader
+                    eyebrow="Come and find us"
+                    title="Bulk orders, gifting"
+                    accent="and franchise"
+                    description="We put together dry fruit and chocolate hampers for Diwali, weddings and corporate gifting, and we are building a retail and franchise network across India. Tell us what you need."
+                    action={<StoreButton href="/contact" variant="accent" arrow>Talk to us</StoreButton>}
+                />
+
+                <address className={cn(styles.visitGrid, 'not-italic')}>
+                    <div data-reveal className={styles.visitItem}>
+                        <span className={styles.visitLabel}>
+                            <MapPin className="mr-1.5 inline size-3.5 align-[-2px]" aria-hidden="true" />
+                            Store
+                        </span>
+                        <span className={styles.visitValue}>
+                            {CONTACT.addressLines.map((line) => (
+                                <span key={line} className="block">{line}</span>
+                            ))}
+                        </span>
+                    </div>
+                    <div data-reveal className={styles.visitItem}>
+                        <span className={styles.visitLabel}>
+                            <Phone className="mr-1.5 inline size-3.5 align-[-2px]" aria-hidden="true" />
+                            Phone
+                        </span>
+                        <span className={styles.visitValue}>
+                            <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+                        </span>
+                    </div>
+                    <div data-reveal className={styles.visitItem}>
+                        <span className={styles.visitLabel}>
+                            <Mail className="mr-1.5 inline size-3.5 align-[-2px]" aria-hidden="true" />
+                            Email
+                        </span>
+                        <span className={cn(styles.visitValue, 'break-words')}>
+                            <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+                        </span>
+                    </div>
+                </address>
+            </Section>
+
+            {/* ── 9 · Related products ───────────────────────────────── */}
+            {products.length > 0 && (
+                <Section tone="page">
+                    <SectionHeader eyebrow="Curated for you" title="You may" accent="also like" align="center" />
+                    <div className="grid grid-cols-2 gap-[var(--grid-gap)] sm:grid-cols-3 lg:grid-cols-4">
+                        {products.map((item) => (
+                            <ProductBox key={item._id} product={item} />
+                        ))}
+                    </div>
+                </Section>
+            )}
+        </AboutMotion>
+    )
+}
+
+export default AboutUsContent
