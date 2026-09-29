@@ -12,7 +12,7 @@ const RailControls = ({ rail, label = 'items', className }) => {
         <div className={cn('flex items-center gap-2', className)}>
             <button
                 type="button"
-                className="ef-icon-btn"
+                className="ef-icon-btn min-h-11 min-w-11"
                 onClick={rail.scrollPrev}
                 disabled={!rail.canPrev}
                 aria-label={`Previous ${label}`}
@@ -21,7 +21,7 @@ const RailControls = ({ rail, label = 'items', className }) => {
             </button>
             <button
                 type="button"
-                className="ef-icon-btn"
+                className="ef-icon-btn min-h-11 min-w-11"
                 onClick={rail.scrollNext}
                 disabled={!rail.canNext}
                 aria-label={`Next ${label}`}

@@ -9,6 +9,7 @@ import { scrollToElement, scrollToY } from '@/lib/scroll'
 // outlast the mobile sheet's close animation (200ms) and the frames Lenis
 // takes to settle, short enough that it is over before anyone notices.
 const SETTLE_MS = 600
+const HASH_WAIT_MS = 5000
 
 /**
  * Where a page opens.
@@ -38,12 +39,17 @@ const SETTLE_MS = 600
  */
 const RouteScrollReset = () => {
     const pathname = usePathname()
-    const poppedRef = useRef(false)
-    const firstRef = useRef(true)
+    const poppedRef = useRef(null)
+    const previousPathRef = useRef(pathname)
 
     // A history pop is the one navigation that must keep its position.
     useEffect(() => {
-        const onPopState = () => { poppedRef.current = true }
+        const onPopState = () => {
+            // Query/hash history does not trigger the pathname effect. Do not
+            // let that history entry suppress the next ordinary navigation.
+            poppedRef.current = window.location.pathname === previousPathRef.current
+                ? null : window.location.pathname
+        }
         window.addEventListener('popstate', onPopState)
         return () => window.removeEventListener('popstate', onPopState)
     }, [])
@@ -51,19 +57,17 @@ const RouteScrollReset = () => {
     useEffect(() => {
         // The first pass is the document load: the browser has already placed
         // the page (top, a #hash, or a position it restored).
-        if (firstRef.current) {
-            firstRef.current = false
-            return
-        }
-        if (poppedRef.current) {
-            poppedRef.current = false
-            return
-        }
+        if (previousPathRef.current === pathname) return
+        previousPathRef.current = pathname
+        const isHistoryNavigation = poppedRef.current === pathname
+        poppedRef.current = null
+        if (isHistoryNavigation) return
 
         // The new page is a different height, so Lenis's cached limit is stale.
         getLenis()?.resize()
 
-        const hash = window.location.hash.slice(1)
+        let hash = window.location.hash.slice(1)
+        try { hash = decodeURIComponent(hash) } catch { /* Keep malformed fragments literal. */ }
         let frame = 0
         let done = false
         const started = performance.now()
@@ -78,11 +82,15 @@ const RouteScrollReset = () => {
             if (hash) {
                 // The target may not have streamed in yet; keep looking, and
                 // fall back to the top if it never arrives.
-                if (scrollToElement(hash, { smooth: false })) return release()
-            } else if (Math.abs(window.scrollY) > 2) {
+                if (scrollToElement(hash, { smooth: false })) {
+                    if (performance.now() - started >= SETTLE_MS) return release()
+                }
+            } else {
+                // Also cancel Lenis momentum when the native position is
+                // already zero after Next's reset.
                 scrollToY(0, { smooth: false })
             }
-            if (performance.now() - started < SETTLE_MS) {
+            if (performance.now() - started < (hash ? HASH_WAIT_MS : SETTLE_MS)) {
                 frame = requestAnimationFrame(settle)
             } else if (hash) {
                 scrollToY(0, { smooth: false })

@@ -249,7 +249,7 @@ const Panel = ({ item, panelRef }) => {
 // Reduced motion keeps the same states, just without the movement.
 const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
     const sectionRef = useRef(null)
-    const rail = useScrollRail({ nudge: 'categories' })
+    const rail = useScrollRail()
     const listRef = rail.railRef
     const panelsRef = useRef([])
     useReveal(sectionRef, [items.length])
@@ -379,6 +379,8 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                 action={<StoreLink href={WEBSITE_SHOP}>Shop everything</StoreLink>}
             />
 
+            <RailPager rail={rail} label="categories" className="mb-4 lg:hidden" />
+
             <ul
                 ref={listRef}
                 aria-label="Top categories"
@@ -388,8 +390,6 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                     <Panel key={item.id} item={item} panelRef={(el) => { panelsRef.current[i] = el }} />
                 ))}
             </ul>
-
-            <RailPager rail={rail} label="categories" className="mt-5 lg:hidden" />
 
             {more.length > 0 && (
                 <nav data-reveal aria-label="More categories" className="mt-6 flex flex-wrap items-center gap-2">

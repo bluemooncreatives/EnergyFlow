@@ -141,7 +141,7 @@ const BestsellerCard = ({ product, position }) => {
 
 const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
     const sectionRef = useRef(null)
-    const rail = useScrollRail({ nudge: 'bestsellers' })
+    const rail = useScrollRail()
     useReveal(sectionRef, [products.length])
 
     if (!products.length) return null
@@ -162,6 +162,8 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
             {/* Native scroller: swipe on touch, arrows on desktop, snap on both.
                 On small screens it bleeds to the viewport edge so the next card
                 peeks in. The native scrollbar is hidden. */}
+            <RailPager rail={rail} label="bestsellers" className="mb-4 sm:hidden" />
+
             <ol
                 ref={rail.railRef}
                 className="ef-rail no-scrollbar list-none p-0 max-sm:-mx-[var(--website-gutter)] max-sm:px-[var(--website-gutter)] max-sm:scroll-px-[var(--website-gutter)]"
@@ -174,10 +176,6 @@ const BestsellersSectionClient = ({ products = [], tone = 'sunken' }) => {
                     </li>
                 ))}
             </ol>
-
-            {/* Phones: the heading arrows are hidden, so position + arrows sit
-                under the rail. mt clears the rail's negative bottom margin. */}
-            <RailPager rail={rail} label="bestsellers" className="mt-9 sm:hidden" />
 
             {/* mt clears the rail's negative bottom margin (room for card shadows). */}
             <div data-reveal className="mt-8 flex justify-center sm:mt-14">
