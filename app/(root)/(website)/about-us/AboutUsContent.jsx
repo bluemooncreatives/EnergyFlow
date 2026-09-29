@@ -22,6 +22,7 @@ import { WEBSITE_HOME, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { cn } from '@/lib/utils'
 import AboutMotion from './AboutMotion'
 import SourcingSteps from './SourcingSteps'
+import StatementSection from '@/components/Application/Website/StatementSection'
 import styles from './about-us.module.css'
 
 /* ── Content ──────────────────────────────────────────────────────────
@@ -265,21 +266,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
             </section>
 
             {/* ── 2 · Statement ──────────────────────────────────────── */}
-            <Section tone="sunken" containerClassName="flex flex-col items-center gap-8 text-center">
-                <p data-reveal className={styles.statement}>
-                    Hi! We&apos;re Energyflow,{' '}
-                    <span className={styles.chip}>
-                        <Leaf aria-hidden="true" />
-                        a dry fruits &amp; superfood store
-                    </span>{' '}
-                    from New Delhi. We want the food your family eats every day to be the
-                    part of the shop you never have to{' '}
-                    <span className={styles.token} aria-hidden="true"><Star /></span> second-guess.
-                </p>
-                <div data-reveal>
-                    <StoreButton href={WEBSITE_SHOP} arrow>Browse everything</StoreButton>
-                </div>
-            </Section>
+            <StatementSection />
 
             {/* ── 3 · Promises ───────────────────────────────────────── */}
             <Section tone="page">

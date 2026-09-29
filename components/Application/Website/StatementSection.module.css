@@ -1,0 +1,318 @@
+.sectionWrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--surface-sunken, #EFECE1);
+  padding-block: clamp(4.5rem, 8vw, 8.5rem);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: clamp(1rem, 5vw, 6rem);
+  text-align: center;
+}
+
+/* ── Ambient Radial Atmosphere ─────────────────────────────────────── */
+.ambientGlow1 {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  width: clamp(300px, 45vw, 650px);
+  height: clamp(300px, 45vw, 650px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(47, 107, 63, 0.12) 0%, rgba(47, 107, 63, 0) 70%);
+  pointer-events: none;
+}
+
+.ambientGlow2 {
+  position: absolute;
+  bottom: 10%;
+  right: 8%;
+  width: clamp(260px, 40vw, 550px);
+  height: clamp(260px, 40vw, 550px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 184, 56, 0.12) 0%, rgba(245, 184, 56, 0) 70%);
+  pointer-events: none;
+}
+
+/* ── Watermark Botanical Drift ─────────────────────────────────────── */
+.watermarkLeft {
+  position: absolute;
+  top: 10%;
+  left: -2%;
+  width: clamp(140px, 16vw, 240px);
+  height: auto;
+  opacity: 0.045;
+  color: var(--brand-primary, #0B3D2E);
+  pointer-events: none;
+  user-select: none;
+}
+
+.watermarkRight {
+  position: absolute;
+  bottom: 8%;
+  right: -2%;
+  width: clamp(140px, 16vw, 240px);
+  height: auto;
+  opacity: 0.045;
+  color: var(--brand-primary, #0B3D2E);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Eyebrow Pill with Live Beacon ─────────────────────────────────── */
+.eyebrowPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid color-mix(in srgb, var(--brand-primary, #0B3D2E) 14%, transparent);
+  background: color-mix(in srgb, var(--surface-card, #F7F3E8) 80%, transparent);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.beaconDot {
+  position: relative;
+  display: flex;
+  width: 7px;
+  height: 7px;
+}
+
+.beaconPing {
+  position: absolute;
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px;
+  background-color: var(--brand-primary-bright, #2F6B3F);
+  opacity: 0.75;
+  animation: beaconPulse 2.4s cubic-bezier(0, 0, 0.2, 1) 3;
+}
+
+.beaconStatic {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px;
+  width: 7px;
+  height: 7px;
+  background-color: var(--brand-primary, #0B3D2E);
+}
+
+@keyframes beaconPulse {
+  0% { transform: scale(1); opacity: 0.75; }
+  70%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+.eyebrowText {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-strong, #0B3D2E);
+}
+
+/* ── Full Width Statement Display Headline ─────────────────────────── */
+.statement {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  font-family: var(--font-display, 'Outfit', sans-serif);
+  font-weight: var(--weight-display, 600);
+  font-size: clamp(1.75rem, 1.05rem + 2.3vw, 3.5rem);
+  line-height: 1.32;
+  letter-spacing: -0.018em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--ink-strong, #0B3D2E);
+  word-spacing: 0.04em;
+}
+
+/* ── Scrubbed Word Spans ───────────────────────────────────────────── */
+.word {
+  display: inline-block;
+  color: var(--ink-strong, #0B3D2E);
+}
+
+/* ── Interactive Highlight Pill Chip ───────────────────────────────── */
+.chipWrap {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42em;
+  padding: 0.08em 0.58em 0.16em;
+  border-radius: var(--radius-full, 9999px);
+  border: 1.5px solid var(--brand-primary-bright, #2F6B3F);
+  background: color-mix(in srgb, var(--brand-primary-bright, #2F6B3F) 6%, transparent);
+  color: var(--brand-primary-bright, #2F6B3F);
+  box-shadow: 0 2px 14px -3px rgba(47, 107, 63, 0.18);
+  max-width: 100%;
+  white-space: normal;
+  vertical-align: baseline;
+  overflow: hidden;
+  cursor: default;
+  transition: transform 0.4s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1)),
+              box-shadow 0.4s ease,
+              background-color 0.4s ease,
+              border-color 0.4s ease;
+}
+
+.chipShimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: translateX(-110%) skewX(-20deg);
+  pointer-events: none;
+}
+
+.chipLeaf {
+  width: 0.72em;
+  height: 0.72em;
+  flex-shrink: 0;
+}
+
+/* ── Kinetic Star Token ────────────────────────────────────────────── */
+.tokenWrap {
+  display: inline-block;
+  vertical-align: baseline;
+  margin-inline: 0.15em;
+}
+
+.token {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.94em;
+  height: 0.94em;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--brand-sun, #F5B838);
+  color: var(--palette-pine, #0B3D2E);
+  vertical-align: baseline;
+  translate: 0 0.08em;
+  box-shadow: 0 2px 12px rgba(245, 184, 56, 0.35);
+}
+
+.token svg {
+  width: 0.58em;
+  height: 0.58em;
+}
+
+/* ── Progress Hairline Bar ─────────────────────────────────────────── */
+.progressTrack {
+  width: min(100%, 180px);
+  height: 2px;
+  background: color-mix(in srgb, var(--brand-primary, #0B3D2E) 12%, transparent);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: clamp(2rem, 3.8vw, 3rem);
+}
+
+.progressBar {
+  width: 100%;
+  height: 100%;
+  background: var(--brand-primary, #0B3D2E);
+  transform-origin: left center;
+  transform: scaleX(1);
+}
+
+/* ── CTA Action Container ──────────────────────────────────────────── */
+.ctaContainer {
+  margin-top: clamp(1.75rem, 3.2vw, 2.5rem);
+  max-width: 100%;
+}
+
+/* Keep keyboard navigation usable at every scroll position. */
+.ctaContainer:focus-within {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    transform: translateY(-2px) scale(1.025) rotate(-0.5deg);
+    box-shadow: 0 6px 24px -2px rgba(47, 107, 63, 0.24);
+  }
+}
+
+@media (max-width: 767px) {
+  .sectionWrap {
+    padding-block: clamp(3.5rem, 10vw, 5rem);
+  }
+
+  .statement {
+    font-size: clamp(1.5rem, 1rem + 2.3vw, 2.75rem);
+    line-height: 1.48;
+    letter-spacing: -0.025em;
+  }
+
+  .chipWrap {
+    margin-block: 0.15em;
+  }
+
+  .chip {
+    gap: 0.3em;
+    padding: 0.22em 0.55em;
+    font-size: 0.78em;
+    line-height: 1.35;
+    border-radius: 1.2em;
+  }
+
+  .chip > span:last-child {
+    min-width: 0;
+    text-wrap: balance;
+  }
+
+  .watermarkLeft,
+  .watermarkRight {
+    width: 120px;
+    opacity: 0.035;
+  }
+
+  .ambientGlow1,
+  .ambientGlow2 {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beaconPing {
+    animation: none;
+    opacity: 0;
+  }
+
+  .chip {
+    transition: none;
+  }
+
+  .chip:hover {
+    transform: none;
+  }
+
+  .chipShimmer {
+    display: none;
+  }
+}
