@@ -28,7 +28,7 @@ const ProductAssurance = () => (
             />
 
             <div data-reveal className="overflow-hidden rounded-[var(--radius-tile)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft),var(--elev-1)]">
-                <ul className="grid list-none gap-px bg-line-soft p-0 sm:grid-cols-2 lg:grid-cols-4">
+                <ul className="grid grid-cols-1 list-none gap-px bg-line-soft p-0 sm:grid-cols-2 lg:grid-cols-4">
                     {POLICIES.map(({ icon: Icon, label, value, unit, text }, i) => (
                         <li key={label} className="group relative flex flex-col bg-surface-card p-6 sm:p-7 lg:p-8">
                             <span

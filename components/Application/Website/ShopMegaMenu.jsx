@@ -189,7 +189,7 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                 )}
             >
                 <div className="overflow-hidden rounded-[var(--radius-tile)] border border-[var(--line-soft)] bg-[var(--surface-card)] shadow-[var(--elev-3)]">
-                    <div className="grid lg:grid-cols-[minmax(0,1fr)_15rem] xl:grid-cols-[minmax(0,1fr)_17rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_15rem] xl:grid-cols-[minmax(0,1fr)_17rem]">
                         {/* Category grid */}
                         <div className="flex min-w-0 flex-col gap-3 p-4 xl:px-5">
                             <div className="flex items-center justify-between gap-4">

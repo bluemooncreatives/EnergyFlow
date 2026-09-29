@@ -138,7 +138,7 @@ const TestimonialClient = ({ testimonials = [], tone = 'page' }) => {
 
     return (
         <Section ref={sectionRef} tone={tone} aria-labelledby="reviews-title">
-            <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+            <div className="grid grid-cols-1 gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
 
                 {/* ── Heading + controls ── */}
                 <div data-reveal className="flex flex-col items-start gap-4 lg:justify-between">

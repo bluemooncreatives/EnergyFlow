@@ -152,7 +152,7 @@ const CategoryPage = async ({ params }) => {
 
             {(seo.sections?.length > 0 || seo.faqs?.length > 0) && (
                 <section className="ef-section ef-section--sunken">
-                    <div className="ef-container grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16">
+                    <div className="ef-container grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16">
                         {seo.sections?.length > 0 && (
                             <div className="flex flex-col gap-10">
                                 {seo.sections.map((section) => (

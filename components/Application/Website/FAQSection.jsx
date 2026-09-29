@@ -145,7 +145,7 @@ const FAQSection = ({ tone = 'page' }) => {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
             <Section ref={sectionRef} tone={tone} id="faq" aria-labelledby="faq-title" className="scroll-mt-20">
-                <div className="grid gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
+                <div className="grid grid-cols-1 gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
 
                     <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
                         <div data-reveal className="flex flex-col items-start gap-4">

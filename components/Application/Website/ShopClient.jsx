@@ -179,7 +179,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
             />
 
             <section className='ef-section ef-section--page ef-section--tight'>
-                <div className="ef-container grid gap-6 lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-10">
+                <div className="ef-container grid grid-cols-1 gap-6 lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-10">
                     {/* The aside shell always renders (CSS-hidden below lg) so the
                         sidebar column is occupied from the server-rendered first
                         paint — if it only mounted after hydration (isDesktop flips

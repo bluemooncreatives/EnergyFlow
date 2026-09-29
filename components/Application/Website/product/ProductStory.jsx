@@ -76,7 +76,7 @@ const ProductStory = ({ product, variant, variants, html }) => {
                 </div>
             </div>
 
-            <div className="ef-container grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16 xl:gap-24">
+            <div className="ef-container grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16 xl:gap-24">
                 <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
                     <div data-reveal className="flex flex-col items-start gap-4">
                         <span className="ef-eyebrow">The details</span>

@@ -3,7 +3,7 @@ import UserPanelNavigation from './UserPanelNavigation'
 const UserPanelLayout = ({ children }) => {
     return (
         <section className="ef-container py-10 lg:py-14 font-neue">
-            <div className="grid w-full gap-6 lg:grid-cols-[260px_1fr] lg:gap-8">
+            <div className="grid grid-cols-1 w-full gap-6 lg:grid-cols-[260px_1fr] lg:gap-8">
                 <aside className="w-full">
                     <div className="sticky top-6">
                         <UserPanelNavigation />

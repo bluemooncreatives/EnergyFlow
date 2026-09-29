@@ -443,7 +443,7 @@ const SignatureRangeClient = ({ tone = 'page', stats = null, availability = null
                 <h3 data-reveal className="mb-4 text-[length:var(--type-h3)] font-medium leading-tight text-ink-strong">
                     Not sure yet? Start here.
                 </h3>
-                <div className="grid gap-3 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                     {MORE_LINKS.map((link) => (
                         <StoreLink key={link.href} href={link.href} data-reveal className="h-14 min-h-14 w-full justify-between">
                             {link.label}

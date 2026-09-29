@@ -19,7 +19,7 @@ import { formatProductName } from '@/lib/seo'
 import { CartBarShell, EMPTY_SUMMARY } from '@/components/Application/Website/MobileCartBar'
 
 const CartSkeleton = () => (
-    <div className="grid gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem]" aria-hidden="true">
+    <div className="grid grid-cols-1 gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem]" aria-hidden="true">
         <div className="flex flex-col gap-3">
             {[0, 1].map((i) => (
                 <div key={i} className="ef-card h-32 animate-pulse bg-surface-card" />
@@ -131,7 +131,7 @@ const CartPageClient = () => {
                     ) : products.length === 0 ? (
                         <EmptyCart />
                     ) : (
-                        <div className="grid items-start gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-8">
+                        <div className="grid grid-cols-1 items-start gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-8">
                             {/* ── Line items ── */}
                             <ul className="flex list-none flex-col gap-3 p-0" aria-label="Items in your cart">
                                 {products.map((product) => {

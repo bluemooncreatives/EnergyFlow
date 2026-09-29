@@ -125,7 +125,7 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
                                 decLabel={cart.cartQty <= 1 ? 'Remove from cart' : 'Decrease quantity'}
                             />
                         </div>
-                        <Link href={WEBSITE_CART} className="ef-btn ef-btn--primary h-11 px-4 text-xs sm:px-5">
+                        <Link href={WEBSITE_CART} className="ef-btn ef-btn--primary h-11 min-h-11 px-4 text-xs sm:px-5">
                             <span className="sm:hidden">Cart ({cart.cartQty})</span>
                             <span className="hidden sm:inline">Go to cart</span>
                             <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
@@ -133,10 +133,10 @@ const StickyBuyBar = ({ watchRef, product, variant, image, cart, onAdd }) => {
                     </div>
                 ) : (
                     <div className="flex items-center gap-2">
-                        <button type="button" onClick={() => cart.buyNow(1)} className="ef-btn ef-btn--accent hidden h-11 px-5 text-xs sm:inline-flex">
+                        <button type="button" onClick={() => cart.buyNow(1)} className="ef-btn ef-btn--accent hidden h-11 min-h-11 px-5 text-xs sm:inline-flex">
                             <Zap aria-hidden="true" /> Buy now
                         </button>
-                        <button type="button" onClick={() => onAdd(1, thumbRef.current)} className="ef-btn ef-btn--primary h-11 px-4 text-xs sm:px-5">
+                        <button type="button" onClick={() => onAdd(1, thumbRef.current)} className="ef-btn ef-btn--primary h-11 min-h-11 px-4 text-xs sm:px-5">
                             <ShoppingBag aria-hidden="true" /> Add<span className="hidden sm:inline"> to cart</span>
                         </button>
                     </div>

@@ -547,7 +547,7 @@ const Checkout = () => {
                 client's restored cart never produce two different trees. */}
             {(!hydrated || (isBuyNow && !buyResolved))
                 ? <section className='ef-section ef-section--tight' aria-busy='true'>
-                    <div className='ef-container grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]'>
+                    <div className='ef-container grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]'>
                         <div className='ef-card h-96 animate-pulse' />
                         <div className='ef-card h-80 animate-pulse' />
                     </div>
@@ -607,7 +607,7 @@ const Checkout = () => {
                 </section>
                 :
                 <section className='ef-section ef-section--tight'>
-                    <div className='ef-container grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)] lg:gap-12'>
+                    <div className='ef-container grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)] lg:gap-12'>
 
                         {/* ───────────────── LEFT: details + payment ───────────────── */}
                         <div className='min-w-0'>

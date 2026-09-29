@@ -24,7 +24,7 @@ const OrderDetailsLoading = () => {
                         <Skeleton className="mt-5 h-16 w-full bg-surface-well" />
                     </div>
 
-                    <div className="mt-6 grid items-start gap-6 lg:grid-cols-[1fr_360px]">
+                    <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px]">
                         <div className="min-w-0 space-y-6">
                             <div className="rounded-[var(--radius-card)] bg-surface-card p-5 shadow-[inset_0_0_0_1px_var(--line-soft)]">
                                 <Skeleton className="h-5 w-24 bg-surface-well" />

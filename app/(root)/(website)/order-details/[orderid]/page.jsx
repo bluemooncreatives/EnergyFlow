@@ -153,7 +153,7 @@ const OrderDetails = async ({ params }) => {
                     </div>
 
                     {/* ── Main grid ── */}
-                    <div className='mt-6 grid items-start gap-6 lg:grid-cols-[1fr_360px]'>
+                    <div className='mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px]'>
 
                         {/* LEFT: items + shipping */}
                         <div className='min-w-0 space-y-6'>

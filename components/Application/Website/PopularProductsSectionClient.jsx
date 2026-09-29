@@ -76,7 +76,7 @@ const PopularProductsSectionClient = ({ products = [], tone = 'page', availabili
     return (
         <Section ref={sectionRef} tone={tone} aria-labelledby={products.length ? 'popular-title' : undefined}>
             {/* ── Promo banners ── */}
-            <div className="grid gap-[var(--grid-gap)] md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-[var(--grid-gap)] md:grid-cols-2">
                 {PROMO_BANNERS.map((banner) => (
                     <PromoBanner key={banner.title} banner={banner} availability={availability} />
                 ))}

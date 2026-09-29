@@ -11,7 +11,7 @@ const ShopLoading = () => {
             <PageHeroSkeleton />
 
             <section className="ef-section ef-section--page ef-section--tight">
-                <div className="ef-container grid gap-6 lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-10">
+                <div className="ef-container grid grid-cols-1 gap-6 lg:grid-cols-[272px_minmax(0,1fr)] lg:gap-10">
                     {/* Filter rail */}
                     <aside className="hidden flex-col gap-6 lg:flex">
                         {Array.from({ length: 3 }, (_, section) => (

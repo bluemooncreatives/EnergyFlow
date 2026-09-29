@@ -106,7 +106,7 @@ const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmen
                 <span>{note}</span>
             </p>
 
-            <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <ShipmentInfo label="Tracking Number (AWB)" value={shipment?.awb || "---"} mono />
                 <ShipmentInfo label="Courier Name" value={shipment?.courier || "---"} />
                 <ShipmentInfo label="Current Shipment Status" value={labelize(shipmentStatus)} />

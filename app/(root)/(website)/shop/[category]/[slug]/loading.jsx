@@ -19,7 +19,7 @@ const ProductLoading = () => {
             <div className="ef-container">
                 <Skeleton className="mb-6 h-4 w-64 max-w-full bg-surface-well lg:mb-8" />
 
-                <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-20">
+                <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-20">
                     {/* Gallery: stage + thumbnail rail */}
                     <div className="flex flex-col gap-3">
                         <Skeleton className="aspect-square w-full rounded-well bg-surface-well" />
