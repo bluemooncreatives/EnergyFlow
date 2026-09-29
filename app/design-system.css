@@ -1284,6 +1284,53 @@ body {
   .ef-icon-btn:disabled { opacity: 0.35; cursor: default; }
   .ef-icon-btn svg { width: 1.125rem; height: 1.125rem; }
 
+  /* ── Back to top ─────────────────────────────────────────────── */
+  /* Desktop only. Phones and tablets already carry a bottom bar — the cart
+     bar, or the product page's buy bar with its own way back up — and a
+     floating circle would land on top of it. Sits bottom-right, opposite the
+     newsletter teaser, and clear of the desktop buy bar's floating capsule. */
+  .ef-to-top { display: none; }
+
+  @media (min-width: 1024px) {
+    .ef-to-top {
+      display: inline-flex;
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right, 0px));
+      /* Lifted by whichever bottom bar is showing, like the teaser. */
+      bottom: calc(1rem + max(var(--ef-buybar-h, 0px), var(--ef-cartbar-h, 0px)) + env(safe-area-inset-bottom, 0px));
+      z-index: 40;   /* under the header (50), the buy bar (45) and any sheet */
+      width: 3rem;
+      height: 3rem;
+      box-shadow: var(--elev-2);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(0.75rem) scale(0.92);
+      transition: opacity 260ms var(--ease-out),
+                  transform 360ms var(--ease-spring),
+                  visibility 0s linear 360ms,
+                  background-color var(--duration-fast),
+                  border-color var(--duration-fast),
+                  color var(--duration-fast);
+    }
+    .ef-to-top[data-visible] {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition: opacity 260ms var(--ease-out),
+                  transform 360ms var(--ease-spring),
+                  visibility 0s,
+                  background-color var(--duration-fast),
+                  border-color var(--duration-fast),
+                  color var(--duration-fast);
+    }
+    .ef-to-top[data-visible]:active { transform: scale(0.94); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ef-to-top { transition: opacity 120ms linear, visibility 0s linear 120ms; transform: none; }
+    .ef-to-top[data-visible] { transition: opacity 120ms linear, visibility 0s; }
+  }
+
   /* ── Chips & badges ────────────────────────────────────────── */
   .ef-badge {
     display: inline-flex;
