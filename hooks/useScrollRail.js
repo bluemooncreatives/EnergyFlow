@@ -8,11 +8,11 @@ const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)'
 // Where each card snaps to (its left edge less the rail's scroll padding),
 // clamped to the scrollable range and de-duplicated: the last few cards of a
 // multi-card rail all share the final stop.
-const measureStops = (el, max) => {
+const measureStops = (el, max, stopSelector) => {
     const pad = parseFloat(getComputedStyle(el).scrollPaddingLeft) || 0
     const origin = el.getBoundingClientRect().left + el.clientLeft - el.scrollLeft
     const stops = []
-    for (const child of el.children) {
+    for (const child of stopSelector ? el.querySelectorAll(stopSelector) : el.children) {
         const at = Math.min(max, Math.max(0, child.getBoundingClientRect().left - origin - pad))
         if (!stops.length || at - stops[stops.length - 1] > EDGE) stops.push(at)
     }
@@ -25,7 +25,7 @@ const measureStops = (el, max) => {
 // every card already fits. Also reports the snap stops and which one is
 // current, for a position indicator (RailPager). Re-measures on resize and
 // when cards load in.
-export const useScrollRail = () => {
+export const useScrollRail = (stopSelector) => {
     const railRef = useRef(null)
     const stopsRef = useRef([0])
     const [state, setState] = useState({ canPrev: false, canNext: false, overflows: false, stops: 1, index: 0 })
@@ -36,7 +36,7 @@ export const useScrollRail = () => {
 
         const update = () => {
             const max = Math.max(0, el.scrollWidth - el.clientWidth)
-            const stops = measureStops(el, max)
+            const stops = measureStops(el, max, stopSelector)
             stopsRef.current = stops
             let index = 0
             stops.forEach((at, i) => {
@@ -61,7 +61,10 @@ export const useScrollRail = () => {
         const observeCards = () => {
             ro?.disconnect()
             ro?.observe(el)
-            Array.from(el.children).forEach((child) => ro?.observe(child))
+            // Nested stops are used by responsive rails whose desktop cards
+            // animate their widths. Watching those cards would remeasure the
+            // whole rail on every animation frame; viewport resize is enough.
+            if (!stopSelector) Array.from(el.children).forEach((child) => ro?.observe(child))
             update()
         }
         const mutations = new MutationObserver(observeCards)
@@ -73,7 +76,7 @@ export const useScrollRail = () => {
             ro?.disconnect()
             mutations.disconnect()
         }
-    }, [])
+    }, [stopSelector])
 
     const scroll = useCallback((direction) => {
         const el = railRef.current

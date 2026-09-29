@@ -32,8 +32,7 @@ const CategoryArchiveSection = async ({ tone }) => {
 
     const items = (categories || []).map(mapCategory)
 
-    // Nothing shoppable with an image yet: hide the section entirely rather than
-    // render an empty showcase on the live storefront.
+    // No active categories with products: hide the empty showcase.
     if (items.length === 0) return null
 
     return <CategoryShowcaseClient items={items} writeup={WRITEUP} tone={tone} />

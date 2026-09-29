@@ -383,7 +383,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
             )}
 
             {/* ── 5 · How we source ──────────────────────────────────── */}
-            <Section tone="page">
+            <Section tone="page" id="how-we-work">
                 <div className={styles.sourcingHeader} data-reveal>
                     <div className={styles.sourcingHeaderMeta}>
                         <span className="ef-eyebrow">How we work</span>

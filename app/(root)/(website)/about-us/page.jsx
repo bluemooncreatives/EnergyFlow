@@ -49,7 +49,7 @@ export default async function AboutUsPage() {
     getTestimonials().catch(() => []),
   ]);
 
-  const categories = (homeCategories ?? []).map((category) => ({
+  const categories = (homeCategories ?? []).filter((category) => category.previewImage).map((category) => ({
     ...category,
     name: formatCategoryName(category.name),
   }));

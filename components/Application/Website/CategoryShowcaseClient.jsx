@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useReveal } from '@/hooks/useReveal'
 import { useScrollRail } from '@/hooks/useScrollRail'
@@ -105,6 +105,7 @@ const Panel = ({ item, panelRef }) => {
     return (
         <li
             ref={setLiRef}
+            data-category-panel
             className="group/panel relative h-[31rem] w-[78vw] max-w-[22rem] shrink-0 snap-start sm:w-[26rem] sm:max-w-none lg:h-full lg:w-auto lg:min-w-0 lg:flex-1 lg:basis-0"
         >
             {/* Product count, sitting in the notch cut from the card's corner. */}
@@ -118,14 +119,16 @@ const Panel = ({ item, panelRef }) => {
 
             <div ref={cardRef} data-card className="absolute inset-0 isolate overflow-hidden rounded-[var(--radius-control)] bg-pine">
                 {/* Photo (oversized so the pointer parallax never shows an edge) */}
-                <div data-img className="absolute -inset-[4%] -z-10 will-change-transform">
-                    <Image
-                        src={item.previewImage}
-                        alt=""
-                        fill
-                        sizes="(max-width: 1024px) 84vw, 50vw"
-                        className="object-cover"
-                    />
+                <div data-img className="absolute -inset-[4%] -z-10 bg-[radial-gradient(circle_at_78%_18%,rgb(242_201_76/0.52),transparent_36%),radial-gradient(circle_at_12%_83%,rgb(140_122_59/0.68),transparent_44%),var(--palette-pine)] will-change-transform">
+                    {item.previewImage && (
+                        <Image
+                            src={item.previewImage}
+                            alt=""
+                            fill
+                            sizes="(max-width: 1024px) 84vw, 50vw"
+                            className="object-cover"
+                        />
+                    )}
                 </div>
                 {/* Scrim. Phones always show the full details stack, which reaches much
                     higher up the photo, so the scrim climbs with it there. */}
@@ -231,12 +234,9 @@ const Panel = ({ item, panelRef }) => {
     )
 }
 
-// "Shop by category": four equal photo panels; hovering (or focusing) one
-// widens it and reveals its data — price floor, best markdown, three popular
-// products and a clear shop action. Phones and tablets get the same cards as a
-// swipeable rail with the details always visible. The next card peeks in, a
-// pager under the rail shows the position with prev / next buttons, and on
-// first view the rail nudges sideways once, so it is plain that it scrolls.
+// "Shop by category": four panels per desktop page, with the same expansion
+// and detail reveal on every page. Phones and tablets get one swipeable rail
+// containing every card, with its details always visible.
 //
 // GSAP, desktop only (gsap.matchMedia):
 //   • one flex-grow tween re-proportions all panels (debounced by a short
@@ -249,13 +249,67 @@ const Panel = ({ item, panelRef }) => {
 // Reduced motion keeps the same states, just without the movement.
 const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
     const sectionRef = useRef(null)
-    const rail = useScrollRail()
+    const rail = useScrollRail('[data-category-panel]')
     const listRef = rail.railRef
+    const trackRef = useRef(null)
+    const pagesRef = useRef([])
     const panelsRef = useRef([])
+    const [pageIndex, setPageIndex] = useState(0)
     useReveal(sectionRef, [items.length])
 
-    const panels = items.slice(0, PANEL_COUNT)
-    const more = items.slice(PANEL_COUNT)
+    const pages = Array.from({ length: Math.ceil(items.length / PANEL_COUNT) }, (_, i) =>
+        items.slice(i * PANEL_COUNT, (i + 1) * PANEL_COUNT)
+    )
+
+    useEffect(() => {
+        setPageIndex((i) => Math.min(i, Math.max(0, pages.length - 1)))
+    }, [pages.length])
+
+    // Move whole four-card compositions together. The small lift and fade on
+    // the entering page gives the transition depth without disturbing the
+    // flex-grow hover animation inside each composition.
+    useEffect(() => {
+        const viewport = listRef.current
+        const track = trackRef.current
+        if (!viewport || !track) return
+
+        const desktop = window.matchMedia('(min-width: 1024px)')
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const sync = (animate = false) => {
+            const isDesktop = desktop.matches
+            const target = pagesRef.current[pageIndex]
+            pagesRef.current.forEach((page, i) => {
+                if (page) page.inert = isDesktop && i !== pageIndex
+            })
+            gsap.killTweensOf(track)
+            if (!isDesktop) {
+                gsap.set(track, { clearProps: 'transform' })
+                return
+            }
+            if (animate && !reduce.matches && target) {
+                gsap.fromTo(target,
+                    { autoAlpha: 0.7, y: 24, scale: 0.985 },
+                    { autoAlpha: 1, y: 0, scale: 1, duration: 0.95, ease: 'expo.out', clearProps: 'opacity,visibility,transform' }
+                )
+            }
+            gsap.to(track, {
+                x: -pageIndex * viewport.clientWidth,
+                duration: animate && !reduce.matches ? 1.05 : 0,
+                ease: 'expo.inOut',
+                overwrite: true,
+            })
+        }
+
+        sync(true)
+        const resize = new ResizeObserver(() => sync(false))
+        resize.observe(viewport)
+        desktop.addEventListener('change', sync)
+        return () => {
+            resize.disconnect()
+            desktop.removeEventListener('change', sync)
+            gsap.killTweensOf(track)
+        }
+    }, [listRef, pageIndex, pages.length])
 
     useGSAP(() => {
         const list = listRef.current
@@ -295,7 +349,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                     if (active > -1) reveals[active].timeScale(1.7).reverse()
                     active = i
                     gsap.to(els, {
-                        flexGrow: (j) => (i < 0 ? 1 : j === i ? GROW_ACTIVE : GROW_REST),
+                        flexGrow: (j) => (i < 0 || Math.floor(j / PANEL_COUNT) !== Math.floor(i / PANEL_COUNT) ? 1 : j === i ? GROW_ACTIVE : GROW_REST),
                         duration: 0.9 * t,
                         ease: 'expo.out',
                         overwrite: 'auto',
@@ -336,7 +390,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
                 list.addEventListener('focusout', onFocusOut)
 
                 if (!reduce) {
-                    gsap.fromTo(els,
+                    gsap.fromTo(els.slice(0, PANEL_COUNT),
                         { clipPath: 'inset(100% 0% 0% 0%)' },
                         {
                             clipPath: 'inset(0% 0% 0% 0%)',
@@ -366,7 +420,7 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
         return () => mm.revert()
     }, { scope: sectionRef, dependencies: [items.length] })
 
-    if (!panels.length) return null
+    if (!items.length) return null
 
     return (
         <Section ref={sectionRef} tone={tone} aria-labelledby="categories-title">
@@ -381,29 +435,60 @@ const CategoryShowcaseClient = ({ items = [], writeup, tone = 'sunken' }) => {
 
             <RailPager rail={rail} label="categories" className="mb-4 lg:hidden" />
 
-            <ul
+            <div
                 ref={listRef}
-                aria-label="Top categories"
-                className="no-scrollbar flex list-none gap-[var(--grid-gap)] overflow-x-auto p-0 max-lg:-mx-[var(--website-gutter)] max-lg:snap-x max-lg:snap-mandatory max-lg:px-[var(--website-gutter)] max-lg:scroll-px-[var(--website-gutter)] lg:h-[clamp(28rem,36vw,34rem)] lg:overflow-visible"
+                aria-label="Shop by category"
+                className="no-scrollbar flex list-none gap-[var(--grid-gap)] overflow-x-auto p-0 max-lg:-mx-[var(--website-gutter)] max-lg:snap-x max-lg:snap-mandatory max-lg:px-[var(--website-gutter)] max-lg:scroll-px-[var(--website-gutter)] lg:h-[clamp(28rem,36vw,34rem)] lg:overflow-hidden"
             >
-                {panels.map((item, i) => (
-                    <Panel key={item.id} item={item} panelRef={(el) => { panelsRef.current[i] = el }} />
-                ))}
-            </ul>
-
-            {more.length > 0 && (
-                <nav data-reveal aria-label="More categories" className="mt-6 flex flex-wrap items-center gap-2">
-                    <span className="mr-1 text-[0.8125rem] text-ink-muted">More categories:</span>
-                    {more.map((item) => (
-                        <Link
-                            key={item.id}
-                            href={item.href}
-                            className="ef-focus rounded-[var(--radius-control)] bg-surface-card px-3 py-1.5 text-[0.8125rem] font-medium text-ink-strong shadow-[inset_0_0_0_1px_var(--line-soft)] transition-colors hover:bg-brand hover:text-on-brand"
+                <div ref={trackRef} className="contents lg:flex lg:h-full lg:w-full lg:will-change-transform">
+                    {pages.map((page, pageNumber) => (
+                        <div
+                            key={page[0].id}
+                            ref={(el) => { pagesRef.current[pageNumber] = el }}
+                            className="contents lg:block lg:h-full lg:w-full lg:shrink-0"
+                            role="group"
+                            aria-label={`Category page ${pageNumber + 1} of ${pages.length}`}
                         >
-                            {item.name}
-                        </Link>
+                            <ul className="contents list-none p-0 lg:flex lg:h-full lg:gap-[var(--grid-gap)]">
+                                {page.map((item, itemIndex) => (
+                                    <Panel
+                                        key={item.id}
+                                        item={item}
+                                        panelRef={(el) => { panelsRef.current[pageNumber * PANEL_COUNT + itemIndex] = el }}
+                                    />
+                                ))}
+                            </ul>
+                        </div>
                     ))}
-                </nav>
+                </div>
+            </div>
+
+            {pages.length > 1 && (
+                <div data-reveal className="mt-5 hidden items-center justify-between gap-6 lg:flex">
+                    <div className="flex min-w-0 flex-1 items-center gap-4">
+                        <span role="status" aria-live="polite" aria-atomic="true" className="shrink-0 font-header text-sm font-semibold tabular-nums text-ink-strong">
+                            {String(pageIndex + 1).padStart(2, '0')}
+                            <span className="mx-2 text-ink-muted">/</span>
+                            {String(pages.length).padStart(2, '0')}
+                        </span>
+                        <div className="flex h-1 min-w-0 max-w-52 flex-1 gap-1" aria-hidden="true">
+                            {pages.map((page, i) => (
+                                <span key={page[0].id} className="h-full flex-1 overflow-hidden rounded-full bg-line-strong">
+                                    <span className={`block h-full origin-left rounded-full bg-brand transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${i <= pageIndex ? 'scale-x-100' : 'scale-x-0'}`} />
+                                </span>
+                            ))}
+                        </div>
+                        <span className="text-sm text-ink-muted">Explore all {items.length} categories</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button type="button" className="ef-icon-btn min-h-11 min-w-11" aria-label="Previous categories" disabled={pageIndex === 0} onClick={() => setPageIndex((i) => Math.max(0, i - 1))}>
+                            <ArrowLeft aria-hidden="true" />
+                        </button>
+                        <button type="button" className="ef-icon-btn min-h-11 min-w-11" aria-label="Next categories" disabled={pageIndex === pages.length - 1} onClick={() => setPageIndex((i) => Math.min(pages.length - 1, i + 1))}>
+                            <ArrowRight aria-hidden="true" />
+                        </button>
+                    </div>
+                </div>
             )}
 
             {/* The long-form range description stays on the page for search and
