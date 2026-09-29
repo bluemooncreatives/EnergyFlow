@@ -269,7 +269,7 @@ const ProductCard = ({
                             aria-label={addLabel}
                             className="ef-btn ef-btn--primary ef-btn--sm ef-btn--block mt-2"
                         >
-                            <ShoppingBag aria-hidden="true" /> {canAdd ? 'Add to cart' : 'Unavailable'}
+                            <ShoppingBag aria-hidden="true" className="@max-[11rem]/card:hidden" /> {canAdd ? 'Add to cart' : 'Unavailable'}
                         </button>
                     )
                 )}
@@ -293,7 +293,7 @@ const ProductCard = ({
                                 aria-label={addLabel}
                                 className="ef-btn ef-btn--outline ef-btn--sm ef-btn--block"
                             >
-                                <ShoppingBag aria-hidden="true" /> Add to cart
+                                <ShoppingBag aria-hidden="true" className="@max-[11rem]/card:hidden" /> Add to cart
                             </button>
                         )}
                         <button
