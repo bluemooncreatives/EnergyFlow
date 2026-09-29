@@ -1,13 +1,14 @@
 'use client'
 
 import { WEBSITE_CHECKOUT, WEBSITE_LOGIN, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import { ArrowRight, LogIn, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck } from 'lucide-react'
-import { decreaseQuantity, increaseQuantity, removeFromCart } from '@/store/reducer/cartReducer'
+import { decreaseQuantity, increaseQuantity, removeFromCart, selectCartSummary } from '@/store/reducer/cartReducer'
 import { MAX_CART_QTY, MIN_CART_QTY } from '@/lib/cartConstants'
 import useFetch from '@/hooks/useFetch'
 import { useHydrated } from '@/hooks/useHydrated'
@@ -15,6 +16,7 @@ import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton, { StoreLink } from '@/components/Application/Website/storefront/StoreButton'
 import { formatINR } from '@/components/Application/Website/storefront/format'
 import { formatProductName } from '@/lib/seo'
+import { CartBarShell, EMPTY_SUMMARY } from '@/components/Application/Website/MobileCartBar'
 
 const CartSkeleton = () => (
     <div className="grid gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_22rem]" aria-hidden="true">
@@ -79,11 +81,24 @@ const CartPageClient = () => {
     const { data: profile, loading: authLoading } = useFetch('/api/profile/get')
     const isLoggedIn = Boolean(profile?.success)
 
+    const summary = useSelector(selectCartSummary)
     const products = hydrated ? cart.products : []
-    const itemCount = products.reduce((n, p) => n + (Number(p.qty) || 0), 0)
-    const subtotal = products.reduce((sum, p) => sum + (Number(p.sellingPrice) || 0) * (Number(p.qty) || 0), 0)
-    const mrpTotal = products.reduce((sum, p) => sum + (Number(p.mrp) || Number(p.sellingPrice) || 0) * (Number(p.qty) || 0), 0)
-    const savings = Math.max(0, mrpTotal - subtotal)
+    const { units: itemCount, subtotal, mrpTotal, savings } = hydrated ? summary : EMPTY_SUMMARY
+
+    // Phones and tablets stack the summary under the items, so its checkout
+    // button starts off-screen. A bottom bar carries checkout until that
+    // button scrolls into view (and again once it scrolls past).
+    const checkoutRef = useRef(null)
+    const [checkoutInView, setCheckoutInView] = useState(true)
+    const hasItems = products.length > 0
+    useEffect(() => {
+        const el = checkoutRef.current
+        if (!hasItems || !el || typeof IntersectionObserver === 'undefined') return
+        // The bottom margin keeps a button hidden under the bar counting as out of view.
+        const io = new IntersectionObserver(([entry]) => setCheckoutInView(entry.isIntersecting), { rootMargin: '0px 0px -88px 0px' })
+        io.observe(el)
+        return () => io.disconnect()
+    }, [hasItems])
 
     // Checkout is account-required: signed-in users go straight to checkout, guests
     // are sent to sign-in and bounced back to checkout afterwards via ?callback.
@@ -201,6 +216,7 @@ const CartPageClient = () => {
                                     <p className="text-[0.8125rem] text-ink-muted">Coupons and delivery are applied at checkout.</p>
 
                                     <button
+                                        ref={checkoutRef}
                                         type="button"
                                         onClick={handleCheckout}
                                         disabled={authLoading}
@@ -224,6 +240,30 @@ const CartPageClient = () => {
                     )}
                 </div>
             </section>
+
+            <CartBarShell visible={hasItems && !checkoutInView} label="Checkout">
+                <div className="ef-cartbar__panel">
+                    <span className="flex min-w-0 flex-col leading-tight">
+                        <span className="truncate text-[0.75rem] font-medium opacity-85">
+                            Total · {itemCount} {itemCount === 1 ? 'item' : 'items'}
+                            {savings > 0 && <> · Save {formatINR(savings)}</>}
+                        </span>
+                        <span className="truncate text-[1.0625rem] font-semibold tabular-nums tracking-[-0.01em]">
+                            {formatINR(subtotal)}
+                        </span>
+                    </span>
+                    <button
+                        type="button"
+                        onClick={handleCheckout}
+                        disabled={authLoading}
+                        className="ef-cartbar__cta ef-cartbar__cta--solid"
+                    >
+                        {showSignInCta
+                            ? <><LogIn aria-hidden="true" /> Sign in to checkout</>
+                            : <>Checkout <ArrowRight aria-hidden="true" /></>}
+                    </button>
+                </div>
+            </CartBarShell>
         </div>
     )
 }

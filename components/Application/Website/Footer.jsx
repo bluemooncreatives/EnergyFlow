@@ -197,8 +197,10 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
                 <FooterWordmark />
             </div>
 
-            {/* ───── Bottom bar — the sunflower strip that closes the page ───── */}
-            <div className='border-t border-[var(--palette-pine)] bg-[var(--surface-sun)] text-[var(--palette-pine)]'>
+            {/* ───── Bottom bar — the sunflower strip that closes the page ─────
+                ef-bottom-clear grows it while a bottom bar is showing, so the
+                last line is never hidden underneath. */}
+            <div className='ef-bottom-clear border-t border-[var(--palette-pine)] bg-[var(--surface-sun)] text-[var(--palette-pine)]'>
                 <div className='website-gutter py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm'>
                     <div className='flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3'>
                         <p>Copyright © {new Date().getFullYear()} Energyflow. All Rights Reserved.</p>

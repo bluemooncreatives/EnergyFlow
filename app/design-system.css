@@ -2622,13 +2622,27 @@ body {
     white-space: nowrap;
   }
   .dark .ef-cartbar__cta { background: rgb(10 47 36 / 0.12); }
+  /* The one action on the cart page's bar: checkout. */
+  .ef-cartbar__cta--solid {
+    border: 0;
+    cursor: pointer;
+    background: var(--brand-sun);
+    color: var(--brand-sun-ink);
+    transition: background-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-out);
+  }
+  .ef-cartbar__cta--solid:hover { background: var(--brand-amber-hover); }
+  .ef-cartbar__cta--solid:active:not(:disabled) { transform: scale(0.97); }
+  .ef-cartbar__cta--solid:disabled { opacity: 0.6; cursor: default; }
+  .ef-cartbar__cta--solid:focus-visible { outline: 2px solid var(--on-brand); outline-offset: 2px; }
+  .dark .ef-cartbar__cta--solid { background: var(--palette-pine); color: var(--palette-cream); }
+  .dark .ef-cartbar__cta--solid:hover { background: var(--brand-pine-hover); }
   .ef-cartbar__cta svg { width: 1rem; height: 1rem; }
   /* Very narrow phones keep the total and the button, not the photos. */
   @media (max-width: 359px) {
     .ef-cartbar__thumbs { display: none; }
   }
 
-  /* Page foot stays reachable above whichever bottom bar is showing. */
+  /* The page foot stays readable above whichever bottom bar is showing. */
   .ef-bottom-clear {
     padding-bottom: max(var(--ef-buybar-h, 0px), var(--ef-cartbar-h, 0px));
   }

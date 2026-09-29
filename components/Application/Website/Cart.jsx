@@ -18,10 +18,10 @@ import { BrandButton, BrandOutlineButton } from "@/components/Application/Websit
 import { useEffect, useState } from "react"
 import { showToast } from "@/lib/showToast"
 import { formatProductName } from '@/lib/seo'
+import { formatINR } from '@/components/Application/Website/storefront/format'
 import { useCartLine } from '@/hooks/useCartLine'
 import CartQtyStepper from '@/components/Application/Website/storefront/CartQtyStepper'
 
-const fmt = (n) => n?.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
 
 // One drawer row. Owns its own cart-line hook so a − / + here re-renders just
 // this row; stepping below one removes it (with Undo), like everywhere else.
@@ -59,9 +59,10 @@ const DrawerLine = ({ product }) => {
                     </button>
                 </div>
                 <span className="w-fit rounded-[var(--radius-control)] bg-surface-well px-2 py-0.5 text-[0.75rem] text-ink-body">
-                    {product.size && <>{product.size} · </>}{fmt(Number(product.sellingPrice) || 0)} each
+                    {product.size && <>{product.size} · </>}{formatINR(Number(product.sellingPrice) || 0)} each
                 </span>
-                <div className="mt-0.5 flex items-center justify-between gap-2">
+                {/* Wraps under the stepper when the drawer is narrow. */}
+                <div className="mt-0.5 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
                     <CartQtyStepper
                         qty={qty}
                         atMax={atMax}
@@ -72,7 +73,7 @@ const DrawerLine = ({ product }) => {
                         size="sm"
                     />
                     <span className="font-neue text-[14px] font-semibold tabular-nums text-foreground">
-                        {fmt(lineTotal)}
+                        {formatINR(lineTotal)}
                     </span>
                 </div>
             </div>
@@ -161,12 +162,12 @@ const Cart = () => {
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <span className="font-neue text-[15px] text-muted-foreground">Subtotal</span>
-                                    <span className="font-neue text-[15px] font-medium text-foreground">{fmt(summary.mrpTotal)}</span>
+                                    <span className="font-neue text-[15px] font-medium text-foreground">{formatINR(summary.mrpTotal)}</span>
                                 </div>
                                 {summary.savings > 0 && (
                                     <div className="flex items-center justify-between">
                                         <span className="font-neue text-[15px] text-muted-foreground">You save</span>
-                                        <span className="font-neue text-[15px] font-medium text-brand-bright">−{fmt(summary.savings)}</span>
+                                        <span className="font-neue text-[15px] font-medium text-brand-bright">−{formatINR(summary.savings)}</span>
                                     </div>
                                 )}
 
@@ -174,7 +175,7 @@ const Cart = () => {
 
                                 <div className="flex items-center justify-between">
                                     <span className="font-neue text-[17px] font-semibold text-foreground">Total</span>
-                                    <span className="font-neue text-[17px] font-semibold text-foreground">{fmt(subtotal)}</span>
+                                    <span className="font-neue text-[17px] font-semibold text-foreground">{formatINR(subtotal)}</span>
                                 </div>
                             </div>
 
@@ -186,7 +187,7 @@ const Cart = () => {
                         <div className="space-y-1.5">
                             <div className="flex items-center justify-between">
                                 <span className="font-neue text-[15px] font-semibold text-foreground">Total</span>
-                                <span className="font-neue text-[15px] font-semibold text-foreground">{fmt(0)}</span>
+                                <span className="font-neue text-[15px] font-semibold text-foreground">{formatINR(0)}</span>
                             </div>
                         </div>
                     )}

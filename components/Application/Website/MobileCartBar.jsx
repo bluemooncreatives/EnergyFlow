@@ -21,6 +21,8 @@ const SHOW_ON = [WEBSITE_SHOP, '/category', '/product']
 const showsOn = (path = '') => SHOW_ON.some((prefix) => path === prefix || path.startsWith(`${prefix}/`))
 
 const MAX_THUMBS = 3
+const NO_PRODUCTS = []
+export const EMPTY_SUMMARY = { lines: 0, units: 0, subtotal: 0, mrpTotal: 0, savings: 0 }
 const TYPING = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select, [contenteditable="true"]'
 
 // True while a text field has focus. On phones the keyboard is up then, and a
@@ -126,12 +128,16 @@ const MobileCartBar = () => {
     const pathname = usePathname()
     const hydrated = useHydrated()
     const slotTaken = useBottomSlotTaken()
-    const products = useSelector((store) => store.cartStore.products)
-    const { units, subtotal, savings } = useSelector(selectCartSummary)
+    const storedProducts = useSelector((store) => store.cartStore.products)
+    const summary = useSelector(selectCartSummary)
+    // The stored cart is client-only: render the server's empty cart until
+    // hydrated, or the (hidden) bar's text and photos would mismatch.
+    const products = hydrated ? storedProducts : NO_PRODUCTS
+    const { units, subtotal, savings } = hydrated ? summary : EMPTY_SUMMARY
     const panelRef = useRef(null)
     const lastUnits = useRef(null)
 
-    const visible = hydrated && units > 0 && showsOn(pathname) && !slotTaken
+    const visible = units > 0 && showsOn(pathname) && !slotTaken
 
     // A small nudge when more lands in the cart, so the change is noticed
     // without a second toast.
