@@ -15,7 +15,7 @@ import SectionHeader from './storefront/SectionHeader'
 import { StoreLink } from './storefront/StoreButton'
 import { formatINR } from './storefront/format'
 import { OilBottle } from './storefront/ProductIllustrations'
-import bilonaGhee from '@/public/assets/images/marquee/bilona-ghee.webp'
+import bilonaGhee from '@/public/assets/images/marquee/bilona-ghee-jar.webp'
 import chocolates from '@/public/assets/images/marquee/chocolates.webp'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -36,7 +36,7 @@ const RANGES = [
         cta: 'Shop ghee',
         enquire: 'Enquire about ghee',
         tint: 'var(--tint-honey)',
-        media: { kind: 'cutout', src: bilonaGhee },
+        media: { kind: 'cover', src: bilonaGhee },
     },
     {
         key: 'oils',
