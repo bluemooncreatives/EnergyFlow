@@ -20,8 +20,13 @@ const SWIPE_PX = 48;
 const LOADER_SESSION_KEY = "energyflow_loader_seen";
 
 // Cloudinary serves the plate PNGs; f_auto,q_auto keeps them light.
-const plateUrl = (version, id) =>
-  `https://res.cloudinary.com/g5wdpcrr/image/upload/f_auto,q_auto,w_900/v${version}/${id}.png`;
+// `fit` shrinks a plate that fills its whole canvas to that many px and pads it
+// back to a transparent 900px square, so it shows at the same visual size as
+// plates that already have breathing room around them.
+const plateUrl = (version, id, fit) =>
+  fit
+    ? `https://res.cloudinary.com/g5wdpcrr/image/upload/c_fit,w_${fit},h_${fit}/c_lpad,w_900,h_900,b_transparent/f_auto,q_auto/v${version}/${id}.png`
+    : `https://res.cloudinary.com/g5wdpcrr/image/upload/f_auto,q_auto,w_900/v${version}/${id}.png`;
 
 const shopCategory = (slug) => WEBSITE_CATEGORY(slug);
 
@@ -66,8 +71,8 @@ const SLIDES = [
     headline: "Made To Gift",
     writeup: "Chocolate and dry fruit gift boxes, wrapped and ready for festivals, weddings, teams and every reason worth celebrating.",
     short: "Chocolate and dry fruit gift boxes for festivals, weddings and teams.",
-    plate: plateUrl("1789923316", "ChatGPT_Image_Sep_20_2026_09_58_22_PM"),
-    alt: "A festive gift box of chocolates and dry fruits",
+    plate: plateUrl("1790878261", "Ornate_Gold_Tray_of_Nuts_and_Dried_Fruit", 800),
+    alt: "An ornate gold tray of nuts and dried fruit",
     tint: "var(--tint-almond)",
     badge: { Icon: Gift, text: "Custom & bulk orders" },
     floaters: ["bow", "sparkle", "truffle", "giftBox"],
