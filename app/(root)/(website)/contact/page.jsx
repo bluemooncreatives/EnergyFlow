@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { toast } from "sonner";
 import styles from "./contact.module.css";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { FACEBOOK_URL, INSTAGRAM_URL, X_URL } from "@/lib/socialLinks";
 
 const ContactPage = () => {
   const container = useRef();
@@ -284,13 +285,13 @@ const ContactPage = () => {
               <div className={styles.sectionLabel}><p>Socials</p></div>
               <div className={styles.divider} />
               <div className={styles.item}>
-                <a href="https://www.instagram.com/mom.stitched" target="_blank" rel="noreferrer">Instagram</a>
+                <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a>
               </div>
               <div className={styles.item}>
-                <a href="https://www.facebook.com/profile.php?id=100087738263074" target="_blank" rel="noreferrer">Facebook</a>
+                <a href={FACEBOOK_URL} target="_blank" rel="noreferrer">Facebook</a>
               </div>
               <div className={styles.item}>
-                <a href="https://youtube.com" target="_blank" rel="noreferrer">YouTube</a>
+                <a href={X_URL} target="_blank" rel="noreferrer">X (Twitter)</a>
               </div>
             </div>
 

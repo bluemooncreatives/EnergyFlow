@@ -9,6 +9,7 @@ import { MapPin, Mail, Phone, Instagram, Facebook, Twitter, Globe, ArrowRight } 
 import { USER_DASHBOARD, WEBSITE_HOME, WEBSITE_LOGIN, WEBSITE_REGISTER, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import FooterWordmark from '@/components/Application/Website/FooterWordmark'
 import NewsletterFooterStrip from '@/components/Application/Website/newsletter/NewsletterFooterStrip'
+import { FACEBOOK_URL, INSTAGRAM_URL, X_URL } from '@/lib/socialLinks'
 
 const CONTACT_EMAIL = 'energyflow0001@gmail.com'
 const CONTACT_PHONE = '+919289657742'
@@ -35,9 +36,9 @@ const helpLinks = [
 ]
 
 const socialLinks = [
-    { label: 'Instagram', href: 'https://www.instagram.com/mom.stitched', Icon: Instagram },
-    { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100087738263074', Icon: Facebook },
-    { label: 'X (Twitter)', href: 'https://twitter.com/energyflow', Icon: Twitter },
+    { label: 'Instagram', href: INSTAGRAM_URL, Icon: Instagram },
+    { label: 'Facebook', href: FACEBOOK_URL, Icon: Facebook },
+    { label: 'X (Twitter)', href: X_URL, Icon: Twitter },
 ]
 
 const LinkColumn = ({ title, links }) => (

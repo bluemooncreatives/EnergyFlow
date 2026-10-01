@@ -11,6 +11,8 @@
    unchanged — only the values change.
    ================================================================ */
 
+import { INSTAGRAM_URL, FACEBOOK_URL, X_URL } from "@/lib/socialLinks";
+
 // ── Brand palette (cream + pine + forest + sunflower + olive) ──
 export const BRAND = {
     oxblood: "#0B3D2E", // pine — headings, footer, code, CTAs
@@ -45,9 +47,6 @@ const fontFaces = () => {
     ].join("\n    ");
 };
 
-// The only real social account we own.
-export const INSTAGRAM_URL =
-    "https://www.instagram.com/mom.stitched";
 
 export const BRAND_NAME = "Energyflow";
 
@@ -201,6 +200,10 @@ export const emailShell = ({ preheader = "", bodyHtml = "", title = BRAND_NAME }
                     <a href="${contactUrl()}" target="_blank" style="color:${BRAND.cream};text-decoration:underline;">Contact us</a>
                     &nbsp;&nbsp;·&nbsp;&nbsp;
                     <a href="${INSTAGRAM_URL}" target="_blank" style="color:${BRAND.cream};text-decoration:underline;">Instagram</a>
+                    &nbsp;&nbsp;·&nbsp;&nbsp;
+                    <a href="${FACEBOOK_URL}" target="_blank" style="color:${BRAND.cream};text-decoration:underline;">Facebook</a>
+                    &nbsp;&nbsp;·&nbsp;&nbsp;
+                    <a href="${X_URL}" target="_blank" style="color:${BRAND.cream};text-decoration:underline;">X</a>
                   </td>
                 </tr>
                 <tr>

@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 import { RETURN_POLICY, SITE_NAME, SITE_URL, serializeJsonLd } from "@/lib/seo";
+import { SOCIAL_URLS } from "@/lib/socialLinks";
 
 // One canonical description, reused by the document head, Open Graph and the
 // organisation schema so search and social previews can never drift apart.
@@ -125,6 +126,7 @@ const organizationSchema = {
     areaServed: 'IN',
     availableLanguage: ['English', 'Hindi'],
   },
+  sameAs: SOCIAL_URLS,
   hasMerchantReturnPolicy: RETURN_POLICY,
 };
 
