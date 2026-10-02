@@ -32,7 +32,7 @@ const photoOf = (product) => product.media?.find((item) => item?.secure_url)?.se
 
 // Slowly turning circular seal over the photo. Decorative.
 const Seal = () => (
-    <span aria-hidden="true" className="absolute -bottom-5 right-5 z-20 hidden size-28 sm:block lg:-right-7 lg:bottom-10 lg:size-32">
+    <span aria-hidden="true" className="absolute bottom-3 right-3 z-20 size-[4.5rem] sm:bottom-4 sm:right-4 sm:size-20">
         <svg viewBox="0 0 120 120" className="size-full animate-[spin_18s_linear_infinite] motion-reduce:animate-none">
             <defs>
                 <path id="gift-seal-path" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" />
@@ -43,7 +43,7 @@ const Seal = () => (
             </text>
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-[var(--palette-pine)]">
-            <Gift className="size-7" strokeWidth={1.75} />
+            <Gift className="size-5 sm:size-6" strokeWidth={1.75} />
         </span>
     </span>
 )
@@ -142,7 +142,7 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
     useEffect(() => {
         const el = stageRef.current
         if (!el || typeof IntersectionObserver === 'undefined') return
-        const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.35 })
+        const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.2 })
         io.observe(el)
         return () => io.disconnect()
     }, [])
@@ -228,7 +228,7 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
                             onPointerUp={onPointerUp}
                             onPointerCancel={() => { swipeRef.current = null }}
                         >
-                            <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-tile)] bg-black/20 sm:aspect-[5/4] lg:aspect-[4/5] xl:aspect-[1/1]">
+                            <div className="relative aspect-[9/10] overflow-hidden rounded-[var(--radius-tile)] bg-black/20 sm:aspect-[3/2] lg:aspect-[7/6] xl:aspect-[6/5]">
                                 {boxes.map((product, index) => (
                                     <div
                                         key={product._id}
@@ -255,7 +255,7 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
 
                                 {/* Phone dots */}
                                 {boxes.length > 1 && (
-                                    <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5 lg:hidden" aria-hidden="true">
+                                    <div className="absolute bottom-4 left-4 flex gap-1.5 lg:hidden" aria-hidden="true">
                                         {boxes.map((product, index) => (
                                             <span
                                                 key={product._id}
@@ -287,7 +287,7 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
                         <div
                             role="tablist"
                             aria-label="Choose a gift box"
-                            className="no-scrollbar mt-4 grid auto-cols-[minmax(9.5rem,1fr)] grid-flow-col gap-2 overflow-x-auto sm:mt-5 lg:auto-cols-fr"
+                            className="no-scrollbar mt-4 grid auto-cols-[minmax(6.5rem,1fr)] grid-flow-col gap-2 overflow-x-auto sm:mt-5 sm:auto-cols-[minmax(9.5rem,1fr)] lg:auto-cols-fr"
                         >
                             {boxes.map((product, index) => {
                                 const selected = index === active
@@ -305,15 +305,15 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
                                         onClick={() => go(index, { user: true })}
                                         onKeyDown={(event) => onTabKey(event, index)}
                                         className={cn(
-                                            'ef-focus relative flex items-center gap-3 overflow-hidden rounded-[var(--radius-card)] p-2 pr-3 text-left transition-colors duration-300',
+                                            'ef-focus relative flex min-w-0 flex-col items-start gap-2 overflow-hidden rounded-[var(--radius-card)] p-2 pb-3 text-left transition-colors duration-300 sm:flex-row sm:items-center sm:gap-3 sm:pb-2 sm:pr-3',
                                             selected ? 'bg-white/[0.14]' : 'bg-white/[0.05] hover:bg-white/[0.1]'
                                         )}
                                     >
-                                        <span className={cn('relative size-12 shrink-0 overflow-hidden rounded-[var(--radius-sm)] transition-opacity', selected ? 'opacity-100' : 'opacity-70')}>
-                                            <Image src={photoOf(product)} alt="" fill sizes="48px" className="object-cover" />
+                                        <span className={cn('relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-[var(--radius-sm)] transition-opacity sm:aspect-auto sm:size-12 sm:w-12', selected ? 'opacity-100' : 'opacity-70')}>
+                                            <Image src={photoOf(product)} alt="" fill sizes="(max-width: 640px) 30vw, 48px" className="object-cover" />
                                         </span>
-                                        <span className="min-w-0">
-                                            <span className={cn('block truncate text-[0.8125rem] font-semibold uppercase', selected ? 'text-[var(--palette-cream)]' : 'text-[rgb(247_243_232/0.7)]')}>
+                                        <span className="min-w-0 px-0.5 sm:px-0">
+                                            <span className={cn('line-clamp-2 text-[11px] font-semibold uppercase leading-tight sm:line-clamp-1 sm:text-[0.8125rem]', selected ? 'text-[var(--palette-cream)]' : 'text-[rgb(247_243_232/0.7)]')}>
                                                 {formatProductName(product.name)}
                                             </span>
                                             <span className="block text-xs tabular-nums text-[rgb(247_243_232/0.6)]">{formatINR(price)}</span>
