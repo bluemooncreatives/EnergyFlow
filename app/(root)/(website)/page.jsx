@@ -8,6 +8,7 @@ import CategoryArchiveSection from '@/components/Application/Website/CategoryArc
 import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
 import DailyBestSellsSection from '@/components/Application/Website/DailyBestSellsSection'
 import SignatureRangeSection from '@/components/Application/Website/SignatureRangeSection'
+import GiftBoxesSection from '@/components/Application/Website/GiftBoxesSection'
 import StoreStatsSection from '@/components/Application/Website/StoreStatsSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
 import NewsletterSection from '@/components/Application/Website/newsletter/NewsletterSection'
@@ -87,7 +88,8 @@ const Home = async () => {
                 initial load only hydrates the hero + header.
 
                 Order follows the shopper: find your way in (categories) →
-                what others buy (bestsellers) → what we are known for
+                what others buy (bestsellers) → the gifting edit (gift boxes,
+                a top seller, on its own pine band) → what we are known for
                 (signature range) → offers (deals, a pantry marquee as a breather
                 between the product grids, popular) → why trust us
                 (promise band, store numbers, reviews, story) → stay in touch
@@ -101,6 +103,10 @@ const Home = async () => {
 
             <LazyHydrate>
                 <BestsellersSection tone="page" />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <GiftBoxesSection tone="inverse" />
             </LazyHydrate>
 
             <LazyHydrate>
