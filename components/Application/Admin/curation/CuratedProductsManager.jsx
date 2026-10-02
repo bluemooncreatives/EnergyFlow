@@ -241,7 +241,7 @@ const CuratedProductsManager = ({ config }) => {
                                 placeholder={loading ? 'Loading products…' : `Search ${available.length} products`}
                                 disabled={loading || !available.length}
                                 aria-label="Search products to add"
-                                className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 disabled:opacity-60"
+                                className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-base outline-none sm:text-sm transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 disabled:opacity-60"
                             />
                         </div>
                     </div>
@@ -362,7 +362,7 @@ const CuratedProductsManager = ({ config }) => {
                                             <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums', onStore ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground')}>
                                                 {index + 1}
                                             </span>
-                                            <Thumb src={product.media?.[0]?.secure_url} alt="" className="size-12" />
+                                            <Thumb src={product.media?.[0]?.secure_url} alt="" className="size-10 sm:size-12" />
                                             <div className="min-w-0 flex-1">
                                                 <p className="truncate text-sm font-medium">{product.name}</p>
                                                 <p className="text-xs text-muted-foreground">

@@ -84,7 +84,7 @@ export default function Navbar({
   }, [])
 
   return (
-    <section className="py-2.5 lg:py-4">
+    <section className="py-1.5 sm:py-2.5 lg:py-4">
       <div className="w-full pl-4 pr-3 lg:px-10">
         <nav className="hidden grid-cols-[1fr_auto_1fr] items-center lg:grid" aria-label="Main navigation">
           <div className="flex items-center gap-8">
@@ -152,11 +152,11 @@ export default function Navbar({
         <div className="flex items-center justify-between lg:hidden" role="navigation" aria-label="Mobile navigation">
           <Link
             href={logo.url}
-            className="flex min-w-0 items-center gap-2 font-header text-[clamp(1.125rem,4.4vw+0.25rem,1.375rem)] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]"
+            className="flex min-w-0 items-center gap-1.5 font-header text-[clamp(1.0625rem,5.2vw,1.5rem)] font-semibold uppercase leading-none tracking-normal text-[var(--brand-primary)] min-[400px]:gap-2 min-[400px]:tracking-[0.02em]"
             aria-label={logo.alt}
           >
-            <LogoMark className="size-6" />
-            <span className="truncate">{logo.title}</span>
+            <LogoMark className="size-5 shrink-0 min-[400px]:size-6" />
+            <span className="whitespace-nowrap">{logo.title}</span>
           </Link>
 
           {/* Three 40px tap targets; the theme switch lives in the menu sheet
@@ -166,13 +166,13 @@ export default function Navbar({
               variant="ghost"
               size="icon"
               onClick={() => setOpenSearch(true)}
-              className="size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
+              className="size-9 min-[400px]:size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
               aria-label="Open search"
             >
               <SearchIcon className="size-[1.125rem]" strokeWidth={1.75} />
             </Button>
 
-            <div className="flex size-10 items-center justify-center">
+            <div className="flex size-9 min-[400px]:size-10 items-center justify-center">
               <Cart />
             </div>
 
@@ -181,7 +181,7 @@ export default function Navbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
+                  className="size-9 min-[400px]:size-10 text-[var(--ink-body)] hover:text-[var(--brand-primary-hover)]"
                   aria-label="Open menu"
                 >
                   <Menu className="size-[1.125rem]" strokeWidth={1.75} />

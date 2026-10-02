@@ -135,7 +135,7 @@ const MediaContent = () => {
             <div className="rounded-md bg-card p-4 sm:p-5">
                 {selectedMedia.length > 0 && (
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md border bg-muted/40 px-3 py-2">
-                        <Label>
+                        <Label className="min-h-9">
                             <Checkbox
                                 checked={selectAll}
                                 onCheckedChange={handleSelectAll}
@@ -187,7 +187,7 @@ const MediaContent = () => {
                             )
                         )}
 
-                        <div className="grid lg:grid-cols-5 sm:grid-cols-3 grid-cols-2 gap-2 mb-5">
+                        <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                             {data?.pages?.map((page, index) => (
                                 <React.Fragment key={index}>
                                     {page?.mediaData?.map((media) => (

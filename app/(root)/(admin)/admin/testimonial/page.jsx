@@ -395,7 +395,7 @@ const ShowTestimonials = () => {
                   key={t._id}
                   {...list.dragProps(index, canReorder)}
                   className={cn(
-                    'group flex items-start gap-3 rounded-lg border bg-card p-3 transition',
+                    'group flex flex-wrap items-start gap-3 rounded-lg border bg-card p-3 transition sm:flex-nowrap',
                     'data-[dragging]:opacity-40 data-[over]:border-primary data-[over]:shadow-[0_-2px_0_var(--primary)]',
                     editingId === t._id && 'border-primary shadow-[0_0_0_1px_var(--primary)]',
                     !t.isActive && 'bg-muted/40'
@@ -413,7 +413,7 @@ const ShowTestimonials = () => {
                     </div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">“{t.review}”</p>
                   </div>
-                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-0.5">
+                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-0.5 max-sm:-mb-1 max-sm:w-full max-sm:border-t max-sm:pt-2">
                     {canReorder && (
                       <>
                         <Button type="button" variant="ghost" size="icon" className="size-8" disabled={index === 0} onClick={() => list.move(index, -1)} aria-label={`Move ${t.name} up`}><ArrowUp className="size-4" /></Button>

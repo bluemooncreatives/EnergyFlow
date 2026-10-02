@@ -56,16 +56,16 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
             onOpenChange={setOpen}
         >
             <DialogContent onInteractOutside={(e) => e.preventDefault()}
-                className="sm:max-w-[80%] h-screen border-0 bg-transparent p-0 py-10 shadow-none"
+                className="h-dvh max-h-dvh overflow-hidden max-w-[calc(100%-1rem)] border-0 bg-transparent p-0 py-4 shadow-none sm:max-w-[80%] sm:py-10"
             >
                 <DialogDescription className="hidden"></DialogDescription>
 
-                <div className='h-[90vh] rounded-xl border bg-background p-3 shadow-sm'>
-                    <DialogHeader className="h-8 border-b">
+                <div className='flex h-full flex-col rounded-xl border bg-background p-3 shadow-sm'>
+                    <DialogHeader className="shrink-0 border-b pb-2">
                         <DialogTitle>Media Selection</DialogTitle>
                     </DialogHeader>
 
-                    <div className='h-[calc(100%-80px)] overflow-auto py-2'>
+                    <div className='min-h-0 flex-1 overflow-auto py-2'>
                         {isPending ?
                             (<div className='size-full flex justify-center items-center'>
                                 <Image src={loading} alt='loading' height={80} width={80} />
@@ -82,7 +82,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                                 </div>
                                 :
                                 <>
-                                    <div className='grid lg:grid-cols-6 grid-cols-3 gap-2'>
+                                    <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6'>
                                         {
                                             data?.pages?.map((page, index) => (
                                                 <React.Fragment key={index}>
@@ -115,13 +115,13 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                     </div>
 
 
-                    <div className='h-10 pt-3 border-t flex justify-between'>
+                    <div className='flex shrink-0 items-center justify-between gap-2 border-t pt-3'>
                         <div>
                             <Button type="button" variant="destructive" size="lg" onClick={handleClear} >
                                 Clear All
                             </Button>
                         </div>
-                        <div className='flex gap-5'>
+                        <div className='flex gap-2 sm:gap-5'>
                             <Button type="button" variant="secondary" size="lg" onClick={handleClose} >
                                 Close
                             </Button>

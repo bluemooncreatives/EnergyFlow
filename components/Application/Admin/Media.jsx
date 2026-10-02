@@ -37,11 +37,11 @@ const Media = ({ media, handleDelete, deleteType, selectedMedia, setSelectedMedi
             <div className='absolute top-2 right-2 z-20'>
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
-                        <button type='button' className='w-7 h-7 flex items-center justify-center rounded-full bg-black/50 text-white cursor-pointer'>
+                        <button type='button' aria-label='Media actions' className='flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white sm:size-7'>
                             <MoreVertical className='size-4' />
                         </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
+                    <DropdownMenuContent align="end">
                         {deleteType === 'SD' &&
                             <>
                                 <DropdownMenuItem asChild className="cursor-pointer">

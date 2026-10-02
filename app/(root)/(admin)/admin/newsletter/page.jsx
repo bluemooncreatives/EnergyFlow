@@ -60,10 +60,10 @@ const StatusAction = ({ row }) => {
 
 const StatCard = ({ title, value, hint, icon: Icon, chartVar, trend, compact = false }) => (
   <Card className="border-l-4" style={{ borderLeftColor: `var(${chartVar})` }}>
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-sm font-medium text-foreground">{title}</CardTitle>
+    <CardHeader className="flex flex-row items-start justify-between gap-2 space-y-0 pb-2">
+      <CardTitle className="text-xs font-medium leading-snug text-foreground sm:text-sm">{title}</CardTitle>
       <span
-        className="inline-flex size-9 items-center justify-center rounded-full"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-full sm:size-9"
         style={{ backgroundColor: `var(${chartVar})`, color: chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }}
         aria-hidden
       >
@@ -71,15 +71,15 @@ const StatCard = ({ title, value, hint, icon: Icon, chartVar, trend, compact = f
       </span>
     </CardHeader>
     <CardContent>
-      <div className={compact ? 'py-1 text-2xl font-bold' : 'text-4xl font-bold tabular-nums'}>{value}</div>
-      <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+      <div className={compact ? 'truncate py-1 text-lg font-bold sm:text-2xl' : 'text-2xl font-bold tabular-nums sm:text-4xl'}>{value}</div>
+      <p className="mt-1 flex items-start gap-2 text-xs text-muted-foreground">
         {trend === 'up' && (
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-success/15 text-success">
+          <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
             <TrendingUp className="size-3" />
           </span>
         )}
         {trend === 'down' && (
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+          <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <TrendingDown className="size-3" />
           </span>
         )}
@@ -128,7 +128,7 @@ const NewsletterSubscribersPage = () => {
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           title="Active subscribers"
           value={stats?.active ?? '—'}
