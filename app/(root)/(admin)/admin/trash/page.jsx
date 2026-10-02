@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/Application/Admin/BreadCrumb"
 import DatatableWrapper from "@/components/Application/Admin/DatatableWrapper"
 import DeleteAction from "@/components/Application/Admin/DeleteAction"
 import PageHeader from "@/components/Application/Admin/PageHeader"
-import { DT_CATEGORY_COLUMN, DT_CONTACT_COLUMN, DT_COUPON_COLUMN, DT_CUSTOMERS_COLUMN, DT_NEWSLETTER_COLUMN, DT_ORDER_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN, DT_REVIEW_COLUMN } from "@/lib/column"
+import { DT_CATEGORY_COLUMN, DT_CONTACT_COLUMN, DT_COUPON_COLUMN, DT_GIFT_ENQUIRY_COLUMN, DT_CUSTOMERS_COLUMN, DT_NEWSLETTER_COLUMN, DT_ORDER_COLUMN, DT_PRODUCT_COLUMN, DT_PRODUCT_VARIANT_COLUMN, DT_REVIEW_COLUMN } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
 import { ADMIN_DASHBOARD, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
 
@@ -73,6 +73,14 @@ const TRASH_CONFIG = {
         fetchUrl: '/api/contact',
         exportUrl: '/api/contact/export',
         deleteUrl: '/api/contact/delete'
+    },
+
+    'gift-enquiries': {
+        title: 'Corporate Enquiries Trash',
+        columns: DT_GIFT_ENQUIRY_COLUMN,
+        fetchUrl: '/api/gift-enquiry',
+        exportUrl: '/api/gift-enquiry/export',
+        deleteUrl: '/api/gift-enquiry/delete'
     },
 
     newsletter: {

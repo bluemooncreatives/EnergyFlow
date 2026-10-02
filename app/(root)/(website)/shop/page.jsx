@@ -1,8 +1,22 @@
 import ShopClient from '@/components/Application/Website/ShopClient'
+import CorporateGiftingPage from '@/components/Application/Website/gifting/CorporateGiftingPage'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
+import { getGiftingCollection } from '@/lib/services/giftingService'
+import { getCategorySeo } from '@/lib/catalogSeo'
+import { GIFTING_CATEGORY_SLUG } from '@/lib/giftEnquiry'
 
 import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 import { CloudinaryPreconnect } from '@/lib/seo'
+
+const GIFTING_TITLE = 'Corporate Gifting & Dry Fruit Gift Boxes'
+
+// /shop?category=gift-boxes and nothing else.
+const isGiftingView = (params) => {
+    const keys = Object.keys(params).filter((key) => params[key] !== undefined && params[key] !== '')
+    return keys.length === 1
+        && typeof params.category === 'string'
+        && params.category.trim().toLowerCase() === GIFTING_CATEGORY_SLUG
+}
 
 const DESCRIPTION =
     'Shop dry fruits, nuts, dried berries, seeds, superfoods, flavoured makhana, healthy snacks, Ayurvedic herbs, chocolates and dry fruit gift boxes online. Delivered across India.'
@@ -33,6 +47,17 @@ export async function generateMetadata({ searchParams }) {
     const keys = Object.keys(params).filter((key) => params[key] !== undefined && params[key] !== '')
     if (keys.length === 0) return BASE_METADATA
 
+    if (isGiftingView(params)) {
+        const seo = getCategorySeo(GIFTING_CATEGORY_SLUG, 'Gift Boxes')
+        return {
+            title: GIFTING_TITLE,
+            description: seo.description,
+            alternates: { canonical: WEBSITE_CATEGORY(GIFTING_CATEGORY_SLUG) },
+            openGraph: { title: `${GIFTING_TITLE} | Energyflow`, description: seo.description, url: WEBSITE_CATEGORY(GIFTING_CATEGORY_SLUG) },
+            twitter: { title: `${GIFTING_TITLE} | Energyflow`, description: seo.description },
+        }
+    }
+
     const category = typeof params.category === 'string' ? params.category : ''
     if (keys.length === 1 && category && !category.includes(',')) {
         return { ...BASE_METADATA, alternates: { canonical: WEBSITE_CATEGORY(category.toLowerCase()) } }
@@ -56,6 +81,21 @@ const buildSearchParamString = (searchParams) => {
 
 const Shop = async ({ searchParams }) => {
     const resolvedSearchParams = (await searchParams) ?? {}
+
+    // Gift boxes on their own open the corporate gifting experience; any
+    // extra filter, sort or search falls through to the normal listing.
+    if (isGiftingView(resolvedSearchParams)) {
+        const collection = await getGiftingCollection().catch(() => null)
+        if (collection) {
+            return (
+                <>
+                    <CloudinaryPreconnect />
+                    <CorporateGiftingPage collection={collection} seo={getCategorySeo(GIFTING_CATEGORY_SLUG, collection.category.name)} />
+                </>
+            )
+        }
+    }
+
     const initialSearchParamsString = buildSearchParamString(resolvedSearchParams)
     const [filters, { products, total, totalPages }] = await Promise.all([
         getShopFilters(),

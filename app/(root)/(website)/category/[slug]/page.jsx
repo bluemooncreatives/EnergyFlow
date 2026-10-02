@@ -4,7 +4,10 @@ import { ChevronDown } from 'lucide-react'
 import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
 import ProductBox from '@/components/Application/Website/ProductBox'
+import CorporateGiftingPage from '@/components/Application/Website/gifting/CorporateGiftingPage'
 import { getCategoryLanding, getShopFilters } from '@/lib/services/shopService'
+import { getGiftingCollection } from '@/lib/services/giftingService'
+import { GIFTING_CATEGORY_SLUG } from '@/lib/giftEnquiry'
 import { getCategorySeo } from '@/lib/catalogSeo'
 import {
     CloudinaryPreconnect,
@@ -65,6 +68,20 @@ const CategoryPage = async ({ params }) => {
     if (!landing) notFound()
 
     const { category, name, seo, products, total } = landing
+
+    // Gift boxes get the corporate gifting experience instead of a grid.
+    if (category.slug === GIFTING_CATEGORY_SLUG) {
+        const collection = await getGiftingCollection().catch(() => null)
+        if (collection) {
+            return (
+                <>
+                    <CloudinaryPreconnect />
+                    <CorporateGiftingPage collection={collection} seo={seo} />
+                </>
+            )
+        }
+    }
+
     const path = WEBSITE_CATEGORY(category.slug)
     const shopHref = `${WEBSITE_SHOP}?category=${encodeURIComponent(category.slug)}`
 

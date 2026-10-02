@@ -59,6 +59,10 @@ export const ADMIN_ORDER_DETAILS = (order_id) => order_id ? `/admin/orders/detai
 export const ADMIN_CONTACTS_SHOW = '/admin/contacts'
 export const ADMIN_CONTACT_DETAILS = (id) => id ? `/admin/contacts/details/${id}` : ''
 
+// Corporate / bulk gifting enquiries (from the gift-boxes page)
+export const ADMIN_GIFT_ENQUIRIES_SHOW = '/admin/gift-enquiries'
+export const ADMIN_GIFT_ENQUIRY_DETAILS = (id) => id ? `/admin/gift-enquiries/details/${id}` : ''
+
 // Newsletter routes (subscribers list + popup / band / footer customiser)
 export const ADMIN_NEWSLETTER_SHOW = '/admin/newsletter'
 export const ADMIN_NEWSLETTER_SETTINGS = '/admin/newsletter/settings'
