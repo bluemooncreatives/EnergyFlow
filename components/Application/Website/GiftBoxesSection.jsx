@@ -6,7 +6,7 @@ import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 const GiftBoxesShowcase = dynamic(() => import('./GiftBoxesShowcase'))
 
 const GIFT_SLUG = 'gift-boxes'
-const MAX_BOXES = 6
+const MAX_BOXES = 4
 
 const priceOf = (product) => Number(product?.defaultVariant?.sellingPrice ?? product?.sellingPrice) || 0
 
