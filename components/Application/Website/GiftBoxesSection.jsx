@@ -6,7 +6,7 @@ import { WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
 const GiftBoxesShowcase = dynamic(() => import('./GiftBoxesShowcase'))
 
 const GIFT_SLUG = 'gift-boxes'
-const MAX_BOXES = 6
+const MAX_BOXES = 4
 
 const priceOf = (product) => Number(product?.defaultVariant?.sellingPrice ?? product?.sellingPrice) || 0
 
@@ -14,7 +14,7 @@ const priceOf = (product) => Number(product?.defaultVariant?.sellingPrice ?? pro
 // they get their own band on the homepage. Live from the Gift Boxes category
 // (cached with the category page); most premium box first, so the featured
 // tile is the showpiece. Renders nothing when the category has no boxes.
-const GiftBoxesSection = async ({ tone = 'inverse' }) => {
+const GiftBoxesSection = async ({ tone = 'sun' }) => {
     const landing = await getCategoryLanding(GIFT_SLUG).catch(() => null)
     const products = (landing?.products || [])
         .filter((product) => product?.slug)
