@@ -14,7 +14,7 @@ const priceOf = (product) => Number(product?.defaultVariant?.sellingPrice ?? pro
 // they get their own band on the homepage. Live from the Gift Boxes category
 // (cached with the category page); most premium box first, so the featured
 // tile is the showpiece. Renders nothing when the category has no boxes.
-const GiftBoxesSection = async ({ tone = 'sun' }) => {
+const GiftBoxesSection = async ({ tone = 'inverse' }) => {
     const landing = await getCategoryLanding(GIFT_SLUG).catch(() => null)
     const products = (landing?.products || [])
         .filter((product) => product?.slug)

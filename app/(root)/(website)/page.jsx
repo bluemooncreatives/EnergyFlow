@@ -89,7 +89,7 @@ const Home = async () => {
 
                 Order follows the shopper: find your way in (categories) →
                 what others buy (bestsellers) → the gifting edit (gift boxes,
-                a top seller, on its own sunflower band) → what we are known for
+                a top seller, as an editorial index on a pine band) → what we are known for
                 (signature range) → offers (deals, a pantry marquee as a breather
                 between the product grids, popular) → why trust us
                 (promise band, store numbers, reviews, story) → stay in touch
@@ -106,7 +106,7 @@ const Home = async () => {
             </LazyHydrate>
 
             <LazyHydrate>
-                <GiftBoxesSection tone="sun" />
+                <GiftBoxesSection tone="inverse" />
             </LazyHydrate>
 
             <LazyHydrate>
