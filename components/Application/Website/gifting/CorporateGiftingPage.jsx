@@ -1,13 +1,16 @@
 import { Building2 } from 'lucide-react'
-import { JsonLd, absoluteUrl, breadcrumbSchema, formatProductName } from '@/lib/seo'
+import { JsonLd, absoluteUrl, breadcrumbSchema, faqSchema, formatProductName } from '@/lib/seo'
 import { WEBSITE_CATEGORY, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import StoreButton from '../storefront/StoreButton'
 import GiftCollection from './GiftCollection'
 import GiftEnquiryForm from './GiftEnquiryForm'
+import GiftingFaq from './GiftingFaq'
 import GiftingHero from './GiftingHero'
+import GiftingProcess from './GiftingProcess'
 import GiftingPromise from './GiftingPromise'
 import { EnquireButton, GiftingSelectionProvider } from './GiftingSelection'
-import OccasionMarquee from './OccasionMarquee'
+import { photoOf } from './GiftingUi'
+import OccasionBento from './OccasionBento'
 
 // Shown in place of the collection while no gift box is stocked: the page
 // still works as a corporate enquiry page.
@@ -31,11 +34,14 @@ const CuratingSoon = () => (
 )
 
 /**
- * The corporate gifting experience for the gift-boxes category, rendered at
- * both /category/gift-boxes (canonical) and /shop?category=gift-boxes.
+ * The gift boxes category page, rendered at both /category/gift-boxes
+ * (canonical) and /shop?category=gift-boxes: hero → the collection → shop by
+ * occasion → why teams choose us → how bulk orders work → the enquiry form →
+ * FAQs. Everything is built on the storefront design system
+ * (app/design-system.css and its tokens).
  *
  * collection — from getGiftingCollection(): { category, products }
- * seo        — the category's catalogSeo entry (name and description)
+ * seo        — the category's catalogSeo entry (h1, eyebrow, description, faqs)
  */
 const CorporateGiftingPage = ({ collection, seo }) => {
     const products = collection?.products || []
@@ -69,11 +75,15 @@ const CorporateGiftingPage = ({ collection, seo }) => {
                 { name: collection?.category?.name || 'Gift Boxes', path },
             ])} />
 
-            <GiftingHero products={products} />
-            <OccasionMarquee />
+            {seo?.faqs?.length > 0 && <JsonLd data={faqSchema(seo.faqs)} />}
+
+            <GiftingHero products={products} eyebrow={seo?.eyebrow} />
             {products.length > 0 ? <GiftCollection products={products} /> : <CuratingSoon />}
+            <OccasionBento products={products} />
             <GiftingPromise />
+            <GiftingProcess products={products} />
             <GiftEnquiryForm products={products} />
+            <GiftingFaq faqs={seo?.faqs} photo={photoOf(products[2]) || photoOf(products[0])} />
         </GiftingSelectionProvider>
     )
 }
