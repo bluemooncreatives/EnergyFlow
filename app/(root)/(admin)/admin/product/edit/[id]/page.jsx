@@ -1,4 +1,5 @@
 'use client'
+import AdminRecordState from '@/components/Application/Admin/AdminRecordState'
 import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import PageHeader from '@/components/Application/Admin/PageHeader'
 import { ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD, ADMIN_PRODUCT_SHOW } from '@/routes/AdminPanelRoute'
@@ -31,7 +32,7 @@ const EditProduct = ({ params }) => {
   const [loading, setLoading] = useState(false)
   const [categoryOption, setCategoryOption] = useState([])
   const { data: getCategory } = useFetch('/api/category?deleteType=SD&&size=10000')
-  const { data: getProduct, loading: getProductLoading } = useFetch(`/api/product/get/${id}`)
+  const { data: getProduct, loading: getProductLoading, error: recordError, errorStatus: recordErrorStatus, refetch: refetchRecord } = useFetch(`/api/product/get/${id}`)
 
 
 
@@ -144,6 +145,33 @@ const EditProduct = ({ params }) => {
       setLoading(false)
     }
   }
+
+  if (recordError) {
+
+      return (
+
+          <AdminRecordState
+
+              entity="Product"
+
+              error={recordError}
+
+              errorStatus={recordErrorStatus}
+
+              onRetry={refetchRecord}
+
+              backHref={ADMIN_PRODUCT_SHOW}
+
+              backLabel="Back to products"
+
+              header={{ title: 'Edit Product', description: 'Update details, pricing, and media.', breadcrumb: <BreadCrumb breadcrumbData={breadcrumbData} /> }}
+
+          />
+
+      )
+
+  }
+
 
   return (
     <div className="flex flex-col gap-4 sm:gap-6">

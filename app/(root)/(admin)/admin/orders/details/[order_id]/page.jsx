@@ -11,6 +11,8 @@ import PageHeader from "@/components/Application/Admin/PageHeader"
 import ShipmentManagement from "@/components/Application/Admin/ShipmentManagement"
 import ButtonLoading from "@/components/Application/ButtonLoading"
 import { showToast } from "@/lib/showToast"
+import AdminEmptyState, { AdminLoadingState } from "@/components/Application/Admin/AdminEmptyState"
+import { CircleAlert, PackageX } from "lucide-react"
 import axios from "axios"
 import {
     Table,
@@ -48,7 +50,7 @@ const OrderDetails = ({ params }) => {
     const [orderData, setOrderData] = useState()
     const [orderStatus, setOrderStatus] = useState()
     const [updatingStatus, setUpdatingStatus] = useState(false)
-    const { data, loading } = useFetch(`/api/orders/get/${order_id}`)
+    const { data, loading, error, errorStatus, refetch } = useFetch(`/api/orders/get/${order_id}`)
 
 
     useEffect(() => {
@@ -88,10 +90,18 @@ const OrderDetails = ({ params }) => {
             />
 
             <div className="rounded-md bg-card">
-                {!orderData ? (
-                    <div className="flex justify-center items-center py-24">
-                        <h4 className="text-destructive text-xl font-semibold">Order Not Found</h4>
-                    </div>
+                {!orderData && (loading || !error) ? (
+                    <AdminLoadingState label="Loading order…" className="py-24" />
+                ) : !orderData ? (
+                    <AdminEmptyState
+                        icon={errorStatus === 404 ? PackageX : CircleAlert}
+                        tone="danger"
+                        title={errorStatus === 404 ? 'Order not found' : 'Couldn’t load this order'}
+                        description={errorStatus === 404 ? `No order matches “${order_id}”. It may have been deleted or the link is wrong.` : error}
+                        onRetry={errorStatus === 404 ? undefined : refetch}
+                        action={{ href: ADMIN_ORDER_SHOW, label: 'Back to orders' }}
+                        className="py-24"
+                    />
                 ) : (
                     <div className="px-4 py-4">
                         <div className="mb-5">

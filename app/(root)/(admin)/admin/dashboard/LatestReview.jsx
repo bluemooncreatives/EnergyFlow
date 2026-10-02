@@ -9,16 +9,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Package, Star } from 'lucide-react'
+import { CircleAlert, MessageSquareDashed, Package, Star } from 'lucide-react'
 
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import useFetch from "@/hooks/useFetch";
 import { useEffect, useState } from "react";
-import Image from "next/image"
-import notFound from '@/public/assets/images/not-found.png'
+import AdminEmptyState, { AdminLoadingState } from '@/components/Application/Admin/AdminEmptyState'
 const LatestReview = () => {
     const [latestReview, setLatestReview] = useState()
-    const { data: getLatestReview, loading } = useFetch('/api/dashboard/admin/latest-review')
+    const { data: getLatestReview, loading, error, refetch } = useFetch('/api/dashboard/admin/latest-review')
 
     useEffect(() => {
         if (getLatestReview && getLatestReview.success) {
@@ -26,11 +25,11 @@ const LatestReview = () => {
         }
     }, [getLatestReview])
 
-    if (loading) return <div className="h-full w-full flex justify-center items-center py-8 text-sm text-muted-foreground">Loading...</div>
+    if (loading) return <AdminLoadingState className="py-8" />
 
-    if (!latestReview || latestReview.length === 0) return <div className="h-full w-full flex justify-center items-center py-8">
-        <Image src={notFound.src} width={notFound.width} height={notFound.height} alt="not found" className="w-16 opacity-50" />
-    </div>
+    if (error) return <AdminEmptyState icon={CircleAlert} tone="danger" title="Couldn’t load this list" description={error} onRetry={refetch} className="py-8" />
+
+    if (!latestReview || latestReview.length === 0) return <AdminEmptyState icon={MessageSquareDashed} title="No reviews yet" description="Reviews appear here as customers rate products." className="py-8" />
 
     return (
         <Table>

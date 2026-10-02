@@ -11,6 +11,8 @@ import searchData from "@/lib/search"
 import Fuse from "fuse.js"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { SearchX } from "lucide-react"
+import AdminEmptyState from "@/components/Application/Admin/AdminEmptyState"
 
 
 const options = {
@@ -68,10 +70,15 @@ const SearchModel = ({ open, setOpen }) => {
 
                     ))}
 
-                    {query && results.length === 0 &&
-                        <div className="text-sm text-center text-destructive">
-                            No Result Found.
-                        </div>
+                    {query.trim() && results.length === 0 &&
+                        <li>
+                            <AdminEmptyState
+                                icon={SearchX}
+                                title={`No matches for “${query.trim()}”`}
+                                description="Try a different keyword, like orders, products or coupons."
+                                className="py-8"
+                            />
+                        </li>
                     }
 
                 </ul>

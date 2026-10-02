@@ -9,17 +9,16 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import useFetch from "@/hooks/useFetch"
-import Image from "next/image"
 import Link from "next/link"
-import notFound from '@/public/assets/images/not-found.png'
+import AdminEmptyState, { AdminLoadingState } from '@/components/Application/Admin/AdminEmptyState'
 import { useEffect, useState } from "react"
-import { CreditCard, Hash, Package, ReceiptText } from "lucide-react"
+import { CreditCard, Hash, Package, ReceiptText, CircleAlert, ShoppingBag } from "lucide-react"
 import { statusBadge } from "@/lib/helperFunction"
 import { ADMIN_ORDER_DETAILS } from "@/routes/AdminPanelRoute"
 
 const LatestOrder = () => {
     const [latestOrder, setLatestOrder] = useState()
-    const { data, loading } = useFetch('/api/dashboard/admin/latest-order')
+    const { data, loading, error, refetch } = useFetch('/api/dashboard/admin/latest-order')
 
     useEffect(() => {
         if (data && data.success) {
@@ -27,11 +26,11 @@ const LatestOrder = () => {
         }
     }, [data])
 
-    if (loading) return <div className="h-full w-full flex justify-center items-center py-8 text-sm text-muted-foreground">Loading...</div>
+    if (loading) return <AdminLoadingState className="py-8" />
 
-    if (!latestOrder || latestOrder.length === 0) return <div className="h-full w-full flex justify-center items-center py-8">
-        <Image src={notFound.src} width={notFound.width} height={notFound.height} alt="not found" className="w-16 opacity-50" />
-    </div>
+    if (error) return <AdminEmptyState icon={CircleAlert} tone="danger" title="Couldn’t load this list" description={error} onRetry={refetch} className="py-8" />
+
+    if (!latestOrder || latestOrder.length === 0) return <AdminEmptyState icon={ShoppingBag} title="No orders yet" description="New orders will show up here as customers check out." className="py-8" />
 
     return (
         <Table>

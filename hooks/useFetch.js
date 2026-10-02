@@ -5,6 +5,9 @@ const useFetch = (url, method = "GET", options = {}) => {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    // HTTP status of the last failure (e.g. 404), so callers can tell a
+    // missing record apart from a failed request.
+    const [errorStatus, setErrorStatus] = useState(null)
     const [refreshIndex, setRefreshIndex] = useState(0)
 
     const optionsString = JSON.stringify(options)
@@ -22,6 +25,7 @@ const useFetch = (url, method = "GET", options = {}) => {
         const apiCall = async () => {
             setLoading(true)
             setError(null)
+            setErrorStatus(null)
             try {
                 const { data: response } = await axios({
                     url,
@@ -31,7 +35,9 @@ const useFetch = (url, method = "GET", options = {}) => {
                 })
 
                 if (!response.success) {
-                    throw new Error(response.message)
+                    const failure = new Error(response.message)
+                    failure.statusCode = response.statusCode
+                    throw failure
                 }
 
                 setData(response)
@@ -39,7 +45,8 @@ const useFetch = (url, method = "GET", options = {}) => {
                 if (axios.isCancel(error)) {
                     return
                 }
-                setError(error.message)
+                setError(error.response?.data?.message || error.message)
+                setErrorStatus(error.statusCode ?? error.response?.data?.statusCode ?? error.response?.status ?? null)
             } finally {
                 setLoading(false)
             }
@@ -59,7 +66,7 @@ const useFetch = (url, method = "GET", options = {}) => {
     }
 
 
-    return { data, loading, error, refetch }
+    return { data, loading, error, errorStatus, refetch }
 
 }
 

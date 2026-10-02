@@ -19,7 +19,7 @@ import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { ADMIN_ORDER_SHOW, ADMIN_ORDER_DETAILS, ADMIN_REVIEW_SHOW, ADMIN_CUSTOMERS_SHOW } from '@/routes/AdminPanelRoute'
 import { statusBadge } from '@/lib/helperFunction'
-import notFound from '@/public/assets/images/not-found.png'
+import AdminEmptyState, { AdminLoadingState } from '@/components/Application/Admin/AdminEmptyState'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import {
     ShoppingBag, Star, Users, Clock, CheckCircle2,
@@ -142,12 +142,9 @@ const LatestOrdersCard = () => {
             />
             <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 {loading ? (
-                    <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">Loading…</div>
+                    <AdminLoadingState className="h-32 py-0" />
                 ) : !orders.length ? (
-                    <div className="flex h-32 flex-col items-center justify-center gap-2">
-                        <Image src={notFound.src} width={64} height={64} alt="No orders" className="opacity-50" />
-                        <p className="text-xs text-muted-foreground">No recent orders</p>
-                    </div>
+                    <AdminEmptyState icon={ShoppingBag} title="No recent orders" description="New orders will show up here as customers check out." className="py-8" />
                 ) : (
                     <div className="max-h-[280px] overflow-auto">
                         <Table>
@@ -206,12 +203,9 @@ const LatestReviewsCard = () => {
             />
             <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
                 {loading ? (
-                    <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">Loading…</div>
+                    <AdminLoadingState className="h-32 py-0" />
                 ) : !reviews.length ? (
-                    <div className="flex h-32 flex-col items-center justify-center gap-2">
-                        <Image src={notFound.src} width={64} height={64} alt="No reviews" className="opacity-50" />
-                        <p className="text-xs text-muted-foreground">No reviews yet</p>
-                    </div>
+                    <AdminEmptyState icon={Star} title="No reviews yet" description="Reviews appear here as customers rate products." className="py-8" />
                 ) : (
                     <ul className="divide-y">
                         {reviews.map(review => (

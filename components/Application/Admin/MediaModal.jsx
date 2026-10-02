@@ -8,6 +8,9 @@ import loading from '@/public/assets/images/loading.svg'
 import ModalMediaBlock from './ModalMediaBlock'
 import { showToast } from '@/lib/showToast'
 import ButtonLoading from '../ButtonLoading'
+import AdminEmptyState from './AdminEmptyState'
+import { CircleAlert, ImageOff } from 'lucide-react'
+import { ADMIN_MEDIA_SHOW } from '@/routes/AdminPanelRoute'
 const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple }) => {
 
     const [previouslySelected, setPreviouslySelected] = useState([])
@@ -17,7 +20,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
         return response
     }
 
-    const { isPending, isError, error, data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    const { isPending, isError, error, data, isFetching, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery({
         queryKey: ['MediaModal'],
         queryFn: async ({ pageParam }) => await fetchMedia(pageParam),
         placeholderData: keepPreviousData,
@@ -70,7 +73,12 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                             :
                             isError ?
                                 <div className='size-full flex justify-center items-center'>
-                                    <span className='text-destructive'>{error.message}</span>
+                                    <AdminEmptyState icon={CircleAlert} tone="danger" title="Couldn’t load media" description={error.message} onRetry={() => refetch()} />
+                                </div>
+                                :
+                                !data?.pages?.some(page => page?.mediaData?.length) ?
+                                <div className='size-full flex justify-center items-center'>
+                                    <AdminEmptyState icon={ImageOff} title="No media yet" description="Upload images from the Media library, then come back to pick them here." action={{ href: ADMIN_MEDIA_SHOW, label: 'Open media library' }} />
                                 </div>
                                 :
                                 <>
@@ -99,7 +107,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                                                     <ButtonLoading type="button" onClick={() => fetchNextPage()} loading={isFetching} text="Load More" size="lg" />
                                         </div>
                                         :
-                                        <p className='text-center py-5'>Nothing more to load.</p>
+                                        <p className='py-5 text-center text-sm text-muted-foreground'>You’ve reached the end of the library.</p>
                                     }
 
                                 </>

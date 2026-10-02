@@ -1,4 +1,5 @@
 'use client'
+import AdminRecordState from '@/components/Application/Admin/AdminRecordState'
 import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import PageHeader from '@/components/Application/Admin/PageHeader'
 import ButtonLoading from '@/components/Application/ButtonLoading'
@@ -32,7 +33,7 @@ const breadCrumbData = [
 
 const EditMedia = ({ params }) => {
     const { id } = use(params)
-    const { data: mediaData } = useFetch(`/api/media/get/${id}`)
+    const { data: mediaData, error: recordError, errorStatus: recordErrorStatus, refetch: refetchRecord } = useFetch(`/api/media/get/${id}`)
     const [loading, setLoading] = useState(false)
 
     const formSchema = zSchema.pick({
@@ -77,6 +78,46 @@ const EditMedia = ({ params }) => {
             setLoading(false)
         }
     }
+
+
+    if (recordError) {
+
+
+        return (
+
+
+            <AdminRecordState
+
+
+                entity="Media"
+
+
+                error={recordError}
+
+
+                errorStatus={recordErrorStatus}
+
+
+                onRetry={refetchRecord}
+
+
+                backHref={ADMIN_MEDIA_SHOW}
+
+
+                backLabel="Back to media"
+
+
+                header={{ title: 'Edit Media', description: 'Update alt text and title metadata.', breadcrumb: <BreadCrumb breadcrumbData={breadCrumbData} /> }}
+
+
+            />
+
+
+        )
+
+
+    }
+
 
 
     return (

@@ -1,4 +1,5 @@
 'use client'
+import AdminRecordState from '@/components/Application/Admin/AdminRecordState'
 import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import PageHeader from '@/components/Application/Admin/PageHeader'
 import { ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD } from '@/routes/AdminPanelRoute'
@@ -22,7 +23,7 @@ const breadcrumbData = [
 const EditCategory = ({ params }) => {
 
     const { id } = use(params)
-    const { data: categoryData } = useFetch(`/api/category/get/${id}`)
+    const { data: categoryData, error: recordError, errorStatus: recordErrorStatus, refetch: refetchRecord } = useFetch(`/api/category/get/${id}`)
 
 
     const [loading, setLoading] = useState(false)
@@ -75,6 +76,33 @@ const EditCategory = ({ params }) => {
             setLoading(false)
         }
     }
+
+    if (recordError) {
+
+        return (
+
+            <AdminRecordState
+
+                entity="Category"
+
+                error={recordError}
+
+                errorStatus={recordErrorStatus}
+
+                onRetry={refetchRecord}
+
+                backHref={ADMIN_CATEGORY_SHOW}
+
+                backLabel="Back to categories"
+
+                header={{ title: 'Edit Category', description: 'Update the category details and slug.', breadcrumb: <BreadCrumb breadcrumbData={breadcrumbData} /> }}
+
+            />
+
+        )
+
+    }
+
 
     return (
         <div className="flex flex-col gap-4 sm:gap-6">

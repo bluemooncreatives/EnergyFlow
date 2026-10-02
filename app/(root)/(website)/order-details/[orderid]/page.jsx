@@ -22,7 +22,9 @@ import {
     Truck,
     Wallet,
     XCircle,
+    PackageX,
 } from 'lucide-react'
+import EmptyState from '@/components/Application/Website/storefront/EmptyState'
 
 const fmt = (n) => Number(n || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })
 
@@ -170,9 +172,11 @@ const OrderDetails = async ({ params }) => {
                                 </div>
 
                                 {products.length === 0 ? (
-                                    <p className='px-5 py-10 text-center text-sm text-muted-foreground'>
-                                        No items found for this order.
-                                    </p>
+                                    <EmptyState
+                                        icon={PackageX}
+                                        title='No items found'
+                                        description='This order has no line items on record. If this looks wrong, contact us with your order ID.'
+                                    />
                                 ) : (
                                     <div className='divide-y divide-border/50'>
                                         {products.map((product, idx) => {

@@ -4,8 +4,9 @@ import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrum
 import useFetch from '@/hooks/useFetch'
 import { WEBSITE_ORDER_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import Link from 'next/link'
-import { Package } from 'lucide-react'
+import { CircleAlert, Package, PackageOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import EmptyState from '@/components/Application/Website/storefront/EmptyState'
 
 const breadCrumbData = {
     title: 'Orders',
@@ -13,7 +14,7 @@ const breadCrumbData = {
 }
 
 const Orders = () => {
-    const { data: orderData, loading } = useFetch("/api/user-order")
+    const { data: orderData, loading, error, refetch } = useFetch("/api/user-order")
     const orders = orderData?.data ?? []
 
     return (
@@ -60,18 +61,31 @@ const Orders = () => {
                                             ))}
                                         </tr>
                                     ))
+                                ) : error ? (
+                                    <tr>
+                                        <td colSpan={4}>
+                                            <EmptyState
+                                                icon={CircleAlert}
+                                                tone="danger"
+                                                title="We couldn’t load your orders"
+                                                description="Something went wrong on our side. Please try again in a moment."
+                                                action={<Button variant="outline" onClick={refetch} className="h-11 px-8 text-base font-semibold">Try again</Button>}
+                                            />
+                                        </td>
+                                    </tr>
                                 ) : orders.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-5 py-16 text-center">
-                                            <p className="text-lg font-semibold text-[var(--brand-primary)]">
-                                                No orders yet
-                                            </p>
-                                            <p className="mt-2 text-sm text-foreground/60 max-w-xs mx-auto">
-                                                You haven&apos;t placed any orders. Explore our collections and find something you love.
-                                            </p>
-                                            <Button asChild variant="brand" className="mt-6 h-11 px-8 text-base font-semibold">
-                                                <Link href={WEBSITE_SHOP}>Shop Now</Link>
-                                            </Button>
+                                        <td colSpan={4}>
+                                            <EmptyState
+                                                icon={PackageOpen}
+                                                title="No orders yet"
+                                                description="You haven’t placed any orders. Explore our collections and find something you love."
+                                                action={
+                                                    <Button asChild variant="brand" className="h-11 px-8 text-base font-semibold">
+                                                        <Link href={WEBSITE_SHOP}>Shop Now</Link>
+                                                    </Button>
+                                                }
+                                            />
                                         </td>
                                     </tr>
                                 ) : (

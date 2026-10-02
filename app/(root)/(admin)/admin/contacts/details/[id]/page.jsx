@@ -6,7 +6,8 @@ import PageHeader from '@/components/Application/Admin/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ADMIN_CONTACTS_SHOW, ADMIN_DASHBOARD } from '@/routes/AdminPanelRoute'
-import { Mail, User, MessageSquare, Calendar, Tag, Phone, MapPin } from 'lucide-react'
+import { Mail, User, MessageSquare, Calendar, Tag, Phone, MapPin, MailX, CircleAlert } from 'lucide-react'
+import AdminEmptyState, { AdminLoadingState } from '@/components/Application/Admin/AdminEmptyState'
 import dayjs from 'dayjs'
 
 const breadcrumbData = [
@@ -18,7 +19,7 @@ const breadcrumbData = [
 const ContactDetail = ({ params }) => {
   const { id } = use(params)
   const [contact, setContact] = useState(null)
-  const { data, loading } = useFetch(`/api/contact/get/${id}`)
+  const { data, loading, error, errorStatus, refetch } = useFetch(`/api/contact/get/${id}`)
 
   useEffect(() => {
     if (data?.success) {
@@ -35,16 +36,22 @@ const ContactDetail = ({ params }) => {
       />
 
       <div className="rounded-md bg-card">
-        {loading && (
-          <div className="flex justify-center items-center py-24 text-muted-foreground text-sm">
-            Loading…
-          </div>
-        )}
+        {!contact && (loading || !error) && <AdminLoadingState label="Loading message…" className="py-24" />}
 
-        {!loading && !contact && (
-          <div className="flex justify-center items-center py-24">
-            <p className="text-destructive text-lg font-medium">Message not found.</p>
-          </div>
+        {!loading && !contact && error && (
+          <AdminEmptyState
+            icon={errorStatus && errorStatus !== 404 && errorStatus !== 400 ? CircleAlert : MailX}
+            tone="danger"
+            title={errorStatus && errorStatus !== 404 && errorStatus !== 400 ? 'Couldn’t load this message' : 'Message not found'}
+            description={
+              errorStatus && errorStatus !== 404 && errorStatus !== 400
+                ? error
+                : 'This contact query may have been deleted. Check the link or open another message from the list.'
+            }
+            onRetry={errorStatus && errorStatus !== 404 && errorStatus !== 400 ? refetch : undefined}
+            action={{ href: ADMIN_CONTACTS_SHOW, label: 'Back to messages' }}
+            className="py-24"
+          />
         )}
 
         {contact && (

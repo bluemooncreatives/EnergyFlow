@@ -4,7 +4,8 @@ import WebsiteBreadcrumb from '@/components/Application/Website/WebsiteBreadcrum
 import useFetch from '@/hooks/useFetch';
 import { WEBSITE_ORDER_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute';
 import Link from 'next/link';
-import { ShoppingBag, ShoppingCart, Package, ArrowRight } from 'lucide-react'
+import { ShoppingBag, ShoppingCart, Package, PackageOpen, CircleAlert, ArrowRight } from 'lucide-react'
+import EmptyState from '@/components/Application/Website/storefront/EmptyState'
 import { useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button'
 
@@ -34,7 +35,7 @@ const StatCard = ({ icon: Icon, label, value, loading }) => (
 )
 
 const MyAccount = () => {
-    const { data: dashboardData, loading } = useFetch('/api/dashboard/user')
+    const { data: dashboardData, loading, error, refetch } = useFetch('/api/dashboard/user')
     const cartStore = useSelector(store => store.cartStore)
     const recentOrders = dashboardData?.data?.recentOrders ?? []
 
@@ -116,16 +117,31 @@ const MyAccount = () => {
                                                 ))}
                                             </tr>
                                         ))
+                                    ) : error ? (
+                                        <tr>
+                                            <td colSpan={4}>
+                                                <EmptyState
+                                                    icon={CircleAlert}
+                                                    tone="danger"
+                                                    title="We couldn’t load your recent orders"
+                                                    description="Please try again in a moment."
+                                                    action={<Button variant="outline" onClick={refetch} className="h-11 px-8 text-base font-semibold">Try again</Button>}
+                                                />
+                                            </td>
+                                        </tr>
                                     ) : recentOrders.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="px-5 py-12 text-center">
-                                                <p className="text-lg font-semibold text-[var(--brand-primary)]">No orders yet</p>
-                                                <p className="mt-1 text-sm text-foreground/60">
-                                                    Start shopping and your orders will appear here.
-                                                </p>
-                                                <Button asChild variant="brand" className="mt-5 h-11 px-8 text-base font-semibold">
-                                                    <Link href={WEBSITE_SHOP}>Shop Now</Link>
-                                                </Button>
+                                            <td colSpan={4}>
+                                                <EmptyState
+                                                    icon={PackageOpen}
+                                                    title="No orders yet"
+                                                    description="Start shopping and your orders will appear here."
+                                                    action={
+                                                        <Button asChild variant="brand" className="h-11 px-8 text-base font-semibold">
+                                                            <Link href={WEBSITE_SHOP}>Shop Now</Link>
+                                                        </Button>
+                                                    }
+                                                />
                                             </td>
                                         </tr>
                                     ) : (

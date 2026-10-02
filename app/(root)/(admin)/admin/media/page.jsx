@@ -3,6 +3,8 @@ import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import Media from '@/components/Application/Admin/Media'
 import PageHeader from '@/components/Application/Admin/PageHeader'
 import UploadMedia from '@/components/Application/Admin/UploadMedia'
+import AdminEmptyState, { AdminLoadingState } from '@/components/Application/Admin/AdminEmptyState'
+import { CircleAlert, ImageOff } from 'lucide-react'
 import ButtonLoading from '@/components/Application/ButtonLoading'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -55,7 +57,8 @@ const MediaContent = () => {
         fetchNextPage,
         hasNextPage,
         isFetching,
-        status
+        status,
+        refetch
     } = useInfiniteQuery({
         queryKey: ['media-data', deleteType],
         queryFn: async ({ pageParam }) => await fetchMedia(pageParam, deleteType),
@@ -171,13 +174,17 @@ const MediaContent = () => {
                 )}
 
                 {status === 'pending' ? (
-                    <div>Loading...</div>
+                    <AdminLoadingState label="Loading media…" />
                 ) : status === 'error' ? (
-                    <div className="text-destructive text-sm">{error.message}</div>
+                    <AdminEmptyState icon={CircleAlert} tone="danger" title="Couldn’t load media" description={error.message} onRetry={() => refetch()} />
                 ) : (
                     <>
                         {data.pages.flatMap(page => page.mediaData.map(media => media._id)).length === 0 && (
-                            <div>Data not found.</div>
+                            deleteType === 'SD' ? (
+                                <AdminEmptyState icon={ImageOff} title="No media yet" description="Upload images to use them across products, categories and variants." />
+                            ) : (
+                                <AdminEmptyState icon={Trash2} title="The trash is empty" description="Deleted media will appear here until you restore or remove it permanently." action={{ href: ADMIN_MEDIA_SHOW, label: 'Back to media' }} />
+                            )
                         )}
 
                         <div className="grid lg:grid-cols-5 sm:grid-cols-3 grid-cols-2 gap-2 mb-5">
