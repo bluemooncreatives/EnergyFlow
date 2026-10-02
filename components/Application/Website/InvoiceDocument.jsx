@@ -364,7 +364,7 @@ const InvoiceDocument = ({ order = {} }) => {
                                     <SectionLabel icon={FiGift}>Summary</SectionLabel>
                                     <View style={s.noteBox}>
                                         <Text style={s.noteText}>
-                                            {itemCount} {itemCount === 1 ? 'item' : 'items'} across {products.length} {products.length === 1 ? 'product' : 'products'}. Shipping is on us.
+                                            {itemCount} {itemCount === 1 ? 'item' : 'items'} across {products.length} {products.length === 1 ? 'product' : 'products'}.{order?.deliveryCharge > 0 ? '' : ' Shipping is on us.'}
                                         </Text>
                                     </View>
                                 </View>
@@ -390,8 +390,10 @@ const InvoiceDocument = ({ order = {} }) => {
                                     </View>
                                 )}
                                 <View style={s.sumRow}>
-                                    <Text style={s.sumLabel}>Shipping</Text>
-                                    <Text style={s.free}>Free</Text>
+                                    <Text style={s.sumLabel}>Delivery</Text>
+                                    {order?.deliveryCharge > 0
+                                        ? <Text style={s.amount}>{money(order.deliveryCharge)}</Text>
+                                        : <Text style={s.free}>Free</Text>}
                                 </View>
                             </View>
 

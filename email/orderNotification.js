@@ -43,6 +43,7 @@ export const orderNotification = (data = {}) => {
         items = [],
         subtotal = 0,
         couponDiscountAmount = 0,
+        deliveryCharge = 0,
         totalAmount = 0,
         paymentMethod = "full",
         paidAmount = 0,
@@ -85,6 +86,7 @@ export const orderNotification = (data = {}) => {
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:6px 0 0;border-top:1px solid ${BRAND.border};padding-top:8px;">
   ${totalLine("Subtotal", formatINR(subtotal))}
   ${Number(couponDiscountAmount) > 0 ? totalLine("Discount", `– ${formatINR(couponDiscountAmount)}`, { color: BRAND.success }) : ""}
+  ${Number(deliveryCharge) > 0 ? totalLine("Delivery", formatINR(deliveryCharge)) : ""}
   <tr><td colspan="2" style="border-top:1px solid ${BRAND.border};font-size:0;line-height:0;padding-top:6px;">&nbsp;</td></tr>
   ${totalLine("Total", formatINR(totalAmount), { strong: true })}
 </table>`;

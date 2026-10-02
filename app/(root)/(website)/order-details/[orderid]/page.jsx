@@ -240,8 +240,10 @@ const OrderDetails = async ({ params }) => {
                                             </div>
                                         )}
                                         <div className='flex items-center justify-between text-sm'>
-                                            <span className='text-muted-foreground'>Shipping</span>
-                                            <span className='font-medium text-success'>FREE</span>
+                                            <span className='text-muted-foreground'>Delivery</span>
+                                            {orderData?.deliveryCharge > 0
+                                                ? <span className='font-medium text-foreground'>{fmt(orderData.deliveryCharge)}</span>
+                                                : <span className='font-medium text-success'>FREE</span>}
                                         </div>
 
                                         <div className='my-1 border-t border-dashed border-border/70' />

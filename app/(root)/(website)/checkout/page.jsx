@@ -11,7 +11,7 @@ import { showToast } from '@/lib/showToast'
 import { zSchema } from '@/lib/zodSchema'
 import { WEBSITE_BUY_NOW, WEBSITE_CART, WEBSITE_ORDER_DETAILS, WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { addIntoCart, clearCart, decreaseQuantity, increaseQuantity, removeFromCart } from '@/store/reducer/cartReducer'
-import { MAX_CART_QTY, clampQty } from '@/lib/cartConstants'
+import { DELIVERY_CHARGE, MAX_CART_QTY, clampQty } from '@/lib/cartConstants'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import Image from 'next/image'
@@ -165,7 +165,8 @@ const Checkout = () => {
         setSubTotal(subTotalAmount)
         setMrpTotal(mrpTotalAmount)
         setCouponDiscountAmount(newCouponDiscount)
-        setTotalAmount(subTotalAmount - newCouponDiscount)
+        // Delivery is flat and never discounted; must match orderTotalOf on the server.
+        setTotalAmount(cartProducts.length ? subTotalAmount - newCouponDiscount + DELIVERY_CHARGE : 0)
 
         couponForm.setValue('minShoppingAmount', subTotalAmount)
 
@@ -506,7 +507,7 @@ const Checkout = () => {
 
     const TRUST = [
         { Icon: ShieldCheck, label: '100% Secure Payments' },
-        { Icon: Truck, label: 'Free Shipping' },
+        { Icon: Truck, label: 'Delivered Across India' },
         { Icon: RotateCcw, label: '7-Day Easy Returns' },
     ]
 
@@ -975,8 +976,8 @@ const Checkout = () => {
                                             </div>
                                         )}
                                         <div className='flex items-center justify-between text-sm'>
-                                            <span className='text-muted-foreground'>Shipping</span>
-                                            <span className='font-medium text-success'>FREE</span>
+                                            <span className='text-muted-foreground'>Delivery</span>
+                                            <span className='font-medium text-foreground'>{fmt(DELIVERY_CHARGE)}</span>
                                         </div>
 
                                         <div className='my-1 border-t border-dashed border-border/70' />

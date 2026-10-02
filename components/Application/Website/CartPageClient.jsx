@@ -83,7 +83,7 @@ const CartPageClient = () => {
 
     const summary = useSelector(selectCartSummary)
     const products = hydrated ? cart.products : []
-    const { units: itemCount, subtotal, mrpTotal, savings } = hydrated ? summary : EMPTY_SUMMARY
+    const { units: itemCount, mrpTotal, savings, deliveryCharge, total } = hydrated ? summary : EMPTY_SUMMARY
 
     // Phones and tablets stack the summary under the items, so its checkout
     // button starts off-screen. A bottom bar carries checkout until that
@@ -208,12 +208,16 @@ const CartPageClient = () => {
                                                 <dd className="font-medium text-brand-bright">−{formatINR(savings)}</dd>
                                             </div>
                                         )}
+                                        <div className="flex justify-between gap-4">
+                                            <dt className="text-ink-body">Delivery</dt>
+                                            <dd className="font-medium text-ink-strong">{formatINR(deliveryCharge)}</dd>
+                                        </div>
                                         <div className="flex justify-between gap-4 border-t border-line-soft pt-3 text-[1.0625rem]">
                                             <dt className="font-medium text-ink-strong">Total</dt>
-                                            <dd className="font-semibold text-ink-strong">{formatINR(subtotal)}</dd>
+                                            <dd className="font-semibold text-ink-strong">{formatINR(total)}</dd>
                                         </div>
                                     </dl>
-                                    <p className="text-[0.8125rem] text-ink-muted">Coupons and delivery are applied at checkout.</p>
+                                    <p className="text-[0.8125rem] text-ink-muted">Coupons are applied at checkout.</p>
 
                                     <button
                                         ref={checkoutRef}
@@ -249,7 +253,7 @@ const CartPageClient = () => {
                             {savings > 0 && <> · Save {formatINR(savings)}</>}
                         </span>
                         <span className="truncate text-[1.0625rem] font-semibold tabular-nums tracking-[-0.01em]">
-                            {formatINR(subtotal)}
+                            {formatINR(total)}
                         </span>
                     </span>
                     <button

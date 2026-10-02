@@ -49,6 +49,7 @@ export const orderAdminNotification = (data = {}) => {
         subtotal = 0,
         couponDiscountAmount = 0,
         couponCode,
+        deliveryCharge = 0,
         totalAmount = 0,
         paymentMethod = "full",
         paidAmount = 0,
@@ -129,6 +130,7 @@ ${label(`Items (${items.length})`)}
   ${itemRows}
   ${line("Subtotal", esc(formatINR(subtotal)))}
   ${Number(couponDiscountAmount) > 0 ? line(`Discount${couponCode ? ` (${esc(couponCode)})` : ""}`, `– ${esc(formatINR(couponDiscountAmount))}`, false, BRAND.success) : ""}
+  ${Number(deliveryCharge) > 0 ? line("Delivery", esc(formatINR(deliveryCharge))) : ""}
   ${line("Total", esc(formatINR(totalAmount)), true)}
 </table>`;
 

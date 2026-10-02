@@ -22,7 +22,7 @@ const showsOn = (path = '') => SHOW_ON.some((prefix) => path === prefix || path.
 
 const MAX_THUMBS = 3
 const NO_PRODUCTS = []
-export const EMPTY_SUMMARY = { lines: 0, units: 0, subtotal: 0, mrpTotal: 0, savings: 0 }
+export const EMPTY_SUMMARY = { lines: 0, units: 0, subtotal: 0, mrpTotal: 0, savings: 0, deliveryCharge: 0, total: 0 }
 const TYPING = 'input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select, [contenteditable="true"]'
 
 // True while a text field has focus. On phones the keyboard is up then, and a
@@ -133,7 +133,7 @@ const MobileCartBar = () => {
     // The stored cart is client-only: render the server's empty cart until
     // hydrated, or the (hidden) bar's text and photos would mismatch.
     const products = hydrated ? storedProducts : NO_PRODUCTS
-    const { units, subtotal, savings } = hydrated ? summary : EMPTY_SUMMARY
+    const { units, total, savings } = hydrated ? summary : EMPTY_SUMMARY
     const panelRef = useRef(null)
     const lastUnits = useRef(null)
 
@@ -159,7 +159,7 @@ const MobileCartBar = () => {
                 ref={panelRef}
                 href={WEBSITE_CART}
                 className="ef-cartbar__panel"
-                aria-label={`View cart: ${itemsLabel}, total ${formatINR(subtotal)}`}
+                aria-label={`View cart: ${itemsLabel}, total ${formatINR(total)}`}
             >
                 <Thumbs products={products} />
                 <span className="flex min-w-0 flex-col leading-tight">
@@ -168,7 +168,7 @@ const MobileCartBar = () => {
                         {savings > 0 && <> · Save {formatINR(savings)}</>}
                     </span>
                     <span className="truncate text-[1.0625rem] font-semibold tabular-nums tracking-[-0.01em]">
-                        {formatINR(subtotal)}
+                        {formatINR(total)}
                     </span>
                 </span>
                 <span className="ef-cartbar__cta">

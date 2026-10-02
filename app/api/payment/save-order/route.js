@@ -6,9 +6,9 @@ import { sendMail } from "@/lib/sendMail";
 import { zSchema } from "@/lib/zodSchema";
 import { isAuthenticated } from "@/lib/authentication";
 import OrderModel from "@/models/Order.model";
-import { amountDueNow, checkoutFingerprint, priceOrderLines, quoteCheckout, razorpayClient } from "@/lib/services/orderPricing";
+import { amountDueNow, checkoutFingerprint, orderTotalOf, priceOrderLines, quoteCheckout, razorpayClient } from "@/lib/services/orderPricing";
 import UserModel from "@/models/User.model";
-import { MAX_CART_QTY } from "@/lib/cartConstants";
+import { DELIVERY_CHARGE, MAX_CART_QTY } from "@/lib/cartConstants";
 import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils";
 import { z } from "zod";
 
@@ -145,7 +145,7 @@ export async function POST(request) {
 
             subtotal = roundToTwo(validatedData.products.reduce((sum, item) => sum + (item.sellingPrice * item.qty), 0))
             couponDiscountAmount = Math.min(roundToTwo(validatedData.couponDiscountAmount), subtotal)
-            totalAmount = roundToTwo(subtotal - couponDiscountAmount)
+            totalAmount = orderTotalOf(subtotal, couponDiscountAmount)
             if (Math.abs(roundToTwo(validatedData.totalAmount) - totalAmount) > 0.01) {
                 return response(false, 400, 'Order total mismatch. Please contact support with your payment id.', { payment_id: paymentId })
             }
@@ -242,6 +242,7 @@ export async function POST(request) {
                 productId, variantId, name, qty, mrp, sellingPrice
             })),
             couponDiscountAmount,
+            deliveryCharge: DELIVERY_CHARGE,
             totalAmount,
             subtotal,
             paymentMethod,
@@ -293,6 +294,7 @@ export async function POST(request) {
                 })),
                 subtotal,
                 couponDiscountAmount,
+                deliveryCharge: DELIVERY_CHARGE,
                 totalAmount,
                 paymentMethod,
                 paidAmount,

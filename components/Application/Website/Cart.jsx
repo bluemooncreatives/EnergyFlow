@@ -93,7 +93,6 @@ const Cart = ({ variant = 'padded' }) => {
     // Units, not lines: two of one pack reads as "2 items", as on the cart
     // page and the bottom bar.
     const cartCount = mounted ? summary.units : 0
-    const subtotal = summary.subtotal
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -184,11 +183,16 @@ const Cart = ({ variant = 'padded' }) => {
                                     </div>
                                 )}
 
+                                <div className="flex items-center justify-between">
+                                    <span className="font-neue text-[15px] text-muted-foreground">Delivery</span>
+                                    <span className="font-neue text-[15px] font-medium text-foreground">{formatINR(summary.deliveryCharge)}</span>
+                                </div>
+
                                 <div className="my-1 border-t border-border/40" />
 
                                 <div className="flex items-center justify-between">
                                     <span className="font-neue text-[17px] font-semibold text-foreground">Total</span>
-                                    <span className="font-neue text-[17px] font-semibold text-foreground">{formatINR(subtotal)}</span>
+                                    <span className="font-neue text-[17px] font-semibold text-foreground">{formatINR(summary.total)}</span>
                                 </div>
                             </div>
 

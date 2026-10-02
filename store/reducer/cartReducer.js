@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { clampQty } from "@/lib/cartConstants";
+import { clampQty, DELIVERY_CHARGE } from "@/lib/cartConstants";
 
 const initialState = {
     count: 0,
@@ -134,12 +134,16 @@ export const selectCartSummary = createSelector(
             subtotal += price * qty
             mrpTotal += (Number(product.mrp) || price) * qty
         }
+        // `total` is what the shopper pays before coupons: goods plus delivery.
+        const deliveryCharge = products.length ? DELIVERY_CHARGE : 0
         return {
             lines: products.length,
             units,
             subtotal,
             mrpTotal,
             savings: Math.max(0, mrpTotal - subtotal),
+            deliveryCharge,
+            total: subtotal + deliveryCharge,
         }
     }
 )

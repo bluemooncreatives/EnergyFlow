@@ -202,6 +202,12 @@ const OrderDetails = ({ params }) => {
                                                 <dd className="tabular-nums">- {orderData?.couponDiscountAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>
                                             </div>
                                         )}
+                                        {orderData?.deliveryCharge > 0 && (
+                                            <div className="flex justify-between gap-4 py-2">
+                                                <dt className="font-medium">Delivery</dt>
+                                                <dd className="tabular-nums">{orderData.deliveryCharge.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>
+                                            </div>
+                                        )}
                                         <div className="flex justify-between gap-4 py-2 text-base font-semibold">
                                             <dt>Total</dt>
                                             <dd className="tabular-nums">{Number(orderData?.totalAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>

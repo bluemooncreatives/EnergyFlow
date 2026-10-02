@@ -221,6 +221,11 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    // Flat delivery charge included in totalAmount (0 on orders placed before it existed).
+    deliveryCharge: {
+        type: Number,
+        default: 0
+    },
     totalAmount: {
         type: Number,
         required: true
