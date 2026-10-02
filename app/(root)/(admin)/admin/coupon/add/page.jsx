@@ -142,7 +142,7 @@ const AddCoupon = () => {
             </div>
 
             <div className="mb-3 mt-5">
-              <ButtonLoading loading={loading} type="submit" text="Add Coupon" className="h-9 cursor-pointer" size="lg" />
+              <ButtonLoading loading={loading} type="submit" text="Add Coupon" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
             </div>
           </form>
         </Form>

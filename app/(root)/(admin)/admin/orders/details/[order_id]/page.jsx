@@ -103,14 +103,17 @@ const OrderDetails = ({ params }) => {
                         className="py-24"
                     />
                 ) : (
-                    <div className="px-4 py-4">
-                        <div className="mb-5">
-                            <p><b>Order Id:</b> {orderData?.order_id}</p>
-                            <p><b>Transaction Id:</b> {orderData?.payment_id}</p>
-                            <p className="capitalize"><b>Status:</b> {orderData?.status}</p>
-                        </div>
+                    <div className="px-3 py-4 sm:px-4">
+                        <dl className="mb-5 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[auto_minmax(0,1fr)]">
+                            <dt className="font-semibold">Order Id</dt>
+                            <dd className="break-all text-muted-foreground max-sm:-mt-1.5">{orderData?.order_id}</dd>
+                            <dt className="font-semibold">Transaction Id</dt>
+                            <dd className="break-all text-muted-foreground max-sm:-mt-1.5">{orderData?.payment_id || '---'}</dd>
+                            <dt className="font-semibold">Status</dt>
+                            <dd className="capitalize text-muted-foreground max-sm:-mt-1.5">{orderData?.status}</dd>
+                        </dl>
 
-                            <div className="rounded-lg border overflow-hidden">
+                            <div className="overflow-hidden rounded-lg border">
                                 <Table>
                                     <TableHeader className="hidden md:table-header-group">
                                         <TableRow>
@@ -121,30 +124,31 @@ const OrderDetails = ({ params }) => {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                    {orderData && orderData?.products?.map((product) => (
-                                        <TableRow key={product.variantId._id} className="md:table-row block border-b">
-                                            <TableCell className="md:table-cell p-3">
-                                                <div className="flex items-center gap-5">
-                                                    <Image src={product?.variantId?.media[0]?.secure_url || placeholderImg.src} width={60} height={60} alt="product" className="rounded" />
-                                                    <div>
-                                                        <h4 className="text-lg">
-                                                            <Link href={WEBSITE_PRODUCT_DETAILS(product?.productId)}>{product?.productId?.name}</Link>
-                                                            <p>Pack Size: {product?.variantId?.size}</p>
+                                    {orderData && orderData?.products?.map((product, index) => (
+                                        // Phones stack each line item as a block: product, then label/value rows.
+                                        <TableRow key={product?.variantId?._id || index} className="block border-b py-1 md:table-row md:py-0">
+                                            <TableCell className="block whitespace-normal p-3 md:table-cell">
+                                                <div className="flex items-center gap-3 sm:gap-5">
+                                                    <Image src={product?.variantId?.media?.[0]?.secure_url || placeholderImg.src} width={60} height={60} alt="product" className="size-14 shrink-0 rounded object-cover sm:size-[60px]" />
+                                                    <div className="min-w-0">
+                                                        <h4 className="text-base leading-snug break-words sm:text-lg">
+                                                            <Link href={WEBSITE_PRODUCT_DETAILS(product?.productId)} className="hover:underline">{product?.productId?.name || product?.name}</Link>
                                                         </h4>
+                                                        <p className="text-sm text-muted-foreground">Pack Size: {product?.variantId?.size || '---'}</p>
                                                     </div>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="md:table-cell flex justify-between md:p-3 px-3 pb-2 text-center">
-                                                <span className="md:hidden font-medium">Price</span>
-                                                <span>{product.sellingPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</span>
+                                            <TableCell className="flex justify-between gap-3 px-3 py-1.5 text-center md:table-cell md:p-3">
+                                                <span className="text-muted-foreground md:hidden">Price</span>
+                                                <span>{Number(product?.sellingPrice || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</span>
                                             </TableCell>
-                                            <TableCell className="md:table-cell flex justify-between md:p-3 px-3 pb-2 text-center">
-                                                <span className="md:hidden font-medium">Quantity</span>
-                                                <span>{product.qty}</span>
+                                            <TableCell className="flex justify-between gap-3 px-3 py-1.5 text-center md:table-cell md:p-3">
+                                                <span className="text-muted-foreground md:hidden">Quantity</span>
+                                                <span>{product?.qty}</span>
                                             </TableCell>
-                                            <TableCell className="md:table-cell flex justify-between md:p-3 px-3 pb-2 text-center">
-                                                <span className="md:hidden font-medium">Total</span>
-                                                <span>{(product.qty * product.sellingPrice).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</span>
+                                            <TableCell className="flex justify-between gap-3 px-3 py-1.5 text-center font-semibold md:table-cell md:p-3 md:font-normal">
+                                                <span className="text-muted-foreground md:hidden">Total</span>
+                                                <span>{(Number(product?.qty || 0) * Number(product?.sellingPrice || 0)).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</span>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -152,7 +156,7 @@ const OrderDetails = ({ params }) => {
                                 </Table>
                             </div>
 
-                            <div className="mt-10">
+                            <div className="mt-6 sm:mt-10">
                                 <ShipmentManagement
                                     orderData={orderData}
                                     onShipmentCreated={(updatedOrder) => {
@@ -162,91 +166,57 @@ const OrderDetails = ({ params }) => {
                                 />
                             </div>
 
-                            <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
-                                <div className="rounded-lg border p-5">
-                                    <h4 className="text-lg font-semibold mb-5">Shipping Address</h4>
-                                    <div>
-                                        <table className="w-full">
-                                            <tbody>
-                                                <tr>
-                                                    <td className="font-medium py-2">Name</td>
-                                                    <td className="text-end py-2">{orderData?.name}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Email</td>
-                                                    <td className="text-end py-2">{orderData?.email}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Phone</td>
-                                                    <td className="text-end py-2">{orderData?.phone}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Country</td>
-                                                    <td className="text-end py-2">{orderData?.country}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">State</td>
-                                                    <td className="text-end py-2">{orderData?.state}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">City</td>
-                                                    <td className="text-end py-2">{orderData?.city}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Pincode</td>
-                                                    <td className="text-end py-2">{orderData?.pincode}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2 align-top">Address</td>
-                                                    <td className="text-end py-2">{orderData?.address || '---'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Landmark</td>
-                                                    <td className="text-end py-2">{orderData?.landmark || '---'}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="font-medium py-2">Order note</td>
-                                                    <td className="text-end py-2">{orderData?.ordernote || '---'}</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-10 md:grid-cols-2">
+                                <div className="rounded-lg border p-4 sm:p-5">
+                                    <h4 className="mb-3 text-base font-semibold sm:mb-5 sm:text-lg">Shipping Address</h4>
+                                    <dl className="divide-y text-sm">
+                                        {[
+                                            ['Name', orderData?.name],
+                                            ['Email', orderData?.email],
+                                            ['Phone', orderData?.phone],
+                                            ['Country', orderData?.country],
+                                            ['State', orderData?.state],
+                                            ['City', orderData?.city],
+                                            ['Pincode', orderData?.pincode],
+                                            ['Address', orderData?.address],
+                                            ['Landmark', orderData?.landmark],
+                                            ['Order note', orderData?.ordernote],
+                                        ].map(([label, value]) => (
+                                            <div key={label} className="flex items-start justify-between gap-4 py-2">
+                                                <dt className="shrink-0 font-medium">{label}</dt>
+                                                <dd className="min-w-0 break-words text-end text-muted-foreground [overflow-wrap:anywhere]">{value || '---'}</dd>
+                                            </div>
+                                        ))}
+                                    </dl>
                                 </div>
-                                <div className="rounded-lg border bg-muted/30 p-5">
-                                    <h4 className="text-lg font-semibold mb-5">Order Summary</h4>
-                                    <div>
-                                        <table className="w-full">
-                                            <tbody>
-                                                <tr>
-                                                    <td className="font-medium py-2">Subtotal</td>
-                                                    <td className="text-end py-2">{orderData?.subtotal.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                                                </tr>
-                                                {orderData?.couponDiscountAmount > 0 && (
-                                                    <tr>
-                                                        <td className="font-medium py-2">Coupon Discount</td>
-                                                        <td className="text-end py-2">- {orderData?.couponDiscountAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                                                    </tr>
-                                                )}
-                                                <tr>
-                                                    <td className="font-medium py-2">Total</td>
-                                                    <td className="text-end py-2">{orderData?.totalAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                                                </tr>
+                                <div className="rounded-lg border bg-muted/30 p-4 sm:p-5">
+                                    <h4 className="mb-3 text-base font-semibold sm:mb-5 sm:text-lg">Order Summary</h4>
+                                    <dl className="text-sm">
+                                        <div className="flex justify-between gap-4 py-2">
+                                            <dt className="font-medium">Subtotal</dt>
+                                            <dd className="tabular-nums">{Number(orderData?.subtotal || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>
+                                        </div>
+                                        {orderData?.couponDiscountAmount > 0 && (
+                                            <div className="flex justify-between gap-4 py-2">
+                                                <dt className="font-medium">Coupon Discount</dt>
+                                                <dd className="tabular-nums">- {orderData?.couponDiscountAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between gap-4 py-2 text-base font-semibold">
+                                            <dt>Total</dt>
+                                            <dd className="tabular-nums">{Number(orderData?.totalAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</dd>
+                                        </div>
+                                    </dl>
 
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <hr />
+                                    <hr className="my-2" />
 
                                     <div className="pt-3">
-                                        <h4 className="text-lg font-semibold mb-2">Order Status</h4>
+                                        <h4 className="mb-2 text-base font-semibold sm:text-lg">Order Status</h4>
                                         <Select
                                             value={orderStatus}
                                             onValueChange={setOrderStatus}
                                         >
-                                            <SelectTrigger className="w-full h-10">
+                                            <SelectTrigger className="h-11 w-full sm:h-10" aria-label="Order status">
                                                 <SelectValue placeholder="Select status" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -257,7 +227,7 @@ const OrderDetails = ({ params }) => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <ButtonLoading type="button" loading={updatingStatus} onClick={handleOrderStatus} text="Save Status" className="mt-5 h-9 cursor-pointer" size="lg" />
+                                        <ButtonLoading type="button" loading={updatingStatus} onClick={handleOrderStatus} text="Save Status" className="mt-4 h-11 w-full cursor-pointer sm:mt-5 sm:h-9 sm:w-auto" size="lg" />
                                     </div>
 
                                 </div>

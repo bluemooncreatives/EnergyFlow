@@ -75,7 +75,7 @@ const CountOverview = () => {
             {cards.map((card) => (
                 <Link key={card.title} href={card.href} aria-label={`${card.title}: ${card.value}`}>
                     <Card
-                        className="rounded-xl border-l-4 p-3.5 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
+                        className="h-full rounded-xl border-l-4 p-3.5 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
                         style={{ borderLeftColor: `var(${card.chartVar})` }}
                     >
                         <div className="flex items-start justify-between gap-2">

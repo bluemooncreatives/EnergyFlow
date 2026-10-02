@@ -55,13 +55,13 @@ const ContactDetail = ({ params }) => {
         )}
 
         {contact && (
-          <div className="p-6 max-w-3xl">
+          <div className="max-w-3xl p-4 sm:p-6">
 
             {/* Status + date row */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-2 sm:mb-6">
+              <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                 {contact.ticketId && (
-                  <span className="font-mono text-sm font-semibold tracking-wide">
+                  <span className="break-all font-mono text-sm font-semibold tracking-wide">
                     {contact.ticketId}
                   </span>
                 )}
@@ -82,36 +82,36 @@ const ContactDetail = ({ params }) => {
             </div>
 
             {/* Meta grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="rounded-lg border p-4 flex gap-3">
+            <div className="mb-5 grid grid-cols-1 gap-3 sm:mb-6 sm:grid-cols-2 sm:gap-4">
+              <div className="flex min-w-0 gap-3 rounded-lg border p-3.5 sm:p-4">
                 <User className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">From</p>
                   <p className="font-medium text-sm">{contact.name}</p>
                 </div>
               </div>
 
-              <div className="rounded-lg border p-4 flex gap-3">
+              <div className="flex min-w-0 gap-3 rounded-lg border p-3.5 sm:p-4">
                 <Mail className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">Email</p>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="font-medium text-sm text-[var(--brand-primary)] hover:underline"
+                    className="break-all font-medium text-sm text-[var(--brand-primary)] hover:underline"
                   >
                     {contact.email}
                   </a>
                 </div>
               </div>
 
-              <div className="rounded-lg border p-4 flex gap-3">
+              <div className="flex min-w-0 gap-3 rounded-lg border p-3.5 sm:p-4">
                 <Phone className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">Mobile</p>
                   {contact.phone ? (
                     <a
                       href={`tel:${contact.phone}`}
-                      className="font-medium text-sm text-[var(--brand-primary)] hover:underline"
+                      className="break-all font-medium text-sm text-[var(--brand-primary)] hover:underline"
                     >
                       {contact.phone}
                     </a>
@@ -121,34 +121,34 @@ const ContactDetail = ({ params }) => {
                 </div>
               </div>
 
-              <div className="rounded-lg border p-4 flex gap-3">
+              <div className="flex min-w-0 gap-3 rounded-lg border p-3.5 sm:p-4">
                 <MapPin className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">Address</p>
-                  <p className="font-medium text-sm">{contact.address || <span className="text-muted-foreground italic">Not provided</span>}</p>
+                  <p className="break-words font-medium text-sm">{contact.address || <span className="text-muted-foreground italic">Not provided</span>}</p>
                 </div>
               </div>
 
-              <div className="rounded-lg border p-4 flex gap-3 sm:col-span-2">
+              <div className="flex min-w-0 gap-3 rounded-lg border p-3.5 sm:p-4 sm:col-span-2">
                 <Tag className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground mb-0.5 uppercase tracking-wide">Subject</p>
-                  <p className="font-medium text-sm">{contact.subject || <span className="text-muted-foreground italic">No subject</span>}</p>
+                  <p className="break-words font-medium text-sm">{contact.subject || <span className="text-muted-foreground italic">No subject</span>}</p>
                 </div>
               </div>
             </div>
 
             {/* Message body */}
-            <div className="rounded-lg border p-5 mb-6">
+            <div className="mb-5 rounded-lg border p-4 sm:mb-6 sm:p-5">
               <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="size-4 text-muted-foreground" />
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">Message</p>
               </div>
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">{contact.message}</p>
+              <p className="break-words text-sm leading-relaxed whitespace-pre-wrap">{contact.message}</p>
             </div>
 
             {/* Reply CTA */}
-            <Button asChild>
+            <Button asChild className="h-11 w-full sm:h-9 sm:w-auto">
               <a href={`mailto:${contact.email}?subject=Re: ${contact.subject || 'Your message'}`}>
                 <Mail className="size-4 mr-2" />
                 Reply via Email

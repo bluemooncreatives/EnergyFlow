@@ -182,8 +182,8 @@ export const OrderPipeline = ({ statusCounts = {}, shipmentCounts = {}, placed =
                         {PIPELINE.map(({ key, label, icon: Icon }) => {
                             const value = statusCounts[key] || 0
                             return (
-                                <li key={key} className="grid grid-cols-[7.5rem_1fr_3rem] items-center gap-3 text-sm">
-                                    <span className="flex items-center gap-2 text-muted-foreground"><Icon className="size-4" aria-hidden="true" /> {label}</span>
+                                <li key={key} className="grid grid-cols-[6.75rem_1fr_2.5rem] items-center gap-2 text-sm sm:grid-cols-[7.5rem_1fr_3rem] sm:gap-3">
+                                    <span className="flex min-w-0 items-center gap-2 text-muted-foreground"><Icon className="size-4 shrink-0" aria-hidden="true" /> <span className="truncate">{label}</span></span>
                                     <span className="h-6 overflow-hidden rounded-md bg-muted">
                                         <span className="flex h-full items-center rounded-md bg-[var(--viz-1)] transition-[width] duration-700" style={{ width: `${value ? Math.max(4, (value / max) * 100) : 0}%` }} />
                                     </span>
@@ -581,7 +581,7 @@ export const AudiencePanel = ({ audience, kpis }) => {
             {sources.length ? (
                 <ul className="space-y-2">
                     {sources.map(([source, count]) => (
-                        <li key={source} className="grid grid-cols-[7rem_1fr_2rem] items-center gap-2 text-xs">
+                        <li key={source} className="grid grid-cols-[6rem_1fr_2rem] items-center gap-2 text-xs sm:grid-cols-[7rem_1fr_2rem]">
                             <span className="truncate">{NEWSLETTER_SOURCE_LABEL[source] || source}</span>
                             <ShareBar value={count} max={max} />
                             <span className="text-right font-semibold tabular-nums">{count}</span>

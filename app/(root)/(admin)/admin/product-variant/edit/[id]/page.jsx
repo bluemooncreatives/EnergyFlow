@@ -283,7 +283,7 @@ const EditProductVariant = ({ params }) => {
               </div>
             </div>
 
-            <div className="md:col-span-2 border border-dashed rounded p-5 text-center">
+            <div className="md:col-span-2 border border-dashed rounded p-3 text-center sm:p-5">
               <MediaModal
                 open={open}
                 setOpen={setOpen}
@@ -295,7 +295,7 @@ const EditProductVariant = ({ params }) => {
               {selectedMedia.length > 0 && (
                 <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
                   {selectedMedia.map((media) => (
-                    <div key={media._id} className="h-24 w-24 border">
+                    <div key={media._id} className="size-20 border sm:size-24">
                       <Image
                         src={media.url}
                         height={100}
@@ -308,13 +308,13 @@ const EditProductVariant = ({ params }) => {
                 </div>
               )}
 
-              <div onClick={() => setOpen(true)} className="mx-auto w-[200px] cursor-pointer border bg-muted/40 p-5">
+              <button type="button" onClick={() => setOpen(true)} className="mx-auto block w-full max-w-[200px] cursor-pointer rounded-md border bg-muted p-4 transition hover:bg-muted/70 sm:p-5">
                 <span className="font-semibold">Select Media</span>
-              </div>
+              </button>
             </div>
 
             <div className="mb-3 mt-5">
-              <ButtonLoading loading={loading} type="submit" text="Save Changes" className="h-9 cursor-pointer" size="lg" />
+              <ButtonLoading loading={loading} type="submit" text="Save Changes" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
             </div>
           </form>
         </Form>

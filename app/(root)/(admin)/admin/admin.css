@@ -192,6 +192,15 @@
   .admin-table__progress { animation: none; width: 100%; opacity: 0.5; }
 }
 
+/* Phones: form controls get a 40px minimum touch height (the base
+   inputs/selects are 32px, sized for a mouse). */
+@media (max-width: 767.98px) {
+  .admin-theme [data-slot="input"],
+  .admin-theme [data-slot="select-trigger"] {
+    min-height: 2.5rem;
+  }
+}
+
 /* ────────────────────────────────────────────────────────────────
    Analytics chart tokens (dashboard → Analytics).
    Categorical slots validated with the dataviz palette checker

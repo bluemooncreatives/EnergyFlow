@@ -171,25 +171,25 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
 
     return (
         <section className="rounded-lg border bg-background">
-            <div className="flex flex-col gap-3 border-b p-5 md:flex-row md:items-start md:justify-between">
-                <div>
+            <div className="flex flex-col gap-3 border-b p-4 sm:p-5 md:flex-row md:items-start md:justify-between">
+                <div className="min-w-0">
                     <div className="mb-2 flex items-center gap-2">
                         <Truck className="size-4 text-[var(--dark-red)]" />
-                        <h3 className="text-lg font-semibold">Shipment Management</h3>
+                        <h3 className="text-base font-semibold sm:text-lg">Shipment Management</h3>
                     </div>
-                    <p className="text-sm text-muted-foreground">{address || "Shipping address is incomplete."}</p>
+                    <p className="break-words text-sm text-muted-foreground">{address || "Shipping address is incomplete."}</p>
                 </div>
                 <Badge
                     variant="outline"
-                    className={cn("h-6 border px-2.5", statusTone[String(shipment.shipmentStatus || "PENDING")])}
+                    className={cn("h-6 w-fit border px-2.5", statusTone[String(shipment.shipmentStatus || "PENDING")])}
                 >
                     {labelize(shipment.shipmentStatus || "PENDING")}
                 </Badge>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 p-5 xl:grid-cols-[1.1fr_0.9fr]">
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    <InfoItem label="Order ID" value={orderData.order_id} />
+            <div className="grid grid-cols-1 gap-4 p-3 sm:p-5 xl:grid-cols-[1.1fr_0.9fr]">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
+                    <InfoItem label="Order ID" value={orderData.order_id} wide />
                     <InfoItem label="Customer Name" value={orderData.name} />
                     <InfoItem label="Customer Phone" value={orderData.phone} />
                     <InfoItem label="Payment Method" value={labelize(orderData.paymentMethod)} />
@@ -198,20 +198,20 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                 </div>
 
                 <Card className="rounded-lg border bg-muted/20 py-0 shadow-none hover:translate-y-0 hover:shadow-none">
-                    <CardHeader className="border-b px-4 py-3">
+                    <CardHeader className="border-b px-3 py-3 sm:px-4">
                         <CardTitle className="flex items-center gap-2 text-base">
                             {hasAwb ? <CheckCircle2 className="size-4 text-success" /> : <PackageCheck className="size-4 text-muted-foreground" />}
                             Shipment Card
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4 px-4 py-4">
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                            <ShipmentMeta label="AWB" value={shipment.awb || "---"} onCopy={shipment.awb ? copyAwb : undefined} />
+                    <CardContent className="space-y-4 px-3 py-4 sm:px-4">
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
+                            <ShipmentMeta label="AWB" value={shipment.awb || "---"} onCopy={shipment.awb ? copyAwb : undefined} wide />
                             <ShipmentMeta label="Courier" value={shipment.courier || "Delhivery"} />
                             <ShipmentMeta label="Shipment Status" value={labelize(shipment.shipmentStatus || "PENDING")} />
                         </div>
 
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div className="grid grid-cols-2 gap-3">
                             <DimensionInput label="Length" value={dimensions.length} onChange={(value) => updateDimension("length", value)} disabled={hasAwb} />
                             <DimensionInput label="Breadth" value={dimensions.breadth} onChange={(value) => updateDimension("breadth", value)} disabled={hasAwb} />
                             <DimensionInput label="Height" value={dimensions.height} onChange={(value) => updateDimension("height", value)} disabled={hasAwb} />
@@ -228,7 +228,7 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                                     <Button
                                         type="button"
                                         variant="outline"
-                                        className="h-9 flex-1 cursor-pointer sm:flex-none"
+                                        className="h-11 flex-1 cursor-pointer sm:h-9 sm:flex-none"
                                         disabled={syncingShipment}
                                         onClick={syncShipment}
                                     >
@@ -243,7 +243,7 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                                     disabled={hasAwb || creatingShipment}
                                     onClick={createShipment}
                                     variant="brand"
-                                    className="h-9 flex-1 cursor-pointer sm:flex-none"
+                                    className="h-11 flex-1 cursor-pointer sm:h-9 sm:flex-none"
                                 />
                             </div>
                         </div>
@@ -255,19 +255,19 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
 }
 
 const InfoItem = ({ label, value, wide = false }: { label: string; value?: string | null; wide?: boolean }) => (
-    <div className={cn("rounded-md border bg-muted/20 p-3", wide && "sm:col-span-2 lg:col-span-3")}>
+    <div className={cn("min-w-0 rounded-md border bg-muted/20 p-3", wide && "col-span-2 lg:col-span-3")}>
         <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
-        <p className="mt-1 break-words text-sm font-medium text-foreground">{value || "---"}</p>
+        <p className="mt-1 break-words text-sm font-medium text-foreground [overflow-wrap:anywhere]">{value || "---"}</p>
     </div>
 )
 
-const ShipmentMeta = ({ label, value, onCopy }: { label: string; value: string; onCopy?: () => void }) => (
-    <div className="rounded-md border bg-background p-3">
+const ShipmentMeta = ({ label, value, onCopy, wide = false }: { label: string; value: string; onCopy?: () => void; wide?: boolean }) => (
+    <div className={cn("min-w-0 rounded-md border bg-background p-3", wide && "col-span-2 sm:col-span-1")}>
         <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
         <div className="mt-1 flex items-center justify-between gap-2">
-            <p className="break-all text-sm font-semibold">{value}</p>
+            <p className="min-w-0 break-all text-sm font-semibold">{value}</p>
             {onCopy && (
-                <Button type="button" variant="ghost" size="icon-xs" className="" onClick={onCopy} aria-label="Copy AWB">
+                <Button type="button" variant="ghost" size="icon-xs" className="shrink-0 max-sm:size-8" onClick={onCopy} aria-label="Copy AWB">
                     <Copy className="size-3.5" />
                 </Button>
             )}
@@ -286,17 +286,18 @@ const DimensionInput = ({
     onChange: (value: string) => void
     disabled?: boolean
 }) => (
-    <label className="space-y-1.5">
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+    <label className="block min-w-0 space-y-1.5">
+        <span className="block text-xs font-medium text-muted-foreground">{label} ({label === "Weight" ? "kg" : "cm"})</span>
         <Input
             type="number"
             min="0"
             step="0.01"
+            inputMode="decimal"
             value={value}
             disabled={disabled}
             onChange={(event) => onChange(event.target.value)}
             placeholder={label === "Weight" ? "kg" : "cm"}
-            className="h-10 bg-background"
+            className="h-11 bg-background text-base sm:h-10 sm:text-sm"
         />
     </label>
 )
