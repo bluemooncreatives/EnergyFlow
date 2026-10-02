@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import useFetch from '@/hooks/useFetch'
 import { filterOrders, paginate, summarizeOrders } from '@/lib/account'
 import { cn } from '@/lib/utils'
+import { scrollToElement } from '@/lib/scroll'
 import { WEBSITE_LOGIN, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
@@ -47,6 +48,10 @@ const Orders = () => {
     const changeQuery = (next) => {
         setQuery(next)
         setPage(1)
+    }
+    const goToPage = (next) => {
+        setPage(next)
+        scrollToElement('my-orders')
     }
     const clearFilters = () => {
         setStatus('all')
@@ -119,6 +124,8 @@ const Orders = () => {
             <WebsiteBreadcrumb props={breadCrumbData} />
             <UserPanelLayout>
                 <AccountCard
+                    id="my-orders"
+                    className="scroll-mt-24"
                     icon={Package}
                     title="My Orders"
                     description={!isLoading && hasOrders ? `${counts.total} ${counts.total === 1 ? 'order' : 'orders'} placed` : undefined}
@@ -188,7 +195,7 @@ const Orders = () => {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    onClick={() => setPage(currentPage - 1)}
+                                    onClick={() => goToPage(currentPage - 1)}
                                     disabled={currentPage <= 1}
                                     aria-label="Previous page"
                                 >
@@ -200,7 +207,7 @@ const Orders = () => {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    onClick={() => setPage(currentPage + 1)}
+                                    onClick={() => goToPage(currentPage + 1)}
                                     disabled={currentPage >= totalPages}
                                     aria-label="Next page"
                                 >

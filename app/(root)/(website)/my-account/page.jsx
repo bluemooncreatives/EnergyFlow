@@ -37,14 +37,17 @@ const Skeleton = ({ className }) => <span className={`block animate-pulse rounde
 
 const StatCard = ({ icon: Icon, label, value, hint, loading }) => (
     <div className="flex items-start justify-between gap-3 rounded-[var(--radius-card)] bg-surface-card p-5 shadow-[inset_0_0_0_1px_var(--line-soft)]">
-        <div className="min-w-0">
+        <div className="min-w-0 overflow-hidden">
             <p className="text-[13px] font-medium text-foreground/60">{label}</p>
-            <div className="mt-2 text-2xl font-semibold text-[var(--brand-primary)] sm:text-[1.75rem]" data-testid={`stat-${label}`}>
-                {loading ? <Skeleton className="h-8 w-16" /> : <span className="break-all">{value}</span>}
+            <div
+                className={`mt-2 whitespace-nowrap font-semibold tabular-nums text-[var(--brand-primary)] ${String(value ?? '').length > 7 ? 'text-lg sm:text-xl' : 'text-2xl sm:text-[1.75rem]'}`}
+                data-testid={`stat-${label}`}
+            >
+                {loading ? <Skeleton className="h-8 w-16" /> : value}
             </div>
             {hint && <p className="mt-1 text-xs text-foreground/50">{hint}</p>}
         </div>
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-tint-honey text-brand">
+        <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-tint-honey text-brand sm:flex">
             <Icon className="size-[18px]" aria-hidden="true" />
         </span>
     </div>
@@ -84,7 +87,7 @@ const WelcomeCard = ({ user, loading }) => {
                             </div>
                         ) : (
                             <>
-                                <h2 className="truncate text-xl font-semibold sm:text-2xl" data-testid="welcome-heading">
+                                <h2 className="break-words text-xl font-semibold sm:text-2xl" data-testid="welcome-heading">
                                     {greeting}, {firstName(user?.name)}
                                 </h2>
                                 <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-on-brand/75">
@@ -252,7 +255,7 @@ const MyAccount = () => {
                         <StatCard icon={ShoppingBag} label="Total orders" value={totalOrders} loading={isLoading} />
                         <StatCard icon={Truck} label="In progress" value={stats?.activeOrders ?? 0} loading={isLoading} />
                         <StatCard icon={PackageCheck} label="Delivered" value={stats?.deliveredOrders ?? 0} loading={isLoading} />
-                        <StatCard icon={IndianRupee} label="Total spent" value={formatCurrency(stats?.totalSpent)} loading={isLoading} />
+                        <StatCard icon={IndianRupee} label="Total spent" value={formatCurrency(Math.round(Number(stats?.totalSpent) || 0))} loading={isLoading} />
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
