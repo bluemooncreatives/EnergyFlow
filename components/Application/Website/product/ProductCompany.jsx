@@ -16,8 +16,8 @@ const PROMISES = [
  * product page: the store, what Energyflow stands for, and how to reach a
  * person. Photo left, story right on desktop; stacked on phones.
  */
-const ProductCompany = ({ productName }) => (
-    <section aria-labelledby="company-title" className="ef-section ef-section--page">
+const ProductCompany = ({ productName, tone = 'page' }) => (
+    <section aria-labelledby="company-title" className={`ef-section ${tone === 'sunken' ? 'ef-section--sunken' : 'ef-section--page'}`}>
         <div className="ef-container">
             <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14 xl:gap-20">
                 {/* Store photo */}

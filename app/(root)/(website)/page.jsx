@@ -8,6 +8,7 @@ import CategoryArchiveSection from '@/components/Application/Website/CategoryArc
 import PopularProductsSection from '@/components/Application/Website/PopularProductsSection'
 import DailyBestSellsSection from '@/components/Application/Website/DailyBestSellsSection'
 import SignatureRangeSection from '@/components/Application/Website/SignatureRangeSection'
+import StoreStatsSection from '@/components/Application/Website/StoreStatsSection'
 import Testimonial from '@/components/Application/Website/Testimonial'
 import NewsletterSection from '@/components/Application/Website/newsletter/NewsletterSection'
 import { getStorefrontAvailability } from '@/lib/services/categoryService'
@@ -89,11 +90,11 @@ const Home = async () => {
                 what others buy (bestsellers) → what we are known for
                 (signature range) → offers (deals, a pantry marquee as a breather
                 between the product grids, popular) → why trust us
-                (promise band, reviews, story) → stay in touch (newsletter
-                band) → remaining doubts (FAQ).
+                (promise band, store numbers, reviews, story) → stay in touch
+                (newsletter band) → remaining doubts (FAQ).
                 Tones are assigned here so the page/sunken rhythm lives in one
                 place. Data-driven sections (categories, bestsellers, deals,
-                reviews) render nothing when they have no data. */}
+                store numbers, reviews) render nothing when they have no data. */}
             <LazyHydrate>
                 <CategoryArchiveSection tone="sunken" />
             </LazyHydrate>
@@ -120,6 +121,10 @@ const Home = async () => {
 
             <LazyHydrate>
                 <BenefitsSection />
+            </LazyHydrate>
+
+            <LazyHydrate>
+                <StoreStatsSection tone="sunken" />
             </LazyHydrate>
 
             <LazyHydrate>

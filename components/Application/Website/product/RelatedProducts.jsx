@@ -9,11 +9,12 @@ import RailPager from '@/components/Application/Website/storefront/RailPager'
 import { useScrollRail } from '@/hooks/useScrollRail'
 import { useReveal } from '@/hooks/useReveal'
 import { WEBSITE_CATEGORY, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { cn } from '@/lib/utils'
 
 // "You may also like" as a swipeable rail with arrow controls (hidden when
 // every card already fits). Renders nothing without products. It hydrates
 // late (LazyHydrate), so it runs its own scroll reveal.
-const RelatedProducts = ({ products, category }) => {
+const RelatedProducts = ({ products, category, tone = 'page' }) => {
     const rail = useScrollRail()
     const scopeRef = useRef(null)
     useReveal(scopeRef)
@@ -23,7 +24,7 @@ const RelatedProducts = ({ products, category }) => {
     const moreLabel = category?.name ? `More ${category.name}` : 'Shop everything'
 
     return (
-        <section ref={scopeRef} aria-labelledby="related-title" className="ef-section">
+        <section ref={scopeRef} aria-labelledby="related-title" className={cn('ef-section', tone === 'sunken' ? 'ef-section--sunken' : 'ef-section--page')}>
             <div className="ef-container">
                 <div className="mb-[var(--section-gap)] flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div data-reveal className="flex flex-col items-start gap-4">

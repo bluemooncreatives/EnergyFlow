@@ -38,16 +38,16 @@ const ProductReveiw = dynamic(() => import('@/components/Application/Website/Pro
 const tintFor = (seed = '') => tintAt([...String(seed)].reduce((sum, ch) => sum + ch.charCodeAt(0), 0))
 
 /**
- * Product details page.
+ * Product details page, in the order shoppers decide:
  *
  *   Hero      gallery (sticky on desktop) + buy box
  *   Band      the sunflower promise ticker
  *   Details   spec sheet + full description
  *   Policies  shipping & returns
- *   Company   who's behind the pack: store, promises, contact
- *   FAQ       product + category questions (lib/productFaq.js)
  *   Reviews   summary + list + composer
  *   Related   "You may also like" rail
+ *   FAQ       product + category questions (lib/productFaq.js)
+ *   Company   who's behind the pack: store, promises, contact
  *   Sticky    compact buy bar once the main buttons scroll away
  *
  * Every pack size arrives with the page, so switching size is instant: the
@@ -99,6 +99,8 @@ const ProductDetails = ({
     }, [cart, images])
 
     useReveal(scopeRef)
+
+    const hasRelated = relatedProducts.length > 0
 
     const badges = [
         product.isBestseller && 'Bestseller',
@@ -168,18 +170,10 @@ const ProductDetails = ({
 
             <ProductStory product={product} variant={variant} variants={variants} html={descriptionHtml} />
 
+            {/* Decide → reassure → prove → cross-sell → resolve doubts → brand.
+                Tones alternate from here (sunken, page, sunken…); without a
+                related rail the last two flip so no two neighbours match. */}
             <ProductAssurance />
-
-            <ProductCompany productName={name} />
-
-            <FAQSection
-                tone="sunken"
-                faqs={faqs}
-                eyebrow={product.category?.name ? `${product.category.name} · FAQ` : 'FAQ'}
-                title="Questions about"
-                accent="this product"
-                lead={`Pack sizes, storage, delivery and returns for ${name}${product.category?.name ? `, plus what people ask about ${product.category.name.toLowerCase()}` : ''}.`}
-            />
 
             <div id="reviews" className="scroll-mt-28 py-[var(--section-space)]">
                 <LazyHydrate>
@@ -187,13 +181,22 @@ const ProductDetails = ({
                 </LazyHydrate>
             </div>
 
-            {relatedProducts.length > 0 && (
-                <div className="border-t border-line-soft">
-                    <LazyHydrate>
-                        <RelatedProducts products={relatedProducts} category={product.category} />
-                    </LazyHydrate>
-                </div>
+            {hasRelated && (
+                <LazyHydrate>
+                    <RelatedProducts products={relatedProducts} category={product.category} tone="sunken" />
+                </LazyHydrate>
             )}
+
+            <FAQSection
+                tone={hasRelated ? 'page' : 'sunken'}
+                faqs={faqs}
+                eyebrow={product.category?.name ? `${product.category.name} · FAQ` : 'FAQ'}
+                title="Questions about"
+                accent="this product"
+                lead={`Pack sizes, storage, delivery and returns for ${name}${product.category?.name ? `, plus what people ask about ${product.category.name.toLowerCase()}` : ''}.`}
+            />
+
+            <ProductCompany productName={name} tone={hasRelated ? 'sunken' : 'page'} />
 
             <StickyBuyBar
                 watchRef={ctaRef}
