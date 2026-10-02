@@ -199,6 +199,43 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
     const featuredLayout = products.length >= 3
     const count = Number(total) || products.length
 
+    // Occasions, live numbers and CTAs. Beside the headline on desktop; on
+    // phones they follow the carousel so the boxes are the first thing seen.
+    const details = (
+        <>
+                        <ul data-reveal aria-label="Made for" className="m-0 flex list-none flex-wrap gap-2 p-0">
+                            {OCCASIONS.map((occasion) => (
+                                <li
+                                    key={occasion}
+                                    className="rounded-full bg-white/[0.06] px-3.5 py-1.5 text-[0.8125rem] font-medium text-[var(--ink-on-inverse)] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]"
+                                >
+                                    {occasion}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <dl data-reveal className="m-0 grid grid-cols-3 border-y border-white/10">
+                            {[
+                                fromPrice ? { label: 'Starting at', value: formatINR(fromPrice) } : null,
+                                { label: count === 1 ? 'Gift box' : 'Gift boxes', value: pad(count) },
+                                { label: 'Delivered', value: 'Pan-India' },
+                            ].filter(Boolean).map(({ label, value }, i) => (
+                                <div key={label} className={cn('flex flex-col gap-1 py-4', i > 0 && 'border-l border-white/10 pl-4')}>
+                                    <dt className="text-[11px] font-semibold uppercase text-[var(--ink-on-inverse-muted)]">{label}</dt>
+                                    <dd className="m-0 font-header text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] font-semibold leading-none tabular-nums text-[var(--brand-sun)]">{value}</dd>
+                                </div>
+                            ))}
+                        </dl>
+
+                        <div data-reveal className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                            <StoreButton href={categoryHref} variant="accent" arrow>Shop all gift boxes</StoreButton>
+                            <StoreButton href="/contact" variant="ghost-light">
+                                <Gift aria-hidden="true" /> Plan a bulk order
+                            </StoreButton>
+                        </div>
+        </>
+    )
+
     return (
         <section
             ref={sectionRef}
@@ -233,36 +270,7 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
                         </p>
                     </div>
 
-                    <ul data-reveal aria-label="Made for" className="m-0 flex list-none flex-wrap gap-2 p-0">
-                        {OCCASIONS.map((occasion) => (
-                            <li
-                                key={occasion}
-                                className="rounded-full bg-white/[0.06] px-3.5 py-1.5 text-[0.8125rem] font-medium text-[var(--ink-on-inverse)] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14)]"
-                            >
-                                {occasion}
-                            </li>
-                        ))}
-                    </ul>
-
-                    <dl data-reveal className="m-0 grid grid-cols-3 border-y border-white/10">
-                        {[
-                            fromPrice ? { label: 'Starting at', value: formatINR(fromPrice) } : null,
-                            { label: count === 1 ? 'Gift box' : 'Gift boxes', value: pad(count) },
-                            { label: 'Delivered', value: 'Pan-India' },
-                        ].filter(Boolean).map(({ label, value }, i) => (
-                            <div key={label} className={cn('flex flex-col gap-1 py-4', i > 0 && 'border-l border-white/10 pl-4')}>
-                                <dt className="text-[11px] font-semibold uppercase text-[var(--ink-on-inverse-muted)]">{label}</dt>
-                                <dd className="m-0 font-header text-[clamp(1.25rem,1rem+0.8vw,1.75rem)] font-semibold leading-none tabular-nums text-[var(--brand-sun)]">{value}</dd>
-                            </div>
-                        ))}
-                    </dl>
-
-                    <div data-reveal className="flex flex-wrap gap-3">
-                        <StoreButton href={categoryHref} variant="accent" arrow>Shop all gift boxes</StoreButton>
-                        <StoreButton href="/contact" variant="ghost-light">
-                            <Gift aria-hidden="true" /> Plan a bulk order
-                        </StoreButton>
-                    </div>
+                    <div className="hidden flex-col gap-7 lg:flex">{details}</div>
                 </div>
 
                 {/* ── Boxes: carousel on touch, bento grid on desktop ── */}
@@ -315,6 +323,8 @@ const GiftBoxesShowcase = ({ products = [], total = 0, fromPrice = null, categor
                             </li>
                         ))}
                     </ul>
+
+                    <div className="mt-10 flex flex-col gap-7 lg:hidden">{details}</div>
 
                     {count > products.length && (
                         <p data-reveal className="mt-6 text-sm text-[var(--ink-on-inverse-muted)]">
