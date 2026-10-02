@@ -32,7 +32,7 @@ const ThemeToggle = ({ variant = 'icon', className, iconClassName = 'h-6 w-6' })
                 aria-checked={isDark}
                 onClick={toggle}
                 className={cn(
-                    'flex w-full items-center justify-between gap-3 rounded-md px-3 py-3.5 text-left font-neue text-sm font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)]',
+                    'flex w-full items-center justify-between gap-3 rounded-md px-3 py-3.5 text-left font-neue text-sm font-semibold uppercase tracking-[0em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)]',
                     className
                 )}
             >

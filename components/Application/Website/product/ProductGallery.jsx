@@ -249,7 +249,7 @@ const ProductGallery = forwardRef(function ProductGallery({ images, name, badges
                         <div className="ef-pd-seal pointer-events-none absolute right-3 top-3 z-[4] sm:right-4 sm:top-4">
                             <span className="ef-seal ef-seal--sun size-[4.5rem] flex-col gap-0 text-center leading-none sm:size-[5.25rem]">
                                 <span className="font-header text-[1.25rem] font-bold sm:text-[1.5rem]">{discount}%</span>
-                                <span className="text-[0.625rem] font-bold uppercase tracking-[0.12em]">off</span>
+                                <span className="text-[0.625rem] font-bold uppercase tracking-[0em]">off</span>
                             </span>
                         </div>
                     )}

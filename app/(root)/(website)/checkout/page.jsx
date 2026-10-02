@@ -945,7 +945,7 @@ const Checkout = () => {
                                                 <div className='flex items-center gap-2.5'>
                                                     <BadgeCheck className='size-5 text-success' />
                                                     <div>
-                                                        <p className='text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground'>Coupon applied</p>
+                                                        <p className='text-[10px] font-medium uppercase tracking-[0em] text-muted-foreground'>Coupon applied</p>
                                                         <p className='font-neue text-sm font-semibold uppercase text-success'>{couponCode}</p>
                                                     </div>
                                                 </div>

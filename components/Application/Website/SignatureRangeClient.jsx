@@ -185,7 +185,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
                 <span
                     aria-hidden="true"
                     className={cn(
-                        'pt-1 text-[0.6875rem] font-semibold tabular-nums tracking-[0.08em]',
+                        'pt-1 text-[0.6875rem] font-semibold tabular-nums tracking-[0em]',
                         cover ? 'text-cream [text-shadow:0_1px_6px_rgb(0_0_0/0.5)]' : 'text-ink-muted'
                     )}
                 >
@@ -205,7 +205,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
                 )}
             >
                 <div className="flex min-w-0 flex-col gap-1.5">
-                    <span className="hidden truncate text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-cream/70 @min-[13rem]/tile:block">
+                    <span className="hidden truncate text-[0.6875rem] font-semibold uppercase tracking-[0em] text-cream/70 @min-[13rem]/tile:block">
                         {tile.eyebrow}
                     </span>
                     {/* size before leading: cn() drops a leading-* that precedes a text size */}

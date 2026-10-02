@@ -43,7 +43,7 @@ const socialLinks = [
 
 const LinkColumn = ({ title, links }) => (
     <div className='footer-col'>
-        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-[var(--brand-sun)]'>{title}</h3>
+        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0em] text-[var(--brand-sun)]'>{title}</h3>
         <nav aria-label={`${title} links`}>
             <ul className='space-y-2.5'>
                 {links.map(({ label, href }) => (
@@ -162,7 +162,7 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
 
                     {/* Office / Contact */}
                     <div className='footer-col lg:text-right'>
-                        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-[var(--brand-sun)]'>Office</h3>
+                        <h3 className='mb-5 font-header text-[0.8125rem] font-semibold uppercase tracking-[0em] text-[var(--brand-sun)]'>Office</h3>
                         <ul className='space-y-2.5 text-[0.9375rem] text-white/80'>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <MapPin className='size-5 shrink-0 lg:order-2' />

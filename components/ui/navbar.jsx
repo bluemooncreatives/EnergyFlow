@@ -44,10 +44,10 @@ const defaultMenu = [
 ]
 
 const DESKTOP_LINK =
-  "text-[0.8125rem] font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] underline-offset-[10px] decoration-2 decoration-[var(--brand-sun)] transition-colors hover:text-[var(--brand-primary)] hover:underline"
+  "text-[0.8125rem] font-semibold uppercase tracking-[0em] text-[var(--ink-strong)] underline-offset-[10px] decoration-2 decoration-[var(--brand-sun)] transition-colors hover:text-[var(--brand-primary)] hover:underline"
 
 const MOBILE_LINK =
-  "rounded-md px-3 py-3.5 font-neue text-sm font-semibold uppercase tracking-[0.1em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)] hover:text-[var(--brand-primary)] active:bg-[var(--surface-sunken)]"
+  "rounded-md px-3 py-3.5 font-neue text-sm font-semibold uppercase tracking-[0em] text-[var(--ink-strong)] transition-colors hover:bg-[var(--surface-well)] hover:text-[var(--brand-primary)] active:bg-[var(--surface-sunken)]"
 
 const defaultAuth = {
   login: { text: "Sign in", url: "/auth/login" },
@@ -74,7 +74,8 @@ export default function Navbar({
   // Global keyboard shortcut — Ctrl/Cmd + K toggles the search modal.
   React.useEffect(() => {
     const onKeyDown = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      // Autofill and some IMEs dispatch keydown without a `key`.
+      if ((event.metaKey || event.ctrlKey) && event.key?.toLowerCase() === "k") {
         event.preventDefault()
         setOpenSearch((prev) => !prev)
       }
@@ -101,7 +102,7 @@ export default function Navbar({
 
           <Link
             href={logo.url}
-            className="flex items-center gap-2.5 font-header text-[1.75rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
+            className="flex items-center gap-2.5 font-header text-[1.75rem] font-semibold uppercase leading-none tracking-[0em] text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
             aria-label={logo.alt}
           >
             <LogoMark className="size-8" />
@@ -152,7 +153,7 @@ export default function Navbar({
         <div className="flex items-center justify-between lg:hidden" role="navigation" aria-label="Mobile navigation">
           <Link
             href={logo.url}
-            className="flex min-w-0 items-center gap-1.5 font-header text-[clamp(1.0625rem,5.2vw,1.5rem)] font-semibold uppercase leading-none tracking-normal text-[var(--brand-primary)] min-[400px]:gap-2 min-[400px]:tracking-[0.02em]"
+            className="flex min-w-0 items-center gap-1.5 font-header text-[clamp(1.0625rem,5.2vw,1.5rem)] font-semibold uppercase leading-none tracking-normal text-[var(--brand-primary)] min-[400px]:gap-2 min-[400px]:tracking-[0em]"
             aria-label={logo.alt}
           >
             <LogoMark className="size-5 shrink-0 min-[400px]:size-6" />
@@ -189,7 +190,7 @@ export default function Navbar({
               </SheetTrigger>
               <SheetContent className="flex w-[85%] max-w-sm gap-0 border-l border-[var(--line-soft)] bg-background p-0 sm:max-w-sm">
                 <SheetHeader className="flex-shrink-0 border-b border-[var(--line-soft)] px-5 py-5">
-                  <SheetTitle className="flex items-center gap-2 font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]">
+                  <SheetTitle className="flex items-center gap-2 font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0em] text-[var(--brand-primary)]">
                     <LogoMark className="size-6" />
                     {logo.title}
                   </SheetTitle>
@@ -260,7 +261,12 @@ export default function Navbar({
         </div>
       </div>
 
-      <GlobalSearch open={openSearch} setOpen={setOpenSearch} isLoggedIn={!!user} />
+      <GlobalSearch
+        open={openSearch}
+        setOpen={setOpenSearch}
+        isLoggedIn={!!user}
+        categories={navCategories?.categories}
+      />
     </section>
   )
 }

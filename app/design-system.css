@@ -276,14 +276,14 @@
   --tracking-tightest: -0.03em;   /* hero headlines           */
   --tracking-tight:    -0.02em;   /* display headers          */
   --tracking-normal:    0em;
-  --tracking-xs:        0.01em;   /* fine tuning              */
-  --tracking-sm:        0.04em;   /* medium                   */
-  --tracking-md:        0.2em;    /* wide                     */
-  --tracking-lg:        0.22em;   /* button caps              */
-  --tracking-xl:        0.24em;   /* filter labels            */
-  --tracking-2xl:       0.26em;   /* product names            */
-  --tracking-3xl:       0.28em;   /* section labels           */
-  --tracking-4xl:       0.32em;   /* ultra wide               */
+  --tracking-xs:        0em;   /* fine tuning              */
+  --tracking-sm:        0em;   /* medium                   */
+  --tracking-md:        0em;    /* wide                     */
+  --tracking-lg:        0em;   /* button caps              */
+  --tracking-xl:        0em;   /* filter labels            */
+  --tracking-2xl:       0em;   /* product names            */
+  --tracking-3xl:       0em;   /* section labels           */
+  --tracking-4xl:       0em;   /* ultra wide               */
 }
 
 
@@ -1017,7 +1017,7 @@ body {
     max-width: 100%;
     font-size: var(--type-eyebrow);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0em;
     line-height: 1.2;
     text-transform: uppercase;
     color: var(--brand-primary);
@@ -1106,7 +1106,7 @@ body {
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.2;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     text-align: center;
     text-decoration: none;
@@ -1193,7 +1193,7 @@ body {
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1.25;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     text-align: left;
     text-decoration: none;
@@ -1675,7 +1675,7 @@ body {
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.15;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-align: center;
     text-transform: uppercase;
     /* A long admin-written label wraps instead of overflowing on phones. */
@@ -1823,7 +1823,7 @@ body {
     font-family: var(--font-body);
     font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: 0.24em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     fill: currentColor;
   }
@@ -2053,7 +2053,7 @@ body {
     display: block;
     font-size: 0.6875rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     color: var(--nl-muted);
   }
@@ -2062,7 +2062,7 @@ body {
     font-family: var(--font-display);
     font-size: 1.625rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0em;
     line-height: 1.1;
     color: var(--nl-ink);
     word-break: break-all;
@@ -2081,7 +2081,7 @@ body {
     color: var(--nl-btn-ink);
     font-size: 0.8125rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color var(--duration-fast), transform var(--duration-fast);
@@ -2302,7 +2302,7 @@ body {
     font-family: var(--font-body);
     font-size: 0.8125rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     cursor: pointer;
   }
@@ -2498,7 +2498,7 @@ body {
     color: var(--palette-cream);
     font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     white-space: nowrap;
     pointer-events: none;
@@ -2671,7 +2671,7 @@ body {
     background: rgb(247 243 232 / 0.14);
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0em;
     text-transform: uppercase;
     white-space: nowrap;
   }

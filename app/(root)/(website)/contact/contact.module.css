@@ -190,7 +190,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.1;
-  letter-spacing: 0.06em;
+  letter-spacing: 0em;
   text-transform: uppercase;
   padding: 0.95rem 1.75rem;
   transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
@@ -254,7 +254,7 @@
   color: var(--contact-muted);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0em;
   text-transform: uppercase;
 }
 
@@ -263,7 +263,7 @@
   color: var(--contact-heading);
   font-size: 1.4rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -327,7 +327,7 @@
   font-size: 0.8125rem;
   font-weight: var(--weight-regular);
   line-height: 1.2;
-  letter-spacing: 0.12em;
+  letter-spacing: 0em;
   margin: 0;
   position: relative;
   text-transform: uppercase;

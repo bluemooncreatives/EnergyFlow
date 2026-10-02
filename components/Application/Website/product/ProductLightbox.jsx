@@ -60,7 +60,7 @@ const ProductLightbox = ({ open, onOpenChange, images, index, onIndexChange, nam
                     </DialogPrimitive.Description>
 
                     <div className="flex items-center justify-between gap-4 px-[var(--website-gutter)] pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
-                        <p className="min-w-0 truncate font-header text-sm font-semibold uppercase tracking-[0.04em] sm:text-base">
+                        <p className="min-w-0 truncate font-header text-sm font-semibold uppercase tracking-[0em] sm:text-base">
                             {name}
                         </p>
                         <div className="flex shrink-0 items-center gap-4">

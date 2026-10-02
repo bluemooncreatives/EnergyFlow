@@ -79,7 +79,7 @@ const UserPanelNavigation = () => {
                     <div className="flex min-w-0 items-center gap-3">
                         <Avatar className="size-10 border border-line-soft">
                             <AvatarImage src={user?.avatar?.url} alt={user?.name || 'User'} className="object-cover" />
-                            <AvatarFallback className="bg-brand font-neue text-xs font-semibold uppercase tracking-[0.04em] text-on-brand">
+                            <AvatarFallback className="bg-brand font-neue text-xs font-semibold uppercase tracking-[0em] text-on-brand">
                                 {initials(user?.name)}
                             </AvatarFallback>
                         </Avatar>

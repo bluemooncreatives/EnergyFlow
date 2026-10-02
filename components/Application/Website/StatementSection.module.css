@@ -115,7 +115,7 @@
 .eyebrowText {
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0em;
   text-transform: uppercase;
   color: var(--ink-strong, #0B3D2E);
 }

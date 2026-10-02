@@ -232,13 +232,13 @@ const PageLoader = ({ onReady, onComplete }) => {
                     />
                     <span className="flex flex-col items-center leading-none">
                         <span
-                            className="lockup-word font-header text-[1.75rem] font-semibold uppercase tracking-[0.04em] text-white will-change-transform max-sm:text-2xl"
+                            className="lockup-word font-header text-[1.75rem] font-semibold uppercase tracking-[0em] text-white will-change-transform max-sm:text-2xl"
                             style={{ opacity: 0, transform: 'translateY(12px)' }}
                         >
                             Energyflow
                         </span>
                         <span
-                            className="lockup-sub mt-1.5 text-[0.7rem] font-medium uppercase tracking-[0.08em] text-white will-change-transform max-sm:text-[0.625rem]"
+                            className="lockup-sub mt-1.5 text-[0.7rem] font-medium uppercase tracking-[0em] text-white will-change-transform max-sm:text-[0.625rem]"
                             style={{ opacity: 0, transform: 'translateY(10px)' }}
                         >
                             Premium Dry Fruits &amp; Super Foods

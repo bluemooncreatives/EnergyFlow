@@ -230,7 +230,7 @@ const ShopClient = ({ initialProducts = [], initialTotal = 0, initialTotalPages 
                                             <SlidersHorizontal className="size-4" strokeWidth={1.75} />
                                         </span>
                                         <div className="min-w-0">
-                                            <SheetTitle className="font-header text-2xl leading-none tracking-wide text-[var(--brand-primary)]">
+                                            <SheetTitle className="font-header text-2xl leading-none tracking-[0em] text-[var(--brand-primary)]">
                                                 Filter
                                             </SheetTitle>
                                             <SheetDescription className="mt-1 font-neue text-[13px] text-muted-foreground">

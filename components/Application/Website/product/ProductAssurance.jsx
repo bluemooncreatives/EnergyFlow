@@ -40,12 +40,12 @@ const ProductAssurance = () => (
                                 <span className="ef-seal ef-seal--sun size-12 transition-transform duration-700 ease-[var(--ease-spring)] group-hover:rotate-[20deg] motion-reduce:transition-none" aria-hidden="true">
                                     <Icon strokeWidth={2} />
                                 </span>
-                                <span className="text-xs font-semibold tabular-nums tracking-[0.1em] text-ink-muted" aria-hidden="true">
+                                <span className="text-xs font-semibold tabular-nums tracking-[0em] text-ink-muted" aria-hidden="true">
                                     {String(i + 1).padStart(2, '0')}
                                 </span>
                             </div>
 
-                            <h3 className="mt-6 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{label}</h3>
+                            <h3 className="mt-6 text-xs font-semibold uppercase tracking-[0em] text-ink-muted">{label}</h3>
                             <p className="mt-2 flex flex-wrap items-baseline gap-x-2 text-ink-strong">
                                 <span className="font-header text-[clamp(2.25rem,1.8rem+1.4vw,3rem)] font-semibold leading-none tabular-nums">{value}</span>
                                 <span className="font-header text-base font-semibold uppercase leading-tight">{unit}</span>

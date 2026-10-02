@@ -276,13 +276,13 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                             )}
                             <span className="absolute inset-0 bg-gradient-to-t from-[rgb(4_28_21/0.85)] via-[rgb(4_28_21/0.2)] to-transparent" />
                             <span key={`label-${preview.id}`} className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-4 animate-in fade-in-0 slide-in-from-bottom-1 motion-reduce:animate-none">
-                                <span className="w-fit rounded-full bg-[var(--palette-sunflower)] px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-[var(--palette-pine)]">
+                                <span className="w-fit rounded-full bg-[var(--palette-sunflower)] px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-[0em] text-[var(--palette-pine)]">
                                     {productLabel(preview.productCount)}
                                 </span>
                                 <span className="font-header text-xl font-semibold uppercase leading-none text-[var(--palette-cream)]">
                                     {preview.name}
                                 </span>
-                                <span className="flex items-center gap-1.5 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-[var(--palette-sunflower)]">
+                                <span className="flex items-center gap-1.5 text-[0.8125rem] font-semibold uppercase tracking-[0em] text-[var(--palette-sunflower)]">
                                     Shop now <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                                 </span>
                             </span>

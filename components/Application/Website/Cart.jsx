@@ -197,7 +197,7 @@ const Cart = () => {
                         <BrandOutlineButton
                             type="button"
                             asChild
-                            className="text-[13px] tracking-wide sm:text-base sm:tracking-normal"
+                            className="text-[13px] tracking-[0em] sm:text-base sm:tracking-normal"
                             onClick={() => setOpen(false)}
                         >
                             <Link href={WEBSITE_CART}>View Cart</Link>
@@ -205,7 +205,7 @@ const Cart = () => {
                         <BrandButton
                             type="button"
                             asChild
-                            className="text-[13px] tracking-wide sm:text-base sm:tracking-normal"
+                            className="text-[13px] tracking-[0em] sm:text-base sm:tracking-normal"
                             onClick={() => setOpen(false)}
                         >
                             {products.length ? (

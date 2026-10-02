@@ -180,7 +180,7 @@ const Panel = ({ item, panelRef }) => {
                             className="w-full overflow-hidden rounded-[var(--radius-control)] bg-[var(--palette-cream)] text-[var(--palette-pine)] shadow-[0_18px_40px_-16px_rgb(0_0_0/0.55)] dark:bg-[var(--palette-pine)] dark:text-[var(--palette-cream)] dark:shadow-[0_18px_40px_-16px_rgb(0_0_0/0.7),inset_0_0_0_1px_rgb(247_243_232/0.12)] lg:w-[17.5rem] lg:shrink-0"
                         >
                             <div className="flex items-center justify-between gap-3 border-b border-[rgb(11_61_46/0.14)] px-4 py-3 dark:border-[rgb(247_243_232/0.12)]">
-                                <p className="flex items-center gap-2 font-header text-[0.8125rem] font-semibold uppercase tracking-[0.06em]">
+                                <p className="flex items-center gap-2 font-header text-[0.8125rem] font-semibold uppercase tracking-[0em]">
                                     <span aria-hidden="true" className="size-2 rounded-full bg-[var(--palette-sunflower)] shadow-[0_0_0_1.5px_var(--palette-olive)]" />
                                     Popular picks
                                 </p>

@@ -285,7 +285,7 @@
   margin: 0 0 0.8rem;
   font-size: var(--type-small);
   font-weight: 600;
-  letter-spacing: 0.025em;
+  letter-spacing: 0em;
   color: var(--brand-primary-bright);
 }
 .promiseTitle {
@@ -396,7 +396,7 @@
   margin-bottom: 0.4rem;
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0em;
   text-transform: uppercase;
   opacity: 0.72;
 }
@@ -602,7 +602,7 @@
   color: var(--ink-muted);
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0em;
   text-align: right;
   text-transform: uppercase;
 }
@@ -690,7 +690,7 @@
   backdrop-filter: blur(10px);
   font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  letter-spacing: 0em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -732,7 +732,7 @@
   color: var(--brand-sun);
   font-size: 0.625rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0em;
   text-transform: uppercase;
 }
 .sourcingPhotoTitle {
@@ -761,7 +761,7 @@
   color: rgb(247 243 232 / 0.82);
   font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0em;
   text-transform: uppercase;
 }
 @media (min-width: 1024px) {
@@ -820,7 +820,7 @@
   color: var(--brand-primary-bright);
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0em;
   text-transform: uppercase;
 }
 .stepTitle {
@@ -881,7 +881,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-display);
   font-size: clamp(1.1rem, 2.4vw, 1.4rem);
-  letter-spacing: 0.02em;
+  letter-spacing: 0em;
 }
 
 /* ── Visit / contact band ────────────────────────────────────────── */
@@ -905,7 +905,7 @@
 .visitLabel {
   font-size: var(--type-eyebrow);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0em;
   text-transform: uppercase;
   color: var(--brand-amber);
 }

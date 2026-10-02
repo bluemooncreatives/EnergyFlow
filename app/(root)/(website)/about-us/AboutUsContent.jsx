@@ -339,7 +339,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                                 </defs>
                             </svg>
                             <div className={styles.bentoTab}>
-                                <span className="text-[0.75rem] font-semibold uppercase tracking-[0.08em] text-amber">
+                                <span className="text-[0.75rem] font-semibold uppercase tracking-[0em] text-amber">
                                     Our range
                                 </span>
                                 <p className="font-header text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] leading-tight">
@@ -419,7 +419,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                                 <h3 className="font-header text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] leading-tight text-ink-strong">
                                     {person.name}
                                 </h3>
-                                <p className="mt-1 text-[0.8125rem] font-medium uppercase tracking-[0.06em] text-brand">
+                                <p className="mt-1 text-[0.8125rem] font-medium uppercase tracking-[0em] text-brand">
                                     {person.role}
                                 </p>
                                 <div className="mt-4 flex flex-col gap-3">

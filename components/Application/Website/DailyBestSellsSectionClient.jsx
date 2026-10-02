@@ -79,7 +79,7 @@ const Countdown = ({ remaining }) => {
                         className="flex min-w-[3.25rem] flex-col items-center rounded-xl bg-surface-card px-2 py-1.5 shadow-[inset_0_0_0_1px_var(--line-soft)]"
                     >
                         <span className="text-base font-semibold tabular-nums leading-tight text-ink-strong">{pad(cell.value)}</span>
-                        <span className="text-[10px] uppercase tracking-[0.1em] text-ink-muted">{cell.label}</span>
+                        <span className="text-[10px] uppercase tracking-[0em] text-ink-muted">{cell.label}</span>
                     </span>
                 ))}
             </div>

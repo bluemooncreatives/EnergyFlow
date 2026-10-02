@@ -88,7 +88,7 @@ const ProductStory = ({ product, variant, variants, html }) => {
                     <dl data-reveal className="mt-8 border-t border-line-rule">
                         {specs.map(({ label, value }) => (
                             <div key={label} className="flex items-baseline justify-between gap-6 border-b border-line-soft py-3.5">
-                                <dt className="shrink-0 text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted">{label}</dt>
+                                <dt className="shrink-0 text-xs font-semibold uppercase tracking-[0em] text-ink-muted">{label}</dt>
                                 <dd className="min-w-0 text-right text-[0.9375rem] font-medium text-ink-strong">{value}</dd>
                             </div>
                         ))}
