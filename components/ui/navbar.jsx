@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, Search as SearchIcon, UserRound } from "lucide-react"
+import { Heart, Menu, Search as SearchIcon, UserRound } from "lucide-react"
 import { useSelector } from "react-redux"
 
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,8 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import Cart from "@/components/Application/Website/Cart"
 import GlobalSearch from "@/components/Application/Website/GlobalSearch"
+import WishlistLink, { useWishlistCount } from "@/components/Application/Website/WishlistLink"
+import { WEBSITE_WISHLIST } from "@/routes/WebsiteRoute"
 import ThemeToggle from "@/components/Application/Website/ThemeToggle"
 import { MobileShopMenu, ShopMegaMenu } from "@/components/Application/Website/ShopMegaMenu"
 import { BrandButton, BrandOutlineButton } from "@/components/Application/Website/BrandButton"
@@ -66,6 +68,7 @@ export default function Navbar({
   auth = defaultAuth,
 }) {
   const [openSearch, setOpenSearch] = React.useState(false)
+  const wishlistCount = useWishlistCount()
   const user = useSelector((store) => store?.authStore?.auth)
   const hydrated = useSelector((store) => store?.authStore?.hydrated)
 
@@ -121,6 +124,8 @@ export default function Navbar({
             >
               <SearchIcon className="h-6 w-6" strokeWidth={1.75} />
             </button>
+
+            <WishlistLink />
 
             <div>
               <Cart />
@@ -208,6 +213,21 @@ export default function Navbar({
                       </SheetClose>
                     )
                   )}
+
+                  <SheetClose asChild>
+                    <Link href={WEBSITE_WISHLIST} className={`${MOBILE_LINK} flex items-center justify-between gap-3`}>
+                      <span className="flex items-center gap-2.5">
+                        <Heart className="size-4" strokeWidth={1.75} aria-hidden="true" />
+                        Wishlist
+                      </span>
+                      {wishlistCount > 0 && (
+                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-[11px] font-semibold text-on-brand tabular-nums">
+                          {wishlistCount > 99 ? "99+" : wishlistCount}
+                          <span className="sr-only"> saved</span>
+                        </span>
+                      )}
+                    </Link>
+                  </SheetClose>
 
                   <div className="mt-2 border-t border-[var(--line-soft)] pt-2">
                     <ThemeToggle variant="row" />

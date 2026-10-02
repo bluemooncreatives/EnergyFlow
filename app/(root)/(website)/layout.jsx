@@ -2,6 +2,7 @@ import Footer from '@/components/Application/Website/Footer'
 import Header from '@/components/Application/Website/Header'
 import MobileCartBar from '@/components/Application/Website/MobileCartBar'
 import CartSync from '@/components/Application/Website/CartSync'
+import WishlistSync from '@/components/Application/Website/WishlistSync'
 import NewsletterPopup from '@/components/Application/Website/newsletter/NewsletterPopup'
 import ScrollTriggerSync from '@/components/Application/Website/ScrollTriggerSync'
 import { getFooterCategories, getNavCategories } from '@/lib/services/categoryService'
@@ -31,6 +32,7 @@ const Layout = async ({ children }) => {
             {newsletter && <NewsletterPopup settings={newsletter} />}
             <MobileCartBar />
             <CartSync />
+            <WishlistSync />
             <ScrollTriggerSync />
         </div>
     )

@@ -24,6 +24,7 @@ import { showToast } from '@/lib/showToast'
 import { cn } from '@/lib/utils'
 import { scrollToElement } from '@/lib/scroll'
 import { WEBSITE_CART, WEBSITE_CATEGORY } from '@/routes/WebsiteRoute'
+import WishlistButton from '@/components/Application/Website/WishlistButton'
 import AnimatedPrice from './AnimatedPrice'
 import PackSizePicker from './PackSizePicker'
 import { deliveryWindow, savingOf, unitPriceLabel } from './productUtils'
@@ -151,9 +152,12 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
                 ) : (
                     <span className="ef-eyebrow">Energyflow</span>
                 )}
-                <button type="button" onClick={handleShare} className="ef-icon-btn size-10 shrink-0" aria-label={`Share ${name}`}>
-                    <Share2 aria-hidden="true" className="!size-4" />
-                </button>
+                <div className="flex shrink-0 items-center gap-2">
+                    <WishlistButton productId={product._id} name={name} variant="icon" />
+                    <button type="button" onClick={handleShare} className="ef-icon-btn size-10 shrink-0" aria-label={`Share ${name}`}>
+                        <Share2 aria-hidden="true" className="!size-4" />
+                    </button>
+                </div>
             </div>
 
             <h1 className="ef-pd-title mt-5">

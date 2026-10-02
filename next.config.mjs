@@ -70,6 +70,7 @@ const privatePageHeaders = [
     '/admin/:path*',
     '/auth/:path*',
     '/cart',
+    '/wishlist',
     '/checkout/:path*',
     '/my-account/:path*',
     '/profile/:path*',

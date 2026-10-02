@@ -12,6 +12,8 @@ export const WEBSITE_CATEGORY = (slug) => `/category/${slug}`
 export { productPath as WEBSITE_PRODUCT_DETAILS } from '../lib/productRoute'
 
 export const WEBSITE_CART = "/cart"
+// Public: guests keep a wishlist on this device, signed-in shoppers on their account.
+export const WEBSITE_WISHLIST = "/wishlist"
 export const WEBSITE_CHECKOUT = "/checkout"
 // Buy now: a single-item checkout carried in the URL, so it never touches the
 // cart and survives the sign-in redirect (the middleware keeps the query).

@@ -10,6 +10,7 @@ import { formatCategoryName, formatProductName } from '@/lib/seo'
 import { useCartProduct } from '@/hooks/useCartProduct'
 import { cn } from '@/lib/utils'
 import CartQtyStepper from './CartQtyStepper'
+import WishlistButton from '@/components/Application/Website/WishlistButton'
 import { discountPercent, formatINR } from './format'
 
 const DEFAULT_SIZES = '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1440px) 22vw, 300px'
@@ -126,11 +127,17 @@ const ProductCard = ({
                         </span>
                     )}
 
+                    <WishlistButton
+                        productId={product._id}
+                        name={product.name}
+                        className="absolute right-2.5 top-2.5 z-10"
+                    />
+
                     {actions === 'full' && (
                         <Link
                             href={href}
                             aria-label={`Quick view ${name}`}
-                            className="ef-focus absolute right-2.5 top-2.5 z-10 flex size-9 items-center justify-center rounded-full bg-surface-card/90 text-brand shadow-elev-1 backdrop-blur-sm transition-opacity duration-200 hover:bg-surface-card focus-visible:opacity-100 sm:opacity-0 sm:group-hover/card:opacity-100"
+                            className="ef-focus absolute right-2.5 top-[3.25rem] z-10 flex size-9 items-center justify-center rounded-full bg-surface-card/90 text-brand shadow-elev-1 backdrop-blur-sm transition-opacity duration-200 hover:bg-surface-card focus-visible:opacity-100 sm:opacity-0 sm:group-hover/card:opacity-100"
                         >
                             <Eye className="size-4" aria-hidden="true" />
                         </Link>

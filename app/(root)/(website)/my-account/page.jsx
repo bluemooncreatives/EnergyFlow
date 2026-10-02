@@ -8,13 +8,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import useFetch from '@/hooks/useFetch'
 import { addressLines, firstName, formatCurrency, formatDate, greetingFor, initials, profileCompletion } from '@/lib/account'
-import { USER_ORDERS, USER_PROFILE, WEBSITE_CART, WEBSITE_LOGIN, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
+import { USER_ORDERS, USER_PROFILE, WEBSITE_CART, WEBSITE_LOGIN, WEBSITE_SHOP, WEBSITE_WISHLIST } from '@/routes/WebsiteRoute'
+import { useWishlistCount } from '@/components/Application/Website/WishlistLink'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {
     ArrowRight,
     BadgeCheck,
+    Heart,
     CircleAlert,
     IndianRupee,
     KeyRound,
@@ -205,6 +207,7 @@ const QuickLink = ({ href, icon: Icon, title, hint }) => (
 const MyAccount = () => {
     const { data: dashboardData, loading, error, errorStatus, refetch } = useFetch('/api/dashboard/user')
     const cartCount = useSelector(store => store.cartStore?.count) || 0
+    const wishlistCount = useWishlistCount()
 
     // useFetch starts idle (loading=false, no data) — count that first frame as
     // loading so the empty state never flashes before the request begins.
@@ -305,6 +308,12 @@ const MyAccount = () => {
                                     icon={ShoppingCart}
                                     title="Your cart"
                                     hint={cartCount > 0 ? `${cartCount} ${cartCount === 1 ? 'item' : 'items'} waiting` : 'Your cart is empty'}
+                                />
+                                <QuickLink
+                                    href={WEBSITE_WISHLIST}
+                                    icon={Heart}
+                                    title="Your wishlist"
+                                    hint={wishlistCount > 0 ? `${wishlistCount} saved ${wishlistCount === 1 ? 'item' : 'items'}` : 'Nothing saved yet'}
                                 />
                                 <QuickLink
                                     href={`${USER_PROFILE}#security`}
