@@ -15,15 +15,16 @@ import PdfIcon from '@/lib/pdf/PdfIcon'
  */
 
 // ── Fonts ─────────────────────────────────────────────────────────────────
-// Archivo ships to the browser as a variable font; react-pdf can't pick an
-// axis, so public/assets/invoice holds static 400/600 instances of it.
+// react-pdf's fontkit can't read woff2 and can't pick a variable-font axis,
+// so public/assets/invoice holds TTF copies of Clash Display and static
+// 400/600 instances of the Archivo variable font.
 const asset = (...parts) => path.join(process.cwd(), 'public', 'assets', ...parts)
 
 Font.register({
     family: 'Clash Display',
     fonts: [
-        { src: asset('font', 'ClashDisplay-Medium.woff2'), fontWeight: 500 },
-        { src: asset('font', 'ClashDisplay-Semibold.woff2'), fontWeight: 600 },
+        { src: asset('invoice', 'ClashDisplay-Medium.ttf'), fontWeight: 500 },
+        { src: asset('invoice', 'ClashDisplay-Semibold.ttf'), fontWeight: 600 },
     ],
 })
 Font.register({
@@ -92,12 +93,12 @@ const s = StyleSheet.create({
     body: { paddingHorizontal: 40 },
 
     // Header — cream band with the green mark, sunflower rule underneath
-    head: { backgroundColor: C.cream, paddingHorizontal: 40, paddingTop: 30, paddingBottom: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+    head: { backgroundColor: C.cream, paddingHorizontal: 40, paddingTop: 24, paddingBottom: 18, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
     brandRow: { flexDirection: 'row', alignItems: 'center' },
-    logo: { width: 44, height: 44, marginRight: 10 },
+    logo: { width: 40, height: 40, marginRight: 10 },
     brandName: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 22, color: C.pine, letterSpacing: 0.6, textTransform: 'uppercase', lineHeight: 1 },
     brandTag: { fontSize: 8, color: C.muted, marginTop: 4 },
-    contact: { marginTop: 14 },
+    contact: { marginTop: 10 },
     contactRow: { flexDirection: 'row', alignItems: 'center', marginTop: 3 },
     contactIcon: { marginRight: 5 },
     contactText: { fontSize: 7.5, color: C.muted },
@@ -109,7 +110,7 @@ const s = StyleSheet.create({
     rule: { height: 4, backgroundColor: C.sun },
 
     // Billing + order details cards
-    cards: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 22 },
+    cards: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
     card: { width: '48.5%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 12 },
     cardHead: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: C.border },
     cardTitle: { fontSize: 6.5, fontWeight: 600, color: C.forest, letterSpacing: 1.4, textTransform: 'uppercase', marginLeft: 5 },
@@ -123,10 +124,10 @@ const s = StyleSheet.create({
     kvValue: { fontSize: 8.5, fontWeight: 600, color: C.ink, textAlign: 'right', maxWidth: '60%' },
 
     // Items table
-    table: { marginTop: 22, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
+    table: { marginTop: 18, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
     thead: { flexDirection: 'row', backgroundColor: C.pine, paddingVertical: 8, paddingHorizontal: 12 },
     th: { fontSize: 6.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.1, color: C.cream },
-    row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.border },
+    row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.border },
     rowAlt: { backgroundColor: C.card },
     cNum: { width: '6%' },
     cProd: { width: '46%', paddingRight: 8 },
@@ -143,12 +144,12 @@ const s = StyleSheet.create({
     empty: { width: '100%', textAlign: 'center', color: C.muted },
 
     // Notes + totals
-    lower: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 },
+    lower: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
     notes: { width: '50%' },
     label: { fontSize: 6.5, fontWeight: 600, color: C.forest, letterSpacing: 1.4, textTransform: 'uppercase', marginLeft: 5 },
     labelRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
-    noteBox: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 10, fontSize: 8.5, color: C.body, marginBottom: 12 },
-    shipBox: { backgroundColor: C.secondary, borderRadius: 8, padding: 10, marginBottom: 12 },
+    noteBox: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 9, fontSize: 8.5, color: C.body, marginBottom: 10 },
+    shipBox: { backgroundColor: C.secondary, borderRadius: 8, padding: 9, marginBottom: 10 },
     shipText: { fontSize: 8.5, color: C.ink },
 
     totals: { width: '44%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
