@@ -18,6 +18,8 @@ import ProductGallery from '@/components/Application/Website/product/ProductGall
 import ProductBuyBox from '@/components/Application/Website/product/ProductBuyBox'
 import ProductStory from '@/components/Application/Website/product/ProductStory'
 import ProductAssurance from '@/components/Application/Website/product/ProductAssurance'
+import ProductCompany from '@/components/Application/Website/product/ProductCompany'
+import FAQSection from '@/components/Application/Website/FAQSection'
 import RelatedProducts from '@/components/Application/Website/product/RelatedProducts'
 import StickyBuyBar from '@/components/Application/Website/product/StickyBuyBar'
 import { useProductCart } from '@/components/Application/Website/product/useProductCart'
@@ -42,6 +44,8 @@ const tintFor = (seed = '') => tintAt([...String(seed)].reduce((sum, ch) => sum 
  *   Band      the sunflower promise ticker
  *   Details   spec sheet + full description
  *   Policies  shipping & returns
+ *   Company   who's behind the pack: store, promises, contact
+ *   FAQ       product + category questions (lib/productFaq.js)
  *   Reviews   summary + list + composer
  *   Related   "You may also like" rail
  *   Sticky    compact buy bar once the main buttons scroll away
@@ -57,6 +61,7 @@ const ProductDetails = ({
     reviewCount,
     ratingAvg,
     relatedProducts = [],
+    faqs = [],
     descriptionHtml,
     summary,
 }) => {
@@ -164,6 +169,17 @@ const ProductDetails = ({
             <ProductStory product={product} variant={variant} variants={variants} html={descriptionHtml} />
 
             <ProductAssurance />
+
+            <ProductCompany productName={name} />
+
+            <FAQSection
+                tone="sunken"
+                faqs={faqs}
+                eyebrow={product.category?.name ? `${product.category.name} · FAQ` : 'FAQ'}
+                title="Questions about"
+                accent="this product"
+                lead={`Pack sizes, storage, delivery and returns for ${name}${product.category?.name ? `, plus what people ask about ${product.category.name.toLowerCase()}` : ''}.`}
+            />
 
             <div id="reviews" className="scroll-mt-28 py-[var(--section-space)]">
                 <LazyHydrate>

@@ -81,7 +81,9 @@ const DrawerLine = ({ product }) => {
     )
 }
 
-const Cart = () => {
+// variant="padded" — trigger with its own hit area (mobile header slot).
+// variant="icon"   — bare 24px icon matching the other desktop header icons.
+const Cart = ({ variant = 'padded' }) => {
     const [open, setOpen] = useState(false)
     const [mounted, setMounted] = useState(false)
     useEffect(() => setMounted(true), [])
@@ -96,14 +98,25 @@ const Cart = () => {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             {/* ── Trigger ── */}
-            <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center rounded-md px-1.5 py-1.5 transition hover:bg-muted/40 sm:px-2.5 sm:py-2">
-                <ShoppingCart className="h-4 w-4 text-foreground sm:h-5 sm:w-5" strokeWidth={1.75} />
-                {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-on-brand tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
-                        {cartCount}
-                    </span>
-                )}
-            </SheetTrigger>
+            {variant === 'icon' ? (
+                <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center text-[var(--ink-body)] transition-colors hover:text-[var(--brand-primary-hover)]">
+                    <ShoppingCart className="h-6 w-6" strokeWidth={1.75} />
+                    {cartCount > 0 && (
+                        <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-semibold text-on-brand tabular-nums">
+                            {cartCount}
+                        </span>
+                    )}
+                </SheetTrigger>
+            ) : (
+                <SheetTrigger aria-label="Open cart" className="relative flex items-center justify-center rounded-md px-1.5 py-1.5 transition hover:bg-muted/40 sm:px-2.5 sm:py-2">
+                    <ShoppingCart className="h-4 w-4 text-foreground sm:h-5 sm:w-5" strokeWidth={1.75} />
+                    {cartCount > 0 && (
+                        <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-semibold text-on-brand tabular-nums sm:-right-2 sm:-top-2 sm:h-5 sm:min-w-5 sm:text-[10px]">
+                            {cartCount}
+                        </span>
+                    )}
+                </SheetTrigger>
+            )}
 
             {/* ── Drawer ── */}
             <SheetContent className="w-full gap-0 border-l border-border/40 bg-background p-0 shadow-xl sm:max-w-[440px]">

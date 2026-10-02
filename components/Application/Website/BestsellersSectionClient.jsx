@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, Zap } from 'lucide-react'
+import { ShoppingBag, Zap } from 'lucide-react'
 import imgPlaceholder from '@/public/assets/images/img-placeholder.webp'
 import { WEBSITE_PRODUCT_DETAILS, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { useReveal } from '@/hooks/useReveal'
@@ -100,17 +100,6 @@ const BestsellerCard = ({ product, position }) => {
                     </div>
 
                     <div className="mt-4 flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={buyNow}
-                            disabled={!canAdd}
-                            aria-label={canAdd ? `Buy now: ${name}` : `Unavailable: ${name}`}
-                            title={canAdd ? 'Buy now' : 'Unavailable'}
-                            className={`ef-focus inline-flex h-10 items-center justify-center gap-1.5 rounded-[var(--radius-control)] bg-khaki text-[0.8125rem] font-medium text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40 ${inCart ? 'w-10 shrink-0' : 'flex-1 px-4'}`}
-                        >
-                            <Zap className="size-3.5" aria-hidden="true" />
-                            {!inCart && (canAdd ? ' Buy now' : ' Unavailable')}
-                        </button>
                         {inCart ? (
                             <CartQtyStepper
                                 qty={qty}
@@ -126,12 +115,23 @@ const BestsellerCard = ({ product, position }) => {
                                 onClick={addToCart}
                                 disabled={!canAdd}
                                 aria-label={canAdd ? `Add to cart: ${name}` : `Unavailable: ${name}`}
-                                title="Add to cart"
-                                className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-pine text-white transition-colors hover:bg-[var(--brand-pine-hover)] disabled:pointer-events-none disabled:opacity-40"
+                                title={canAdd ? 'Add to cart' : 'Unavailable'}
+                                className="ef-focus inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[var(--radius-control)] bg-pine px-4 text-[0.8125rem] font-medium text-white transition-colors hover:bg-[var(--brand-pine-hover)] disabled:pointer-events-none disabled:opacity-40"
                             >
-                                <Plus className="size-[1.1rem]" strokeWidth={2.5} aria-hidden="true" />
+                                <ShoppingBag className="size-3.5 shrink-0" aria-hidden="true" />
+                                {canAdd ? 'Add to cart' : 'Unavailable'}
                             </button>
                         )}
+                        <button
+                            type="button"
+                            onClick={buyNow}
+                            disabled={!canAdd}
+                            aria-label={canAdd ? `Buy now: ${name}` : `Unavailable: ${name}`}
+                            title={canAdd ? 'Buy now' : 'Unavailable'}
+                            className="ef-focus flex size-10 shrink-0 items-center justify-center rounded-full bg-khaki text-brand-deep transition-colors hover:bg-[var(--brand-amber-hover)] disabled:pointer-events-none disabled:opacity-40"
+                        >
+                            <Zap className="size-[1.1rem]" strokeWidth={2} aria-hidden="true" />
+                        </button>
                     </div>
                 </div>
             </div>

@@ -127,9 +127,7 @@ export default function Navbar({
 
             <WishlistLink />
 
-            <div>
-              <Cart />
-            </div>
+            <Cart variant="icon" />
 
             {!hydrated ? (
               // Don't flash a logged-out icon before the auth state is resolved.

@@ -1,6 +1,6 @@
 'use client'
 
-import { useId, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { MessageCircle, Plus } from 'lucide-react'
 import { useReveal } from '@/hooks/useReveal'
 import { cn } from '@/lib/utils'
@@ -64,15 +64,15 @@ const FAQS = [
 
 // FAQPage structured data built from the same array the UI renders, so the
 // markup and the rich result can never fall out of sync.
-const faqSchema = {
+const buildFaqSchema = (faqs) => ({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQS.map(({ q, a }) => ({
+    mainEntity: faqs.map(({ q, a }) => ({
         '@type': 'Question',
         name: q,
         acceptedAnswer: { '@type': 'Answer', text: a },
     })),
-}
+})
 
 const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
     const buttonId = `${baseId}-q${index}`
@@ -130,13 +130,26 @@ const FAQItem = ({ faq, index, isOpen, onToggle, baseId }) => {
     )
 }
 
-const FAQSection = ({ tone = 'page' }) => {
+// Defaults are the homepage's store-wide FAQ; product pages pass their own
+// questions and heading (see lib/productFaq.js).
+const FAQSection = ({
+    tone = 'page',
+    faqs = FAQS,
+    eyebrow = 'Got questions?',
+    title = 'Frequently',
+    accent = 'asked',
+    lead = 'Freshness, shipping, storage and gifting: the things people ask us most.',
+    id = 'faq',
+}) => {
     const [openIndex, setOpenIndex] = useState(0)
+    const faqSchema = useMemo(() => buildFaqSchema(faqs), [faqs])
     const sectionRef = useRef(null)
     const baseId = useId()
     useReveal(sectionRef)
 
     const toggle = (i) => setOpenIndex((prev) => (prev === i ? null : i))
+
+    if (!faqs?.length) return null
 
     return (
         <>
@@ -144,16 +157,16 @@ const FAQSection = ({ tone = 'page' }) => {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            <Section ref={sectionRef} tone={tone} id="faq" aria-labelledby="faq-title" className="scroll-mt-20">
+            <Section ref={sectionRef} tone={tone} id={id} aria-labelledby={`${id}-title`} className="scroll-mt-20">
                 <div className="grid grid-cols-1 gap-[var(--section-gap)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
 
                     <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
                         <div data-reveal className="flex flex-col items-start gap-4">
-                            <span className="ef-eyebrow">Got questions?</span>
-                            <h2 id="faq-title" className="ef-title">
-                                Frequently <span className="ef-title__accent">asked</span>
+                            {eyebrow && <span className="ef-eyebrow">{eyebrow}</span>}
+                            <h2 id={`${id}-title`} className="ef-title">
+                                {title}{accent && <> <span className="ef-title__accent">{accent}</span></>}
                             </h2>
-                            <p className="ef-lead">Freshness, shipping, storage and gifting: the things people ask us most.</p>
+                            {lead && <p className="ef-lead">{lead}</p>}
                         </div>
 
                         <div
@@ -175,7 +188,7 @@ const FAQSection = ({ tone = 'page' }) => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        {FAQS.map((faq, i) => (
+                        {faqs.map((faq, i) => (
                             <div key={faq.q} data-reveal>
                                 <FAQItem
                                     faq={faq}

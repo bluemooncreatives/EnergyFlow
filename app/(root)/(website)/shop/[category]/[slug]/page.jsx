@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import ProductDetails from './ProductDetails'
 import { getProductDetailsBySlug, getRelatedProducts } from '@/lib/services/productService'
 import { decodeHTMLDeep, htmlToText, pickRandom } from '@/lib/utils'
+import { buildProductFaqs } from '@/lib/productFaq'
 import {
     CloudinaryPreconnect,
     JsonLd,
@@ -202,6 +203,15 @@ const ProductPage = async ({ params, searchParams }) => {
         ratingAvg: productData.ratingAvg,
     })
 
+    // Pack sizes, prices and ratings come from the same data the page shows,
+    // so the answers match the buy box.
+    const faqs = buildProductFaqs({
+        product,
+        variants,
+        reviewCount: productData.reviewCount,
+        ratingAvg: productData.ratingAvg,
+    })
+
     const crumbs = [
         { name: 'Home', path: '/' },
         { name: 'Shop', path: WEBSITE_SHOP },
@@ -224,6 +234,7 @@ const ProductPage = async ({ params, searchParams }) => {
                 reviewCount={productData.reviewCount}
                 ratingAvg={productData.ratingAvg}
                 relatedProducts={relatedProducts}
+                faqs={faqs}
                 descriptionHtml={sanitizeDescription(description)}
                 summary={htmlToText(description)}
             />
