@@ -2,6 +2,7 @@ import { isAuthenticated } from "@/lib/authentication";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import UserModel from "@/models/User.model";
+import mongoose from "mongoose";
 
 export async function GET(request) {
     try {
@@ -12,13 +13,16 @@ export async function GET(request) {
         }
 
         const userId = auth.userId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return response(false, 404, 'User not found.')
+        }
 
         // Return only the fields the profile/checkout forms need. Avoids leaking
         // internal blobs like googleProfile.raw to the client. `+password`/`+googleId`
         // are pulled in only to derive booleans for the UI — the values are stripped
         // before responding.
-        const user = await UserModel.findById(userId)
-            .select('role name email phone address landmark city state pincode country avatar isEmailVerified googleId +password')
+        const user = await UserModel.findOne({ _id: userId, deletedAt: null })
+            .select('role name email phone address landmark city state pincode country avatar isEmailVerified createdAt googleId +password')
             .lean()
 
         if (!user) {

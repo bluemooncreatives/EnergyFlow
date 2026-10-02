@@ -34,8 +34,16 @@ Font.register({
         { src: asset('invoice', 'Archivo-SemiBold.ttf'), fontWeight: 600 },
     ],
 })
-// Keep words whole — automatic hyphenation splits names and order ids.
+// Keep words whole — dictionary hyphenation splits names and order ids.
 Font.registerHyphenationCallback((word) => [word])
+
+// Long unbroken values (emails, payment ids) get zero-width break points after
+// . @ _ - and every 18 characters so they wrap inside their card instead of
+// overflowing it. The invoice's Archivo files carry an empty U+200B glyph.
+const ZWSP = '\u200B'
+const breakable = (value) =>
+    String(value ?? '').replace(/\S{19,}/g, (word) =>
+        word.split(/(?<=[.@_-])/).flatMap((part) => part.match(/.{1,18}/g)).join(ZWSP))
 
 // Read as a Buffer: react-pdf mistakes Windows drive paths (C:\…) for URLs.
 const LOGO = fs.readFileSync(asset('invoice', 'logo-green.png'))
@@ -124,10 +132,13 @@ const s = StyleSheet.create({
     kvValue: { fontSize: 8.5, fontWeight: 600, color: C.ink, textAlign: 'right', maxWidth: '60%' },
 
     // Items table
-    table: { marginTop: 18, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
-    thead: { flexDirection: 'row', backgroundColor: C.pine, paddingVertical: 8, paddingHorizontal: 12 },
+    // Rows carry their own side borders (not the table) so a table that breaks
+    // across pages doesn't leave open border lines running down to the footer.
+    table: { marginTop: 18 },
+    thead: { flexDirection: 'row', backgroundColor: C.pine, paddingVertical: 8, paddingHorizontal: 12, borderTopLeftRadius: 7, borderTopRightRadius: 7 },
     th: { fontSize: 6.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.1, color: C.cream },
-    row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.border },
+    row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 7, paddingHorizontal: 12, borderTopWidth: 1, borderLeftWidth: 1, borderRightWidth: 1, borderColor: C.border },
+    rowLast: { borderBottomWidth: 1, borderBottomLeftRadius: 8, borderBottomRightRadius: 8 },
     rowAlt: { backgroundColor: C.card },
     cNum: { width: '6%' },
     cProd: { width: '46%', paddingRight: 8 },
@@ -152,7 +163,7 @@ const s = StyleSheet.create({
     shipBox: { backgroundColor: C.secondary, borderRadius: 8, padding: 9, marginBottom: 10 },
     shipText: { fontSize: 8.5, color: C.ink },
 
-    totals: { width: '44%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
+    totals: { width: '44%', alignSelf: 'flex-start', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
     totalsInner: { paddingHorizontal: 12, paddingTop: 10, paddingBottom: 6 },
     sumRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 3.5 },
     sumLabel: { fontSize: 8.5, color: C.muted },
@@ -170,13 +181,14 @@ const s = StyleSheet.create({
     foot: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 52, backgroundColor: C.pine, paddingHorizontal: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     thanks: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 11, color: C.sun, letterSpacing: 0.3 },
     footSmall: { fontSize: 6.5, color: C.cream, opacity: 0.8, marginTop: 3 },
-    pageNum: { fontSize: 6.5, color: C.cream, opacity: 0.8, letterSpacing: 1, textTransform: 'uppercase' },
+    // Sits over the footer band; render-prop text needs an explicit width.
+    pageNum: { position: 'absolute', right: 40, bottom: 22, width: 90, textAlign: 'right', fontSize: 6.5, color: C.cream, letterSpacing: 1, textTransform: 'uppercase' },
 })
 
 const InfoRow = ({ icon, children }) => (
     <View style={s.infoRow}>
         <PdfIcon icon={icon} size={8} color={C.forest} style={s.infoIcon} />
-        <Text style={s.infoText}>{children}</Text>
+        <Text style={s.infoText}>{breakable(children)}</Text>
     </View>
 )
 
@@ -186,7 +198,7 @@ const KeyValue = ({ icon, label, value }) => (
             <PdfIcon icon={icon} size={8} color={C.forest} />
             <Text style={s.kvLabel}>{label}</Text>
         </View>
-        <Text style={s.kvValue}>{value}</Text>
+        <Text style={s.kvValue}>{breakable(value)}</Text>
     </View>
 )
 
@@ -203,7 +215,7 @@ const InvoiceDocument = ({ order = {} }) => {
     const mrpTotal = products.reduce((sum, p) => sum + ((p?.mrp || p?.sellingPrice || 0) * (p?.qty || 0)), 0)
     const mrpSavings = Math.max(0, mrpTotal - (order?.subtotal || 0))
     const totalSavings = mrpSavings + (order?.couponDiscountAmount || 0)
-    const paymentMethod = order?.paymentMethod || 'full'
+    const paymentMethod = order?.paymentMethod
     const status = STATUS[order?.status] || STATUS.pending
     const shipment = order?.shipment || {}
 
@@ -256,7 +268,7 @@ const InvoiceDocument = ({ order = {} }) => {
                                 <PdfIcon icon={FiUser} size={8} color={C.forest} />
                                 <Text style={s.cardTitle}>Billed to</Text>
                             </View>
-                            <Text style={s.name}>{order?.name || '—'}</Text>
+                            <Text style={s.name}>{breakable(order?.name || '—')}</Text>
                             {!!addressLine && <InfoRow icon={FiMapPin}>{addressLine}</InfoRow>}
                             <InfoRow icon={FiPhone}>{order?.phone || '—'}</InfoRow>
                             <InfoRow icon={FiMail}>{order?.email || '—'}</InfoRow>
@@ -268,8 +280,8 @@ const InvoiceDocument = ({ order = {} }) => {
                             </View>
                             <KeyValue icon={FiHash} label="Order ID" value={order?.order_id || '—'} />
                             <KeyValue icon={FiCalendar} label="Date" value={formatDate(order?.createdAt)} />
-                            <KeyValue icon={FiCreditCard} label="Payment" value={PAYMENT_METHOD_LABEL[paymentMethod] || 'Online'} />
-                            <KeyValue icon={FiCheckCircle} label="Status" value={PAYMENT_STATUS_LABEL[order?.paymentStatus] || 'Unpaid'} />
+                            <KeyValue icon={FiCreditCard} label="Payment" value={PAYMENT_METHOD_LABEL[paymentMethod] || '—'} />
+                            <KeyValue icon={FiCheckCircle} label="Status" value={PAYMENT_STATUS_LABEL[order?.paymentStatus] || '—'} />
                             {!!order?.payment_id && <KeyValue icon={FiHash} label="Txn ID" value={order.payment_id} />}
                         </View>
                     </View>
@@ -285,7 +297,7 @@ const InvoiceDocument = ({ order = {} }) => {
                         </View>
 
                         {products.length === 0 ? (
-                            <View style={s.row}><Text style={s.empty}>No items found.</Text></View>
+                            <View style={[s.row, s.rowLast]}><Text style={s.empty}>No items found.</Text></View>
                         ) : products.map((p, i) => {
                             const name = p?.productId?.name || p?.name || 'Product'
                             const variant = p?.variantId?.size || ''
@@ -294,10 +306,10 @@ const InvoiceDocument = ({ order = {} }) => {
                             const lineTotal = price * qty
                             const hasMarkdown = (p?.mrp || 0) > price
                             return (
-                                <View style={[s.row, i % 2 === 1 ? s.rowAlt : null]} key={p?.variantId?._id || p?._id || i} wrap={false}>
+                                <View style={[s.row, i % 2 === 1 ? s.rowAlt : null, i === products.length - 1 ? s.rowLast : null]} key={p?.variantId?._id || p?._id || i} wrap={false}>
                                     <Text style={[s.num, s.cNum]}>{String(i + 1).padStart(2, '0')}</Text>
                                     <View style={s.cProd}>
-                                        <Text style={s.pName}>{name}</Text>
+                                        <Text style={s.pName}>{breakable(name)}</Text>
                                         {!!variant && <Text style={s.pVariant}>{variant}</Text>}
                                     </View>
                                     <View style={s.cPrice}>
@@ -317,7 +329,7 @@ const InvoiceDocument = ({ order = {} }) => {
                             {!!order?.ordernote && (
                                 <View>
                                     <SectionLabel icon={FiFileText}>Order note</SectionLabel>
-                                    <Text style={s.noteBox}>{order.ordernote}</Text>
+                                    <Text style={s.noteBox}>{breakable(order.ordernote)}</Text>
                                 </View>
                             )}
                             {!!shipment?.awb && (
@@ -390,12 +402,12 @@ const InvoiceDocument = ({ order = {} }) => {
 
                 {/* Footer */}
                 <View style={s.foot} fixed>
-                    <View>
+                    <View style={{ flex: 1, paddingRight: 100 }}>
                         <Text style={s.thanks}>Thank you for shopping with {BRAND.name}</Text>
                         <Text style={s.footSmall}>Computer-generated invoice — no signature required. Questions? {BRAND.email}</Text>
                     </View>
-                    <Text style={s.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
                 </View>
+                <Text style={s.pageNum} fixed render={({ pageNumber, totalPages }) => (totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : '')} />
 
             </Page>
         </Document>
