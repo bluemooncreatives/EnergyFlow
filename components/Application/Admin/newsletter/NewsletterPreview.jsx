@@ -231,7 +231,7 @@ const FooterPreview = ({ footer, state }) => (
             style={{ backgroundImage: 'var(--pine-panel-gradient)' }}
         >
             <p className="mb-4 max-w-md text-white/60" aria-hidden="true">Premium dry fruits, nuts, seeds and super foods…</p>
-            <span className="inline-block border-b border-white/30 pb-2 font-header text-3xl" aria-hidden="true">hello@energyflow.in</span>
+            <span className="inline-block border-b border-white/30 pb-2 font-header text-3xl" aria-hidden="true">energyflow0001@gmail.com</span>
             <NewsletterFooterStrip footer={footer} preview previewState={state} />
             <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-10" aria-hidden="true">
                 {[0, 1, 2, 3].map((i) => (
