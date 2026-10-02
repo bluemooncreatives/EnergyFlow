@@ -15,44 +15,6 @@ const svgProps = {
 // a page, and a duplicate id resolving to a hidden copy paints nothing.
 const useSvgId = () => useId().replace(/[^a-zA-Z0-9_-]/g, '')
 
-export const GheeJar = ({ className }) => {
-    const uid = useSvgId()
-    return (
-    <svg {...svgProps} className={className}>
-        <defs>
-            <linearGradient id={`ghee-fill-${uid}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#F7CF6B" />
-                <stop offset="1" stopColor="#E3A33A" />
-            </linearGradient>
-            <linearGradient id={`ghee-glass-${uid}`} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#fff" stopOpacity=".55" />
-                <stop offset=".35" stopColor="#fff" stopOpacity=".15" />
-                <stop offset="1" stopColor="#fff" stopOpacity=".35" />
-            </linearGradient>
-        </defs>
-        <ellipse cx="100" cy="182" rx="62" ry="8" fill="#0A2F24" opacity=".12" />
-        {/* jar */}
-        <rect x="46" y="58" width="108" height="122" rx="26" fill="#FFF6E2" />
-        <path d="M46 96h108v58c0 14.4-11.6 26-26 26H72c-14.4 0-26-11.6-26-26z" fill={`url(#ghee-fill-${uid})`} />
-        {/* granules — bilona ghee is grainy */}
-        {[[64, 128], [80, 150], [98, 134], [118, 158], [136, 126], [128, 144], [72, 164], [110, 116], [90, 168], [142, 162]].map(([x, y]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r="2.2" fill="#FBE2A0" opacity=".9" />
-        ))}
-        <rect x="46" y="58" width="108" height="122" rx="26" fill={`url(#ghee-glass-${uid})`} />
-        <rect x="56" y="70" width="10" height="92" rx="5" fill="#fff" opacity=".45" />
-        {/* lid */}
-        <rect x="52" y="34" width="96" height="30" rx="9" fill="#0B3D2E" />
-        <rect x="52" y="52" width="96" height="6" fill="#072A20" />
-        <rect x="60" y="40" width="30" height="5" rx="2.5" fill="#fff" opacity=".18" />
-        {/* label */}
-        <rect x="66" y="104" width="68" height="44" rx="10" fill="#FFFDF7" />
-        <path d="M100 113c5 3 7 8 5 13-5-1-8-5-8-10-3 4-3 8 0 12-6-2-8-8-5-13 2-2 5-3 8-2z" fill="#4E8A5C" />
-        <rect x="80" y="133" width="40" height="4" rx="2" fill="#0B3D2E" opacity=".75" />
-        <rect x="87" y="140" width="26" height="3" rx="1.5" fill="#0B3D2E" opacity=".35" />
-    </svg>
-    )
-}
-
 export const OilBottle = ({ className }) => {
     const uid = useSvgId()
     return (
@@ -88,28 +50,3 @@ export const OilBottle = ({ className }) => {
     </svg>
     )
 }
-
-export const ChocolateBox = ({ className }) => (
-    <svg {...svgProps} className={className}>
-        <ellipse cx="100" cy="182" rx="74" ry="8" fill="#0A2F24" opacity=".12" />
-        {/* box */}
-        <rect x="30" y="78" width="140" height="98" rx="14" fill="#5B3321" />
-        <rect x="30" y="78" width="140" height="22" rx="10" fill="#6E4029" />
-        {/* ribbon */}
-        <rect x="92" y="78" width="16" height="98" fill="#F2C94C" />
-        <rect x="30" y="112" width="140" height="14" fill="#F2C94C" />
-        <rect x="92" y="78" width="6" height="98" fill="#fff" opacity=".22" />
-        {/* bow */}
-        <path d="M100 78c-10-22-40-26-40-10 0 12 22 14 40 10z" fill="#F2C94C" />
-        <path d="M100 78c10-22 40-26 40-10 0 12-22 14-40 10z" fill="#E3A33A" />
-        <circle cx="100" cy="77" r="8" fill="#D9962E" />
-        {/* truffles in front */}
-        {[[58, 166, '#3E2216'], [100, 170, '#4A2A1B'], [142, 166, '#2F1911']].map(([x, y, fill]) => (
-            <g key={x}>
-                <circle cx={x} cy={y} r="18" fill={fill} />
-                <path d={`M${x - 12} ${y - 6}c6 4 10-4 16 0s8-2 10 0`} stroke="#F6E4D2" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-                <circle cx={x - 6} cy={y - 9} r="3" fill="#fff" opacity=".18" />
-            </g>
-        ))}
-    </svg>
-)

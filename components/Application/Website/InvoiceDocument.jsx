@@ -1,110 +1,200 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+import fs from 'node:fs'
+import path from 'node:path'
+import { Document, Page, Text, View, Image, StyleSheet, Font } from '@react-pdf/renderer'
+import { FiPhone, FiMail, FiMapPin, FiCalendar, FiHash, FiCreditCard, FiTruck, FiFileText, FiCheckCircle, FiUser, FiGift } from 'react-icons/fi'
+import PdfIcon from '@/lib/pdf/PdfIcon'
 
 /**
- * Vector PDF invoice built with @react-pdf/renderer primitives.
- * Generated client-side and streamed straight to the user as a download.
+ * Vector PDF invoice built with @react-pdf/renderer primitives and rendered on
+ * the server by /api/order-invoice/[orderid].
  *
- * Note: the built-in Helvetica font has no Rupee (₹) glyph, so amounts are
- * formatted with an "Rs." prefix to render reliably without a custom font.
+ * Styled after the storefront design system (app/design-system.css): pine /
+ * forest / sunflower / cream palette, Clash Display for headings and amounts,
+ * Archivo for body copy. Archivo's Latin subset has no Rupee glyph, so every
+ * amount is set in Clash Display, which does.
  */
 
+// ── Fonts ─────────────────────────────────────────────────────────────────
+// Archivo ships to the browser as a variable font; react-pdf can't pick an
+// axis, so public/assets/invoice holds static 400/600 instances of it.
+const asset = (...parts) => path.join(process.cwd(), 'public', 'assets', ...parts)
+
+Font.register({
+    family: 'Clash Display',
+    fonts: [
+        { src: asset('font', 'ClashDisplay-Medium.woff2'), fontWeight: 500 },
+        { src: asset('font', 'ClashDisplay-Semibold.woff2'), fontWeight: 600 },
+    ],
+})
+Font.register({
+    family: 'Archivo',
+    fonts: [
+        { src: asset('invoice', 'Archivo-Regular.ttf'), fontWeight: 400 },
+        { src: asset('invoice', 'Archivo-SemiBold.ttf'), fontWeight: 600 },
+    ],
+})
+// Keep words whole — automatic hyphenation splits names and order ids.
+Font.registerHyphenationCallback((word) => [word])
+
+// Read as a Buffer: react-pdf mistakes Windows drive paths (C:\…) for URLs.
+const LOGO = fs.readFileSync(asset('invoice', 'logo-green.png'))
+
 const BRAND = {
-    name: 'ENERGYFLOW',
-    tagline: 'Fuel Your Health, Energize Your Life.',
+    name: 'Energyflow',
+    tagline: 'Fuel your health, energize your life.',
     email: 'energyflow0001@gmail.com',
     phone: '+91 92896 57742',
-    address: 'Rangpuri, Mahipalpur, New Delhi - 110037',
+    address: 'Rangpuri, Mahipalpur, New Delhi 110037',
 }
 
-const BRAND_COLOR = '#0B3D2E'   // pine — matches --brand-primary
-const CREAM = '#F7F3E8'
-const INK = '#0A2F24'
-const MUTE = '#5A6A5F'
-const GREEN = '#2F6B3F'          // fern — savings / success
+// Mirrors the --palette-* / semantic tokens in app/design-system.css.
+const C = {
+    pine: '#0B3D2E',
+    pineDeep: '#072A20',
+    forest: '#2F6B3F',
+    sun: '#F2C94C',
+    sunSoft: '#FBEDC4',
+    cream: '#F7F3E8',
+    card: '#FDFBF6',
+    well: '#EFEADC',
+    secondary: '#E6ECDD',
+    border: '#E3DDCB',
+    ink: '#0A2F24',
+    body: '#34453C',
+    muted: '#5A6A5F',
+    olive: '#6B5C27',
+    danger: '#B3261E',
+}
 
 const money = (n) =>
-    'Rs. ' + Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    Number(n || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 const formatDate = (d) => {
     if (!d) return '—'
-    try {
-        return new Date(d).toLocaleString('en-IN', {
-            day: 'numeric', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit',
-        })
-    } catch {
-        return '—'
-    }
+    const date = new Date(d)
+    if (Number.isNaN(date.getTime())) return '—'
+    return date.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-const STATUS_LABEL = {
-    pending: 'Order Placed', processing: 'Processing', shipped: 'Shipped',
-    delivered: 'Delivered', cancelled: 'Cancelled', unverified: 'Payment Unverified',
+const STATUS = {
+    pending: { label: 'Order Placed', bg: C.sunSoft, fg: C.olive },
+    processing: { label: 'Processing', bg: C.sunSoft, fg: C.olive },
+    shipped: { label: 'Shipped', bg: C.secondary, fg: C.forest },
+    delivered: { label: 'Delivered', bg: C.secondary, fg: C.forest },
+    cancelled: { label: 'Cancelled', bg: '#F6DEDC', fg: C.danger },
+    unverified: { label: 'Payment Unverified', bg: '#F6DEDC', fg: C.danger },
 }
 const PAYMENT_METHOD_LABEL = { cod: 'Cash on Delivery', full: 'Paid Online', partial: 'Partial Payment' }
 const PAYMENT_STATUS_LABEL = { unpaid: 'Unpaid', partial_paid: 'Partially Paid', fully_paid: 'Fully Paid' }
 
 const s = StyleSheet.create({
-    page: { paddingVertical: 40, paddingHorizontal: 44, fontFamily: 'Helvetica', fontSize: 9, color: INK, lineHeight: 1.5 },
+    page: { paddingTop: 0, paddingBottom: 72, paddingHorizontal: 0, fontFamily: 'Archivo', fontSize: 9, color: C.body, lineHeight: 1.45, backgroundColor: '#FFFFFF' },
+    body: { paddingHorizontal: 40 },
 
-    // header
-    head: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: 2, borderBottomColor: BRAND_COLOR, paddingBottom: 14 },
-    brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: BRAND_COLOR, letterSpacing: 1 },
-    brandTag: { fontSize: 7.5, color: MUTE, marginTop: 2, letterSpacing: 0.5 },
-    brandMeta: { fontSize: 7.5, color: '#6a6a6a', marginTop: 6 },
-    invTitleWrap: { alignItems: 'flex-end' },
-    invTitle: { fontSize: 16, fontFamily: 'Helvetica-Bold', color: INK, letterSpacing: 3 },
-    badge: { marginTop: 6, backgroundColor: CREAM, color: BRAND_COLOR, paddingVertical: 3, paddingHorizontal: 8, borderRadius: 8, fontSize: 7, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 1 },
+    // Header — cream band with the green mark, sunflower rule underneath
+    head: { backgroundColor: C.cream, paddingHorizontal: 40, paddingTop: 30, paddingBottom: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+    brandRow: { flexDirection: 'row', alignItems: 'center' },
+    logo: { width: 44, height: 44, marginRight: 10 },
+    brandName: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 22, color: C.pine, letterSpacing: 0.6, textTransform: 'uppercase', lineHeight: 1 },
+    brandTag: { fontSize: 8, color: C.muted, marginTop: 4 },
+    contact: { marginTop: 14 },
+    contactRow: { flexDirection: 'row', alignItems: 'center', marginTop: 3 },
+    contactIcon: { marginRight: 5 },
+    contactText: { fontSize: 7.5, color: C.muted },
+    titleWrap: { alignItems: 'flex-end' },
+    eyebrow: { fontSize: 6.5, fontWeight: 600, color: C.forest, letterSpacing: 1.6, textTransform: 'uppercase' },
+    title: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 28, color: C.pine, letterSpacing: 1, textTransform: 'uppercase', lineHeight: 1, marginTop: 4 },
+    orderId: { fontFamily: 'Clash Display', fontWeight: 500, fontSize: 10, color: C.ink, marginTop: 6 },
+    pill: { marginTop: 8, paddingVertical: 3, paddingHorizontal: 9, borderRadius: 10, fontSize: 6.5, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' },
+    rule: { height: 4, backgroundColor: C.sun },
 
-    // meta
-    meta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 18 },
-    metaBlock: { width: '48%' },
-    metaRight: { alignItems: 'flex-end' },
-    label: { fontSize: 6.5, textTransform: 'uppercase', letterSpacing: 1.2, color: '#9a9a9a', fontFamily: 'Helvetica-Bold', marginBottom: 4 },
-    strong: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: INK },
-    line: { fontSize: 8.5, color: '#555', marginTop: 2 },
-    kv: { fontSize: 8.5, color: '#555', marginTop: 2 },
-    kvb: { fontFamily: 'Helvetica-Bold', color: INK },
+    // Billing + order details cards
+    cards: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 22 },
+    card: { width: '48.5%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 12 },
+    cardHead: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: C.border },
+    cardTitle: { fontSize: 6.5, fontWeight: 600, color: C.forest, letterSpacing: 1.4, textTransform: 'uppercase', marginLeft: 5 },
+    name: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 12, color: C.ink, marginBottom: 3 },
+    infoRow: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 4 },
+    infoIcon: { marginRight: 6, marginTop: 1.5 },
+    infoText: { fontSize: 8.5, color: C.body, flex: 1 },
+    kvRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },
+    kvLabelWrap: { flexDirection: 'row', alignItems: 'center' },
+    kvLabel: { fontSize: 8, color: C.muted, marginLeft: 6 },
+    kvValue: { fontSize: 8.5, fontWeight: 600, color: C.ink, textAlign: 'right', maxWidth: '60%' },
 
-    // items table
-    table: { marginTop: 22 },
-    thead: { flexDirection: 'row', backgroundColor: BRAND_COLOR, color: '#fff', paddingVertical: 7, paddingHorizontal: 8 },
-    th: { fontSize: 6.5, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase', letterSpacing: 0.8, color: '#fff' },
-    row: { flexDirection: 'row', paddingVertical: 8, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#ececec' },
-    cNum: { width: '7%', color: '#9a9a9a' },
-    cProd: { width: '45%' },
+    // Items table
+    table: { marginTop: 22, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
+    thead: { flexDirection: 'row', backgroundColor: C.pine, paddingVertical: 8, paddingHorizontal: 12 },
+    th: { fontSize: 6.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1.1, color: C.cream },
+    row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 9, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.border },
+    rowAlt: { backgroundColor: C.card },
+    cNum: { width: '6%' },
+    cProd: { width: '46%', paddingRight: 8 },
     cPrice: { width: '18%', textAlign: 'right' },
     cQty: { width: '10%', textAlign: 'center' },
     cTotal: { width: '20%', textAlign: 'right' },
-    pName: { fontSize: 9, fontFamily: 'Helvetica-Bold', color: INK },
-    pVariant: { fontSize: 7, color: MUTE, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },
-    strike: { fontSize: 7, color: '#aaa', textDecoration: 'line-through', marginTop: 1 },
-    totalCell: { fontFamily: 'Helvetica-Bold' },
+    num: { fontSize: 8, color: C.muted },
+    pName: { fontSize: 9.5, fontWeight: 600, color: C.ink },
+    pVariant: { alignSelf: 'flex-start', marginTop: 3, paddingVertical: 1.5, paddingHorizontal: 6, borderRadius: 6, backgroundColor: C.well, fontSize: 6.5, fontWeight: 600, color: C.muted, letterSpacing: 0.6, textTransform: 'uppercase' },
+    amount: { fontFamily: 'Clash Display', fontWeight: 500, fontSize: 9.5, color: C.ink },
+    amountStrong: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 10, color: C.ink },
+    strike: { fontFamily: 'Clash Display', fontWeight: 500, fontSize: 7, color: C.muted, textDecoration: 'line-through', marginTop: 1 },
+    qty: { fontSize: 9, fontWeight: 600, color: C.ink },
+    empty: { width: '100%', textAlign: 'center', color: C.muted },
 
-    // lower
+    // Notes + totals
     lower: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 },
-    notes: { width: '52%' },
-    noteBox: { borderWidth: 1, borderColor: '#ececec', backgroundColor: '#fafafa', borderRadius: 4, padding: 9, fontSize: 8.5, color: '#555', marginTop: 4 },
-    totals: { width: '42%' },
-    sumRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 4 },
-    sumLabel: { fontSize: 9, color: '#888' },
-    sumVal: { fontSize: 9, color: INK },
-    sumGreen: { color: GREEN, fontFamily: 'Helvetica-Bold' },
-    grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 2, borderTopColor: INK, marginTop: 6, paddingTop: 8 },
-    grandLabel: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
-    grandVal: { fontSize: 12, fontFamily: 'Helvetica-Bold', color: INK },
-    saved: { marginTop: 8, backgroundColor: '#E2EAD8', color: GREEN, borderRadius: 4, paddingVertical: 6, paddingHorizontal: 9, fontSize: 8.5, fontFamily: 'Helvetica-Bold', textAlign: 'center' },
-    payBox: { marginTop: 12, borderWidth: 1, borderColor: '#ececec', borderRadius: 4 },
-    payRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, paddingHorizontal: 10 },
-    payRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },
-    payLabel: { fontSize: 8.5, color: '#888' },
-    payVal: { fontSize: 8.5, fontFamily: 'Helvetica-Bold', color: INK },
+    notes: { width: '50%' },
+    label: { fontSize: 6.5, fontWeight: 600, color: C.forest, letterSpacing: 1.4, textTransform: 'uppercase', marginLeft: 5 },
+    labelRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
+    noteBox: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, padding: 10, fontSize: 8.5, color: C.body, marginBottom: 12 },
+    shipBox: { backgroundColor: C.secondary, borderRadius: 8, padding: 10, marginBottom: 12 },
+    shipText: { fontSize: 8.5, color: C.ink },
 
-    // footer
-    foot: { marginTop: 30, borderTopWidth: 1, borderTopColor: '#ececec', paddingTop: 14, alignItems: 'center' },
-    thanks: { fontSize: 10, fontFamily: 'Helvetica-Bold', color: BRAND_COLOR },
-    footSmall: { fontSize: 7.5, color: '#9a9a9a', marginTop: 5, textAlign: 'center', lineHeight: 1.6 },
+    totals: { width: '44%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 8, overflow: 'hidden' },
+    totalsInner: { paddingHorizontal: 12, paddingTop: 10, paddingBottom: 6 },
+    sumRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 3.5 },
+    sumLabel: { fontSize: 8.5, color: C.muted },
+    sumGreen: { fontFamily: 'Clash Display', fontWeight: 500, fontSize: 9.5, color: C.forest },
+    free: { fontSize: 8, fontWeight: 600, color: C.forest, letterSpacing: 0.8, textTransform: 'uppercase' },
+    grand: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: C.pine, paddingVertical: 10, paddingHorizontal: 12 },
+    grandLabel: { fontSize: 7.5, fontWeight: 600, color: C.cream, letterSpacing: 1.4, textTransform: 'uppercase' },
+    grandVal: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 15, color: C.sun },
+    saved: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: C.sun, paddingVertical: 6, paddingHorizontal: 10 },
+    savedText: { fontSize: 8, fontWeight: 600, color: C.pine, marginLeft: 5 },
+    savedAmount: { fontFamily: 'Clash Display', fontWeight: 600 },
+    payRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.border },
+
+    // Footer — pine band pinned to every page
+    foot: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 52, backgroundColor: C.pine, paddingHorizontal: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    thanks: { fontFamily: 'Clash Display', fontWeight: 600, fontSize: 11, color: C.sun, letterSpacing: 0.3 },
+    footSmall: { fontSize: 6.5, color: C.cream, opacity: 0.8, marginTop: 3 },
+    pageNum: { fontSize: 6.5, color: C.cream, opacity: 0.8, letterSpacing: 1, textTransform: 'uppercase' },
 })
+
+const InfoRow = ({ icon, children }) => (
+    <View style={s.infoRow}>
+        <PdfIcon icon={icon} size={8} color={C.forest} style={s.infoIcon} />
+        <Text style={s.infoText}>{children}</Text>
+    </View>
+)
+
+const KeyValue = ({ icon, label, value }) => (
+    <View style={s.kvRow}>
+        <View style={s.kvLabelWrap}>
+            <PdfIcon icon={icon} size={8} color={C.forest} />
+            <Text style={s.kvLabel}>{label}</Text>
+        </View>
+        <Text style={s.kvValue}>{value}</Text>
+    </View>
+)
+
+const SectionLabel = ({ icon, children }) => (
+    <View style={s.labelRow}>
+        <PdfIcon icon={icon} size={8} color={C.forest} />
+        <Text style={s.label}>{children}</Text>
+    </View>
+)
 
 const InvoiceDocument = ({ order = {} }) => {
     const products = Array.isArray(order?.products) ? order.products : []
@@ -113,153 +203,197 @@ const InvoiceDocument = ({ order = {} }) => {
     const mrpSavings = Math.max(0, mrpTotal - (order?.subtotal || 0))
     const totalSavings = mrpSavings + (order?.couponDiscountAmount || 0)
     const paymentMethod = order?.paymentMethod || 'full'
+    const status = STATUS[order?.status] || STATUS.pending
+    const shipment = order?.shipment || {}
 
     const addressLine = [order?.address, order?.landmark, order?.city, order?.state, order?.country, order?.pincode]
         .filter(Boolean).join(', ')
 
     return (
-        <Document title={`Invoice ${order?.order_id || ''}`} author={BRAND.name}>
+        <Document title={`Invoice ${order?.order_id || ''}`} author={BRAND.name} subject="Order invoice" creator={BRAND.name}>
             <Page size="A4" style={s.page}>
 
                 {/* Header */}
                 <View style={s.head}>
                     <View>
-                        <Text style={s.brandName}>{BRAND.name}</Text>
-                        <Text style={s.brandTag}>{BRAND.tagline}</Text>
-                        <Text style={s.brandMeta}>{BRAND.address}</Text>
-                        <Text style={s.brandMeta}>{BRAND.phone}   ·   {BRAND.email}</Text>
-                    </View>
-                    <View style={s.invTitleWrap}>
-                        <Text style={s.invTitle}>INVOICE</Text>
-                        <Text style={s.badge}>{STATUS_LABEL[order?.status] || 'Order Placed'}</Text>
-                    </View>
-                </View>
-
-                {/* Meta */}
-                <View style={s.meta}>
-                    <View style={s.metaBlock}>
-                        <Text style={s.label}>Billed To</Text>
-                        <Text style={s.strong}>{order?.name || '—'}</Text>
-                        {!!addressLine && <Text style={s.line}>{addressLine}</Text>}
-                        <Text style={s.kv}><Text style={s.kvb}>Phone: </Text>{order?.phone || '—'}</Text>
-                        <Text style={s.kv}><Text style={s.kvb}>Email: </Text>{order?.email || '—'}</Text>
-                    </View>
-                    <View style={[s.metaBlock, s.metaRight]}>
-                        <Text style={s.label}>Invoice Details</Text>
-                        <Text style={s.kv}><Text style={s.kvb}>Order ID: </Text>{order?.order_id || '—'}</Text>
-                        <Text style={s.kv}><Text style={s.kvb}>Date: </Text>{formatDate(order?.createdAt)}</Text>
-                        <Text style={s.kv}><Text style={s.kvb}>Payment: </Text>{PAYMENT_METHOD_LABEL[paymentMethod] || 'Online'}</Text>
-                        <Text style={s.kv}><Text style={s.kvb}>Payment Status: </Text>{PAYMENT_STATUS_LABEL[order?.paymentStatus] || 'Unpaid'}</Text>
-                        {!!order?.payment_id && <Text style={s.kv}><Text style={s.kvb}>Txn ID: </Text>{order.payment_id}</Text>}
-                    </View>
-                </View>
-
-                {/* Items */}
-                <View style={s.table}>
-                    <View style={s.thead}>
-                        <Text style={[s.th, s.cNum]}>#</Text>
-                        <Text style={[s.th, s.cProd]}>Product</Text>
-                        <Text style={[s.th, s.cPrice]}>Price</Text>
-                        <Text style={[s.th, s.cQty]}>Qty</Text>
-                        <Text style={[s.th, s.cTotal]}>Total</Text>
-                    </View>
-
-                    {products.length === 0 ? (
-                        <View style={s.row}><Text style={{ width: '100%', textAlign: 'center', color: '#999' }}>No items found.</Text></View>
-                    ) : products.map((p, i) => {
-                        const name = p?.productId?.name || p?.name || 'Product'
-                        const variant = p?.variantId?.size || ''
-                        const price = p?.sellingPrice || 0
-                        const qty = p?.qty || 0
-                        const lineTotal = price * qty
-                        const lineMrp = (p?.mrp || price) * qty
-                        return (
-                            <View style={s.row} key={p?.variantId?._id || p?._id || i} wrap={false}>
-                                <Text style={s.cNum}>{i + 1}</Text>
-                                <View style={s.cProd}>
-                                    <Text style={s.pName}>{name}</Text>
-                                    {!!variant && <Text style={s.pVariant}>{variant}</Text>}
-                                </View>
-                                <View style={s.cPrice}>
-                                    <Text>{money(price)}</Text>
-                                    {lineMrp > lineTotal && <Text style={s.strike}>{money(p?.mrp)}</Text>}
-                                </View>
-                                <Text style={s.cQty}>{qty}</Text>
-                                <Text style={[s.cTotal, s.totalCell]}>{money(lineTotal)}</Text>
-                            </View>
-                        )
-                    })}
-                </View>
-
-                {/* Lower */}
-                <View style={s.lower}>
-                    <View style={s.notes}>
-                        {!!order?.ordernote && (
+                        <View style={s.brandRow}>
+                            <Image src={LOGO} style={s.logo} />
                             <View>
-                                <Text style={s.label}>Order Note</Text>
-                                <Text style={s.noteBox}>{order.ordernote}</Text>
+                                <Text style={s.brandName}>{BRAND.name}</Text>
+                                <Text style={s.brandTag}>{BRAND.tagline}</Text>
                             </View>
-                        )}
-                        <Text style={[s.label, { marginTop: 14 }]}>Summary</Text>
-                        <Text style={s.noteBox}>{itemCount} {itemCount === 1 ? 'item' : 'items'} in this order.</Text>
+                        </View>
+                        <View style={s.contact}>
+                            <View style={s.contactRow}>
+                                <PdfIcon icon={FiMapPin} size={7.5} color={C.forest} style={s.contactIcon} />
+                                <Text style={s.contactText}>{BRAND.address}</Text>
+                            </View>
+                            <View style={s.contactRow}>
+                                <PdfIcon icon={FiPhone} size={7.5} color={C.forest} style={s.contactIcon} />
+                                <Text style={s.contactText}>{BRAND.phone}</Text>
+                            </View>
+                            <View style={s.contactRow}>
+                                <PdfIcon icon={FiMail} size={7.5} color={C.forest} style={s.contactIcon} />
+                                <Text style={s.contactText}>{BRAND.email}</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={s.titleWrap}>
+                        <Text style={s.eyebrow}>Tax invoice</Text>
+                        <Text style={s.title}>Invoice</Text>
+                        <Text style={s.orderId}>#{order?.order_id || '—'}</Text>
+                        <Text style={[s.pill, { backgroundColor: status.bg, color: status.fg }]}>{status.label}</Text>
+                    </View>
+                </View>
+                <View style={s.rule} />
+
+                <View style={s.body}>
+                    {/* Billed to / order details */}
+                    <View style={s.cards}>
+                        <View style={s.card}>
+                            <View style={s.cardHead}>
+                                <PdfIcon icon={FiUser} size={8} color={C.forest} />
+                                <Text style={s.cardTitle}>Billed to</Text>
+                            </View>
+                            <Text style={s.name}>{order?.name || '—'}</Text>
+                            {!!addressLine && <InfoRow icon={FiMapPin}>{addressLine}</InfoRow>}
+                            <InfoRow icon={FiPhone}>{order?.phone || '—'}</InfoRow>
+                            <InfoRow icon={FiMail}>{order?.email || '—'}</InfoRow>
+                        </View>
+                        <View style={s.card}>
+                            <View style={s.cardHead}>
+                                <PdfIcon icon={FiFileText} size={8} color={C.forest} />
+                                <Text style={s.cardTitle}>Order details</Text>
+                            </View>
+                            <KeyValue icon={FiHash} label="Order ID" value={order?.order_id || '—'} />
+                            <KeyValue icon={FiCalendar} label="Date" value={formatDate(order?.createdAt)} />
+                            <KeyValue icon={FiCreditCard} label="Payment" value={PAYMENT_METHOD_LABEL[paymentMethod] || 'Online'} />
+                            <KeyValue icon={FiCheckCircle} label="Status" value={PAYMENT_STATUS_LABEL[order?.paymentStatus] || 'Unpaid'} />
+                            {!!order?.payment_id && <KeyValue icon={FiHash} label="Txn ID" value={order.payment_id} />}
+                        </View>
                     </View>
 
-                    <View style={s.totals}>
-                        <View style={s.sumRow}>
-                            <Text style={s.sumLabel}>{mrpSavings > 0 ? 'Total MRP' : 'Subtotal'}</Text>
-                            <Text style={s.sumVal}>{money(mrpSavings > 0 ? mrpTotal : order?.subtotal)}</Text>
-                        </View>
-                        {mrpSavings > 0 && (
-                            <View style={s.sumRow}>
-                                <Text style={s.sumLabel}>Discount on MRP</Text>
-                                <Text style={[s.sumVal, s.sumGreen]}>- {money(mrpSavings)}</Text>
-                            </View>
-                        )}
-                        {order?.couponDiscountAmount > 0 && (
-                            <View style={s.sumRow}>
-                                <Text style={s.sumLabel}>Coupon Discount</Text>
-                                <Text style={[s.sumVal, s.sumGreen]}>- {money(order.couponDiscountAmount)}</Text>
-                            </View>
-                        )}
-                        <View style={s.sumRow}>
-                            <Text style={s.sumLabel}>Shipping</Text>
-                            <Text style={[s.sumVal, s.sumGreen]}>FREE</Text>
-                        </View>
-                        <View style={s.grand}>
-                            <Text style={s.grandLabel}>Total</Text>
-                            <Text style={s.grandVal}>{money(order?.totalAmount)}</Text>
+                    {/* Items */}
+                    <View style={s.table}>
+                        <View style={s.thead} fixed>
+                            <Text style={[s.th, s.cNum]}>#</Text>
+                            <Text style={[s.th, s.cProd]}>Product</Text>
+                            <Text style={[s.th, s.cPrice]}>Price</Text>
+                            <Text style={[s.th, s.cQty]}>Qty</Text>
+                            <Text style={[s.th, s.cTotal]}>Total</Text>
                         </View>
 
-                        {totalSavings > 0 && (
-                            <Text style={s.saved}>You saved {money(totalSavings)} on this order</Text>
-                        )}
+                        {products.length === 0 ? (
+                            <View style={s.row}><Text style={s.empty}>No items found.</Text></View>
+                        ) : products.map((p, i) => {
+                            const name = p?.productId?.name || p?.name || 'Product'
+                            const variant = p?.variantId?.size || ''
+                            const price = p?.sellingPrice || 0
+                            const qty = p?.qty || 0
+                            const lineTotal = price * qty
+                            const hasMarkdown = (p?.mrp || 0) > price
+                            return (
+                                <View style={[s.row, i % 2 === 1 ? s.rowAlt : null]} key={p?.variantId?._id || p?._id || i} wrap={false}>
+                                    <Text style={[s.num, s.cNum]}>{String(i + 1).padStart(2, '0')}</Text>
+                                    <View style={s.cProd}>
+                                        <Text style={s.pName}>{name}</Text>
+                                        {!!variant && <Text style={s.pVariant}>{variant}</Text>}
+                                    </View>
+                                    <View style={s.cPrice}>
+                                        <Text style={s.amount}>{money(price)}</Text>
+                                        {hasMarkdown && <Text style={s.strike}>{money(p.mrp)}</Text>}
+                                    </View>
+                                    <Text style={[s.qty, s.cQty]}>{qty}</Text>
+                                    <Text style={[s.amountStrong, s.cTotal]}>{money(lineTotal)}</Text>
+                                </View>
+                            )
+                        })}
+                    </View>
 
-                        {(order?.paidAmount > 0 || order?.remainingAmount > 0) && (
-                            <View style={s.payBox}>
-                                {order?.paidAmount > 0 && (
-                                    <View style={[s.payRow, order?.remainingAmount > 0 ? s.payRowBorder : null]}>
-                                        <Text style={s.payLabel}>Amount Paid</Text>
-                                        <Text style={s.payVal}>{money(order.paidAmount)}</Text>
+                    {/* Notes + totals */}
+                    <View style={s.lower} wrap={false}>
+                        <View style={s.notes}>
+                            {!!order?.ordernote && (
+                                <View>
+                                    <SectionLabel icon={FiFileText}>Order note</SectionLabel>
+                                    <Text style={s.noteBox}>{order.ordernote}</Text>
+                                </View>
+                            )}
+                            {!!shipment?.awb && (
+                                <View>
+                                    <SectionLabel icon={FiTruck}>Shipment</SectionLabel>
+                                    <View style={s.shipBox}>
+                                        <Text style={s.shipText}>{shipment.courier || 'Courier'} · AWB {shipment.awb}</Text>
+                                    </View>
+                                </View>
+                            )}
+                            <SectionLabel icon={FiGift}>Summary</SectionLabel>
+                            <Text style={s.noteBox}>
+                                {itemCount} {itemCount === 1 ? 'item' : 'items'} across {products.length} {products.length === 1 ? 'product' : 'products'}. Shipping is on us.
+                            </Text>
+                        </View>
+
+                        <View style={s.totals}>
+                            <View style={s.totalsInner}>
+                                <View style={s.sumRow}>
+                                    <Text style={s.sumLabel}>{mrpSavings > 0 ? 'Total MRP' : 'Subtotal'}</Text>
+                                    <Text style={s.amount}>{money(mrpSavings > 0 ? mrpTotal : order?.subtotal)}</Text>
+                                </View>
+                                {mrpSavings > 0 && (
+                                    <View style={s.sumRow}>
+                                        <Text style={s.sumLabel}>Discount on MRP</Text>
+                                        <Text style={s.sumGreen}>− {money(mrpSavings)}</Text>
                                     </View>
                                 )}
-                                {order?.remainingAmount > 0 && (
-                                    <View style={s.payRow}>
-                                        <Text style={s.payLabel}>{paymentMethod === 'cod' ? 'Pay on Delivery' : 'Remaining'}</Text>
-                                        <Text style={s.payVal}>{money(order.remainingAmount)}</Text>
+                                {order?.couponDiscountAmount > 0 && (
+                                    <View style={s.sumRow}>
+                                        <Text style={s.sumLabel}>Coupon discount</Text>
+                                        <Text style={s.sumGreen}>− {money(order.couponDiscountAmount)}</Text>
                                     </View>
                                 )}
+                                <View style={s.sumRow}>
+                                    <Text style={s.sumLabel}>Shipping</Text>
+                                    <Text style={s.free}>Free</Text>
+                                </View>
                             </View>
-                        )}
+
+                            <View style={s.grand}>
+                                <Text style={s.grandLabel}>Grand total</Text>
+                                <Text style={s.grandVal}>{money(order?.totalAmount)}</Text>
+                            </View>
+
+                            {order?.paidAmount > 0 && (
+                                <View style={s.payRow}>
+                                    <Text style={s.sumLabel}>Amount paid</Text>
+                                    <Text style={s.amountStrong}>{money(order.paidAmount)}</Text>
+                                </View>
+                            )}
+                            {order?.remainingAmount > 0 && (
+                                <View style={s.payRow}>
+                                    <Text style={s.sumLabel}>{paymentMethod === 'cod' ? 'Pay on delivery' : 'Remaining'}</Text>
+                                    <Text style={s.amountStrong}>{money(order.remainingAmount)}</Text>
+                                </View>
+                            )}
+
+                            {totalSavings > 0 && (
+                                <View style={s.saved}>
+                                    <PdfIcon icon={FiGift} size={8} color={C.pine} />
+                                    <Text style={s.savedText}>
+                                        You saved <Text style={s.savedAmount}>{money(totalSavings)}</Text> on this order
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
                     </View>
                 </View>
 
                 {/* Footer */}
-                <View style={s.foot}>
-                    <Text style={s.thanks}>Thank you for shopping with {BRAND.name}!</Text>
-                    <Text style={s.footSmall}>
-                        This is a computer-generated invoice and does not require a signature.{'\n'}
-                        For any queries about your order, contact us at {BRAND.email}.
-                    </Text>
+                <View style={s.foot} fixed>
+                    <View>
+                        <Text style={s.thanks}>Thank you for shopping with {BRAND.name}</Text>
+                        <Text style={s.footSmall}>Computer-generated invoice — no signature required. Questions? {BRAND.email}</Text>
+                    </View>
+                    <Text style={s.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
                 </View>
 
             </Page>

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Search as SearchIcon, UserRound } from "lucide-react"
 import { useSelector } from "react-redux"
 
@@ -21,6 +22,20 @@ import ThemeToggle from "@/components/Application/Website/ThemeToggle"
 import { MobileShopMenu, ShopMegaMenu } from "@/components/Application/Website/ShopMegaMenu"
 import { BrandButton, BrandOutlineButton } from "@/components/Application/Website/BrandButton"
 import userIcon from "@/public/assets/images/user.png"
+import logoGreen from "@/public/assets/images/hero/logo-green.png"
+import logoYellow from "@/public/assets/images/hero/logo-yellow.png"
+
+// Emblem beside the wordmark: green on the light theme, sun yellow on dark,
+// matching --brand-primary. Both render and CSS picks one, so there is no
+// flash while next-themes resolves the theme.
+function LogoMark({ className }) {
+  return (
+    <span className={`relative inline-block shrink-0 ${className}`} aria-hidden>
+      <Image src={logoGreen} alt="" fill sizes="48px" priority className="object-contain dark:hidden" />
+      <Image src={logoYellow} alt="" fill sizes="48px" priority className="hidden object-contain dark:block" />
+    </span>
+  )
+}
 
 const defaultMenu = [
   { title: "Shop", url: "/shop" },
@@ -86,9 +101,10 @@ export default function Navbar({
 
           <Link
             href={logo.url}
-            className="font-header text-[1.75rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
+            className="flex items-center gap-2.5 font-header text-[1.75rem] font-semibold uppercase leading-none tracking-[0.04em] text-[var(--brand-primary)] transition-colors hover:text-[var(--brand-primary-hover)]"
             aria-label={logo.alt}
           >
+            <LogoMark className="size-8" />
             {logo.title}
           </Link>
 
@@ -136,10 +152,11 @@ export default function Navbar({
         <div className="flex items-center justify-between lg:hidden" role="navigation" aria-label="Mobile navigation">
           <Link
             href={logo.url}
-            className="min-w-0 truncate font-header text-[clamp(1.125rem,4.4vw+0.25rem,1.375rem)] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]"
+            className="flex min-w-0 items-center gap-2 font-header text-[clamp(1.125rem,4.4vw+0.25rem,1.375rem)] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]"
             aria-label={logo.alt}
           >
-            {logo.title}
+            <LogoMark className="size-6" />
+            <span className="truncate">{logo.title}</span>
           </Link>
 
           {/* Three 40px tap targets; the theme switch lives in the menu sheet
@@ -172,7 +189,8 @@ export default function Navbar({
               </SheetTrigger>
               <SheetContent className="flex w-[85%] max-w-sm gap-0 border-l border-[var(--line-soft)] bg-background p-0 sm:max-w-sm">
                 <SheetHeader className="flex-shrink-0 border-b border-[var(--line-soft)] px-5 py-5">
-                  <SheetTitle className="font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]">
+                  <SheetTitle className="flex items-center gap-2 font-header text-[1.375rem] font-semibold uppercase leading-none tracking-[0.02em] text-[var(--brand-primary)]">
+                    <LogoMark className="size-6" />
                     {logo.title}
                   </SheetTitle>
                 </SheetHeader>

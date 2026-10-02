@@ -20,7 +20,6 @@ const Header = ({ navCategories }) => {
         <Navbar
           logo={{
             url: WEBSITE_HOME,
-            src: '/assets/images/hero/logo.png',
             alt: 'Energyflow logo',
             title: 'Energyflow',
           }}
