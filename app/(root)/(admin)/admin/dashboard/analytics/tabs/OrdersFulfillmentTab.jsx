@@ -21,7 +21,7 @@ const SectionLabel = ({ icon: Icon, bg, fg = 'var(--primary-foreground)', title,
 )
 
 const OrdersFulfillmentTab = ({ data, isLoading }) => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
         {/* Pipeline + Payment */}
         <div>
             <SectionLabel icon={Package} bg="var(--chart-2)" fg="#0A2F24" title="Order Pipeline & Payments" description="Current order status flow and payment breakdown" />

@@ -10,12 +10,12 @@ const AccountCard = ({ icon: Icon, title, description, action, className, bodyCl
         {...props}
     >
         {title && (
-            <header className="flex flex-wrap items-center justify-between gap-3 border-b border-line-soft px-5 py-4">
-                <div className="flex min-w-0 items-center gap-2.5">
-                    {Icon && <Icon className="size-4 shrink-0 text-[var(--brand-primary)]" aria-hidden="true" />}
+            <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2.5 border-b border-line-soft px-4 py-3.5 sm:px-5 sm:py-4">
+                <div className="flex min-w-0 flex-1 items-start gap-2.5">
+                    {Icon && <Icon className="mt-1 size-4 shrink-0 text-[var(--brand-primary)]" aria-hidden="true" />}
                     <div className="min-w-0">
-                        <h2 className="text-lg font-semibold text-[var(--brand-primary)]">{title}</h2>
-                        {description && <p className="text-[13px] text-foreground/60">{description}</p>}
+                        <h2 className="text-base leading-snug font-semibold text-[var(--brand-primary)] sm:text-lg">{title}</h2>
+                        {description && <p className="mt-0.5 text-xs leading-relaxed text-foreground/60 sm:text-[13px]">{description}</p>}
                     </div>
                 </div>
                 {action}

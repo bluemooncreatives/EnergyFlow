@@ -38,14 +38,14 @@ const SalesRevenueTab = ({ data, isLoading, kpis, timeline }) => {
     ] : Array.from({ length: 8 }, (_, i) => ({ label: ['Net sales','Orders','Avg. order value','Units sold','Collected','Outstanding','Cancellation rate','Coupon discounts'][i], spark: i < 4 ? [] : undefined })), [kpis, timeline, data])
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Action center */}
             <ActionCenter actions={data?.actions} loading={isLoading} />
 
             {/* KPI tiles */}
             <div>
                 <SectionLabel icon={IndianRupee} bg="var(--chart-1)" title="Sales KPIs" description="Compared with the previous period of equal length" />
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                     {tiles.map((tile, i) => <KpiTile key={tile.label} index={i} {...tile} loading={isLoading || !data} />)}
                 </div>
             </div>

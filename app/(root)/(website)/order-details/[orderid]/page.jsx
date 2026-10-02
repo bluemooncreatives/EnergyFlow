@@ -75,14 +75,14 @@ const OrderDetails = async ({ params }) => {
         <div className='font-neue'>
             <WebsiteBreadcrumb props={breadcrumb} />
 
-            <section className='ef-container py-10 lg:py-14'>
+            <section className='ef-container py-6 sm:py-10 lg:py-14'>
                 <div className='mx-auto w-full max-w-5xl'>
 
                     {/* ── Top bar ── */}
-                    <div className='mb-6 flex flex-wrap items-center justify-between gap-4'>
+                    <div className='mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6 sm:gap-4'>
                         <Link
                             href={USER_ORDERS}
-                            className='inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-foreground'
+                            className='-mx-2 inline-flex min-h-10 items-center gap-1.5 rounded-[var(--radius-sm)] px-2 text-[0.8125rem] font-medium text-ink-muted transition-colors hover:text-foreground'
                         >
                             <ArrowLeft className='size-3.5' /> Back to orders
                         </Link>
@@ -93,21 +93,21 @@ const OrderDetails = async ({ params }) => {
 
                     {/* ── Header card ── */}
                     <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
-                        <div className='flex flex-col gap-4 border-b border-border/60 bg-surface-well/70 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6'>
+                        <div className='flex flex-col gap-3 border-b border-border/60 bg-surface-well/70 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-5'>
                             <div className='flex min-w-0 items-start gap-3'>
-                                <div className='flex size-11 flex-shrink-0 items-center justify-center rounded-full bg-brand text-on-brand'>
-                                    <ShoppingBag className='size-5' />
+                                <div className='flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-brand text-on-brand sm:size-11'>
+                                    <ShoppingBag className='size-[18px] sm:size-5' />
                                 </div>
                                 <div className='min-w-0'>
-                                    <h1 className='break-all text-lg font-medium text-ink-strong sm:text-xl'>
+                                    <h1 className='break-all text-base leading-snug font-medium text-ink-strong sm:text-xl'>
                                         Order #{orderData?.order_id}
                                     </h1>
                                     {placedOn && (
-                                        <p className='mt-0.5 text-[13px] text-muted-foreground'>Placed on {placedOn}</p>
+                                        <p className='mt-0.5 text-xs text-muted-foreground sm:text-[13px]'>Placed on {placedOn}</p>
                                     )}
                                 </div>
                             </div>
-                            <p className='text-[13px] text-muted-foreground sm:text-right'>
+                            <p className='pl-[52px] text-[13px] text-muted-foreground sm:pl-0 sm:text-right'>
                                 {itemCount} {itemCount === 1 ? 'item' : 'items'} · <span className='font-semibold text-foreground'>{fmt(orderData?.totalAmount)}</span>
                             </p>
                         </div>
@@ -120,15 +120,15 @@ const OrderDetails = async ({ params }) => {
                     </div>
 
                     {/* ── Main grid ── */}
-                    <div className='mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px]'>
+                    <div className='mt-4 grid grid-cols-1 items-start gap-4 sm:mt-6 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]'>
 
                         {/* LEFT: items + shipping */}
-                        <div className='min-w-0 space-y-6'>
+                        <div className='min-w-0 space-y-4 sm:space-y-6'>
 
                             {/* Items */}
                             <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
-                                <div className='flex items-center justify-between border-b border-border/60 px-5 py-4'>
-                                    <h2 className='flex items-center gap-2 text-[1.0625rem] font-medium text-ink-strong'>
+                                <div className='flex items-center justify-between border-b border-border/60 px-4 py-3.5 sm:px-5 sm:py-4'>
+                                    <h2 className='flex items-center gap-2 text-base sm:text-[1.0625rem] font-medium text-ink-strong'>
                                         <Package className='size-[18px] text-brand' /> Items
                                     </h2>
                                     <span className='rounded-[var(--radius-control)] bg-surface-well px-2.5 py-1 text-[0.75rem] font-medium text-ink-body'>
@@ -155,8 +155,8 @@ const OrderDetails = async ({ params }) => {
                                                 ? <Link href={WEBSITE_PRODUCT_DETAILS(product.productId)} className='transition-colors hover:text-brand'>{name}</Link>
                                                 : name
                                             return (
-                                                <div key={product?.variantId?._id || product?._id || idx} className='flex gap-4 p-5'>
-                                                    <div className='relative h-[96px] w-[72px] flex-shrink-0 overflow-hidden rounded-well'>
+                                                <div key={product?.variantId?._id || product?._id || idx} className='flex gap-3 p-4 sm:gap-4 sm:p-5'>
+                                                    <div className='relative h-[80px] w-[60px] flex-shrink-0 overflow-hidden rounded-well sm:h-[96px] sm:w-[72px]'>
                                                         <Image src={media} fill sizes='72px' alt={name} className='object-cover object-center' />
                                                     </div>
                                                     <div className='flex min-w-0 flex-1 flex-col'>
@@ -168,7 +168,7 @@ const OrderDetails = async ({ params }) => {
                                                                 {size}
                                                             </span>
                                                         )}
-                                                        <div className='mt-auto flex items-end justify-between pt-3'>
+                                                        <div className='mt-auto flex items-end justify-between gap-2 pt-2 sm:pt-3'>
                                                             <span className='text-[13px] text-muted-foreground'>
                                                                 {fmt(product?.sellingPrice)} × {product?.qty}
                                                             </span>
@@ -189,13 +189,13 @@ const OrderDetails = async ({ params }) => {
 
                             {/* Shipping address */}
                             <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
-                                <div className='flex items-center gap-2 border-b border-border/60 px-5 py-4'>
+                                <div className='flex items-center gap-2 border-b border-border/60 px-4 py-3.5 sm:px-5 sm:py-4'>
                                     <MapPin className='size-[18px] text-brand' />
-                                    <h2 className='text-[1.0625rem] font-medium text-ink-strong'>Shipping Address</h2>
+                                    <h2 className='text-base sm:text-[1.0625rem] font-medium text-ink-strong'>Shipping Address</h2>
                                 </div>
-                                <div className='px-5 py-5'>
+                                <div className='px-4 py-4 sm:px-5 sm:py-5'>
                                     <p className='text-sm font-semibold text-foreground'>{orderData?.name}</p>
-                                    <p className='mt-1 text-[13px] leading-relaxed text-muted-foreground'>
+                                    <p className='mt-1 break-words text-[13px] leading-relaxed text-muted-foreground'>
                                         {[orderData?.address, orderData?.landmark, orderData?.city, orderData?.state, orderData?.country, orderData?.pincode].filter(Boolean).join(', ')}
                                     </p>
                                     <div className='mt-3 flex flex-col gap-1 text-[13px] text-muted-foreground sm:flex-row sm:gap-6'>
@@ -205,7 +205,7 @@ const OrderDetails = async ({ params }) => {
                                     {orderData?.ordernote && (
                                         <div className='mt-4 rounded-lg border border-border/50 bg-muted/30 px-3 py-2.5'>
                                             <p className='text-[0.75rem] font-medium text-ink-muted'>Order Note</p>
-                                            <p className='mt-1 text-[13px] text-foreground'>{orderData.ordernote}</p>
+                                            <p className='mt-1 break-words whitespace-pre-line text-[13px] text-foreground'>{orderData.ordernote}</p>
                                         </div>
                                     )}
                                 </div>
@@ -218,11 +218,11 @@ const OrderDetails = async ({ params }) => {
 
                                 {/* Payment summary */}
                                 <div className='overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)]'>
-                                    <div className='border-b border-border/60 px-5 py-4'>
-                                        <h2 className='text-[1.0625rem] font-medium text-ink-strong'>Order Summary</h2>
+                                    <div className='border-b border-border/60 px-4 py-3.5 sm:px-5 sm:py-4'>
+                                        <h2 className='text-base sm:text-[1.0625rem] font-medium text-ink-strong'>Order Summary</h2>
                                     </div>
 
-                                    <div className='space-y-2.5 px-5 py-4'>
+                                    <div className='space-y-2.5 px-4 py-4 sm:px-5'>
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='text-muted-foreground'>{mrpSavings > 0 ? 'Total MRP' : 'Subtotal'}</span>
                                             <span className='font-medium text-foreground'>{fmt(mrpSavings > 0 ? mrpTotal : orderData?.subtotal)}</span>
@@ -248,19 +248,19 @@ const OrderDetails = async ({ params }) => {
 
                                         <div className='flex items-center justify-between'>
                                             <span className='text-base font-semibold text-foreground'>Total</span>
-                                            <span className='text-xl font-semibold text-foreground'>{fmt(orderData?.totalAmount)}</span>
+                                            <span className='text-lg font-semibold text-foreground sm:text-xl'>{fmt(orderData?.totalAmount)}</span>
                                         </div>
 
                                         {totalSavings > 0 && (
-                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-success/[0.08] px-3 py-2 text-[13px] font-semibold text-success'>
-                                                <BadgeCheck className='size-4' />
+                                            <div className='flex items-center justify-center gap-1.5 rounded-lg bg-success/[0.08] px-3 py-2 text-center text-[13px] font-semibold text-success'>
+                                                <BadgeCheck className='size-4 shrink-0' />
                                                 You saved {fmt(totalSavings)} on this order
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Payment details */}
-                                    <div className='space-y-2.5 border-t border-border/60 bg-muted/20 px-5 py-4'>
+                                    <div className='space-y-2.5 border-t border-border/60 bg-muted/20 px-4 py-4 sm:px-5'>
                                         <div className='flex items-center justify-between text-sm'>
                                             <span className='flex items-center gap-1.5 text-muted-foreground'>
                                                 {paymentMethod === 'cod' ? <Wallet className='size-4' /> : <CreditCard className='size-4' />}
@@ -288,14 +288,14 @@ const OrderDetails = async ({ params }) => {
                                         )}
                                         {orderData?.payment_id && (
                                             <div className='flex items-center justify-between gap-3 text-sm'>
-                                                <span className='text-muted-foreground'>Transaction ID</span>
-                                                <span className='truncate font-mono text-[11px] text-foreground' title={orderData.payment_id}>{orderData.payment_id}</span>
+                                                <span className='shrink-0 text-muted-foreground'>Transaction ID</span>
+                                                <span className='min-w-0 truncate font-mono text-[11px] text-foreground' title={orderData.payment_id}>{orderData.payment_id}</span>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Actions */}
-                                    <div className='space-y-2.5 border-t border-border/60 px-5 py-5'>
+                                    <div className='space-y-2.5 border-t border-border/60 px-4 py-4 sm:px-5 sm:py-5'>
                                         <OrderDetailActions orderId={orderData?.order_id} />
                                         <Link
                                             href={WEBSITE_SHOP}
@@ -309,16 +309,16 @@ const OrderDetails = async ({ params }) => {
                                 {/* Help */}
                                 <Link
                                     href='/contact'
-                                    className='flex items-center gap-3 rounded-2xl border border-border/60 bg-background px-5 py-4 shadow-sm transition-colors hover:border-brand/40'
+                                    className='flex items-center gap-3 rounded-[var(--radius-card)] border border-border/60 bg-background px-4 py-3.5 shadow-sm transition-colors hover:border-brand/40 sm:px-5 sm:py-4'
                                 >
                                     <span className='flex size-9 flex-shrink-0 items-center justify-center rounded-full bg-tint-honey text-brand'>
                                         <Headset className='size-[18px]' />
                                     </span>
-                                    <div className='flex-1'>
+                                    <div className='min-w-0 flex-1'>
                                         <p className='text-[13px] font-semibold text-foreground'>Need help with this order?</p>
-                                        <p className='text-[11px] text-muted-foreground'>Our support team is here for you.</p>
+                                        <p className='text-xs text-muted-foreground'>Our support team is here for you.</p>
                                     </div>
-                                    <ChevronRight className='size-4 text-muted-foreground' />
+                                    <ChevronRight className='size-4 shrink-0 text-muted-foreground' />
                                 </Link>
                             </div>
                         </aside>

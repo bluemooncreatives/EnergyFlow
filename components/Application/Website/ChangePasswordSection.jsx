@@ -81,7 +81,7 @@ const ChangePasswordSection = ({ hasPassword = false, onPasswordSet }) => {
                 )}
 
                 <Form {...form}>
-                    <form className="grid grid-cols-1 gap-5 md:max-w-md" onSubmit={form.handleSubmit(onSubmit)}>
+                    <form className="grid grid-cols-1 gap-5" onSubmit={form.handleSubmit(onSubmit)}>
 
                         {hasPassword && (
                             <FormField
@@ -103,14 +103,16 @@ const ChangePasswordSection = ({ hasPassword = false, onPasswordSet }) => {
                             control={form.control}
                             name="password"
                             render={({ field }) => (
-                                <FormItem className="relative">
+                                <FormItem>
                                     <FormLabel className="text-[13px] text-foreground/60">New Password</FormLabel>
-                                    <FormControl>
-                                        <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="Enter new password" className="form-field !pr-10" {...field} />
-                                    </FormControl>
-                                    <button type="button" onClick={() => setShowPassword((p) => !p)} className="absolute right-3 top-[31px] cursor-pointer text-muted-foreground hover:text-foreground">
-                                        {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                                    </button>
+                                    <div className="relative">
+                                        <FormControl>
+                                            <Input type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="Enter new password" className="form-field !pr-11" {...field} />
+                                        </FormControl>
+                                        <button type="button" onClick={() => setShowPassword((p) => !p)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 flex -translate-y-1/2 cursor-pointer items-center text-muted-foreground hover:text-foreground">
+                                            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                                        </button>
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )}

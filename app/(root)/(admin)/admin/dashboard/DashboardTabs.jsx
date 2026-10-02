@@ -23,7 +23,7 @@ const TabsInner = ({ overview }) => {
 
     return (
         <Tabs value={tab} onValueChange={onChange} className="space-y-4">
-            <div className="w-full overflow-x-auto print:hidden">
+            <div className="no-scrollbar w-full overflow-x-auto print:hidden">
                 <TabsList>
                     <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm"><LayoutDashboard className="size-3.5 sm:size-4" aria-hidden="true" /> Overview</TabsTrigger>
                     <TabsTrigger value="analytics" className="gap-1.5 text-xs sm:text-sm"><BarChart3 className="size-3.5 sm:size-4" aria-hidden="true" /> Analytics &amp; Reports</TabsTrigger>

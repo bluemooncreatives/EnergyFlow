@@ -95,7 +95,7 @@ const Orders = () => {
                 description="You haven’t placed any orders. Explore our collections and find something you love."
                 action={
                     <Button asChild variant="brand" className="h-11 px-8 text-base font-semibold">
-                        <Link href={WEBSITE_SHOP}>Shop Now</Link>
+                        <Link href={WEBSITE_SHOP}>Shop now</Link>
                     </Button>
                 }
             />
@@ -132,8 +132,8 @@ const Orders = () => {
                 >
                     {/* Filters */}
                     {!isLoading && !error && hasOrders && (
-                        <div className="flex flex-col gap-3 border-b border-line-soft px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-                            <div role="tablist" aria-label="Filter orders by status" className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-0.5">
+                        <div className="flex flex-col gap-3 border-b border-line-soft px-4 py-3.5 sm:px-5 sm:py-4 lg:flex-row lg:items-center lg:justify-between">
+                            <div role="tablist" aria-label="Filter orders by status" className="no-scrollbar -mx-4 flex snap-x gap-1.5 overflow-x-auto px-4 sm:-mx-1 sm:px-1 lg:min-w-0">
                                 {TABS.map((tab) => {
                                     const active = status === tab.key
                                     return (
@@ -144,7 +144,7 @@ const Orders = () => {
                                             aria-selected={active}
                                             onClick={() => changeStatus(tab.key)}
                                             className={cn(
-                                                'inline-flex shrink-0 items-center gap-1.5 rounded-[var(--radius-control)] border px-3.5 py-1.5 text-sm font-semibold transition-colors',
+                                                'inline-flex h-9 shrink-0 snap-start items-center gap-1.5 rounded-[var(--radius-control)] border px-3 text-[13px] font-semibold whitespace-nowrap transition-colors sm:px-3.5 sm:text-sm',
                                                 active
                                                     ? 'border-transparent bg-brand text-on-brand'
                                                     : 'border-line-soft text-foreground/65 hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]'
@@ -158,7 +158,7 @@ const Orders = () => {
                                     )
                                 })}
                             </div>
-                            <div className="relative w-full lg:max-w-xs">
+                            <div className="relative w-full lg:max-w-xs lg:shrink-0">
                                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-foreground/40" aria-hidden="true" />
                                 <Input
                                     type="search"
@@ -167,14 +167,14 @@ const Orders = () => {
                                     placeholder="Search order ID or product"
                                     aria-label="Search orders"
                                     maxLength={80}
-                                    className="h-10 pl-9 pr-9 text-sm"
+                                    className="h-11 pl-9 pr-10 text-base sm:h-10 sm:text-sm"
                                 />
                                 {query && (
                                     <button
                                         type="button"
                                         onClick={() => changeQuery('')}
                                         aria-label="Clear search"
-                                        className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-foreground/50 hover:bg-surface-well hover:text-foreground"
+                                        className="absolute right-1.5 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-foreground/50 hover:bg-surface-well hover:text-foreground"
                                     >
                                         <X className="size-3.5" />
                                     </button>
@@ -187,14 +187,15 @@ const Orders = () => {
 
                     {/* Pagination */}
                     {!isLoading && !error && totalPages > 1 && (
-                        <nav aria-label="Orders pagination" className="flex items-center justify-between gap-3 border-t border-line-soft px-5 py-3">
-                            <p className="text-[13px] text-foreground/60">
+                        <nav aria-label="Orders pagination" className="flex items-center justify-between gap-3 border-t border-line-soft px-4 py-3 sm:px-5">
+                            <p className="text-xs text-foreground/60 sm:text-[13px]">
                                 {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, total)} of {total}
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button
                                     variant="outline"
                                     size="icon"
+                                    className="size-10 sm:size-9"
                                     onClick={() => goToPage(currentPage - 1)}
                                     disabled={currentPage <= 1}
                                     aria-label="Previous page"
@@ -207,6 +208,7 @@ const Orders = () => {
                                 <Button
                                     variant="outline"
                                     size="icon"
+                                    className="size-10 sm:size-9"
                                     onClick={() => goToPage(currentPage + 1)}
                                     disabled={currentPage >= totalPages}
                                     aria-label="Next page"

@@ -64,7 +64,7 @@ const UserPanelNavigation = () => {
     return (
         <div className="overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] font-neue">
             {/* User greeting */}
-            <div className="flex items-center justify-between gap-3 border-b border-line-soft px-5 py-4">
+            <div className="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-3.5 sm:px-5 sm:py-4">
                 {!hydrated ? (
                     // Auth state not resolved yet — show a skeleton instead of a
                     // misleading "User" placeholder that would flash before hydration.
@@ -84,7 +84,7 @@ const UserPanelNavigation = () => {
                             </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                            <p className="truncate text-base font-semibold text-[var(--brand-primary)]" data-testid="nav-user-name">
+                            <p className="truncate text-[15px] font-semibold text-[var(--brand-primary)] sm:text-base" data-testid="nav-user-name">
                                 {user?.name || 'My account'}
                             </p>
                             {user?.email && (
@@ -100,31 +100,31 @@ const UserPanelNavigation = () => {
                     onClick={handleLogout}
                     disabled={loggingOut}
                     aria-label="Log out"
-                    className="flex size-9 shrink-0 items-center justify-center rounded-full text-foreground/50 transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 lg:hidden"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full text-foreground/50 transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 lg:hidden"
                 >
                     {loggingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />}
                 </button>
             </div>
 
-            {/* Navigation links: a scrollable tab row on mobile, a list on desktop */}
+            {/* Navigation links: equal-width tabs on mobile, a list on desktop */}
             <nav aria-label="Account" className="p-2">
-                <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5 lg:overflow-visible">
+                <ul className="grid grid-cols-3 gap-1 lg:flex lg:flex-col lg:gap-0.5">
                     {navLinks.map(({ label, href, icon: Icon }) => {
                         const isActive = isActiveLink(pathname, href)
                         return (
-                            <li key={href} className="shrink-0 lg:shrink">
+                            <li key={href} className="min-w-0">
                                 <Link
                                     href={href}
                                     aria-current={isActive ? 'page' : undefined}
                                     className={cn(
-                                        'group flex items-center gap-2.5 rounded-[var(--radius-sm)] px-3.5 py-2.5 transition-all duration-200 lg:gap-3 lg:px-3',
+                                        'group flex min-h-11 items-center justify-center gap-1.5 rounded-[var(--radius-sm)] px-2 py-2.5 transition-all duration-200 sm:gap-2.5 sm:px-3.5 lg:justify-start lg:gap-3 lg:px-3',
                                         isActive
                                             ? 'bg-brand text-on-brand'
                                             : 'text-[var(--brand-primary)] hover:bg-[var(--brand-warm-bg)]'
                                     )}
                                 >
                                     <Icon className={cn('size-4 shrink-0', isActive ? 'text-on-brand/90' : 'text-foreground/40 group-hover:text-[var(--brand-primary)]')} />
-                                    <span className="text-[15px] font-semibold">{label}</span>
+                                    <span className="truncate text-[13px] font-semibold sm:text-sm lg:text-[15px]">{label}</span>
                                 </Link>
                             </li>
                         )

@@ -25,6 +25,7 @@ import DataTableToolbar from './data-table/DataTableToolbar'
 import DataTablePagination from './data-table/DataTablePagination'
 import DataTableColumnHeader from './data-table/DataTableColumnHeader'
 import DataTableViewOptions from './data-table/DataTableViewOptions'
+import DataTableMobileSort from './data-table/DataTableMobileSort'
 import ConfirmDialog from './data-table/ConfirmDialog'
 
 const SKELETON_ROWS = 6
@@ -70,7 +71,8 @@ const DELETE_COPY = {
  *  • Debounced search, click-to-sort headers, column visibility.
  *  • Selecting rows swaps the toolbar for a selection bar: export selected,
  *    move to bin / restore / delete forever, clear.
- *  • Select and Actions columns stay pinned while wide tables scroll.
+ *  • Select and Actions columns stay pinned while wide tables scroll; below
+ *    md the rows render as label/value cards with a sort menu instead.
  *  • Skeleton rows while loading, a thin progress bar while refreshing,
  *    an empty state that can clear the search, and an error state with retry.
  *  • Deletes confirm in an in-app dialog and step back a page when the last
@@ -257,7 +259,7 @@ const Datatable = ({
                     <div className="flex justify-end">
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon-sm" className="cursor-pointer" aria-label="Row actions">
+                                <Button variant="ghost" size="icon-sm" className="cursor-pointer max-md:size-9" aria-label="Row actions">
                                     <MoreHorizontal className="size-4" />
                                 </Button>
                             </DropdownMenuTrigger>
@@ -312,37 +314,74 @@ const Datatable = ({
                 : ''
 
     const dialogCopy = pendingDelete ? DELETE_COPY[pendingDelete.type]?.(pendingDelete.ids.length) : null
+    const pageRows = table.getRowModel().rows
+    const showError = !isLoading && isError && rows.length === 0
+    const showEmpty = !isLoading && !showError && pageRows.length === 0
+
+    // Error / empty copy shared by the desktop table and the phone card list.
+    const stateBlock = showError ? (
+        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
+            <span className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                <AlertTriangle className="size-5" aria-hidden="true" />
+            </span>
+            <p className="mt-4 font-semibold">Couldn’t load this table</p>
+            <p className="mt-1 text-sm text-muted-foreground">Check your connection and try again.</p>
+            <Button variant="outline" className="mt-5 h-10 gap-2 px-4 sm:h-9" onClick={() => refetch()}>
+                <RotateCcw className="size-4" /> Retry
+            </Button>
+        </div>
+    ) : showEmpty ? (
+        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
+            <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
+                {searching ? <SearchX className="size-5" aria-hidden="true" /> : <Inbox className="size-5" aria-hidden="true" />}
+            </span>
+            <p className="mt-4 break-all font-semibold">{searching ? `No matches for “${globalFilter}”` : 'Nothing here yet'}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+                {searching
+                    ? 'Try a shorter or different search term.'
+                    : deleteType === 'PD'
+                        ? 'The recycle bin is empty.'
+                        : 'New records will appear here as they come in.'}
+            </p>
+            {searching && (
+                <Button variant="outline" className="mt-5 h-10 px-4 sm:h-9" onClick={() => table.setGlobalFilter('')}>
+                    Clear search
+                </Button>
+            )}
+        </div>
+    ) : null
 
     return (
         <div className="admin-table overflow-hidden rounded-xl border bg-card shadow-[0_1px_2px_rgb(11_61_46/0.04)]">
             {/* Toolbar / selection bar */}
             <div className="flex min-h-[3.75rem] flex-col gap-3 border-b px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4">
                 {selectedCount > 0 ? (
-                    <div className="flex w-full flex-wrap items-center justify-between gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="flex w-full flex-col gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                         <div className="flex items-center gap-2 text-sm">
                             <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-primary px-2 text-xs font-semibold text-primary-foreground tabular-nums">
                                 {selectedCount}
                             </span>
                             <span className="font-medium">selected</span>
-                            <button type="button" onClick={() => setRowSelection({})} className="ml-1 inline-flex items-center gap-1 rounded-md px-2 py-1 text-muted-foreground transition hover:bg-muted hover:text-foreground">
+                            <button type="button" onClick={() => setRowSelection({})} className="ml-1 inline-flex min-h-9 items-center gap-1 rounded-md px-2 py-1 text-muted-foreground transition hover:bg-muted hover:text-foreground">
                                 <X className="size-3.5" aria-hidden="true" /> Clear
                             </button>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" className="h-9 gap-2 px-3" disabled={exportLoading} onClick={() => handleExport(table.getSelectedRowModel().rows)}>
-                                {exportLoading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />} Export selected
+                        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+                            <Button variant="outline" className="h-10 gap-2 px-3 sm:h-9" disabled={exportLoading} onClick={() => handleExport(table.getSelectedRowModel().rows)}>
+                                {exportLoading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+                                <span className="sm:hidden">Export</span><span className="max-sm:hidden">Export selected</span>
                             </Button>
                             {deleteType === 'SD' && (
-                                <Button variant="destructive" className="h-9 gap-2 px-3" onClick={() => handleDelete(selectedIds, 'SD')}>
+                                <Button variant="destructive" className="h-10 gap-2 px-3 sm:h-9" onClick={() => handleDelete(selectedIds, 'SD')}>
                                     <Trash2 className="size-4" /> Move to bin
                                 </Button>
                             )}
                             {deleteType === 'PD' && (
                                 <>
-                                    <Button variant="outline" className="h-9 gap-2 px-3" onClick={() => handleDelete(selectedIds, 'RSD')}>
+                                    <Button variant="outline" className="h-10 gap-2 px-3 sm:h-9" onClick={() => handleDelete(selectedIds, 'RSD')}>
                                         <RotateCcw className="size-4" /> Restore
                                     </Button>
-                                    <Button variant="destructive" className="h-9 gap-2 px-3" onClick={() => handleDelete(selectedIds, 'PD')}>
+                                    <Button variant="destructive" className="col-span-2 h-10 gap-2 px-3 sm:h-9" onClick={() => handleDelete(selectedIds, 'PD')}>
                                         <Trash className="size-4" /> Delete forever
                                     </Button>
                                 </>
@@ -352,21 +391,21 @@ const Datatable = ({
                 ) : (
                     <>
                         <DataTableToolbar table={table} searchPlaceholder="Search this table…" busy={isFetching} />
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-2 max-sm:[&>*]:flex-1">
+                            <DataTableMobileSort table={table} className="md:hidden" />
                             <DataTableViewOptions table={table} />
                             {deleteType !== 'PD' && trashView && (
-                                <Button asChild variant="outline" className="h-9 gap-2 px-3">
-                                    <Link href={trashView}>
+                                <Button asChild variant="outline" className="h-10 gap-2 px-3 sm:h-9">
+                                    <Link href={trashView} aria-label="Recycle bin">
                                         <Recycle className="size-4" aria-hidden="true" />
-                                        <span className="hidden sm:inline">Recycle bin</span>
-                                        <span className="sr-only sm:hidden">Recycle bin</span>
+                                        <span className="hidden lg:inline">Recycle bin</span>
                                     </Link>
                                 </Button>
                             )}
                             {exportEndpoint && (
-                                <Button className="h-9 gap-2 px-3" disabled={exportLoading || total === 0} onClick={() => handleExport([])}>
+                                <Button className="h-10 gap-2 px-3 sm:h-9" disabled={exportLoading || total === 0} onClick={() => handleExport([])}>
                                     {exportLoading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-                                    Export all
+                                    <span className="sm:hidden">Export</span><span className="max-sm:hidden">Export all</span>
                                 </Button>
                             )}
                         </div>
@@ -381,7 +420,7 @@ const Datatable = ({
                         <div className="admin-table__progress h-full w-1/3 bg-primary" />
                     </div>
                 )}
-                <div className="admin-table__scroll overflow-x-auto">
+                <div className="admin-table__scroll hidden overflow-x-auto md:block">
                     <table className="w-full caption-bottom border-separate border-spacing-0 text-sm">
                         <thead>
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -419,23 +458,12 @@ const Datatable = ({
                                         ))}
                                     </tr>
                                 ))
-                            ) : isError && rows.length === 0 ? (
+                            ) : stateBlock ? (
                                 <tr>
-                                    <td colSpan={visibleColumns} className="bg-card px-6 py-14">
-                                        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-                                            <span className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                                                <AlertTriangle className="size-5" aria-hidden="true" />
-                                            </span>
-                                            <p className="mt-4 font-semibold">Couldn’t load this table</p>
-                                            <p className="mt-1 text-sm text-muted-foreground">Check your connection and try again.</p>
-                                            <Button variant="outline" className="mt-5 h-9 gap-2 px-4" onClick={() => refetch()}>
-                                                <RotateCcw className="size-4" /> Retry
-                                            </Button>
-                                        </div>
-                                    </td>
+                                    <td colSpan={visibleColumns} className="bg-card px-6 py-14">{stateBlock}</td>
                                 </tr>
-                            ) : table.getRowModel().rows.length > 0 ? (
-                                table.getRowModel().rows.map((row) => (
+                            ) : (
+                                pageRows.map((row) => (
                                     <tr key={row.id} data-state={row.getIsSelected() ? 'selected' : undefined} className="group/row">
                                         {row.getVisibleCells().map((cell) => (
                                             <td
@@ -450,32 +478,74 @@ const Datatable = ({
                                         ))}
                                     </tr>
                                 ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={visibleColumns} className="bg-card px-6 py-14">
-                                        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-                                            <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
-                                                {searching ? <SearchX className="size-5" aria-hidden="true" /> : <Inbox className="size-5" aria-hidden="true" />}
-                                            </span>
-                                            <p className="mt-4 font-semibold">{searching ? `No matches for “${globalFilter}”` : 'Nothing here yet'}</p>
-                                            <p className="mt-1 text-sm text-muted-foreground">
-                                                {searching
-                                                    ? 'Try a shorter or different search term.'
-                                                    : deleteType === 'PD'
-                                                        ? 'The recycle bin is empty.'
-                                                        : 'New records will appear here as they come in.'}
-                                            </p>
-                                            {searching && (
-                                                <Button variant="outline" className="mt-5 h-9 px-4" onClick={() => table.setGlobalFilter('')}>
-                                                    Clear search
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Phones: one card per row, label/value pairs, actions top-right. */}
+                <div className="md:hidden">
+                    {isLoading ? (
+                        <ul aria-hidden="true" className="divide-y">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <li key={`skeleton-${i}`} className="flex gap-3 px-3 py-4">
+                                    <span className="size-4 shrink-0 animate-pulse rounded bg-muted" />
+                                    <div className="flex-1 space-y-2.5">
+                                        {Array.from({ length: 3 }).map((__, j) => (
+                                            <span key={j} className="block h-3.5 animate-pulse rounded bg-muted" style={{ width: `${55 + ((i * 7 + j * 13) % 40)}%` }} />
+                                        ))}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : stateBlock ? (
+                        <div className="px-4 py-12">{stateBlock}</div>
+                    ) : (
+                        <>
+                            <label className="flex min-h-11 items-center gap-3 border-b bg-muted px-3 text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+                                <Checkbox
+                                    checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+                                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                                    aria-label="Select all rows on this page"
+                                />
+                                Select all on this page
+                            </label>
+                            <ul className="divide-y">
+                                {pageRows.map((row) => {
+                                    const cells = row.getVisibleCells()
+                                    const dataCells = cells.filter((cell) => !cell.column.columnDef.meta?.pin)
+                                    const actionsCell = cells.find((cell) => cell.column.id === 'actions')
+                                    return (
+                                        <li
+                                            key={row.id}
+                                            data-state={row.getIsSelected() ? 'selected' : undefined}
+                                            className="flex items-start gap-3 bg-card px-3 py-3.5 transition-colors data-[state=selected]:bg-secondary"
+                                        >
+                                            <Checkbox
+                                                className="mt-0.5"
+                                                checked={row.getIsSelected()}
+                                                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                                                aria-label="Select row"
+                                            />
+                                            <dl className="grid min-w-0 flex-1 grid-cols-[minmax(0,6.5rem)_minmax(0,1fr)] items-baseline gap-x-3 gap-y-2 text-sm">
+                                                {dataCells.map((cell) => (
+                                                    <div key={cell.id} className="contents">
+                                                        <dt className="truncate text-xs text-muted-foreground">{cell.column.columnDef.meta?.title || cell.column.id}</dt>
+                                                        <dd className="min-w-0 break-words [&_.truncate]:max-w-full">{flexRender(cell.column.columnDef.cell, cell.getContext())}</dd>
+                                                    </div>
+                                                ))}
+                                            </dl>
+                                            {actionsCell && (
+                                                <div className="-my-1 -mr-1 shrink-0">
+                                                    {flexRender(actionsCell.column.columnDef.cell, actionsCell.getContext())}
+                                                </div>
+                                            )}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </>
+                    )}
                 </div>
             </div>
 

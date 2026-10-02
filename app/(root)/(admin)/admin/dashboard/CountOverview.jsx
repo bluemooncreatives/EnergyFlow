@@ -71,17 +71,17 @@ const CountOverview = () => {
     if (error) return <div role="alert" className="rounded-lg bg-card p-4 ring-1 ring-foreground/10"><p className="text-sm">Could not load store totals.</p><button type="button" onClick={refetch} className="mt-2 text-sm font-medium underline">Try again</button></div>
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {cards.map((card) => (
                 <Link key={card.title} href={card.href} aria-label={`${card.title}: ${card.value}`}>
                     <Card
-                        className="rounded-xl border-l-4 p-4 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
+                        className="rounded-xl border-l-4 p-3.5 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
                         style={{ borderLeftColor: `var(${card.chartVar})` }}
                     >
                         <div className="flex items-start justify-between gap-2">
-                            <p className="text-sm font-medium text-foreground">{card.title}</p>
+                            <p className="text-xs font-medium leading-snug text-foreground sm:text-sm">{card.title}</p>
                             <span
-                                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
+                                className="inline-flex size-8 shrink-0 items-center justify-center rounded-full sm:size-9"
                                 style={{
                                     backgroundColor: `var(${card.chartVar})`,
                                     color: card.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)'
@@ -91,7 +91,7 @@ const CountOverview = () => {
                                 <card.icon className="size-4" />
                             </span>
                         </div>
-                        <p className="mt-3 text-2xl sm:text-3xl font-bold leading-none tracking-tight tabular-nums">
+                        <p className="mt-2.5 truncate text-xl sm:mt-3 sm:text-3xl font-bold leading-none tracking-tight tabular-nums">
                             {loading || !countData ? (
                                 <span className="inline-block h-7 w-20 animate-pulse rounded bg-muted align-middle" aria-label="Loading" />
                             ) : (

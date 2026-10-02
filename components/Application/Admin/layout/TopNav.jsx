@@ -12,10 +12,11 @@ import {
 const TopNav = ({ className, links = [], ...props }) => {
     return (
         <>
-            <div className="lg:hidden">
+            {/* Phones reach these through the sidebar, so the extra menu is md-only. */}
+            <div className="hidden md:block lg:hidden">
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
-                        <Button size="icon" variant="outline" className="md:size-7">
+                        <Button size="icon" variant="outline" className="md:size-7" aria-label="Quick links">
                             <Menu className="size-4" />
                         </Button>
                     </DropdownMenuTrigger>

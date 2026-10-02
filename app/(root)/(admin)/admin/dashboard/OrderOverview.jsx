@@ -114,7 +114,7 @@ export function OrderOverview() {
                 </div>
             </div>
 
-            <ChartContainer config={chartConfig} className="h-[460px] w-full aspect-auto">
+            <ChartContainer config={chartConfig} className="h-[300px] w-full aspect-auto sm:h-[460px]">
                 <BarChart
                     accessibilityLayer
                     data={chartData}

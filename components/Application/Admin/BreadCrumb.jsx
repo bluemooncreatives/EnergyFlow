@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/breadcrumb"
 const BreadCrumb = ({ breadcrumbData }) => {
     return (
-        <Breadcrumb className="mb-5">
+        <Breadcrumb className="mb-4 sm:mb-5">
             <BreadcrumbList>
                 {breadcrumbData.length > 0 && breadcrumbData.map((data, index) => {
                     const isLast = index === breadcrumbData.length - 1
@@ -24,7 +24,7 @@ const BreadCrumb = ({ breadcrumbData }) => {
                             :
                             <div key={index} className="flex items-center">
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage className="font-semibold">{data.label}</BreadcrumbPage>
+                                    <BreadcrumbPage className="line-clamp-1 break-all font-semibold">{data.label}</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </div>
                     )

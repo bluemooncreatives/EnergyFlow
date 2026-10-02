@@ -33,11 +33,11 @@ const CustomersTab = ({ data, isLoading, kpis, timeline }) => {
     ] : Array.from({ length: 4 }, (_, i) => ({ label: ['Buyers','New accounts','Returning buyers','Cancellation rate'][i], spark: i === 1 ? [] : undefined })), [kpis, timeline])
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Customer KPIs */}
             <div>
                 <SectionLabel icon={Users} bg="var(--chart-1)" title="Customer KPIs" description="Acquisition, retention and engagement metrics" />
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                     {tiles.map((tile, i) => <KpiTile key={tile.label} index={i + 4} {...tile} loading={isLoading || !data} />)}
                 </div>
             </div>

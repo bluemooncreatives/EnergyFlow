@@ -172,19 +172,19 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
     return (
         <div className={cn('rounded-xl border bg-card text-card-foreground shadow-sm print:hidden', className)}>
             {/* Top Bar: Mode Selector & Active Badge */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b px-3.5 py-2.5 sm:px-4">
-                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b px-3 py-2.5 sm:px-4">
+                <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
                     <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
                         <Filter className="size-3.5 text-primary" /> Filter by:
                     </span>
 
-                    {/* Mode buttons */}
-                    <div className="flex flex-wrap items-center rounded-lg bg-muted p-0.5">
+                    {/* Mode buttons: one scrollable segmented row on phones */}
+                    <div className="no-scrollbar flex max-w-full items-center overflow-x-auto rounded-lg bg-muted p-0.5 max-sm:w-full">
                         <button
                             type="button"
                             onClick={() => setSelectedMode('presets')}
                             className={cn(
-                                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition',
+                                'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-2 sm:py-1',
                                 selectedMode === 'presets' ? 'bg-card text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
@@ -194,7 +194,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             type="button"
                             onClick={() => setSelectedMode('month')}
                             className={cn(
-                                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition',
+                                'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-2 sm:py-1',
                                 selectedMode === 'month' ? 'bg-card text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
@@ -204,7 +204,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             type="button"
                             onClick={() => setSelectedMode('year')}
                             className={cn(
-                                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition',
+                                'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-2 sm:py-1',
                                 selectedMode === 'year' ? 'bg-card text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
@@ -214,7 +214,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             type="button"
                             onClick={() => setSelectedMode('date')}
                             className={cn(
-                                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition',
+                                'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-2 sm:py-1',
                                 selectedMode === 'date' ? 'bg-card text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
@@ -224,7 +224,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             type="button"
                             onClick={() => setSelectedMode('custom')}
                             className={cn(
-                                'flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition',
+                                'flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition sm:px-2 sm:py-1',
                                 selectedMode === 'custom' ? 'bg-card text-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'
                             )}
                         >
@@ -234,10 +234,10 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                 </div>
 
                 {/* Right: Active Filter Pill + Reset */}
-                <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                        <span className="size-1.5 rounded-full bg-primary" />
-                        {activeLabel}
+                <div className="flex min-w-0 items-center gap-2 max-sm:w-full max-sm:justify-between">
+                    <span className="inline-flex min-w-0 items-center gap-1.5 rounded-full border bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                        <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+                        <span className="truncate">{activeLabel}</span>
                     </span>
                     {isNonDefault && (
                         <Button
@@ -245,7 +245,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             variant="ghost"
                             size="sm"
                             onClick={handleReset}
-                            className="h-7 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground"
+                            className="h-8 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground sm:h-7"
                             title="Reset to 30 Days default"
                         >
                             <RotateCcw className="size-3" /> Reset
@@ -255,10 +255,10 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
             </div>
 
             {/* Bottom Controls Area depending on selectedMode */}
-            <div className="px-3.5 py-2.5 sm:px-4">
+            <div className="px-3 py-3 sm:px-4 sm:py-2.5">
                 {/* 1. PRESETS MODE */}
                 {selectedMode === 'presets' && (
-                    <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="grid grid-cols-5 gap-1.5 sm:flex sm:flex-wrap sm:items-center">
                         {PRESETS.map((p) => {
                             const isSelected = activeMode === 'presets' && range === p.id
                             return (
@@ -267,7 +267,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                     type="button"
                                     onClick={() => handlePreset(p.id)}
                                     className={cn(
-                                        'rounded-md px-2.5 py-1 text-xs font-medium transition',
+                                        'whitespace-nowrap rounded-md px-1.5 py-2 text-xs font-medium transition sm:px-2.5 sm:py-1',
                                         isSelected
                                             ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
                                             : 'bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -286,12 +286,13 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                         <div className="flex items-center gap-2">
                             <label className="text-xs font-medium text-muted-foreground">Year:</label>
                             <select
+                                aria-label="Year"
                                 value={draftYear}
                                 onChange={(e) => {
                                     setDraftYear(e.target.value)
                                     handleApplyMonth(draftMonth, e.target.value)
                                 }}
-                                className="h-8 rounded-md border border-input bg-background px-2.5 text-xs font-medium shadow-xs focus:outline-hidden focus:ring-1 focus:ring-primary"
+                                className="h-9 rounded-md border border-input bg-background px-2.5 text-base font-medium shadow-xs focus:outline-hidden focus:ring-1 focus:ring-primary sm:h-8 sm:text-xs"
                             >
                                 {availableYears.map((y) => (
                                     <option key={y} value={y}>{y}</option>
@@ -300,7 +301,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                         </div>
 
                         {/* Month Pills */}
-                        <div className="flex flex-wrap items-center gap-1">
+                        <div className="grid w-full grid-cols-6 gap-1 sm:flex sm:w-auto sm:flex-wrap sm:items-center">
                             {MONTHS.map((m) => {
                                 const isCurrent = activeMode === 'month' && String(month || draftMonth) === m.value && String(year || draftYear) === String(draftYear)
                                 return (
@@ -309,7 +310,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                         type="button"
                                         onClick={() => handleApplyMonth(m.value, draftYear)}
                                         className={cn(
-                                            'rounded-md px-2 py-1 text-xs font-medium transition',
+                                            'rounded-md px-2 py-2 text-xs font-medium transition sm:py-1',
                                             isCurrent
                                                 ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
                                                 : 'bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -322,12 +323,12 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                         </div>
 
                         {/* Quick Month Actions */}
-                        <div className="flex items-center gap-1.5 border-l pl-3">
+                        <div className="grid w-full grid-cols-2 gap-1.5 sm:flex sm:w-auto sm:items-center sm:border-l sm:pl-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => handleApplyMonth(String(currentMonthIst()), String(currentYearIst()))}
                             >
                                 Current Month
@@ -336,7 +337,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => {
                                     const curM = currentMonthIst()
                                     const lastM = curM === 1 ? 12 : curM - 1
@@ -363,7 +364,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                         type="button"
                                         onClick={() => handleApplyYear(y)}
                                         className={cn(
-                                            'rounded-md px-3 py-1 text-xs font-medium transition',
+                                            'rounded-md px-3 py-2 text-xs font-medium transition sm:py-1',
                                             isCurrent
                                                 ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
                                                 : 'bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -374,12 +375,12 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                 )
                             })}
                         </div>
-                        <div className="flex items-center gap-1.5 border-l pl-3">
+                        <div className="grid w-full grid-cols-2 gap-1.5 sm:flex sm:w-auto sm:items-center sm:border-l sm:pl-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => handleApplyYear(String(currentYearIst()))}
                             >
                                 This Year ({currentYearIst()})
@@ -388,7 +389,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => handleApplyYear(String(currentYearIst() - 1))}
                             >
                                 Last Year ({currentYearIst() - 1})
@@ -412,22 +413,22 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                 setDraftDate(e.target.value)
                                 if (e.target.value) handleApplyDate(e.target.value)
                             }}
-                            className="h-8 rounded-md border border-input bg-background px-2.5 text-xs font-medium shadow-xs"
+                            className="h-10 min-w-0 rounded-md border border-input bg-background px-2.5 text-base font-medium shadow-xs max-sm:flex-1 sm:h-8 sm:text-xs"
                         />
                         <Button
                             type="button"
                             size="sm"
-                            className="h-8 px-3 text-xs"
+                            className="h-10 px-3 text-xs sm:h-8"
                             onClick={() => handleApplyDate(draftDate)}
                         >
                             Filter Date
                         </Button>
-                        <div className="flex items-center gap-1.5 border-l pl-3">
+                        <div className="grid w-full grid-cols-2 gap-1.5 sm:flex sm:w-auto sm:items-center sm:border-l sm:pl-3">
                             <Button
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => {
                                     const t = todayIst()
                                     setDraftDate(t)
@@ -440,7 +441,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                className="h-7 text-xs"
+                                className="h-9 text-xs sm:h-7"
                                 onClick={() => {
                                     const yest = new Date(Date.now() + 330 * 60000 - 86400000).toISOString().slice(0, 10)
                                     setDraftDate(yest)
@@ -455,7 +456,7 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
 
                 {/* 5. CUSTOM RANGE MODE */}
                 {selectedMode === 'custom' && (
-                    <form onSubmit={handleApplyCustom} className="flex flex-wrap items-center gap-2.5">
+                    <form onSubmit={handleApplyCustom} className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2.5 sm:flex sm:flex-wrap">
                         <label className="text-xs font-medium text-muted-foreground" htmlFor="dash-from">
                             From:
                         </label>
@@ -465,10 +466,10 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             max={draftTo || todayIst()}
                             value={draftFrom}
                             onChange={(e) => setDraftFrom(e.target.value)}
-                            className="h-8 rounded-md border border-input bg-background px-2.5 text-xs font-medium shadow-xs"
+                            className="h-10 min-w-0 rounded-md border border-input bg-background px-2.5 text-base font-medium shadow-xs max-sm:flex-1 sm:h-8 sm:text-xs"
                             required
                         />
-                        <span className="text-xs text-muted-foreground">to</span>
+                        <span className="text-xs text-muted-foreground max-sm:hidden">to</span>
                         <label className="text-xs font-medium text-muted-foreground" htmlFor="dash-to">
                             To:
                         </label>
@@ -479,13 +480,13 @@ const DashboardDateFilterInner = ({ className, compact = false }) => {
                             max={todayIst()}
                             value={draftTo}
                             onChange={(e) => setDraftTo(e.target.value)}
-                            className="h-8 rounded-md border border-input bg-background px-2.5 text-xs font-medium shadow-xs"
+                            className="h-10 min-w-0 rounded-md border border-input bg-background px-2.5 text-base font-medium shadow-xs max-sm:flex-1 sm:h-8 sm:text-xs"
                             required
                         />
                         <Button
                             type="submit"
                             size="sm"
-                            className="h-8 px-3.5 text-xs"
+                            className="h-10 px-3.5 text-xs max-sm:col-span-2 sm:h-8"
                             disabled={!draftFrom || !draftTo || draftFrom > draftTo}
                         >
                             Apply Custom Range

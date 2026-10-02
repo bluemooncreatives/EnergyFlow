@@ -40,7 +40,7 @@ const SectionCard = ({ title, description, action, children, iconBg = 'var(--cha
 )
 
 const SummaryTab = () => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
         {/* Stat cards */}
         <CountOverview />
 

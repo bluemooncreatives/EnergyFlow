@@ -31,10 +31,10 @@ const UserDropdown = () => {
                     </Avatar>
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuContent align="end" className="w-56 max-w-[calc(100vw-1.5rem)]">
                 <DropdownMenuLabel>
-                    <p className="font-semibold">{auth?.name}</p>
-                    <p className="text-xs text-muted-foreground font-normal">{auth?.email}</p>
+                    <p className="truncate font-semibold">{auth?.name}</p>
+                    <p className="truncate text-xs text-muted-foreground font-normal">{auth?.email}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>

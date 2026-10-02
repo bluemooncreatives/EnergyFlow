@@ -40,7 +40,7 @@ const DataTableToolbar = ({ table, searchPlaceholder = 'Search…', busy = false
                 onKeyDown={(event) => { if (event.key === 'Escape' && value) { event.preventDefault(); clear() } }}
                 placeholder={searchPlaceholder}
                 aria-label={searchPlaceholder}
-                className="h-9 w-full rounded-lg border border-input bg-background pl-9 pr-9 text-sm outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:hidden"
+                className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-10 text-base outline-none sm:h-9 sm:text-sm transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:hidden"
             />
             <span className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center">
                 {busy && value ? (
@@ -50,7 +50,7 @@ const DataTableToolbar = ({ table, searchPlaceholder = 'Search…', busy = false
                         type="button"
                         onClick={clear}
                         aria-label="Clear search"
-                        className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                        className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground"
                     >
                         <X className="size-3.5" aria-hidden="true" />
                     </button>

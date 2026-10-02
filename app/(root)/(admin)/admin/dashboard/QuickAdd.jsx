@@ -35,15 +35,15 @@ const QuickAdd = () => {
     ]
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {quickLinks.map((link) => (
                 <Link key={link.title} href={link.href}>
-                    <Card className="rounded-xl border-l-4 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ borderLeftColor: `var(${link.chartVar})` }}>
-                        <div className="flex flex-col pr-8">
+                    <Card className="h-full rounded-xl border-l-4 p-3.5 transition-all hover:-translate-y-0.5 hover:shadow-md sm:p-4" style={{ borderLeftColor: `var(${link.chartVar})` }}>
+                        <div className="flex flex-col pr-9 sm:pr-8">
                             <div className="text-sm font-medium text-foreground">{link.title}</div>
                             <div className="mt-0.5 text-xs text-muted-foreground">{link.description}</div>
                         </div>
-                        <span className="absolute top-3 right-3 inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: link.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }}>
+                        <span className="absolute top-3 right-3 inline-flex size-8 shrink-0 sm:size-9 items-center justify-center rounded-full" style={{ backgroundColor: `var(${link.chartVar})`, color: link.chartVar === '--chart-2' ? '#0A2F24' : 'var(--background)' }}>
                             <link.icon className="size-4" />
                         </span>
                     </Card>

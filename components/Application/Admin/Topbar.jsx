@@ -33,13 +33,13 @@ const Topbar = () => {
     return (
         <Header fixed className="border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/70">
             <TopNav links={links} />
-            <div className="ms-auto flex items-center gap-2">
+            <div className="ms-auto flex items-center gap-1 sm:gap-2">
                 <div className="hidden md:block">
                     <AdminSearch />
                 </div>
                 <AdminMobileSearch />
                 <ThemeSwitch />
-                <Button variant="ghost" size="icon" aria-label="Settings">
+                <Button variant="ghost" size="icon" aria-label="Settings" className="max-sm:hidden">
                     <Settings className="size-4" />
                 </Button>
                 <UserDropdown />

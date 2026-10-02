@@ -18,7 +18,7 @@ const NavButton = ({ label, className, ...props }) => (
         aria-label={label}
         title={label}
         className={cn(
-            'flex size-8 items-center justify-center rounded-lg border border-border bg-background text-foreground transition hover:bg-muted disabled:pointer-events-none disabled:opacity-40',
+            'flex size-10 items-center justify-center rounded-lg border border-border bg-background sm:size-8 text-foreground transition hover:bg-muted disabled:pointer-events-none disabled:opacity-40',
             className
         )}
         {...props}
@@ -36,7 +36,7 @@ const DataTablePagination = ({ table, total = 0, className }) => {
     const to = Math.min(total, (pageIndex + 1) * pageSize)
 
     return (
-        <div className={cn('flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between', className)}>
+        <div className={cn('flex flex-wrap items-center justify-between gap-3', className)}>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                 <span aria-live="polite">
                     {total === 0 ? 'No results' : <>Showing <b className="font-semibold text-foreground">{from}–{to}</b> of <b className="font-semibold text-foreground">{total.toLocaleString('en-IN')}</b></>}
@@ -44,7 +44,7 @@ const DataTablePagination = ({ table, total = 0, className }) => {
                 <label className="flex items-center gap-2">
                     <span className="hidden sm:inline">Rows</span>
                     <Select value={`${pageSize}`} onValueChange={(value) => table.setPageSize(Number(value))}>
-                        <SelectTrigger className="h-8 w-[72px]" aria-label="Rows per page">
+                        <SelectTrigger className="h-10 w-[72px] sm:h-8" aria-label="Rows per page">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent side="top">
@@ -64,7 +64,7 @@ const DataTablePagination = ({ table, total = 0, className }) => {
                     <ChevronLeft className="size-4" aria-hidden="true" />
                 </NavButton>
 
-                <span className="px-2 text-sm text-muted-foreground sm:hidden">
+                <span className="min-w-12 px-1 text-center text-sm tabular-nums text-muted-foreground sm:hidden">
                     {currentPage} / {pageCount}
                 </span>
                 <div className="hidden items-center gap-1 sm:flex">

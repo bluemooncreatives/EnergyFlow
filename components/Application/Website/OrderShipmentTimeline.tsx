@@ -100,40 +100,41 @@ const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmen
     const note = STATUS_NOTE[shipmentStatus] || "Your shipment status will update here as soon as tracking is available."
 
     return (
-        <section className="px-5 py-6 sm:px-6">
-            <p className="mb-5 flex items-start gap-2 text-[13px] text-muted-foreground">
+        <section className="px-4 py-5 sm:px-6 sm:py-6">
+            <p className="mb-4 flex items-start gap-2 text-[13px] leading-relaxed text-muted-foreground sm:mb-5">
                 <Clock className="mt-0.5 size-4 flex-shrink-0" />
                 <span>{note}</span>
             </p>
 
-            <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mb-5 grid grid-cols-2 gap-2 sm:mb-6 sm:gap-3 lg:grid-cols-4">
                 <ShipmentInfo label="Tracking Number (AWB)" value={shipment?.awb || "---"} mono />
                 <ShipmentInfo label="Courier Name" value={shipment?.courier || "---"} />
                 <ShipmentInfo label="Current Shipment Status" value={labelize(shipmentStatus)} />
                 <ShipmentInfo label="Last Updated Time" value={lastUpdated || "---"} />
             </div>
 
-            <ol className="space-y-4 sm:flex sm:items-start sm:space-y-0">
+            <ol className="sm:flex sm:items-start">
                 {TRACK_STEPS.map((step, index) => {
                     const done = index <= activeStepIndex
                     const connectorDone = index < activeStepIndex
                     const isLast = index === TRACK_STEPS.length - 1
 
                     return (
-                        <li key={step.key} className={`relative flex gap-3 sm:flex-1 sm:flex-col sm:items-center sm:gap-2 ${isLast ? "sm:flex-none" : ""}`}>
+                        <li key={step.key} className="relative flex gap-3 sm:min-w-0 sm:flex-1 sm:flex-col sm:items-center sm:gap-2">
                             <div className="relative z-10 flex flex-col items-center">
-                                <span className={`flex size-9 items-center justify-center rounded-full border-2 transition-colors ${done ? "border-[var(--dark-red)] bg-[var(--dark-red)] text-on-brand" : "border-border bg-background text-muted-foreground"}`}>
+                                <span className={`flex size-8 items-center sm:size-9 justify-center rounded-full border-2 transition-colors ${done ? "border-[var(--dark-red)] bg-[var(--dark-red)] text-on-brand" : "border-border bg-background text-muted-foreground"}`}>
                                     <step.Icon className="size-4" />
                                 </span>
                                 {!isLast && (
-                                    <span className={`mt-2 h-8 w-0.5 rounded-full sm:hidden ${connectorDone ? "bg-[var(--dark-red)]" : "bg-border"}`} />
+                                    <span className={`my-1 h-5 w-0.5 rounded-full sm:hidden ${connectorDone ? "bg-[var(--dark-red)]" : "bg-border"}`} />
                                 )}
                             </div>
-                            <span className={`pt-2 text-[10px] font-semibold uppercase tracking-[0.1em] sm:pt-0 ${done ? "text-foreground" : "text-muted-foreground"}`}>
+                            <span className={`pt-2 text-[11px] font-semibold uppercase tracking-[0.08em] sm:pt-0 sm:text-center sm:text-[10px] sm:tracking-[0.1em] ${done ? "text-foreground" : "text-muted-foreground"}`}>
                                 {step.label}
                             </span>
+                            {/* Runs from just right of this icon to just left of the next one. */}
                             {!isLast && (
-                                <span className={`absolute left-[2.25rem] top-4 hidden h-0.5 w-[calc(100%-1.25rem)] rounded-full sm:block ${connectorDone ? "bg-[var(--dark-red)]" : "bg-border"}`} />
+                                <span className={`absolute left-[calc(50%+1.5rem)] top-[17px] hidden h-0.5 w-[calc(100%-3rem)] rounded-full sm:block ${connectorDone ? "bg-[var(--dark-red)]" : "bg-border"}`} />
                             )}
                         </li>
                     )
@@ -144,9 +145,9 @@ const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmen
 }
 
 const ShipmentInfo = ({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) => (
-    <div className="rounded-lg border border-border/60 bg-muted/20 px-3 py-3">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-        <p className={`mt-1 break-words text-sm font-semibold text-foreground ${mono ? "font-mono" : ""}`}>
+    <div className="min-w-0 rounded-lg border border-border/60 bg-muted/20 px-3 py-2.5 sm:py-3">
+        <p className="text-[10px] leading-tight font-semibold uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.12em]">{label}</p>
+        <p className={`mt-1 break-all text-[13px] font-semibold sm:text-sm text-foreground ${mono ? "font-mono" : ""}`}>
             {value}
         </p>
     </div>

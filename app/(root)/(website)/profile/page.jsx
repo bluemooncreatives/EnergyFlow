@@ -67,7 +67,7 @@ const inputClass = "h-11 text-base font-semibold text-[var(--brand-primary)]"
 const labelClass = "text-[13px] text-foreground/60"
 
 const FieldSkeleton = ({ wide }) => (
-    <div className={`space-y-2 ${wide ? 'md:col-span-2' : ''}`}>
+    <div className={`space-y-2 ${wide ? 'sm:col-span-2' : ''}`}>
         <span className="block h-3 w-20 animate-pulse rounded bg-border/60" />
         <span className="block h-11 w-full animate-pulse rounded-[var(--radius-sm)] bg-border/40" />
     </div>
@@ -245,13 +245,13 @@ const Profile = () => {
         <div>
             <WebsiteBreadcrumb props={breadCrumbData} />
             <UserPanelLayout>
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                     <Form {...form}>
-                        <form className="space-y-6" onSubmit={form.handleSubmit(updateProfile)} noValidate>
+                        <form className="space-y-4 sm:space-y-6" onSubmit={form.handleSubmit(updateProfile)} noValidate>
                             <AccountCard icon={User} title="My Profile" description="Your personal details and contact information.">
-                                <div className="p-5 sm:p-6">
-                                    {/* Identity row */}
-                                    <div className="flex flex-col gap-5 border-b border-line-soft pb-6 sm:flex-row sm:items-center">
+                                <div className="p-4 sm:p-6">
+                                    {/* Identity row: avatar beside name on phones, progress below */}
+                                    <div className="flex flex-wrap items-center gap-4 border-b border-line-soft pb-5 sm:flex-nowrap sm:gap-5 sm:pb-6">
                                         <Dropzone
                                             onDrop={handleFileSelection}
                                             onDropRejected={handleRejected}
@@ -270,17 +270,17 @@ const Profile = () => {
                                                 >
                                                     <input {...getInputProps()} data-testid="avatar-input" />
                                                     {isLoading ? (
-                                                        <span className="block size-24 animate-pulse rounded-full bg-border/60" />
+                                                        <span className="block size-16 animate-pulse rounded-full bg-border/60 sm:size-24" />
                                                     ) : (
-                                                        <Avatar className={`size-24 border-2 transition-colors ${isDragActive ? 'border-brand' : 'border-brand/30 group-hover:border-brand'}`}>
+                                                        <Avatar className={`size-16 border-2 sm:size-24 transition-colors ${isDragActive ? 'border-brand' : 'border-brand/30 group-hover:border-brand'}`}>
                                                             <AvatarImage src={preview} alt="Profile photo" className="object-cover" />
-                                                            <AvatarFallback className="bg-brand text-2xl font-semibold text-on-brand">
+                                                            <AvatarFallback className="bg-brand text-lg font-semibold text-on-brand sm:text-2xl">
                                                                 {initials(watched.name)}
                                                             </AvatarFallback>
                                                         </Avatar>
                                                     )}
-                                                    <span className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full border-2 border-surface-card bg-brand text-on-brand shadow-sm">
-                                                        <Camera className="size-3.5" aria-hidden="true" />
+                                                    <span className="absolute -bottom-0.5 -right-0.5 flex size-7 items-center justify-center rounded-full border-2 border-surface-card bg-brand text-on-brand shadow-sm sm:bottom-0 sm:right-0 sm:size-8">
+                                                        <Camera className="size-3 sm:size-3.5" aria-hidden="true" />
                                                     </span>
                                                 </div>
                                             )}
@@ -294,11 +294,11 @@ const Profile = () => {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <p className="truncate text-lg font-semibold text-[var(--brand-primary)]">
+                                                    <p className="truncate text-base font-semibold text-[var(--brand-primary)] sm:text-lg">
                                                         {watched.name?.trim() || 'Your name'}
                                                     </p>
-                                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-foreground/60">
-                                                        <span className="max-w-full truncate">{account?.email}</span>
+                                                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-foreground/60 sm:text-[13px]">
+                                                        <span className="max-w-full break-all">{account?.email}</span>
                                                         {account?.isEmailVerified && (
                                                             <span className="inline-flex items-center gap-1 text-[var(--success)]">
                                                                 <BadgeCheck className="size-3.5" aria-hidden="true" /> Verified
@@ -306,7 +306,7 @@ const Profile = () => {
                                                         )}
                                                         {memberSince && <span>Member since {memberSince}</span>}
                                                     </div>
-                                                    <p className="mt-2 text-xs text-foreground/50">
+                                                    <p className="mt-2 text-xs leading-relaxed text-foreground/50 max-sm:hidden">
                                                         {file ? `New photo selected: ${file.name}` : 'Click or drop an image to change your photo. JPG, PNG or WebP, up to 5 MB.'}
                                                     </p>
                                                 </>
@@ -314,7 +314,7 @@ const Profile = () => {
                                         </div>
 
                                         {!isLoading && (
-                                            <div className="w-full sm:w-44" data-testid="profile-percent">
+                                            <div className="w-full sm:w-44 sm:shrink-0" data-testid="profile-percent">
                                                 <div className="flex items-baseline justify-between text-[13px]">
                                                     <span className="text-foreground/60">Profile</span>
                                                     <span className="font-semibold text-brand">{completion.percent}%</span>
@@ -327,7 +327,7 @@ const Profile = () => {
                                     </div>
 
                                     {/* Personal details */}
-                                    <div className="grid grid-cols-1 gap-5 pt-6 md:grid-cols-2">
+                                    <div className="grid grid-cols-1 gap-4 pt-5 sm:grid-cols-2 sm:gap-5 sm:pt-6">
                                         {isLoading ? (
                                             <>
                                                 <FieldSkeleton />
@@ -351,7 +351,7 @@ const Profile = () => {
                                                     )}
                                                 />
                                                 {/* Email (account identity — read only) */}
-                                                <FormItem className="md:col-span-2">
+                                                <FormItem className="sm:col-span-2">
                                                     <FormLabel className={labelClass}>Email</FormLabel>
                                                     <Input
                                                         type="email"
@@ -369,7 +369,7 @@ const Profile = () => {
                             </AccountCard>
 
                             <AccountCard icon={MapPin} title="Saved Address" description="We'll use this to pre-fill your checkout. You can change it anytime.">
-                                <div className="grid grid-cols-1 gap-5 p-5 sm:p-6 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:gap-5 sm:p-6">
                                     {isLoading ? (
                                         <>
                                             <FieldSkeleton wide />
@@ -384,7 +384,7 @@ const Profile = () => {
                                                 control={form.control}
                                                 name="address"
                                                 render={({ field }) => (
-                                                    <FormItem className="md:col-span-2">
+                                                    <FormItem className="sm:col-span-2">
                                                         <FormLabel className={labelClass}>Address (Flat, House no., Building, Street, Area)</FormLabel>
                                                         <FormControl>
                                                             <Textarea placeholder="e.g. 12B, Sunrise Apartments, MG Road, Andheri West" autoComplete="street-address" maxLength={250} className="min-h-[90px] resize-y text-base font-semibold text-[var(--brand-primary)]" {...field} />
@@ -403,13 +403,13 @@ const Profile = () => {
                                 </div>
 
                                 {/* Save bar */}
-                                <div className="flex flex-col-reverse gap-3 border-t border-line-soft bg-surface-well/40 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                                    <p className="text-[13px] text-foreground/60" aria-live="polite">
+                                <div className="flex flex-col-reverse gap-3 border-t border-line-soft bg-surface-well/40 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                                    <p className="text-center text-[13px] text-foreground/60 sm:text-left" aria-live="polite">
                                         {isDirty ? 'You have unsaved changes.' : 'All changes saved.'}
                                     </p>
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-3 [&>*]:flex-1 sm:[&>*]:flex-none">
                                         {isDirty && (
-                                            <Button type="button" variant="outline" onClick={discardChanges} disabled={loading} className="h-11 px-6 text-base font-semibold">
+                                            <Button type="button" variant="outline" onClick={discardChanges} disabled={loading} className="h-11 px-6 text-[15px] font-semibold sm:text-base">
                                                 Discard
                                             </Button>
                                         )}
@@ -419,7 +419,7 @@ const Profile = () => {
                                             text="Save Changes"
                                             variant="brand"
                                             disabled={isLoading || !isDirty || loading}
-                                            className="h-11 px-8 text-base font-semibold cursor-pointer"
+                                            className="h-11 px-6 text-[15px] font-semibold cursor-pointer sm:px-8 sm:text-base"
                                         />
                                     </div>
                                 </div>

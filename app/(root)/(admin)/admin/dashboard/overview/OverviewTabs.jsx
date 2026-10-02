@@ -35,7 +35,7 @@ const OverviewInner = () => {
 
     return (
         <Tabs value={ovTab} onValueChange={onChange} className="space-y-5">
-            <div className="w-full overflow-x-auto">
+            <div className="no-scrollbar w-full overflow-x-auto">
                 <TabsList className="gap-1">
                     {TABS.map(({ id, label, icon: Icon }) => (
                         <TabsTrigger key={id} value={id} className="gap-1.5 text-xs sm:text-sm">

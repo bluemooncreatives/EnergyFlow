@@ -24,7 +24,7 @@ const ProductsCatalogueTab = ({ data, isLoading }) => {
     const totalSales = (data?.categories || []).reduce((s, c) => s + c.sales, 0)
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Top products + category performance */}
             <div>
                 <SectionLabel icon={ShoppingBag} bg="var(--chart-1)" title="Product Performance" description="Top-selling products and category revenue breakdown" />

@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
  * action: { href, label } renders a back link; onRetry renders a retry button.
  */
 const AdminEmptyState = ({ icon: Icon, title, description, action, onRetry, tone = 'neutral', className }) => (
-    <div role={tone === 'danger' ? 'alert' : 'status'} className={cn('flex flex-col items-center justify-center px-6 py-16 text-center', className)}>
+    <div role={tone === 'danger' ? 'alert' : 'status'} className={cn('flex flex-col items-center justify-center px-4 py-12 text-center sm:px-6 sm:py-16', className)}>
         {Icon && (
             <span
                 className={cn(

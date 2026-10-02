@@ -39,7 +39,7 @@ const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 // icon badge
 const IconBadge = ({ icon: Icon, bg = 'var(--chart-1)', fg = 'var(--primary-foreground)' }) => (
     <span
-        className="inline-flex size-9 shrink-0 items-center justify-center rounded-full"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-full sm:size-9"
         style={{ backgroundColor: bg, color: fg }}
         aria-hidden="true"
     >
@@ -116,14 +116,14 @@ const RevenueTrendCard = ({ monthlySales, activeYear, activeMonth }) => {
 
 // ── KPI Summary cards ─────────────────────────────────────────────────
 const KpiCard = ({ label, value, sub, icon: Icon, bg, fg = 'var(--primary-foreground)', borderColor }) => (
-    <Card className="rounded-xl border-l-4 p-4 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg" style={{ borderLeftColor: borderColor || bg }}>
+    <Card className="rounded-xl border-l-4 p-3.5 sm:p-5 transition hover:-translate-y-0.5 hover:shadow-lg" style={{ borderLeftColor: borderColor || bg }}>
         <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-medium text-foreground">{label}</p>
-            <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
+            <p className="text-xs font-medium leading-snug text-foreground sm:text-sm">{label}</p>
+            <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full sm:size-9" style={{ backgroundColor: bg, color: fg }}>
                 <Icon className="size-4" />
             </span>
         </div>
-        <p className="mt-3 text-2xl sm:text-3xl font-bold leading-none tracking-tight tabular-nums">{value}</p>
+        <p className="mt-2.5 truncate text-xl sm:mt-3 sm:text-3xl font-bold leading-none tracking-tight tabular-nums">{value}</p>
         {sub && <p className="mt-2 text-xs text-muted-foreground">{sub}</p>}
     </Card>
 )
@@ -297,7 +297,7 @@ const SalesTab = () => {
     }, [activeMonth, monthlySales])
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
             {/* Sales Section Year & Month Filter Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-3 shadow-xs">
                 <div className="flex flex-wrap items-center gap-3">
@@ -357,7 +357,7 @@ const SalesTab = () => {
             </div>
 
             {/* KPI row */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                 <KpiCard
                     label={monthData ? `${monthData.name} Sales` : `Total Revenue (${activeYear})`}
                     value={inr(monthData ? monthData.sales : totalRevenue, true)}
