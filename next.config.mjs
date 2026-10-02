@@ -97,6 +97,11 @@ const nextConfig = {
     turbopack: {
         root: path.dirname(fileURLToPath(import.meta.url)),
     },
+    // The invoice PDF route reads its fonts and logo from disk at runtime;
+    // make sure they ship with that serverless function.
+    outputFileTracingIncludes: {
+        '/api/order-invoice/[orderid]': ['./public/assets/invoice/**'],
+    },
     experimental: {
         optimizePackageImports: ['lucide-react', 'gsap', '@gsap/react', 'react-icons', 'radix-ui'],
     },

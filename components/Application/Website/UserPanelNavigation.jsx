@@ -1,6 +1,7 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import { showToast } from '@/lib/showToast'
+import { cn } from '@/lib/utils'
+import { initials } from '@/lib/account'
 import { USER_DASHBOARD, USER_ORDERS, USER_PROFILE, WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import { logout } from '@/store/reducer/authReducer'
 import { persistor } from '@/store/store'
@@ -8,23 +9,33 @@ import axios from 'axios'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { LayoutDashboard, User, ShoppingBag, LogOut } from 'lucide-react'
+import { LayoutDashboard, User, ShoppingBag, LogOut, Loader2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const navLinks = [
     { label: 'Dashboard', href: USER_DASHBOARD, icon: LayoutDashboard },
-    { label: 'Profile', href: USER_PROFILE, icon: User },
     { label: 'Orders', href: USER_ORDERS, icon: ShoppingBag },
+    { label: 'Profile', href: USER_PROFILE, icon: User },
 ]
 
+// Order details live outside the panel but belong to the Orders section.
+const isActiveLink = (pathname, href) =>
+    pathname === href ||
+    pathname.startsWith(`${href}/`) ||
+    (href === USER_ORDERS && pathname.startsWith('/order-details'))
+
 const UserPanelNavigation = () => {
-    const pathname = usePathname()
+    const pathname = usePathname() || ''
     const dispatch = useDispatch()
     const user = useSelector((store) => store.authStore?.auth)
     const hydrated = useSelector((store) => store.authStore?.hydrated)
+    const [loggingOut, setLoggingOut] = useState(false)
 
     const handleLogout = async () => {
+        if (loggingOut) return
+        setLoggingOut(true)
         try {
             const { data: logoutResponse } = await axios.post('/api/auth/logout', {}, {
                 withCredentials: true,
@@ -45,62 +56,75 @@ const UserPanelNavigation = () => {
             // Force a full navigation to avoid stale client state in production.
             window.location.replace(WEBSITE_LOGIN)
         } catch (error) {
-            showToast('error', error.message)
+            showToast('error', error.response?.data?.message || error.message)
+            setLoggingOut(false)
         }
     }
 
     return (
         <div className="overflow-hidden rounded-[var(--radius-card)] bg-surface-card shadow-[inset_0_0_0_1px_var(--line-soft)] font-neue">
             {/* User greeting */}
-            <div className="border-b border-line-soft px-5 py-4">
+            <div className="flex items-center justify-between gap-3 border-b border-line-soft px-5 py-4">
                 {!hydrated ? (
                     // Auth state not resolved yet — show a skeleton instead of a
                     // misleading "User" placeholder that would flash before hydration.
-                    <div className="flex items-center gap-3">
-                        <span className="size-9 shrink-0 animate-pulse rounded-full bg-border/60" />
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <span className="size-10 shrink-0 animate-pulse rounded-full bg-border/60" />
                         <div className="min-w-0 flex-1 space-y-1.5">
-                            <span className="block h-2.5 w-16 animate-pulse rounded bg-border/60" />
                             <span className="block h-3.5 w-28 animate-pulse rounded bg-border/60" />
+                            <span className="block h-2.5 w-36 animate-pulse rounded bg-border/60" />
                         </div>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-3">
-                        <Avatar className="size-9 border border-line-soft">
+                    <div className="flex min-w-0 items-center gap-3">
+                        <Avatar className="size-10 border border-line-soft">
                             <AvatarImage src={user?.avatar?.url} alt={user?.name || 'User'} className="object-cover" />
-                            <AvatarFallback className="bg-brand font-neue text-[11px] font-semibold uppercase tracking-[0.04em] text-on-brand">
-                                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                            <AvatarFallback className="bg-brand font-neue text-xs font-semibold uppercase tracking-[0.04em] text-on-brand">
+                                {initials(user?.name)}
                             </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                            <p className="text-[13px] text-foreground/60">
-                                Welcome back
+                            <p className="truncate text-base font-semibold text-[var(--brand-primary)]" data-testid="nav-user-name">
+                                {user?.name || 'My account'}
                             </p>
-                            <p className="truncate text-base font-semibold text-[var(--brand-primary)]">
-                                {user?.name || 'User'}
-                            </p>
+                            {user?.email && (
+                                <p className="truncate text-xs text-foreground/55">{user.email}</p>
+                            )}
                         </div>
                     </div>
                 )}
+
+                {/* Compact logout for the mobile tab layout */}
+                <button
+                    type="button"
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    aria-label="Log out"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full text-foreground/50 transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 lg:hidden"
+                >
+                    {loggingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />}
+                </button>
             </div>
 
-            {/* Navigation links */}
-            <nav className="p-2">
-                <ul className="space-y-0.5">
+            {/* Navigation links: a scrollable tab row on mobile, a list on desktop */}
+            <nav aria-label="Account" className="p-2">
+                <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5 lg:overflow-visible">
                     {navLinks.map(({ label, href, icon: Icon }) => {
-                        const isActive = pathname.startsWith(href)
+                        const isActive = isActiveLink(pathname, href)
                         return (
-                            <li key={href}>
+                            <li key={href} className="shrink-0 lg:shrink">
                                 <Link
                                     href={href}
-                                    className={`group flex items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 transition-all duration-200 ${isActive
-                                        ? 'bg-brand text-on-brand'
-                                        : 'text-foreground/60 hover:bg-[var(--brand-warm-bg)] hover:text-[var(--brand-primary)]'
-                                        }`}
+                                    aria-current={isActive ? 'page' : undefined}
+                                    className={cn(
+                                        'group flex items-center gap-2.5 rounded-[var(--radius-sm)] px-3.5 py-2.5 transition-all duration-200 lg:gap-3 lg:px-3',
+                                        isActive
+                                            ? 'bg-brand text-on-brand'
+                                            : 'text-[var(--brand-primary)] hover:bg-[var(--brand-warm-bg)]'
+                                    )}
                                 >
-                                    <Icon className={`size-3.5 shrink-0 ${isActive ? 'text-white/90' : 'text-foreground/40 group-hover:text-[var(--brand-primary)]'}`} />
-                                    <span className={`text-base font-semibold ${isActive ? 'text-white' : 'text-[var(--brand-primary)]'}`}>
-                                        {label}
-                                    </span>
+                                    <Icon className={cn('size-4 shrink-0', isActive ? 'text-on-brand/90' : 'text-foreground/40 group-hover:text-[var(--brand-primary)]')} />
+                                    <span className="text-[15px] font-semibold">{label}</span>
                                 </Link>
                             </li>
                         )
@@ -109,15 +133,18 @@ const UserPanelNavigation = () => {
             </nav>
 
             {/* Logout */}
-            <div className="border-t border-line-soft p-2">
+            <div className="hidden border-t border-line-soft p-2 lg:block">
                 <button
                     type="button"
                     onClick={handleLogout}
-                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-destructive/10"
+                    disabled={loggingOut}
+                    className="group flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-left transition-all duration-200 hover:bg-destructive/10 disabled:opacity-60"
                 >
-                    <LogOut className="size-3.5 shrink-0 text-foreground/40 group-hover:text-destructive" />
-                    <span className="text-base font-semibold text-foreground/60 group-hover:text-destructive">
-                        Logout
+                    {loggingOut
+                        ? <Loader2 className="size-4 shrink-0 animate-spin text-foreground/40" />
+                        : <LogOut className="size-4 shrink-0 text-foreground/40 group-hover:text-destructive" />}
+                    <span className="text-[15px] font-semibold text-foreground/60 group-hover:text-destructive">
+                        {loggingOut ? 'Logging out…' : 'Logout'}
                     </span>
                 </button>
             </div>
