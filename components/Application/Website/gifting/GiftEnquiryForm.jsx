@@ -8,7 +8,9 @@ import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertCircle, ArrowRight, Check, CheckCircle2, Copy, Loader2, Mail, MessageCircle, Phone } from 'lucide-react'
 import { PhoneInput } from '@/components/ui/phone-input'
+import Link from 'next/link'
 import { COMPANY } from '@/lib/company'
+import { USER_ENQUIRIES, WEBSITE_LOGIN } from '@/routes/WebsiteRoute'
 import {
     BUDGETS,
     MAX_GIFT_QUANTITY,
@@ -169,7 +171,13 @@ const GiftEnquiryForm = ({ products = [] }) => {
             }
 
             clearDraft()
-            setResult({ ticketId: data.data?.ticketId, duplicate: Boolean(data.data?.duplicate), message: data.message })
+            setResult({
+                ticketId: data.data?.ticketId,
+                duplicate: Boolean(data.data?.duplicate),
+                tracked: Boolean(data.data?.tracked),
+                email: values.email,
+                message: data.message,
+            })
         } catch (error) {
             const offline = typeof navigator !== 'undefined' && navigator.onLine === false
             setServerError(
@@ -199,6 +207,8 @@ const GiftEnquiryForm = ({ products = [] }) => {
         setCopied(false)
         window.setTimeout(() => setFocus('occasion'), 50)
     }
+
+    const trackHref = result?.ticketId ? `${USER_ENQUIRIES}?ref=${encodeURIComponent(result.ticketId)}` : USER_ENQUIRIES
 
     const copyRef = async () => {
         if (!result?.ticketId) return
@@ -289,8 +299,22 @@ const GiftEnquiryForm = ({ products = [] }) => {
                                     </span>
                                 </div>
                             )}
+                            {result.ticketId && !result.tracked && (
+                                <p className="max-w-lg text-[0.875rem] leading-relaxed text-ink-body">
+                                    Want to follow its progress?{' '}
+                                    <Link href={`${WEBSITE_LOGIN}?callback=${encodeURIComponent(trackHref)}`} className="font-semibold text-brand underline underline-offset-2">
+                                        Sign in or create an account
+                                    </Link>{' '}
+                                    with <span className="font-semibold">{result.email}</span> and verify it — this enquiry will appear under Enquiries in your account.
+                                </p>
+                            )}
                             <div className="mt-2 flex flex-wrap gap-3">
-                                <button type="button" className="ef-btn ef-btn--primary" onClick={startAnother}>
+                                {result.ticketId && result.tracked && (
+                                    <Link href={trackHref} className="ef-btn ef-btn--primary">
+                                        Track in your account <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
+                                    </Link>
+                                )}
+                                <button type="button" className={result.tracked ? 'ef-btn ef-btn--outline' : 'ef-btn ef-btn--primary'} onClick={startAnother}>
                                     Send another enquiry
                                 </button>
                                 {products.length > 0 && (

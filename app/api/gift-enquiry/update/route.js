@@ -38,9 +38,29 @@ export async function PUT(request) {
 
     await connectDB()
 
+    const current = await GiftEnquiryModel.findOne({ _id, deletedAt: null })
+      .select('status statusHistory createdAt updatedAt')
+      .lean()
+    if (!current) {
+      return response(false, 404, 'Enquiry not found (it may have been moved to trash).')
+    }
+
+    const ops = { $set: update }
+    // A real status change goes on the customer's tracking timeline. Enquiries
+    // created before the timeline existed get their earlier states seeded first.
+    if (update.status && update.status !== current.status) {
+      const seed = current.statusHistory?.length
+        ? []
+        : [
+            { status: 'new', at: current.createdAt },
+            ...(current.status !== 'new' ? [{ status: current.status, at: current.updatedAt }] : []),
+          ]
+      ops.$push = { statusHistory: { $each: [...seed, { status: update.status, at: new Date() }] } }
+    }
+
     const enquiry = await GiftEnquiryModel.findOneAndUpdate(
       { _id, deletedAt: null },
-      { $set: update },
+      ops,
       { new: true, runValidators: true }
     ).lean()
     if (!enquiry) {

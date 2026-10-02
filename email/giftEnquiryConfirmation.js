@@ -7,7 +7,9 @@ import {
     heading,
     paragraph,
     firstName,
+    button,
     esc,
+    siteUrl,
 } from "./_shared";
 
 /**
@@ -45,6 +47,14 @@ ${refCard}
   ${detail("Occasion", esc(occasion))}
   ${deliveryDate ? detail("Needed by", esc(deliveryDate)) : ""}
   ${products.length ? detail("Boxes you liked", products.map((p) => esc(p.name)).join(", ")) : ""}
+</table>
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+  <tr>
+    <td style="padding-top:16px;">
+      ${button("Track your enquiry", esc(`${siteUrl()}/my-account/enquiries?ref=${encodeURIComponent(ticketId)}`))}
+      <p style="margin:12px 0 0;text-align:center;font-family:${FONT_BODY};font-size:12px;line-height:18px;color:${BRAND.muted};">Sign in with this email address to see live updates.</p>
+    </td>
+  </tr>
 </table>`;
 
     return emailShell({

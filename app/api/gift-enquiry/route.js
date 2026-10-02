@@ -74,6 +74,10 @@ export async function POST(request) {
 
     await connectDB()
 
+    // A signed-in customer gets the enquiry in their account to track.
+    const auth = await isAuthenticated('user', request)
+    const userId = auth.isAuth && isValidObjectId(auth.userId) ? auth.userId : null
+
     const duplicate = await GiftEnquiryModel.findOne({
       email: data.email,
       quantity: data.quantity,
@@ -81,12 +85,17 @@ export async function POST(request) {
       deletedAt: null,
       createdAt: { $gte: new Date(Date.now() - DUPLICATE_WINDOW_MS) },
     })
-      .select('ticketId')
+      .select('ticketId user')
       .lean()
     if (duplicate) {
+      // Sent as a guest, then again after signing in: claim it for the account.
+      if (userId && !duplicate.user) {
+        await GiftEnquiryModel.updateOne({ _id: duplicate._id, user: null }, { $set: { user: userId } })
+      }
       return response(true, 200, 'We already have this enquiry — our team will be in touch shortly.', {
         ticketId: duplicate.ticketId,
         duplicate: true,
+        tracked: Boolean(userId),
       })
     }
 
@@ -98,6 +107,7 @@ export async function POST(request) {
       : []
 
     const payload = {
+      user: userId,
       name: data.name,
       company: data.company || '',
       email: data.email,
@@ -118,7 +128,11 @@ export async function POST(request) {
     let enquiry = null
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
-        enquiry = await GiftEnquiryModel.create({ ...payload, ticketId: generateTicketId('GE') })
+        enquiry = await GiftEnquiryModel.create({
+          ...payload,
+          ticketId: generateTicketId('GE'),
+          statusHistory: [{ status: 'new', at: new Date() }],
+        })
         break
       } catch (err) {
         const isDuplicateTicket = err?.code === 11000 && err?.keyPattern && 'ticketId' in err.keyPattern
@@ -152,7 +166,7 @@ export async function POST(request) {
       ),
     ])
 
-    return response(true, 200, 'Enquiry received.', { ticketId: enquiry.ticketId })
+    return response(true, 200, 'Enquiry received.', { ticketId: enquiry.ticketId, tracked: Boolean(userId) })
   } catch (error) {
     return catchError(error, 'We could not send your enquiry. Please try again.')
   }

@@ -523,6 +523,11 @@ const GiftEnquiryDetail = ({ params }) => {
                         )
                       })}
                     </div>
+                    <p className="mt-2.5 text-xs text-muted-foreground">
+                      {enquiry.user
+                        ? 'The customer sees status changes live under Enquiries in their account. Notes stay internal.'
+                        : 'Sent as a guest — it appears in the customer’s account once they sign in with this verified email.'}
+                    </p>
                   </fieldset>
 
                   <div className="flex flex-col gap-2">

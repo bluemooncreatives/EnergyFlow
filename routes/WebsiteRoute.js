@@ -27,3 +27,5 @@ export const WEBSITE_ORDER_DETAILS = (order_id) => `/order-details/${order_id}`
 export const USER_DASHBOARD = "/my-account"
 export const USER_PROFILE = "/profile"
 export const USER_ORDERS = "/orders"
+// Corporate / bulk gifting enquiries the customer has sent, with live status.
+export const USER_ENQUIRIES = "/my-account/enquiries"

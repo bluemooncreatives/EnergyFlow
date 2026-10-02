@@ -2,7 +2,7 @@
 import { showToast } from '@/lib/showToast'
 import { cn } from '@/lib/utils'
 import { initials } from '@/lib/account'
-import { USER_DASHBOARD, USER_ORDERS, USER_PROFILE, WEBSITE_LOGIN, WEBSITE_WISHLIST } from '@/routes/WebsiteRoute'
+import { USER_DASHBOARD, USER_ENQUIRIES, USER_ORDERS, USER_PROFILE, WEBSITE_LOGIN, WEBSITE_WISHLIST } from '@/routes/WebsiteRoute'
 import { logout } from '@/store/reducer/authReducer'
 import { persistor } from '@/store/store'
 import axios from 'axios'
@@ -11,20 +11,22 @@ import { signOut } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { LayoutDashboard, User, ShoppingBag, LogOut, Loader2, Heart } from 'lucide-react'
+import { LayoutDashboard, User, ShoppingBag, LogOut, Loader2, Heart, Gift } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const navLinks = [
     { label: 'Dashboard', href: USER_DASHBOARD, icon: LayoutDashboard },
     { label: 'Orders', href: USER_ORDERS, icon: ShoppingBag },
+    { label: 'Enquiries', href: USER_ENQUIRIES, icon: Gift },
     { label: 'Wishlist', href: WEBSITE_WISHLIST, icon: Heart },
     { label: 'Profile', href: USER_PROFILE, icon: User },
 ]
 
 // Order details live outside the panel but belong to the Orders section.
+// The dashboard only matches itself, since Enquiries sits under its path.
 const isActiveLink = (pathname, href) =>
     pathname === href ||
-    pathname.startsWith(`${href}/`) ||
+    (href !== USER_DASHBOARD && pathname.startsWith(`${href}/`)) ||
     (href === USER_ORDERS && pathname.startsWith('/order-details'))
 
 const UserPanelNavigation = () => {
@@ -109,7 +111,7 @@ const UserPanelNavigation = () => {
 
             {/* Navigation links: equal-width tabs on mobile, a list on desktop */}
             <nav aria-label="Account" className="p-2">
-                <ul className="grid grid-cols-2 gap-1 min-[440px]:grid-cols-4 lg:flex lg:flex-col lg:gap-0.5">
+                <ul className="grid grid-cols-3 gap-1 min-[560px]:grid-cols-5 lg:flex lg:flex-col lg:gap-0.5">
                     {navLinks.map(({ label, href, icon: Icon }) => {
                         const isActive = isActiveLink(pathname, href)
                         return (
