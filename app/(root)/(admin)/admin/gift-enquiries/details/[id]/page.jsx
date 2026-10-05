@@ -65,7 +65,7 @@ const STATUS_HINTS = {
   contacted: 'First call or email made',
   quoted: 'Pricing shared with the client',
   won: 'Client has placed the order',
-  lost: 'No deal — enquiry closed',
+  lost: 'No deal - enquiry closed',
 }
 
 // Per-box budget bands in rupees, for the rough order-value estimate.
@@ -86,7 +86,7 @@ const estimateValue = (budget, quantity) => {
   const [min, max] = range
   if (min == null) return `Up to ${inr(max * qty)}`
   if (max == null) return `${inr(min * qty)}+`
-  return `${inr(min * qty)} – ${inr(max * qty)}`
+  return `${inr(min * qty)} - ${inr(max * qty)}`
 }
 
 // Days from today to the requested delivery date, as a short label + tone.
@@ -389,10 +389,10 @@ const GiftEnquiryDetail = ({ params }) => {
                     {enquiry.branding ? (
                       <p className="flex items-start gap-2 text-sm font-medium">
                         <Sparkles className="mt-0.5 size-4 shrink-0 text-[var(--brand-olive)]" aria-hidden="true" />
-                        Yes — logo / personalised packaging
+                        Yes - logo / personalised packaging
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Not needed — standard packaging</p>
+                      <p className="text-sm text-muted-foreground">Not needed - standard packaging</p>
                     )}
                   </div>
 
@@ -433,7 +433,7 @@ const GiftEnquiryDetail = ({ params }) => {
                     ) : (
                       <p className="flex items-center gap-2 text-sm text-muted-foreground">
                         <PackageX className="size-4 shrink-0" aria-hidden="true" />
-                        No specific box chosen — open to suggestions
+                        No specific box chosen - open to suggestions
                       </p>
                     )}
                   </div>
@@ -447,7 +447,7 @@ const GiftEnquiryDetail = ({ params }) => {
                   {enquiry.message}
                 </blockquote>
               ) : (
-                <p className="text-sm text-muted-foreground">No message — the brief above is everything they shared.</p>
+                <p className="text-sm text-muted-foreground">No message - the brief above is everything they shared.</p>
               )}
             </Section>
 
@@ -526,7 +526,7 @@ const GiftEnquiryDetail = ({ params }) => {
                     <p className="mt-2.5 text-xs text-muted-foreground">
                       {enquiry.user
                         ? 'The customer sees status changes live under Enquiries in their account. Notes stay internal.'
-                        : 'Sent as a guest — it appears in the customer’s account once they sign in with this verified email.'}
+                        : 'Sent as a guest - it appears in the customer’s account once they sign in with this verified email.'}
                     </p>
                   </fieldset>
 

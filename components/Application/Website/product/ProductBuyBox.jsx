@@ -306,9 +306,9 @@ const ProductBuyBox = forwardRef(function ProductBuyBox({
                 </span>
                 <div className="min-w-0 text-sm leading-snug">
                     <p className="font-semibold text-ink-strong">
-                        {delivery ? <>Estimated delivery <span className="whitespace-nowrap">{delivery}</span></> : 'Delivered in 4–7 days'}
+                        {delivery ? <>Estimated delivery <span className="whitespace-nowrap">{delivery}</span></> : 'Delivered in 4-7 days'}
                     </p>
-                    <p className="mt-1 text-ink-body">Packed fresh and dispatched within 1–2 business days, anywhere in India.</p>
+                    <p className="mt-1 text-ink-body">Packed fresh and dispatched within 1-2 business days, anywhere in India.</p>
                 </div>
             </div>
 

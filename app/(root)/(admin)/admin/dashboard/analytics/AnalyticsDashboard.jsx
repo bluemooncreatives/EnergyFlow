@@ -161,7 +161,7 @@ const AnalyticsDashboard = () => {
                             <p className="text-sm font-semibold text-foreground">Analytics &amp; Reports</p>
                             <p className="mt-0.5 text-xs text-muted-foreground">
                                 {data
-                                    ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} – {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} – {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range — narrow for exact figures</span>}</>
+                                    ? <><b className="font-semibold text-foreground">{data.range.label}</b>{' · '}{shortDate(data.range.start)} - {shortDate(new Date(new Date(data.range.end).getTime() - 1))}{' · compared with '}{shortDate(data.range.previousStart)} - {shortDate(new Date(new Date(data.range.previousEnd).getTime() - 1))}{data.truncated && <span className="ml-2 rounded-full border px-2 py-0.5 ef-tone--sun">Very large range - narrow for exact figures</span>}</>
                                     : 'Select a date range to load the report'
                                 }
                             </p>

@@ -131,14 +131,14 @@ const NewsletterSubscribersPage = () => {
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           title="Active subscribers"
-          value={stats?.active ?? '—'}
+          value={stats?.active ?? '-'}
           hint="Currently receiving emails"
           icon={MailCheck}
           chartVar="--chart-1"
         />
         <StatCard
           title="New in last 30 days"
-          value={stats?.newLast30 ?? '—'}
+          value={stats?.newLast30 ?? '-'}
           hint={stats ? `${growth >= 0 ? '+' : ''}${growth} vs the 30 days before` : 'Loading…'}
           icon={UserPlus}
           chartVar="--chart-2"
@@ -146,14 +146,14 @@ const NewsletterSubscribersPage = () => {
         />
         <StatCard
           title="Unsubscribed"
-          value={stats?.unsubscribed ?? '—'}
+          value={stats?.unsubscribed ?? '-'}
           hint="Kept for your records"
           icon={MailX}
           chartVar="--chart-4"
         />
         <StatCard
           title="Top source"
-          value={topSource ? SOURCE_LABEL[topSource[0]] : '—'}
+          value={topSource ? SOURCE_LABEL[topSource[0]] : '-'}
           hint={
             stats
               ? `Popup ${stats.sources.popup} · Band ${stats.sources.section} · Footer ${stats.sources.footer}`

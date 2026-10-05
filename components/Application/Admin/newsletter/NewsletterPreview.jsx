@@ -296,7 +296,7 @@ const NewsletterPreview = ({ values, offerLive }) => {
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <Segmented label="State" value={effectiveState} onChange={setState} options={stateOptions} />
                 {disabled ? (
-                    <span className="ef-tone--danger rounded-full border px-2.5 py-0.5 text-xs font-medium">Off — not shown on the site</span>
+                    <span className="ef-tone--danger rounded-full border px-2.5 py-0.5 text-xs font-medium">Off - not shown on the site</span>
                 ) : (
                     <span className="ef-tone--forest rounded-full border px-2.5 py-0.5 text-xs font-medium">Live on the site</span>
                 )}

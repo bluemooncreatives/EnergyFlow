@@ -66,7 +66,7 @@ const TermsAndConditions = () => {
                 {/* Section 2 */}
                 <Section number="2" title="Eligibility & Account Registration">
                     <ul className='list-disc ps-6 space-y-2'>
-                        <li>You must be at least 18 years old to create an account or make a purchase. Users between 13–17 may browse with verifiable parental or guardian consent and supervision.</li>
+                        <li>You must be at least 18 years old to create an account or make a purchase. Users between 13-17 may browse with verifiable parental or guardian consent and supervision.</li>
                         <li>By registering, you represent that all information you provide is accurate, current, and complete.</li>
                         <li>You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a> if you suspect unauthorized access.</li>
                         <li>We reserve the right to suspend or terminate accounts that violate these Terms or engage in fraudulent activity.</li>
@@ -112,7 +112,7 @@ const TermsAndConditions = () => {
                 <Section number="6" title="Shipping & Delivery">
                     <ul className='list-disc ps-6 space-y-2'>
                         <li>We ship within India and to select international destinations. Delivery timelines vary by location and are estimates, not guarantees.</li>
-                        <li>Domestic orders are typically dispatched within 2–5 business days; international orders within 5–10 business days, subject to customs clearance.</li>
+                        <li>Domestic orders are typically dispatched within 2-5 business days; international orders within 5-10 business days, subject to customs clearance.</li>
                         <li>Shipping charges, if applicable, are displayed at checkout before payment.</li>
                         <li>Risk of loss or damage passes to you upon delivery. If your package arrives visibly damaged, please refuse delivery and contact us within 24 hours.</li>
                         <li>International customers are solely responsible for all import duties, VAT, GST, or customs fees imposed by their country.</li>
@@ -128,7 +128,7 @@ const TermsAndConditions = () => {
                         <li>If a product arrives damaged, leaking, expired, or is not what you ordered, contact us within 48 hours of delivery with photographs of the pack, seal and batch details, and we will replace it or refund you in full.</li>
                         <li>Custom gift hampers and personalised or branded bulk orders cannot be returned unless they arrive defective or damaged.</li>
                         <li>To initiate a return, contact us at <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>energyflow0001@gmail.com</a> with your order number and photos of the item.</li>
-                        <li>Approved refunds are processed within 5–10 business days to the original payment method.</li>
+                        <li>Approved refunds are processed within 5-10 business days to the original payment method.</li>
                         <li>Return shipping costs are the customer&apos;s responsibility unless the return is due to our error (wrong item, defective product).</li>
                         <li>Exchanges are subject to stock availability. If the desired item is unavailable, a store credit or refund will be offered.</li>
                         <li>
@@ -142,7 +142,7 @@ const TermsAndConditions = () => {
                 {/* Section 8 */}
                 <Section number="8" title="Intellectual Property">
                     <ul className='list-disc ps-6 space-y-2'>
-                        <li>All content on this Website — including but not limited to text, graphics, logos, photographs, designs, product names, and software — is the exclusive property of Energyflow and is protected under applicable Indian and international copyright, trademark, and intellectual property laws.</li>
+                        <li>All content on this Website - including but not limited to text, graphics, logos, photographs, designs, product names, and software - is the exclusive property of Energyflow and is protected under applicable Indian and international copyright, trademark, and intellectual property laws.</li>
                         <li>You may not reproduce, distribute, modify, create derivative works from, publicly display, or commercially exploit any content without our prior written consent.</li>
                         <li>Limited, non-exclusive, non-transferable permission is granted to access and use this Website for personal, non-commercial shopping purposes only.</li>
                         <li>Any unauthorized use may result in legal action under the Copyright Act 1957 (India) and equivalent international statutes.</li>

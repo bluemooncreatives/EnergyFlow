@@ -33,7 +33,7 @@ import UnsavedOrderBar from './UnsavedOrderBar'
 
 const inr = (value) => {
     const n = Number(value)
-    return Number.isFinite(n) ? n.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }) : '—'
+    return Number.isFinite(n) ? n.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }) : '-'
 }
 
 const Stat = ({ label, value, hint, tone }) => (
@@ -181,15 +181,15 @@ const CuratedProductsManager = ({ config }) => {
 
             {/* Stats + slot meter */}
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                <Stat label="In your list" value={loading ? '–' : count} hint={`${noun}s you picked`} />
-                <Stat label="Live on storefront" value={loading ? '–' : `${live}/${slots}`} hint={`First ${slots} in order`} tone="text-[var(--success)]" />
+                <Stat label="In your list" value={loading ? '-' : count} hint={`${noun}s you picked`} />
+                <Stat label="Live on storefront" value={loading ? '-' : `${live}/${slots}`} hint={`First ${slots} in order`} tone="text-[var(--success)]" />
                 <Stat
                     label={exact ? 'Auto-filled slots' : 'Beyond the cut-off'}
-                    value={loading ? '–' : exact ? autoFilled : Math.max(0, count - slots)}
+                    value={loading ? '-' : exact ? autoFilled : Math.max(0, count - slots)}
                     hint={exact ? 'Topped up with newest products' : 'Saved, not shown yet'}
                     tone={exact && autoFilled > 0 ? 'text-[var(--brand-amber-ink)]' : undefined}
                 />
-                <Stat label="Available to add" value={loading ? '–' : available.length} hint="Active products not in the list" />
+                <Stat label="Available to add" value={loading ? '-' : available.length} hint="Active products not in the list" />
             </div>
 
             <div className="rounded-xl border bg-card p-4" aria-hidden={loading}>

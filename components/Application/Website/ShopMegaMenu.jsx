@@ -17,8 +17,8 @@ import { tintAt } from './storefront/format'
    menu sheet. Data comes from getNavCategories() via the layout.
    ================================================================ */
 
-const OPEN_DELAY = 80     // ms — skip flicker when the cursor just passes over
-const CLOSE_DELAY = 240   // ms — room to travel from "Shop" down into the panel
+const OPEN_DELAY = 80     // ms - skip flicker when the cursor just passes over
+const CLOSE_DELAY = 240   // ms - room to travel from "Shop" down into the panel
 
 const productLabel = (n) => `${n} ${n === 1 ? 'product' : 'products'}`
 

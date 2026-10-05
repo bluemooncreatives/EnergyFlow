@@ -58,7 +58,7 @@ ${fineprint(`Not for you? ${link("Unsubscribe", unsubscribeUrl, BRAND.muted)} wi
     return emailShell({
         preheader: coupon
             ? `Your welcome code ${coupon.code} is inside.`
-            : "You're on the list — fresh drops and member deals are on the way.",
+            : "You're on the list - fresh drops and member deals are on the way.",
         title: "Welcome to the Energyflow club",
         bodyHtml,
     });

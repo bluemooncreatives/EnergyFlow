@@ -57,7 +57,7 @@ const StarPicker = ({ value = 0, onChange, invalid }) => {
                             name={name}
                             data-star={star}
                             aria-checked={checked}
-                            aria-label={`${star} star${star > 1 ? 's' : ''} — ${RATING_WORDS[star]}`}
+                            aria-label={`${star} star${star > 1 ? 's' : ''} - ${RATING_WORDS[star]}`}
                             tabIndex={checked || (!value && star === 1) ? 0 : -1}
                             onClick={() => onChange(star)}
                             onMouseEnter={() => setHover(star)}
@@ -229,7 +229,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
                         <>
                             <div className="flex items-end gap-3">
                                 <span className="font-header text-[5rem] font-semibold leading-[0.8] tabular-nums">
-                                    {summary.isPending || total === 0 ? '—' : average.toFixed(1)}
+                                    {summary.isPending || total === 0 ? '-' : average.toFixed(1)}
                                 </span>
                                 <span className="pb-1 text-sm text-[var(--ink-on-inverse-muted)]">out of 5</span>
                             </div>
@@ -287,7 +287,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
 
                                 {!auth ? (
                                     <div className="flex flex-col items-start gap-4 rounded-[var(--radius-card)] bg-surface-sunken p-5">
-                                        <p className="text-sm text-ink-body">Sign in to share your experience — we’ll bring you right back here.</p>
+                                        <p className="text-sm text-ink-body">Sign in to share your experience - we’ll bring you right back here.</p>
                                         <Link
                                             href={`${WEBSITE_LOGIN}?callback=${encodeURIComponent(returnUrl || '/')}`}
                                             className="ef-btn ef-btn--primary"
@@ -337,7 +337,7 @@ const ProductReveiw = ({ productId, productName = 'this product' }) => {
                                                             <span className={cn('text-xs tabular-nums', reviewLen > REVIEW_MAX ? 'text-destructive' : 'text-ink-muted')}>{reviewLen}/{REVIEW_MAX}</span>
                                                         </div>
                                                         <FormControl>
-                                                            <textarea placeholder="Taste, freshness, packaging — what stood out?" className="form-field form-field-area min-h-32" {...field} />
+                                                            <textarea placeholder="Taste, freshness, packaging - what stood out?" className="form-field form-field-area min-h-32" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>

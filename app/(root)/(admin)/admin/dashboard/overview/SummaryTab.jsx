@@ -52,7 +52,7 @@ const SummaryTab = () => (
             <div className="col-span-1 lg:col-span-4">
                 <SectionCard
                     title="Revenue Status"
-                    description="Monthly net sales — current year"
+                    description="Monthly net sales - current year"
                     icon={TrendingUp}
                     iconBg="var(--chart-1)"
                     action={

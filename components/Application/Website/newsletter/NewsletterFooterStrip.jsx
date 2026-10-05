@@ -34,7 +34,7 @@ const NewsletterFooterStrip = ({ footer, preview = false, previewState = 'form' 
                     <div className="flex flex-col gap-3" role="status">
                         <p className="m-0 flex items-center gap-3 font-semibold text-[var(--palette-cream)]">
                             <SuccessSeal size="2.25rem" />
-                            {result.alreadySubscribed ? "You're already on the list — welcome back!" : "You're subscribed — welcome to the club!"}
+                            {result.alreadySubscribed ? "You're already on the list - welcome back!" : "You're subscribed - welcome to the club!"}
                         </p>
                         {result.couponCode && <CodeReveal code={result.couponCode} />}
                     </div>

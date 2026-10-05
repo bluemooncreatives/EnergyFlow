@@ -181,7 +181,7 @@ const WishlistPageClient = () => {
                                 <Info className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden="true" />
                                 {auth?.role === 'admin'
                                     ? 'Saved on this device only. Admin accounts don’t have an account wishlist.'
-                                    : 'Your wishlist is saved on this device only. Sign in to keep it on every device — it’s added to your account automatically.'}
+                                    : 'Your wishlist is saved on this device only. Sign in to keep it on every device - it’s added to your account automatically.'}
                             </p>
                             {!auth && (
                                 <StoreButton

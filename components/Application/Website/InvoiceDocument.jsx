@@ -72,9 +72,9 @@ const money = (n) =>
     Number(n || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 const formatDate = (d) => {
-    if (!d) return '—'
+    if (!d) return '-'
     const date = new Date(d)
-    if (Number.isNaN(date.getTime())) return '—'
+    if (Number.isNaN(date.getTime())) return '-'
     return date.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
@@ -273,7 +273,7 @@ const InvoiceDocument = ({ order = {} }) => {
                     <View style={s.titleWrap}>
                         <Text style={s.eyebrow}>Tax invoice</Text>
                         <Text style={s.title}>Invoice</Text>
-                        <Text style={s.orderId}>#{order?.order_id || '—'}</Text>
+                        <Text style={s.orderId}>#{order?.order_id || '-'}</Text>
                         <Text style={[s.pill, { backgroundColor: status.bg, color: status.fg }]}>{status.label}</Text>
                     </View>
                 </View>
@@ -287,20 +287,20 @@ const InvoiceDocument = ({ order = {} }) => {
                                 <PdfIcon icon={FiUser} size={8} color={C.forest} />
                                 <Text style={s.cardTitle}>Billed to</Text>
                             </View>
-                            <WrapText style={s.name}>{order?.name || '—'}</WrapText>
+                            <WrapText style={s.name}>{order?.name || '-'}</WrapText>
                             {!!addressLine && <InfoRow icon={FiMapPin}>{addressLine}</InfoRow>}
-                            <InfoRow icon={FiPhone}>{order?.phone || '—'}</InfoRow>
-                            <InfoRow icon={FiMail}>{order?.email || '—'}</InfoRow>
+                            <InfoRow icon={FiPhone}>{order?.phone || '-'}</InfoRow>
+                            <InfoRow icon={FiMail}>{order?.email || '-'}</InfoRow>
                         </View>
                         <View style={s.card}>
                             <View style={s.cardHead}>
                                 <PdfIcon icon={FiFileText} size={8} color={C.forest} />
                                 <Text style={s.cardTitle}>Order details</Text>
                             </View>
-                            <KeyValue icon={FiHash} label="Order ID" value={order?.order_id || '—'} />
+                            <KeyValue icon={FiHash} label="Order ID" value={order?.order_id || '-'} />
                             <KeyValue icon={FiCalendar} label="Date" value={formatDate(order?.createdAt)} />
-                            <KeyValue icon={FiCreditCard} label="Payment" value={PAYMENT_METHOD_LABEL[paymentMethod] || '—'} />
-                            <KeyValue icon={FiCheckCircle} label="Status" value={PAYMENT_STATUS_LABEL[order?.paymentStatus] || '—'} />
+                            <KeyValue icon={FiCreditCard} label="Payment" value={PAYMENT_METHOD_LABEL[paymentMethod] || '-'} />
+                            <KeyValue icon={FiCheckCircle} label="Status" value={PAYMENT_STATUS_LABEL[order?.paymentStatus] || '-'} />
                             {!!order?.payment_id && <KeyValue icon={FiHash} label="Txn ID" value={order.payment_id} />}
                         </View>
                     </View>
@@ -431,7 +431,7 @@ const InvoiceDocument = ({ order = {} }) => {
                 <View style={s.foot} fixed>
                     <View style={{ flex: 1, paddingRight: 100 }}>
                         <Text style={s.thanks}>Thank you for shopping with {BRAND.name}</Text>
-                        <Text style={s.footSmall}>Computer-generated invoice — no signature required. Questions? {BRAND.email}</Text>
+                        <Text style={s.footSmall}>Computer-generated invoice - no signature required. Questions? {BRAND.email}</Text>
                     </View>
                 </View>
                 <Text style={s.pageNum} fixed render={({ pageNumber, totalPages }) => (totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : '')} />

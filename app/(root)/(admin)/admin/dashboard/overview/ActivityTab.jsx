@@ -108,7 +108,7 @@ const OrderStatusSummaryCard = () => {
                             <span className="inline-flex size-9 items-center justify-center rounded-full" style={{ backgroundColor: bg, color: fg }}>
                                 <Icon className="size-4" />
                             </span>
-                            <span className="text-xl sm:text-2xl font-bold tabular-nums leading-none">{counts[key] ?? '—'}</span>
+                            <span className="text-xl sm:text-2xl font-bold tabular-nums leading-none">{counts[key] ?? '-'}</span>
                             <span className="text-xs font-medium text-muted-foreground">{label}</span>
                         </Link>
                     ))}

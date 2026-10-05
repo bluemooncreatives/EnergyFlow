@@ -42,7 +42,7 @@ export const galleryFor = (variant, product, placeholder, name) => {
     const fallback = (product?.media || []).filter((m) => m?.secure_url)
     const list = own.length ? own : fallback
     return list.length
-        ? list.map((m, i) => ({ id: m._id || `${m.secure_url}-${i}`, src: m.secure_url, alt: m.alt || `${name} — photo ${i + 1}` }))
+        ? list.map((m, i) => ({ id: m._id || `${m.secure_url}-${i}`, src: m.secure_url, alt: m.alt || `${name} - photo ${i + 1}` }))
         : [{ id: 'placeholder', src: placeholder, alt: name, placeholder: true }]
 }
 
@@ -54,7 +54,7 @@ export const deliveryWindow = (now = new Date()) => {
         d.setDate(d.getDate() + days)
         return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })
     }
-    return `${at(4)} – ${at(7)}`
+    return `${at(4)} - ${at(7)}`
 }
 
 // The header cart button that is actually on screen (there can be more than

@@ -295,7 +295,7 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                                 <p className="text-muted-foreground">Delhivery will not pick up this package.</p>
                                 {paidAmount > 0 && (
                                     <p className="font-medium text-foreground">
-                                        The customer paid {formatInr(paidAmount)} online — refund it from your payment dashboard.
+                                        The customer paid {formatInr(paidAmount)} online - refund it from your payment dashboard.
                                     </p>
                                 )}
                             </div>
@@ -387,7 +387,7 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                     </p>
                     {paidAmount > 0 && (
                         <p className="text-xs font-medium text-foreground">
-                            The customer paid {formatInr(paidAmount)} online. Refunds are not automatic — issue it from your payment dashboard.
+                            The customer paid {formatInr(paidAmount)} online. Refunds are not automatic - issue it from your payment dashboard.
                         </p>
                     )}
 

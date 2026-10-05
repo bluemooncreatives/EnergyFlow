@@ -39,7 +39,7 @@ const DataTablePagination = ({ table, total = 0, className }) => {
         <div className={cn('flex flex-wrap items-center justify-between gap-3', className)}>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                 <span aria-live="polite">
-                    {total === 0 ? 'No results' : <>Showing <b className="font-semibold text-foreground">{from}–{to}</b> of <b className="font-semibold text-foreground">{total.toLocaleString('en-IN')}</b></>}
+                    {total === 0 ? 'No results' : <>Showing <b className="font-semibold text-foreground">{from}-{to}</b> of <b className="font-semibold text-foreground">{total.toLocaleString('en-IN')}</b></>}
                 </span>
                 <label className="flex items-center gap-2">
                     <span className="hidden sm:inline">Rows</span>

@@ -69,7 +69,7 @@ const OrderCard = ({ order }) => {
             <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <p className="min-w-0 max-w-full truncate text-sm font-semibold text-[var(--brand-primary)]">
-                        #{orderId || '—'}
+                        #{orderId || '-'}
                     </p>
                     <OrderStatusBadge status={order?.status} />
                 </div>

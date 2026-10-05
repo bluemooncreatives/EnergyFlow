@@ -321,7 +321,7 @@ export const BuyingHeatmap = ({ heatmap = [] }) => {
             ) : (
                 <>
                     <div className="mb-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
-                        {peak && <p><span className="text-muted-foreground">Peak hour </span><b>{DAYS[peak.d]} {hourLabel(peak.h)}–{hourLabel((peak.h + 1) % 24)}</b></p>}
+                        {peak && <p><span className="text-muted-foreground">Peak hour </span><b>{DAYS[peak.d]} {hourLabel(peak.h)}-{hourLabel((peak.h + 1) % 24)}</b></p>}
                         {busiestDay && <p><span className="text-muted-foreground">Busiest day </span><b>{busiestDay}</b></p>}
                         <p className="min-h-5 text-muted-foreground" aria-live="polite">
                             {hover ? <>{DAYS[hover.d]} {hourLabel(hover.h)}: <b className="text-foreground">{num(hover.v)} {hover.v === 1 ? 'order' : 'orders'}</b></> : 'Hover a cell for details'}
@@ -611,7 +611,7 @@ export const CatalogueHealth = ({ catalogue }) => {
                     <ShareBar value={sold} max={total} className="mt-2 h-2.5" />
                     {unsoldSample.length > 0 && (
                         <>
-                            <p className="mb-2 mt-4 text-xs font-medium text-muted-foreground">No sales yet — consider featuring or discounting</p>
+                            <p className="mb-2 mt-4 text-xs font-medium text-muted-foreground">No sales yet - consider featuring or discounting</p>
                             <ul className="flex flex-wrap gap-1.5">
                                 {unsoldSample.map((p) => (
                                     <li key={p.id}>

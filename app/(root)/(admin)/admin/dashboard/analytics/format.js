@@ -25,7 +25,7 @@ export const bucketLabel = (key, granularity, long = false) => {
     if (granularity === 'hour') {
         const h = Number(key.slice(11, 13))
         const label = `${h % 12 || 12} ${h < 12 ? 'AM' : 'PM'}`
-        return long ? `${label} – ${(h + 1) % 12 || 12} ${h + 1 < 12 || h + 1 === 24 ? 'AM' : 'PM'}` : label
+        return long ? `${label} - ${(h + 1) % 12 || 12} ${h + 1 < 12 || h + 1 === 24 ? 'AM' : 'PM'}` : label
     }
     if (granularity === 'month') {
         const [y, m] = key.split('-').map(Number)
@@ -37,10 +37,10 @@ export const bucketLabel = (key, granularity, long = false) => {
 }
 
 export const dateTime = (value) =>
-    value ? new Date(value).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: IST }) : '—'
+    value ? new Date(value).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: IST }) : '-'
 
 export const shortDate = (value) =>
-    value ? new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: IST }) : '—'
+    value ? new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: IST }) : '-'
 
 export const relative = (value) => {
     if (!value) return ''

@@ -37,7 +37,7 @@ ${paragraph(`Hi ${firstName(name)},`)}
 ${paragraph(lead)}
 ${valueCard({ caption: "Your verification code", value: otp })}
 ${noteBlock(
-        `This code expires in <strong style="color:${BRAND.ink};">10 minutes</strong> and can be used once. If you didn't request this, you can safely ignore this email${isReset ? "" : " — your account is still secure"}.`
+        `This code expires in <strong style="color:${BRAND.ink};">10 minutes</strong> and can be used once. If you didn't request this, you can safely ignore this email${isReset ? "" : " - your account is still secure"}.`
     )}`;
 
     return emailShell({

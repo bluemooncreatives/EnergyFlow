@@ -68,7 +68,7 @@ const NewsletterSectionClient = ({ section, offer, preview = false, previewState
                                 <div className="ef-nl-success" role="status">
                                     <SuccessSeal size="3.5rem" />
                                     <p className="ef-nl-lead font-semibold text-[var(--nl-ink)]">
-                                        {shown.alreadySubscribed ? "You're already on the list — welcome back!" : section.successMessage}
+                                        {shown.alreadySubscribed ? "You're already on the list - welcome back!" : section.successMessage}
                                     </p>
                                     {shown.couponCode && <CodeReveal code={shown.couponCode} />}
                                 </div>

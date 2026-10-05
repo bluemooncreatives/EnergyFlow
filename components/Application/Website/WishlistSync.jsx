@@ -75,7 +75,7 @@ const WishlistSync = () => {
                             : `The ${result.added} items you saved on this device are now in your account wishlist.`)
                     }
                     if (result.overLimit > 0) {
-                        showToast('warning', `${result.overLimit} saved ${result.overLimit === 1 ? 'item' : 'items'} didn’t fit — your wishlist is full.`)
+                        showToast('warning', `${result.overLimit} saved ${result.overLimit === 1 ? 'item' : 'items'} didn’t fit - your wishlist is full.`)
                     }
                 } else {
                     const result = await wishlistRequest('get', '/api/wishlist')

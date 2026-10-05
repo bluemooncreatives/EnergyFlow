@@ -92,7 +92,7 @@ export async function POST(request) {
       if (userId && !duplicate.user) {
         await GiftEnquiryModel.updateOne({ _id: duplicate._id, user: null }, { $set: { user: userId } })
       }
-      return response(true, 200, 'We already have this enquiry — our team will be in touch shortly.', {
+      return response(true, 200, 'We already have this enquiry - our team will be in touch shortly.', {
         ticketId: duplicate.ticketId,
         duplicate: true,
         tracked: Boolean(userId),
@@ -154,13 +154,13 @@ export async function POST(request) {
     // throws, so a mail outage can't fail the customer's submission.
     await Promise.allSettled([
       sendMail(
-        `New gifting enquiry [${enquiry.ticketId}] — ${payload.quantity} boxes${payload.company ? ` · ${payload.company}` : ''}`,
+        `New gifting enquiry [${enquiry.ticketId}] - ${payload.quantity} boxes${payload.company ? ` · ${payload.company}` : ''}`,
         process.env.NODEMAILER_EMAIL,
         giftEnquiryNotification(emailData),
         { replyTo: payload.email }
       ),
       sendMail(
-        `We've received your gifting enquiry — Ref ${enquiry.ticketId}`,
+        `We've received your gifting enquiry - Ref ${enquiry.ticketId}`,
         payload.email,
         giftEnquiryConfirmation(emailData)
       ),

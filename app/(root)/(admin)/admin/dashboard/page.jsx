@@ -11,7 +11,7 @@ const AdminDashboard = () => {
         <div className="flex flex-col gap-4 sm:gap-6">
             <PageHeader
                 title="Dashboard"
-                description="Sales, customers and catalogue performance — live from your store."
+                description="Sales, customers and catalogue performance - live from your store."
                 actions={
                     <>
                         <Button asChild variant="outline" className="h-9">

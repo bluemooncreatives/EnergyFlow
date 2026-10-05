@@ -24,7 +24,7 @@ ${heading("New message received")}
     ${detailRows([
         ["Reference", esc(ticketId)],
         ["From", `${esc(name)} &nbsp;·&nbsp; ${mailLink(email)}`],
-        ["Mobile", esc(phone) || "—"],
+        ["Mobile", esc(phone) || "-"],
         ["Address", esc(address) || "(Not provided)", { wrap: true }],
         ["Subject", esc(subject) || "(No subject)"],
         ["Message", esc(message) || "(No message)", { wrap: true }],

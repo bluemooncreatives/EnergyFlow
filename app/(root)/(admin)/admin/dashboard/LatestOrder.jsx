@@ -72,7 +72,7 @@ const LatestOrder = () => {
                             </Link>
                         </TableCell>
                         <TableCell className="bg-background py-2.5 font-mono text-xs text-muted-foreground">
-                            {order.payment_id ? String(order.payment_id).slice(-8).toUpperCase() : '—'}
+                            {order.payment_id ? String(order.payment_id).slice(-8).toUpperCase() : '-'}
                         </TableCell>
                         <TableCell className="bg-background py-2.5 text-xs sm:text-sm text-muted-foreground">
                             {order.products?.length ?? 0}

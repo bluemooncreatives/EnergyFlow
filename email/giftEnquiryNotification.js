@@ -64,7 +64,7 @@ ${detailRows([
         ["Occasion", esc(occasion)],
         ["Budget per box", esc(budget) || "(Not specified)"],
         ["Needed by", esc(deliveryDate) || "(Flexible)"],
-        ["Custom branding", branding ? "Yes — logo / personalised packaging" : "No"],
+        ["Custom branding", branding ? "Yes - logo / personalised packaging" : "No"],
         ["Boxes of interest", productList],
         ["Message", esc(message) || "(No message)", { wrap: true }],
     ])}

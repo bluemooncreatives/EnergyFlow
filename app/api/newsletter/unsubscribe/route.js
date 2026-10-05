@@ -36,7 +36,7 @@ export async function POST(request) {
         return response(
             true,
             200,
-            resubscribe ? "Welcome back — you're subscribed again." : "You've been unsubscribed.",
+            resubscribe ? "Welcome back - you're subscribed again." : "You've been unsubscribed.",
             { email: subscriber.email, status: subscriber.status }
         )
     } catch (error) {

@@ -23,7 +23,7 @@ const STATUS_COPY = {
     processing: {
         eyebrow: "Order Update",
         title: "We're preparing your order",
-        lead: "Good news — your order is now being prepared by our makers. We'll let you know the moment it ships.",
+        lead: "Good news - your order is now being prepared by our makers. We'll let you know the moment it ships.",
         cta: "View my order",
     },
     shipped: {
@@ -35,7 +35,7 @@ const STATUS_COPY = {
     delivered: {
         eyebrow: "Delivered",
         title: "Your order has arrived",
-        lead: "Your order has been delivered. We hope you love it! If anything isn't quite right, just reply to this email — we're here to help.",
+        lead: "Your order has been delivered. We hope you love it! If anything isn't quite right, just reply to this email - we're here to help.",
         cta: "View my order",
     },
     cancelled: {
@@ -106,7 +106,7 @@ ${trackingBlock}
 ${ctaRow(copy.cta, ctaUrl, { top: 28, bottom: 8, bg: BRAND.pine })}`;
 
     return emailShell({
-        preheader: order_id ? `${copy.title} — order ${order_id}.` : `${copy.title}.`,
+        preheader: order_id ? `${copy.title} - order ${order_id}.` : `${copy.title}.`,
         title: copy.title,
         bodyHtml,
     });

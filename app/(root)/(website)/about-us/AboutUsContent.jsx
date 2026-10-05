@@ -118,7 +118,7 @@ const SOURCING_STEPS = [
     {
         phase: 'The journey',
         title: 'Delivered across India',
-        body: 'Orders are packed within 1–2 working days and reach metros in 2–4 working days and the rest of India in 4–7, with free shipping.',
+        body: 'Orders are packed within 1-2 working days and reach metros in 2-4 working days and the rest of India in 4-7, with free shipping.',
     },
 ]
 
@@ -129,7 +129,7 @@ const PEOPLE = [
         role: 'Director · Sourcing & operations',
         bio: [
             'Mr. Parveen Singla decides what earns a place on our shelf. He builds direct, lasting relationships with growers, mills and producers so quality is controlled at origin rather than inspected at the end.',
-            'It takes longer to set up and it is far more reliable once it runs — and the same discipline shapes how we price: buy well, keep the chain short, pass the difference on.',
+            'It takes longer to set up and it is far more reliable once it runs - and the same discipline shapes how we price: buy well, keep the chain short, pass the difference on.',
         ],
     },
     {
@@ -138,7 +138,7 @@ const PEOPLE = [
         role: 'Director · Retail, brand & expansion',
         bio: [
             'Mr. Ayush Singla turns a single store into a network that can grow without losing what makes it work: a range people genuinely want, and a shopping experience that is easy online and in store.',
-            'The goal is a professionally managed brand rather than a chain of lookalike outlets — one where every Energyflow store means the same thing to the person walking in.',
+            'The goal is a professionally managed brand rather than a chain of lookalike outlets - one where every Energyflow store means the same thing to the person walking in.',
         ],
     },
 ]
@@ -254,7 +254,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                     <dl className="mt-[clamp(2rem,4vw,3rem)] grid grid-cols-2 gap-6 border-t border-line-soft pt-8 sm:grid-cols-4">
                         <Stat value={`${stats.categoryCount}`} label="Categories in the range" />
                         <Stat value={`${stats.productCount}+`} label="Products on the shelf" />
-                        <Stat value="1–2 days" label="Packed and dispatched" />
+                        <Stat value="1-2 days" label="Packed and dispatched" />
                         <Stat value="Pan-India" label="Delivered with free shipping" />
                     </dl>
                 </div>
@@ -325,7 +325,7 @@ const AboutUsContent = ({ products = [], categories = [], stats, testimonials = 
                         eyebrow="What we sell"
                         title="One shelf for the"
                         accent="whole pantry"
-                        description="Dry fruits and nuts, dried berries, seeds and superfoods, Ayurvedic herbs, flavoured nuts and healthy candies — with millets, pulses, chocolates, makhana and gift boxes joining the shelf as we stock them."
+                        description="Dry fruits and nuts, dried berries, seeds and superfoods, Ayurvedic herbs, flavoured nuts and healthy candies - with millets, pulses, chocolates, makhana and gift boxes joining the shelf as we stock them."
                         action={<StoreLink href={WEBSITE_SHOP}>Shop all products</StoreLink>}
                     />
 

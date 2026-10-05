@@ -87,7 +87,7 @@ const RevenueTrendCard = ({ monthlySales, activeYear, activeMonth }) => {
                 iconBg="var(--chart-1)"
                 iconFg="var(--primary-foreground)"
                 title="Revenue Trend"
-                description={`${activeYear} · Total ${inr(total, true)} · Peak: ${peak?.month || '—'}`}
+                description={`${activeYear} · Total ${inr(total, true)} · Peak: ${peak?.month || '-'}`}
                 action={
                     <Button variant="ghost" className="h-8 text-xs" asChild>
                         <Link href={ADMIN_ORDER_SHOW}>View Orders</Link>
@@ -213,10 +213,10 @@ const chartConfigRadar = { amount: { label: 'Sales', color: 'var(--chart-1)' } }
 const SalesRadarCard = ({ monthlySales }) => {
     const data = useMemo(() => {
         const quarters = [
-            { quarter: 'Q1 (Jan–Mar)', months: [1, 2, 3] },
-            { quarter: 'Q2 (Apr–Jun)', months: [4, 5, 6] },
-            { quarter: 'Q3 (Jul–Sep)', months: [7, 8, 9] },
-            { quarter: 'Q4 (Oct–Dec)', months: [10, 11, 12] },
+            { quarter: 'Q1 (Jan-Mar)', months: [1, 2, 3] },
+            { quarter: 'Q2 (Apr-Jun)', months: [4, 5, 6] },
+            { quarter: 'Q3 (Jul-Sep)', months: [7, 8, 9] },
+            { quarter: 'Q4 (Oct-Dec)', months: [10, 11, 12] },
         ]
         return quarters.map(q => ({
             quarter: q.quarter,
@@ -279,7 +279,7 @@ const SalesTab = () => {
         (monthlySales?.data || []).reduce((s, d) => s + (d.orderCount || 0), 0), [monthlySales])
     const aov = totalOrders ? Math.round(totalRevenue / totalOrders) : 0
     const bestMonth = useMemo(() => {
-        if (!monthlySales?.data?.length) return '—'
+        if (!monthlySales?.data?.length) return '-'
         const best = monthlySales.data.reduce((a, b) => (b.totalSales > a.totalSales ? b : a), monthlySales.data[0])
         return MONTHS_SHORT[(best._id?.month || 1) - 1]
     }, [monthlySales])

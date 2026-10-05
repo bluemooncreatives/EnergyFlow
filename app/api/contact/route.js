@@ -72,13 +72,13 @@ export async function POST(request) {
     // result), so a mail outage must not break the user-facing flow.
     await Promise.allSettled([
       sendMail(
-        `New Contact Message [${ticketId}]${payload.subject ? `: ${payload.subject}` : ''} — from ${payload.name}`,
+        `New Contact Message [${ticketId}]${payload.subject ? `: ${payload.subject}` : ''} - from ${payload.name}`,
         process.env.NODEMAILER_EMAIL,
         contactNotification(emailPayload),
         { replyTo: payload.email }
       ),
       sendMail(
-        `We've received your message — Ref ${ticketId}`,
+        `We've received your message - Ref ${ticketId}`,
         payload.email,
         contactConfirmation(emailPayload)
       ),

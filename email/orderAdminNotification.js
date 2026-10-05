@@ -114,7 +114,7 @@ ${totalsTable({ subtotal, couponDiscountAmount, couponCode, deliveryCharge, tota
     ], { gap: 0 })}
     </td>
     <td class="ms-stack" width="50%" valign="top" style="padding:0 0 18px;">
-      ${detailRows([["Ship to", addressHtml(address, { landmarkPrefix: "Near " }) || "—"]], { gap: 0 })}
+      ${detailRows([["Ship to", addressHtml(address, { landmarkPrefix: "Near " }) || "-"]], { gap: 0 })}
     </td>
   </tr>
   <tr>

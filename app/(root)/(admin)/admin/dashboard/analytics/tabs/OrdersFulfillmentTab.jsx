@@ -34,7 +34,7 @@ const OrdersFulfillmentTab = ({ data, isLoading }) => (
 
         {/* Buying heatmap */}
         <div>
-            <SectionLabel icon={Clock} bg="var(--chart-4)" title="When Customers Order" description="Orders by weekday and hour (India time) — spot your peak windows" />
+            <SectionLabel icon={Clock} bg="var(--chart-4)" title="When Customers Order" description="Orders by weekday and hour (India time) - spot your peak windows" />
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <BuyingHeatmap heatmap={data?.heatmap} />
                 {/* Courier status summary */}

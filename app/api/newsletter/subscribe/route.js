@@ -74,7 +74,7 @@ export async function POST(request) {
         if (existing && existing.status === 'subscribed' && !existing.deletedAt) {
             // Already on the list: nothing to write, no duplicate welcome mail.
             // Still return the code so a returning subscriber can grab it again.
-            return response(true, 200, "You're already on the list — welcome back!", {
+            return response(true, 200, "You're already on the list - welcome back!", {
                 couponCode: coupon?.code || null,
                 alreadySubscribed: true,
             })
@@ -112,7 +112,7 @@ export async function POST(request) {
             } catch (err) {
                 // Two tabs submitting at once: the unique index wins the race.
                 if (err?.code === 11000) {
-                    return response(true, 200, "You're already on the list — welcome back!", {
+                    return response(true, 200, "You're already on the list - welcome back!", {
                         couponCode: coupon?.code || null,
                         alreadySubscribed: true,
                     })
@@ -142,7 +142,7 @@ export async function POST(request) {
         if (settings.emails.notifyAdmin && process.env.NODEMAILER_EMAIL) {
             mails.push(
                 sendMail(
-                    `New newsletter subscriber — ${email}`,
+                    `New newsletter subscriber - ${email}`,
                     process.env.NODEMAILER_EMAIL,
                     newsletterNotification({ email, name, source, pagePath })
                 )

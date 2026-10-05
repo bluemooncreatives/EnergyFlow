@@ -92,7 +92,7 @@ const SalesTrend = ({ data, kpis }) => {
 
             {!hasData ? (
                 <EmptyState icon={TrendingUp} title={`No ${metric.label.toLowerCase()} in this range`} className="min-h-[16rem]">
-                    Try a longer range — the chart fills in as orders come in.
+                    Try a longer range - the chart fills in as orders come in.
                 </EmptyState>
             ) : view === 'table' ? (
                 <div className="max-h-[18rem] overflow-auto rounded-lg border">

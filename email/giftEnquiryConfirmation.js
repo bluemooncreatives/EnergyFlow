@@ -42,7 +42,7 @@ ${ctaRow("Track your enquiry", `${siteUrl()}/my-account/enquiries?ref=${encodeUR
 ${fineprint("Sign in with this email address to see live updates.")}`;
 
     return emailShell({
-        preheader: `We've received your gifting enquiry — reference ${ticketId}.`,
+        preheader: `We've received your gifting enquiry - reference ${ticketId}.`,
         title: "Your gifting enquiry",
         bodyHtml,
     });

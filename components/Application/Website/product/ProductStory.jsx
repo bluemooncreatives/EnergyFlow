@@ -127,7 +127,7 @@ const ProductStory = ({ product, variant, variants, html }) => {
                         <div className="flex flex-col items-start gap-4 rounded-[var(--radius-tile)] bg-surface-sunken p-8">
                             <span className="ef-seal ef-seal--forest size-14" aria-hidden="true"><Leaf /></span>
                             <p className="ef-lead">
-                                We’re still writing the full story of {product.name}. Every lot is quality checked before it’s packed —
+                                We’re still writing the full story of {product.name}. Every lot is quality checked before it’s packed - 
                                 questions about this product? Our team is happy to help.
                             </p>
                             <Link href="/contact" className="ef-link">Ask about this product</Link>

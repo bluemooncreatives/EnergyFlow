@@ -62,7 +62,7 @@ const StarPicker = ({ value, onChange }) => {
             type="button"
             role="radio"
             aria-checked={value === n}
-            aria-label={`${n} star${n > 1 ? 's' : ''} — ${RATING_WORDS[n]}`}
+            aria-label={`${n} star${n > 1 ? 's' : ''} - ${RATING_WORDS[n]}`}
             onClick={() => onChange(n)}
             onMouseEnter={() => setHover(n)}
             className="rounded-md p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
@@ -253,12 +253,12 @@ const ShowTestimonials = () => {
           { label: 'Total', value: stats.total },
           { label: 'Live', value: stats.live, tone: 'text-[var(--success)]' },
           { label: 'Hidden', value: stats.hidden },
-          { label: 'Average rating', value: stats.total ? stats.avg.toFixed(1) : '—', extra: <Stars value={Math.round(stats.avg)} /> },
+          { label: 'Average rating', value: stats.total ? stats.avg.toFixed(1) : '-', extra: <Stars value={Math.round(stats.avg)} /> },
         ].map(({ label, value, tone, extra }) => (
           <div key={label} className="rounded-xl border bg-card p-4">
             <p className="text-xs font-medium uppercase tracking-[0.06em] text-muted-foreground">{label}</p>
             <div className="mt-1.5 flex items-center gap-2">
-              <p className={cn('font-header text-2xl font-semibold tabular-nums', tone)}>{status === 'loading' ? '–' : value}</p>
+              <p className={cn('font-header text-2xl font-semibold tabular-nums', tone)}>{status === 'loading' ? '-' : value}</p>
               {status !== 'loading' && extra}
             </div>
           </div>

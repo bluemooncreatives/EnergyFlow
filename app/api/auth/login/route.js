@@ -44,7 +44,7 @@ export async function POST(request) {
 
 
             await sendMail(
-                'Verify your email — Energyflow',
+                'Verify your email - Energyflow',
                 email,
                 emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`, { name: getUser.name })
             )

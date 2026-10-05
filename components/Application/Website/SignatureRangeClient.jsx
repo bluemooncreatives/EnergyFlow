@@ -147,7 +147,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
             data-sig-tile
             className={cn('ef-tile ef-focus group/tile @container/tile block', SLOT_CLASSES[slot])}
             style={{ background: tile.tint }}
-            aria-label={`${tile.title}${price ? `, from ${price}` : ''} — ${tile.label}`}
+            aria-label={`${tile.title}${price ? `, from ${price}` : ''} - ${tile.label}`}
         >
             {!cover && (
                 <>

@@ -109,7 +109,7 @@ const PrivacyPolicy = () => {
                         <li><strong>Account Management:</strong> Creating and maintaining your account; verifying your identity.</li>
                         <li><strong>Customer Support:</strong> Responding to queries, complaints, and return/refund requests.</li>
                         <li><strong>Payments & Fraud Prevention:</strong> Verifying payment details and detecting, preventing, or investigating fraudulent transactions.</li>
-                        <li><strong>Marketing Communications:</strong> Sending promotional emails, special offers, and newsletters — only with your consent or where permitted by law. You may opt out at any time via the unsubscribe link in emails.</li>
+                        <li><strong>Marketing Communications:</strong> Sending promotional emails, special offers, and newsletters - only with your consent or where permitted by law. You may opt out at any time via the unsubscribe link in emails.</li>
                         <li><strong>Website Improvement:</strong> Analyzing usage patterns to improve site performance, design, and product offerings.</li>
                         <li><strong>Legal Compliance:</strong> Meeting our obligations under applicable laws, regulations, court orders, or governmental requests.</li>
                         <li><strong>Personalization:</strong> Displaying relevant products, recommendations, and content based on your browsing and purchase history.</li>
@@ -122,7 +122,7 @@ const PrivacyPolicy = () => {
                     <ul className='list-disc ps-6 space-y-2'>
                         <li><strong>Contract Performance:</strong> Processing necessary to fulfill your orders and manage your account (Article 6(1)(b) GDPR).</li>
                         <li><strong>Legitimate Interests:</strong> Fraud prevention, website security, and improving our services, where these do not override your fundamental rights (Article 6(1)(f) GDPR).</li>
-                        <li><strong>Consent:</strong> Marketing emails and non-essential cookies — where you have given explicit consent (Article 6(1)(a) GDPR). You may withdraw consent at any time.</li>
+                        <li><strong>Consent:</strong> Marketing emails and non-essential cookies - where you have given explicit consent (Article 6(1)(a) GDPR). You may withdraw consent at any time.</li>
                         <li><strong>Legal Obligation:</strong> Retaining financial records and complying with applicable laws (Article 6(1)(c) GDPR).</li>
                     </ul>
                 </Section>

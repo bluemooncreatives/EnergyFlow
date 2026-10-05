@@ -184,7 +184,7 @@ const Stepper = ({ step, onGo }) => (
 const BriefRow = ({ label, value }) => (
     <div className="flex items-baseline justify-between gap-4 py-2.5">
         <dt className="shrink-0 text-[0.75rem] uppercase text-cream/60">{label}</dt>
-        <dd className={cn('min-w-0 text-right text-[0.9375rem] font-medium', value ? 'text-cream' : 'text-cream/35')}>{value || '—'}</dd>
+        <dd className={cn('min-w-0 text-right text-[0.9375rem] font-medium', value ? 'text-cream' : 'text-cream/35')}>{value || '-'}</dd>
     </div>
 )
 
@@ -400,7 +400,7 @@ const GiftEnquiryForm = ({ products = [] }) => {
             await navigator.clipboard.writeText(result.ticketId)
             setCopied(true)
             window.setTimeout(() => setCopied(false), 2000)
-        } catch { /* clipboard blocked — the reference is on screen anyway */ }
+        } catch { /* clipboard blocked - the reference is on screen anyway */ }
     }
 
     const errId = (name) => (errors[name] ? `gift-${name}-error` : undefined)
@@ -478,7 +478,7 @@ const GiftEnquiryForm = ({ products = [] }) => {
                                         <Link href={`${WEBSITE_LOGIN}?callback=${encodeURIComponent(trackHref)}`} className="font-semibold text-brand underline underline-offset-2">
                                             Sign in or create an account
                                         </Link>{' '}
-                                        with <span className="font-semibold">{result.email}</span> and verify it — this enquiry will appear under Enquiries in your account.
+                                        with <span className="font-semibold">{result.email}</span> and verify it - this enquiry will appear under Enquiries in your account.
                                     </p>
                                 )}
                                 <div className="mt-2 flex flex-wrap gap-3">
@@ -609,7 +609,7 @@ const GiftEnquiryForm = ({ products = [] }) => {
                                             {products.length > 0 && (
                                                 <fieldset className="m-0 min-w-0 border-0 p-0">
                                                     <legend className={LEGEND}>
-                                                        Boxes you like <span className={OPTIONAL}>(optional — pick any, or leave it to us)</span>
+                                                        Boxes you like <span className={OPTIONAL}>(optional - pick any, or leave it to us)</span>
                                                     </legend>
                                                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
                                                         {products.map((p) => {

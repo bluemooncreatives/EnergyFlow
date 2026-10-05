@@ -102,7 +102,7 @@ const NewsletterPopupCard = forwardRef(function NewsletterPopupCard(
                             <Title className="ef-nl-title">{popup.successTitle}</Title>
                             <Description className="ef-nl-lead ef-nl-keep">
                                 {shown.alreadySubscribed
-                                    ? "You're already on the list — welcome back!"
+                                    ? "You're already on the list - welcome back!"
                                     : popup.successMessage}
                             </Description>
                             {shown.couponCode && <CodeReveal code={shown.couponCode} />}

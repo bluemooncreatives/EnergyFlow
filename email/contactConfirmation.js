@@ -28,7 +28,7 @@ export const contactConfirmation = ({ ticketId, name, subject, message }) => {
 ${eyebrow("Message received")}
 ${heading("Thanks for reaching out")}
 ${paragraph(`Hi ${firstName(name)},`)}
-${paragraph("We've received your message and our team will get back to you as soon as possible. Please keep the reference number below for any follow-up — just reply to this email and we'll pick up right where you left off.")}
+${paragraph("We've received your message and our team will get back to you as soon as possible. Please keep the reference number below for any follow-up - just reply to this email and we'll pick up right where you left off.")}
 ${valueCard({ caption: "Your reference number", value: ticketId, size: "26px", tracking: "2px" })}
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-top:1px solid ${BRAND.border};margin-top:8px;">
   <tr><td style="padding-top:20px;">
@@ -40,7 +40,7 @@ ${valueCard({ caption: "Your reference number", value: ticketId, size: "26px", t
 </table>`;
 
     return emailShell({
-        preheader: `We've received your message — reference ${ticketId}.`,
+        preheader: `We've received your message - reference ${ticketId}.`,
         title: "We've received your message",
         bodyHtml,
     });

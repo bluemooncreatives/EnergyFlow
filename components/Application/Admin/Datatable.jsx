@@ -234,7 +234,7 @@ const Datatable = ({
                     }
                     const value = getValue()
                     if (value === null || value === undefined || value === '' || value === '-') {
-                        return <span className="text-muted-foreground/60">—</span>
+                        return <span className="text-muted-foreground/60">-</span>
                     }
                     const text = String(value)
                     return (

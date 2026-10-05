@@ -138,7 +138,7 @@ export const CodeReveal = ({ code, className }) => {
     const copy = async () => {
         if (await copyText(code, rootRef.current || undefined)) {
             setCopied(true)
-            toast.success(`Code ${code} copied — apply it at checkout.`)
+            toast.success(`Code ${code} copied - apply it at checkout.`)
             clearTimeout(timerRef.current)
             timerRef.current = setTimeout(() => setCopied(false), 2200)
         } else {

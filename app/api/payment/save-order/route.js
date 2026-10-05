@@ -313,7 +313,7 @@ export async function POST(request) {
             const storeInbox = orderNotificationRecipients()
             const needsVerification = !paymentVerification
             const alertSubject = [
-                needsVerification ? '⚠ VERIFY PAYMENT —' : '🛒 New order',
+                needsVerification ? '⚠ VERIFY PAYMENT -' : '🛒 New order',
                 orderId,
                 '·',
                 totalAmount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }),
@@ -349,7 +349,7 @@ export async function POST(request) {
             for (const [who, result] of [['customer', customerMail], ['store', storeMail]]) {
                 const outcome = result.status === 'fulfilled' ? result.value : { success: false, message: result.reason?.message }
                 if (!outcome?.success) {
-                    console.error(`Order ${orderId}: ${who} email not sent —`, outcome?.message)
+                    console.error(`Order ${orderId}: ${who} email not sent -`, outcome?.message)
                 }
             }
         } catch (error) {

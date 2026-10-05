@@ -59,7 +59,7 @@ const UnsubscribeClient = ({ token }) => {
                     ) : state === 'unsubscribed' ? (
                         <>
                             <h1 className="ef-title ef-title--md">You&apos;re unsubscribed</h1>
-                            <p className="ef-lead" role="status">{message} Sorry to see you go — changed your mind?</p>
+                            <p className="ef-lead" role="status">{message} Sorry to see you go - changed your mind?</p>
                             <div className="flex flex-wrap justify-center gap-3">
                                 <StoreButton onClick={() => send(true)} disabled={loading} variant="accent">
                                     {loading && <Loader2 className="animate-spin" aria-hidden="true" />}

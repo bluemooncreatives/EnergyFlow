@@ -19,7 +19,7 @@ const BENEFITS = [
     {
         Icon: Truck,
         title: 'Free Shipping',
-        description: 'No hidden costs — just the price you see at checkout.',
+        description: 'No hidden costs - just the price you see at checkout.',
     },
     {
         Icon: ShieldCheck,

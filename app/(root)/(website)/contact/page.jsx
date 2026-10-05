@@ -116,7 +116,7 @@ const ContactPage = () => {
 
           {ticketId ? (
             <div className={styles.successPanel} role="status" aria-live="polite">
-              <h2 className={styles.successTitle}>Thanks — we've received your message.</h2>
+              <h2 className={styles.successTitle}>Thanks - we've received your message.</h2>
               <p className={styles.successText}>
                 Our team will get back to you soon. We've also emailed you a copy.
                 Please keep your reference number for any follow-up.

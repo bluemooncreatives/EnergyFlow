@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
             alreadyCancelledOnDelhivery
                 ? "This shipment was already cancelled on Delhivery. The order is now marked as cancelled."
                 : "Shipment cancelled on Delhivery and the order is marked as cancelled.",
-            paidAmount > 0 ? `The customer paid ${formatInr(paidAmount)} online — refund it from your payment dashboard.` : "",
+            paidAmount > 0 ? `The customer paid ${formatInr(paidAmount)} online - refund it from your payment dashboard.` : "",
         ].filter(Boolean).join(" ")
 
         return response(true, 200, message, withDefaultShipment(await loadOrder(updated._id)))

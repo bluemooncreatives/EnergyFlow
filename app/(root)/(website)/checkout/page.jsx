@@ -174,7 +174,7 @@ const Checkout = () => {
         // take the coupon off rather than let the server reject the order.
         if (isCouponApplied && subTotalAmount < couponMin) {
             removeCoupon()
-            showToast('error', `Coupon removed — it needs a minimum order of ${fmt(couponMin)}.`)
+            showToast('error', `Coupon removed - it needs a minimum order of ${fmt(couponMin)}.`)
         }
 
     }, [lines, couponDiscountPercentage])
@@ -455,7 +455,7 @@ const Checkout = () => {
                             showToast('error', `${paymentResponseData.message} (Payment id: ${response.razorpay_payment_id})`)
                         }
                     } catch {
-                        showToast('error', `Your payment went through but we could not confirm the order. Please don't pay again — contact support with payment id ${response.razorpay_payment_id}.`)
+                        showToast('error', `Your payment went through but we could not confirm the order. Please don't pay again - contact support with payment id ${response.razorpay_payment_id}.`)
                     } finally {
                         setSavingOrder(false)
                     }
@@ -727,7 +727,7 @@ const Checkout = () => {
                                             render={({ field }) => (
                                                 <FormItem className='sm:col-span-2'>
                                                     <FormControl>
-                                                        <Input placeholder="Landmark (optional) — e.g. near City Mall" className="form-field" {...field} />
+                                                        <Input placeholder="Landmark (optional) - e.g. near City Mall" className="form-field" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -739,7 +739,7 @@ const Checkout = () => {
                                             render={({ field }) => (
                                                 <FormItem className='sm:col-span-2'>
                                                     <FormControl>
-                                                        <Textarea placeholder="Order note (optional) — delivery instructions, gift message, etc." className="form-field form-field-area" {...field} />
+                                                        <Textarea placeholder="Order note (optional) - delivery instructions, gift message, etc." className="form-field form-field-area" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -784,7 +784,7 @@ const Checkout = () => {
                                                 <p className='font-neue text-base font-semibold text-foreground'>Pay Online</p>
                                                 <span className='rounded-[var(--radius-control)] bg-success/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal text-success'>Recommended</span>
                                             </div>
-                                            <p className='mt-0.5 text-[11px] text-muted-foreground'>UPI, Cards, Net Banking & Wallets — secured by Razorpay</p>
+                                            <p className='mt-0.5 text-[11px] text-muted-foreground'>UPI, Cards, Net Banking & Wallets - secured by Razorpay</p>
                                         </div>
                                         <span className='font-neue text-base font-semibold text-brand'>{fmt(totalAmount)}</span>
                                     </label>
@@ -1029,7 +1029,7 @@ const Checkout = () => {
                                         </Link>
                                         {isBuyNow && (
                                             <p className='mt-2 text-center text-[0.75rem] text-ink-muted'>
-                                                Only this item is being ordered — your cart stays as it is.
+                                                Only this item is being ordered - your cart stays as it is.
                                             </p>
                                         )}
                                     </div>
@@ -1046,7 +1046,7 @@ const Checkout = () => {
                                 </div>
 
                                 <p className='flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground'>
-                                    <Lock className='size-3' /> Secure checkout — your details are encrypted &amp; protected.
+                                    <Lock className='size-3' /> Secure checkout - your details are encrypted &amp; protected.
                                 </p>
                             </div>
                         </aside>

@@ -163,7 +163,7 @@ export const formatINR = (value) => {
 /** Plain integer with Indian digit grouping. Never renders "NaN". */
 export const formatCount = (value) => {
     const n = Number(value);
-    return Number.isFinite(n) ? n.toLocaleString("en-IN") : "—";
+    return Number.isFinite(n) ? n.toLocaleString("en-IN") : "-";
 };
 
 /** Short date, IST, e.g. "5 Oct 2026". Passes an unparseable value through. */
@@ -582,7 +582,7 @@ export const totalsTable = ({
   ${Number(couponDiscountAmount) > 0
         ? totalRow(
             `Discount${couponCode ? ` (${esc(couponCode)})` : ""}`,
-            `– ${esc(formatINR(couponDiscountAmount))}`,
+            `-${esc(formatINR(couponDiscountAmount))}`,
             { color: BRAND.success }
         )
         : ""}

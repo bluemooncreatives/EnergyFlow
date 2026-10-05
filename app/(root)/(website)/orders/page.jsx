@@ -189,7 +189,7 @@ const Orders = () => {
                     {!isLoading && !error && totalPages > 1 && (
                         <nav aria-label="Orders pagination" className="flex items-center justify-between gap-3 border-t border-line-soft px-4 py-3 sm:px-5">
                             <p className="text-xs text-foreground/60 sm:text-[13px]">
-                                {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, total)} of {total}
+                                {(currentPage - 1) * PER_PAGE + 1}-{Math.min(currentPage * PER_PAGE, total)} of {total}
                             </p>
                             <div className="flex items-center gap-2">
                                 <Button

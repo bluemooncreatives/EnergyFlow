@@ -78,7 +78,7 @@ const EnquiryCard = ({ enquiry, highlight = false }) => {
             await navigator.clipboard.writeText(enquiry.ticketId)
             setCopied(true)
             window.setTimeout(() => setCopied(false), 2000)
-        } catch { /* clipboard blocked — the reference is on screen */ }
+        } catch { /* clipboard blocked - the reference is on screen */ }
     }
 
     return (
@@ -122,7 +122,7 @@ const EnquiryCard = ({ enquiry, highlight = false }) => {
 
             <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-[var(--radius-sm)] bg-surface-page p-3.5 sm:grid-cols-4">
                 <Detail label="Boxes">{Number(enquiry.quantity || 0).toLocaleString('en-IN')}</Detail>
-                <Detail label="Occasion">{labelFor(OCCASIONS, enquiry.occasion) || '—'}</Detail>
+                <Detail label="Occasion">{labelFor(OCCASIONS, enquiry.occasion) || '-'}</Detail>
                 <Detail label="Needed by">{enquiry.deliveryDate ? formatDate(enquiry.deliveryDate) : 'Flexible'}</Detail>
                 <Detail label="Branding">{enquiry.branding ? 'Custom branded' : 'Standard'}</Detail>
             </dl>

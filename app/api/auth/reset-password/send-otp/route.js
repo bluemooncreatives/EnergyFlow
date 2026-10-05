@@ -35,7 +35,7 @@ export async function POST(request) {
 
         await newOtpData.save()
 
-        const otpSendStatus = await sendMail('Reset your password — Energyflow', email, otpEmail(otp, { name: getUser.name, purpose: 'reset' }))
+        const otpSendStatus = await sendMail('Reset your password - Energyflow', email, otpEmail(otp, { name: getUser.name, purpose: 'reset' }))
 
         if (!otpSendStatus.success) {
             return response(false, 400, 'Failed to resend otp.')

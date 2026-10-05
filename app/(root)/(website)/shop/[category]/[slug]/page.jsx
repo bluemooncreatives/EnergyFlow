@@ -36,7 +36,7 @@ const buildTitle = (product, variant) => {
     const size = variant?.size ? ` (${variant.size})` : ''
     const title = `Buy ${product.name} Online${size}`
     const category = product.category?.name
-    const withCategory = category ? `${title} – ${category}` : title
+    const withCategory = category ? `${title} - ${category}` : title
     return withCategory.length <= 60 ? withCategory : title
 }
 

@@ -53,7 +53,7 @@ export async function POST(request) {
 
 
         const verifyMailStatus = await sendMail(
-            'Verify your email — Energyflow',
+            'Verify your email - Energyflow',
             email,
             emailVerificationLink(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`, { name })
         )
@@ -62,7 +62,7 @@ export async function POST(request) {
         // but we DO tell the user honestly so they don't sit waiting for a mail that
         // never arrived. They can trigger a fresh link by attempting to log in.
         if (!verifyMailStatus.success) {
-            return response(true, 200, 'Account created. We could not send the verification email right now — please try logging in to resend it.')
+            return response(true, 200, 'Account created. We could not send the verification email right now - please try logging in to resend it.')
         }
 
         return response(true, 200, 'Registration success, Please verify your email address.')

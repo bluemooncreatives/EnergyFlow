@@ -158,7 +158,7 @@ const describeBehavior = (behavior, popupEnabled) => {
   const again = Number(behavior.dismissDays) > 0
     ? `Once closed, it stays hidden for ${behavior.dismissDays} day${Number(behavior.dismissDays) === 1 ? '' : 's'}`
     : 'Once closed, it can reappear on the next visit'
-  return `Opens ${when} — ${where}${excluded}, on ${devices}. ${again}; subscribers never see it again.`
+  return `Opens ${when} - ${where}${excluded}, on ${devices}. ${again}; subscribers never see it again.`
 }
 
 const NewsletterSettingsPage = () => {
@@ -213,7 +213,7 @@ const NewsletterSettingsPage = () => {
       const expired = dayjs(c.validity).isBefore(dayjs())
       return {
         value: c.code,
-        label: `${c.code} — ${c.discountPercentage}% off${c.minShoppingAmount ? ` over ₹${c.minShoppingAmount}` : ''} · ${expired ? 'EXPIRED' : `till ${dayjs(c.validity).format('DD MMM YYYY')}`}`,
+        label: `${c.code} - ${c.discountPercentage}% off${c.minShoppingAmount ? ` over ₹${c.minShoppingAmount}` : ''} · ${expired ? 'EXPIRED' : `till ${dayjs(c.validity).format('DD MMM YYYY')}`}`,
       }
     }),
     [coupons]
@@ -267,7 +267,7 @@ const NewsletterSettingsPage = () => {
   const resetDefaults = () => {
     form.reset(DEFAULT_NEWSLETTER_SETTINGS, { keepDefaultValues: true })
     setSelectedMedia([])
-    showToast('success', 'Defaults restored — save to publish them.')
+    showToast('success', 'Defaults restored - save to publish them.')
   }
 
   // Tabs holding at least one invalid field get a red dot.
@@ -277,7 +277,7 @@ const NewsletterSettingsPage = () => {
     <div className="flex flex-col gap-4 sm:gap-6">
       <PageHeader
         title="Popup & sign-up forms"
-        description="Design the newsletter popup, the homepage newsletter band and the footer sign-up — changes go live when you save."
+        description="Design the newsletter popup, the homepage newsletter band and the footer sign-up - changes go live when you save."
         breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
         actions={
           <>
@@ -474,7 +474,7 @@ const NewsletterSettingsPage = () => {
                     <p className="ef-tone--danger flex items-start gap-2 rounded-md border p-3 text-sm">
                       <AlertTriangle className="mt-0.5 size-4 shrink-0" />
                       {couponExpired
-                        ? 'This coupon has expired. Extend its validity or pick another — an expired offer is hidden from the storefront.'
+                        ? 'This coupon has expired. Extend its validity or pick another - an expired offer is hidden from the storefront.'
                         : 'This coupon no longer exists. Pick another one.'}
                     </p>
                   )}
@@ -510,7 +510,7 @@ const NewsletterSettingsPage = () => {
                     name="behavior.dismissDays"
                     type="number"
                     label="Hide for (days) after it's closed"
-                    hint="Industry standard is 7–30 days. Subscribers never see the popup again."
+                    hint="Industry standard is 7-30 days. Subscribers never see the popup again."
                   />
                 </FieldGroup>
 

@@ -200,8 +200,8 @@ const OrderDetails = async ({ params }) => {
                                         {[orderData?.address, orderData?.landmark, orderData?.city, orderData?.state, orderData?.country, orderData?.pincode].filter(Boolean).join(', ')}
                                     </p>
                                     <div className='mt-3 flex flex-col gap-1 text-[13px] text-muted-foreground sm:flex-row sm:gap-6'>
-                                        <span><span className='font-medium text-foreground'>Phone:</span> {orderData?.phone || '—'}</span>
-                                        <span className='break-all'><span className='font-medium text-foreground'>Email:</span> {orderData?.email || '—'}</span>
+                                        <span><span className='font-medium text-foreground'>Phone:</span> {orderData?.phone || '-'}</span>
+                                        <span className='break-all'><span className='font-medium text-foreground'>Email:</span> {orderData?.email || '-'}</span>
                                     </div>
                                     {orderData?.ordernote && (
                                         <div className='mt-4 rounded-lg border border-border/50 bg-muted/30 px-3 py-2.5'>
