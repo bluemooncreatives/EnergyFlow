@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import Image from 'next/image'
+import CoverImage from './storefront/CoverImage'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowRight, ChevronDown, LayoutGrid } from 'lucide-react'
@@ -30,7 +30,7 @@ const CategoryThumb = ({ category, index, className, sizes = '48px' }) => (
         aria-hidden="true"
     >
         {category.image ? (
-            <Image src={category.image} alt="" fill sizes={sizes} className="object-cover" style={{ objectPosition: category.imagePosition || 'center' }} />
+            <CoverImage src={category.image} fallbackSrc={category.fallbackImage} alt="" fill sizes={sizes} className="object-cover" style={{ objectPosition: category.imagePosition || 'center' }} />
         ) : (
             <span className="font-header text-lg font-semibold uppercase text-[var(--brand-primary)]">
                 {category.name.trim().charAt(0) || '•'}

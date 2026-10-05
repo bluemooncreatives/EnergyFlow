@@ -22,6 +22,7 @@ const breadcrumbData = [
 const AddCategory = () => {
   const [loading, setLoading] = useState(false)
   const [coverMedia, setCoverMedia] = useState(null)
+  const [uploadBusy, setUploadBusy] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(categorySchema),
@@ -42,9 +43,10 @@ const AddCategory = () => {
   }, [form, name])
 
   const onSubmit = async (values) => {
+    if (loading || uploadBusy) return
     setLoading(true)
     try {
-      const { data: response } = await axios.post('/api/category/create', values)
+      const { data: response } = await axios.post('/api/category/create', values, { timeout: 30000 })
       if (!response.success) {
         throw new Error(response.message)
       }
@@ -53,7 +55,7 @@ const AddCategory = () => {
       setCoverMedia(null)
       showToast('success', response.message)
     } catch (error) {
-      showToast('error', error.message)
+      showToast('error', error?.response?.data?.message || error.message)
     } finally {
       setLoading(false)
     }
@@ -70,6 +72,7 @@ const AddCategory = () => {
       <div className="rounded-md bg-card p-4 sm:p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            <fieldset disabled={loading}>
             <div className="mb-5">
               <FormField
                 control={form.control}
@@ -102,9 +105,10 @@ const AddCategory = () => {
             </div>
 
             <div className="mb-3">
-              <CategoryCoverField form={form} media={coverMedia} onMediaChange={setCoverMedia} disabled={loading} />
-              <ButtonLoading loading={loading} type="submit" text="Add Category" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
+              <CategoryCoverField form={form} media={coverMedia} onMediaChange={setCoverMedia} onBusyChange={setUploadBusy} disabled={loading} />
+              <ButtonLoading loading={loading} disabled={loading || uploadBusy} type="submit" text="Add Category" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
             </div>
+            </fieldset>
           </form>
         </Form>
       </div>

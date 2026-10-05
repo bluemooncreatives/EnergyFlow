@@ -39,7 +39,7 @@ const toPickTile = (pick) => {
         price: pick.priceFrom,
         badge: pick.productCount ? countLabel(pick.productCount) : null,
         tint: 'var(--tint-sage)',
-        media: { kind: 'cover', ...art },
+        media: { kind: 'cover', ...art, fallbackSrc: resolveCategoryArt({ ...pick, cover: null }, CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null)).src },
     }
 }
 

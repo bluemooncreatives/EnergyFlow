@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import Image from 'next/image'
+import CoverImage from './storefront/CoverImage'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -126,8 +126,9 @@ const TileMedia = ({ media, slot }) => {
 
     const cover = media.kind === 'cover'
     return (
-        <Image
+        <CoverImage
             src={media.src}
+            fallbackSrc={media.fallbackSrc}
             style={{ objectPosition: media.position || 'center' }}
             alt=""
             fill

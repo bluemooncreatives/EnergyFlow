@@ -32,6 +32,7 @@ const ModalMediaBlock = ({ media, selectedMedia, setSelectedMedia, isMultiple })
             <div className='absolute top-2 left-2 z-20'>
                 <Checkbox
                     id={media._id}
+                    aria-label={media.alt || media.title || `Select image ${media.public_id || media._id}`}
                     checked={selectedMedia.find(m => m._id === media._id) ? true : false}
                     onCheckedChange={handleCheck}
                 />

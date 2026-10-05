@@ -24,6 +24,7 @@ const mapCategory = (category) => {
     name: category.name,
     count: category.productCount || 0,
     previewImage: art.src,
+    fallbackImage: resolveCategoryArt({ ...category, cover: null }, CATEGORY_ART[category.slug]).src,
     alt: art.alt,
     imagePosition: art.position || 'center',
     priceFrom: category.priceFrom,

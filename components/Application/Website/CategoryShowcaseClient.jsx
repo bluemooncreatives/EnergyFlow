@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import CoverImage from './storefront/CoverImage'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -121,8 +122,9 @@ const Panel = ({ item, panelRef }) => {
                 {/* Photo (oversized so the pointer parallax never shows an edge) */}
                 <div data-img className="absolute -inset-[4%] -z-10 bg-[radial-gradient(circle_at_78%_18%,rgb(242_201_76/0.52),transparent_36%),radial-gradient(circle_at_12%_83%,rgb(140_122_59/0.68),transparent_44%),var(--palette-pine)] will-change-transform">
                     {item.previewImage && (
-                        <Image
+                        <CoverImage
                             src={item.previewImage}
+                            fallbackSrc={item.fallbackImage}
                             alt={item.alt || ''}
                             fill
                             sizes="(max-width: 1024px) 84vw, 50vw"
