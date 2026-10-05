@@ -51,6 +51,18 @@ export async function PUT(request) {
             return response(true, 200, 'Order status is already set.', orderData)
         }
 
+        // A live Delhivery shipment must be cancelled through Shipment Management,
+        // which checks it hasn't been picked up and cancels the courier pickup too.
+        const shipment = orderData.shipment
+        const hasActiveShipment = Boolean(shipment?.awb) && shipment.shipmentStatus !== 'CANCELLED'
+        if (status === 'cancelled' && hasActiveShipment) {
+            return response(false, 409, 'This order has a Delhivery shipment. Use “Cancel Shipment” in Shipment Management so the courier pickup is cancelled too.')
+        }
+
+        if (previousStatus === 'cancelled' && shipment?.cancelledAt) {
+            return response(false, 409, 'This order’s Delhivery shipment was cancelled, so the order can’t be reopened.')
+        }
+
         orderData.status = status
         await orderData.save()
 

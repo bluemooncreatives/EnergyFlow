@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 const DEFAULT_BASE_URL = "https://track.delhivery.com"
 const CREATE_SHIPMENT_PATH = "/api/cmu/create.json"
 const TRACK_SHIPMENT_PATH = "/api/v1/packages/json/"
+const EDIT_SHIPMENT_PATH = "/api/p/edit"
 const DEFAULT_RETRIES = 3
 const RETRYABLE_STATUS_CODES = new Set([408, 425, 429, 500, 502, 503, 504])
 
@@ -63,8 +64,15 @@ export type TrackShipmentResult = {
     courier: "Delhivery"
     shipmentStatus: ShipmentStatus
     providerStatus: string
+    /** Delhivery's status family: UD (undelivered), DL (delivered), RT (return), CN (cancelled). */
+    providerStatusType: string | null
     statusDate: string | null
     instructions: string | null
+}
+
+export type CancelShipmentResult = {
+    awb: string
+    remark: string | null
 }
 
 type DelhiveryPackage = {
@@ -102,6 +110,14 @@ type DelhiveryTrackingResponse = {
     Error?: string
     error?: string
     message?: string
+}
+
+type DelhiveryCancelResponse = {
+    status?: boolean | string
+    error?: string
+    remark?: string
+    message?: string
+    waybill?: string | null
 }
 
 type DelhiveryErrorOptions = {
@@ -205,7 +221,7 @@ const retryDelay = (attempt: number, retryAfter?: string) => {
 const sleep = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
 
 const requestWithRetry = async <T>(
-    operation: "create_shipment" | "track_shipment",
+    operation: "create_shipment" | "track_shipment" | "cancel_shipment",
     config: AxiosRequestConfig,
     retries = DEFAULT_RETRIES,
 ): Promise<AxiosResponse<T>> => {
@@ -272,17 +288,30 @@ const extractCreateError = (data: DelhiveryCreateResponse) => {
 }
 
 export const mapDelhiveryStatus = (status: DelhiveryTrackingStatus = {}): ShipmentStatus => {
-    const value = `${status.Status ?? ""} ${status.StatusType ?? ""}`.toLowerCase()
+    const type = String(status.StatusType ?? "").trim().toUpperCase()
+    const value = String(status.Status ?? "").toLowerCase()
 
-    if (/cancel/.test(value)) return "CANCELLED"
-    if (/rto|return|dto/.test(value)) return "RTO"
-    if (/delivered/.test(value)) return "DELIVERED"
+    if (type === "CN" || /cancel/.test(value)) return "CANCELLED"
+    if (type === "RT" || /rto|return|dto/.test(value)) return "RTO"
+    if (type === "DL" || /delivered/.test(value)) return "DELIVERED"
     if (/out for delivery|dispatched to consignee|ofd/.test(value)) return "OUT_FOR_DELIVERY"
+    // Checked before "picked" so "Not Picked" is not mistaken for a pickup.
+    if (/not picked|ready/.test(value)) return "READY_TO_SHIP"
     if (/picked|pickup complete/.test(value)) return "PICKED_UP"
     if (/transit|dispatched|destination|bag|hub|facility/.test(value)) return "IN_TRANSIT"
     if (/manifest/.test(value)) return "PROCESSING"
-    if (/not picked|ready/.test(value)) return "READY_TO_SHIP"
     return "PROCESSING"
+}
+
+// Delhivery statuses where the package is still with the seller. Anything else
+// (In Transit, Pending, Dispatched, Delivered, RTO…) means the courier has it.
+const PRE_PICKUP_PROVIDER_STATUSES = new Set(["manifested", "not picked", "open", "scheduled", "pickup scheduled"])
+
+/** True only while the courier has not yet collected the package. */
+export const isBeforePickup = (tracking: Pick<TrackShipmentResult, "providerStatus" | "providerStatusType">) => {
+    const type = String(tracking.providerStatusType ?? "").toUpperCase()
+    if (type && type !== "UD") return false
+    return PRE_PICKUP_PROVIDER_STATUSES.has(tracking.providerStatus.toLowerCase())
 }
 
 export const createShipment = async (input: CreateShipmentInput): Promise<CreateShipmentResult> => {
@@ -336,12 +365,16 @@ export const createShipment = async (input: CreateShipmentInput): Promise<Create
         productCount: products.length,
     })
 
-    const body = new URLSearchParams({ format: "json", data: JSON.stringify(payload) })
+    // Delhivery expects a `format=json&data=<json>` body sent with a JSON content type.
+    // Sending it as application/x-www-form-urlencoded fails auth with 401 "No such user".
+    const body = `format=json&data=${encodeURIComponent(JSON.stringify(payload))}`
     const response = await requestWithRetry<DelhiveryCreateResponse>("create_shipment", {
         method: "POST",
         url: CREATE_SHIPMENT_PATH,
         data: body,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: { "Content-Type": "application/json" },
+        // Send the body as-is; axios would otherwise JSON-quote a non-JSON string.
+        transformRequest: [(data) => data],
     })
 
     const awb = extractAwb(response.data)
@@ -387,7 +420,37 @@ export const trackShipment = async (awbValue: string): Promise<TrackShipmentResu
         courier: "Delhivery",
         shipmentStatus: mapDelhiveryStatus(shipment.Status),
         providerStatus,
+        providerStatusType: cleanText(shipment.Status.StatusType) || null,
         statusDate: shipment.Status.StatusDateTime || shipment.Status.StatusDate || null,
         instructions: shipment.Status.Instructions || null,
     }
+}
+
+/**
+ * Cancel a shipment on Delhivery. Delhivery itself also accepts cancellation
+ * after pickup (turning it into an RTO), so callers must check `isBeforePickup`
+ * against live tracking first.
+ */
+export const cancelShipment = async (awbValue: string): Promise<CancelShipmentResult> => {
+    const awb = requiredText(awbValue, "AWB")
+    log("info", "cancel_shipment_started", { awb })
+
+    const response = await requestWithRetry<DelhiveryCancelResponse>("cancel_shipment", {
+        method: "POST",
+        url: EDIT_SHIPMENT_PATH,
+        data: { waybill: awb, cancellation: "true" },
+        headers: { "Content-Type": "application/json" },
+    })
+
+    const data = response.data || {}
+    const confirmed = (data.status === true || /^(true|success)$/i.test(String(data.status ?? "")))
+        && !cleanText(data.error)
+
+    if (!confirmed) {
+        const message = cleanText(data.error || data.remark || data.message || "Delhivery did not confirm the cancellation.")
+        log("error", "cancel_shipment_rejected", { awb, message })
+        throw new DelhiveryError(message, { statusCode: response.status })
+    }
+
+    return { awb, remark: cleanText(data.remark) || null }
 }

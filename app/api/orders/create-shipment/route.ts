@@ -51,6 +51,10 @@ export async function POST(request: NextRequest) {
             return response(false, 404, "Order not found.", {}, { status: 404 })
         }
 
+        if (order.status === "cancelled") {
+            return response(false, 400, "This order is cancelled, so a shipment can't be created.", {}, { status: 400 })
+        }
+
         if (order.shipment?.awb) {
             return response(
                 false,
