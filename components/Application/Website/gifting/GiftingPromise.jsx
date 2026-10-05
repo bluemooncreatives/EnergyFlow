@@ -1,9 +1,12 @@
 'use client'
 
 import { useRef } from 'react'
-import { BadgePercent, Layers, Stamp, Truck } from 'lucide-react'
+import { ArrowRight, BadgePercent, Layers, Stamp, Truck } from 'lucide-react'
 import { useReveal } from '@/hooks/useReveal'
-import styles from './gifting.module.css'
+import { cn } from '@/lib/utils'
+import Section from '../storefront/Section'
+import { EnquireButton } from './GiftingSelection'
+import { pad } from './GiftingUi'
 
 const PROMISES = [
     {
@@ -32,33 +35,49 @@ const PROMISES = [
     },
 ]
 
+/**
+ * "For teams & brands" — a two-tone statement beside its eyebrow, then the
+ * four promises as a staggered row of cards.
+ */
 const GiftingPromise = () => {
     const rootRef = useRef(null)
     useReveal(rootRef)
 
     return (
-        <section ref={rootRef} className="ef-section ef-section--sunken" aria-labelledby="promise-title">
-            <div className="ef-container">
-                <div className="mb-[clamp(2rem,4vw,3.5rem)] flex max-w-3xl flex-col items-start gap-3">
-                    <span className="ef-eyebrow" data-reveal>Why teams choose us</span>
-                    <h2 id="promise-title" className="ef-title" data-reveal>
-                        Gifting that feels <span className="ef-title__accent">personal</span>, at any scale
+        <Section ref={rootRef} tone="page" aria-labelledby="promise-title">
+            <div className="mb-[var(--section-gap)] grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,8fr)] lg:gap-10">
+                <div data-reveal><span className="ef-eyebrow">For teams &amp; brands</span></div>
+                <div className="flex flex-col items-start gap-7">
+                    <h2 id="promise-title" className="text-[clamp(1.375rem,1rem+1.6vw,2.5rem)] font-medium leading-[1.2] text-ink-strong [text-wrap:pretty]" data-reveal>
+                        Gifting that carries your name, at any scale.{' '}
+                        <span className="text-ink-muted">Pick a signature box or brief us on your own; we handle the branding, the packing and the delivery to every address.</span>
                     </h2>
-                </div>
-
-                <div className={styles.promise}>
-                    {PROMISES.map(({ Icon, tone, title, copy }) => (
-                        <div key={title} className="flex flex-col gap-4" data-reveal>
-                            <span className={`ef-seal ${tone} !size-16`}>
-                                <Icon aria-hidden="true" />
-                            </span>
-                            <h3 className="text-[1.1875rem] font-semibold leading-snug text-ink-strong">{title}</h3>
-                            <p className="text-[0.9375rem] leading-relaxed text-ink-body">{copy}</p>
-                        </div>
-                    ))}
+                    <EnquireButton className="ef-cta" data-reveal>
+                        <span>Start your brief</span>
+                        <span className="ef-cta__box" aria-hidden="true"><ArrowRight /></span>
+                    </EnquireButton>
                 </div>
             </div>
-        </section>
+
+            <ul className="grid gap-[var(--grid-gap)] sm:grid-cols-2 lg:grid-cols-4 lg:items-start">
+                {PROMISES.map(({ Icon, tone, title, copy }, i) => (
+                    <li
+                        key={title}
+                        className={cn('ef-card ef-card--interactive gap-8 p-6', i % 2 === 1 && 'lg:mt-14')}
+                        data-reveal
+                    >
+                        <span className="flex items-start justify-between">
+                            <span className={`ef-seal ${tone} !size-16`}><Icon aria-hidden="true" /></span>
+                            <span className="text-[0.75rem] font-semibold tabular-nums text-ink-muted" aria-hidden="true">{pad(i + 1)}</span>
+                        </span>
+                        <div>
+                            <h3 className="text-[1.0625rem] font-semibold uppercase leading-snug text-ink-strong">{title}</h3>
+                            <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-body">{copy}</p>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </Section>
     )
 }
 
