@@ -1,10 +1,11 @@
-import '@/models/Category.model'
+import CategoryModel from '@/models/Category.model'
 import mongoose from "mongoose"
 import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
 import ProductModel from "@/models/Product.model"
+import ProductVariantModel from "@/models/ProductVariant.model"
 import "@/models/Media.model"
 
 const FRESHLY_ARRIVED_TAG = 'storefront-freshly-arrived-products'
@@ -35,14 +36,30 @@ export async function GET() {
 
         await connectDB()
 
-        const items = await ProductModel.find({ deletedAt: null, isFreshlyArrived: true })
-            .sort({ freshlyArrivedSortOrder: 1, createdAt: -1, _id: 1 })
-            .select('name slug category sellingPrice mrp media freshlyArrivedSortOrder')
-            .populate('media', 'secure_url alt')
-            .populate({ path: 'category', select: 'slug name' })
-            .lean()
+        const [items, liveCategoryIds, stockedProductIds] = await Promise.all([
+            ProductModel.find({ deletedAt: null, isFreshlyArrived: true })
+                .sort({ freshlyArrivedSortOrder: 1, createdAt: -1, _id: 1 })
+                .select('name slug category sellingPrice mrp media freshlyArrivedSortOrder')
+                .populate('media', 'secure_url alt')
+                .populate({ path: 'category', select: 'slug name' })
+                .lean(),
+            CategoryModel.distinct('_id', { deletedAt: null }),
+            ProductVariantModel.distinct('product', { deletedAt: null }),
+        ])
 
-        return response(true, 200, 'Freshly arrived products fetched.', items)
+        // Mirrors the storefront rule in getFreshlyArrivedProducts: a pick with
+        // no live category or no live variant is skipped there and its slot goes
+        // to the next one. Flag it so the admin list can say why it is missing.
+        const liveCategories = new Set(liveCategoryIds.map(String))
+        const stocked = new Set(stockedProductIds.map(String))
+        const annotated = items.map((item) => {
+            const hiddenReason = !item.category || !liveCategories.has(String(item.category._id))
+                ? 'category'
+                : !stocked.has(String(item._id)) ? 'variants' : null
+            return { ...item, sellable: !hiddenReason, hiddenReason }
+        })
+
+        return response(true, 200, 'Freshly arrived products fetched.', annotated)
     } catch (error) {
         return catchError(error)
     }

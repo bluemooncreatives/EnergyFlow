@@ -1,10 +1,12 @@
 import dynamic from 'next/dynamic'
-import { getPopularProducts } from '@/lib/services/productService'
+import { getFreshlyArrivedProducts } from '@/lib/services/productService'
 
 const PopularProductsSectionClient = dynamic(() => import('./PopularProductsSectionClient'))
 
+// Shoppers see this grid as "Popular right now"; admins fill it from the
+// Freshly Arrived curation screen (/admin/freshly-arrived).
 const PopularProductsSection = async ({ tone, availability }) => {
-    const products = await getPopularProducts()
+    const products = await getFreshlyArrivedProducts()
 
     return <PopularProductsSectionClient products={products || []} tone={tone} availability={availability} />
 }

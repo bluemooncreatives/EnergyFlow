@@ -167,8 +167,22 @@ const CuratedProductsManager = ({ config }) => {
     }
 
     const count = list.items.length
-    const live = Math.min(count, slots)
-    const autoFilled = exact ? Math.max(0, slots - count) : 0
+    // The storefront only gives a slot to a pick it can sell. An endpoint that
+    // reports `sellable` (Freshly Arrived) makes the meter, the cut-off and the
+    // row badges match it; one that does not (Bestsellers) counts every pick.
+    const isHidden = (product) => product.sellable === false
+    const sellableCount = list.items.filter((product) => !isHidden(product)).length
+    const hiddenCount = count - sellableCount
+    const live = Math.min(sellableCount, slots)
+    const autoFilled = exact ? Math.max(0, slots - sellableCount) : 0
+    let filledSlots = 0
+    const onStoreFlags = list.items.map((product) => {
+        if (isHidden(product) || filledSlots >= slots) return false
+        filledSlots++
+        return true
+    })
+    // The cut-off marker sits before the first sellable pick that misses a slot.
+    const cutoffIndex = list.items.findIndex((product, i) => !isHidden(product) && !onStoreFlags[i])
     const loading = status === 'loading'
 
     return (
@@ -185,7 +199,7 @@ const CuratedProductsManager = ({ config }) => {
                 <Stat label="Live on storefront" value={loading ? '-' : `${live}/${slots}`} hint={`First ${slots} in order`} tone="text-[var(--success)]" />
                 <Stat
                     label={exact ? 'Auto-filled slots' : 'Beyond the cut-off'}
-                    value={loading ? '-' : exact ? autoFilled : Math.max(0, count - slots)}
+                    value={loading ? '-' : exact ? autoFilled : Math.max(0, sellableCount - slots)}
                     hint={exact ? 'Topped up with newest products' : 'Saved, not shown yet'}
                     tone={exact && autoFilled > 0 ? 'text-[var(--brand-amber-ink)]' : undefined}
                 />
@@ -213,6 +227,12 @@ const CuratedProductsManager = ({ config }) => {
                     <p className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">
                         <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                         This section always shows {slots} products. The {autoFilled} empty {autoFilled === 1 ? 'slot is' : 'slots are'} filled with your newest products until you add more.
+                    </p>
+                )}
+                {hiddenCount > 0 && !loading && (
+                    <p className="mt-3 flex items-start gap-2 text-sm text-[var(--brand-amber-ink)]">
+                        <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                        {hiddenCount} {hiddenCount === 1 ? 'pick is' : 'picks are'} hidden from the storefront because {hiddenCount === 1 ? 'it has' : 'they have'} no variants or {hiddenCount === 1 ? 'its' : 'their'} category was deleted. The next pick in your list takes the slot.
                     </p>
                 )}
             </div>
@@ -342,10 +362,11 @@ const CuratedProductsManager = ({ config }) => {
                     ) : (
                         <ol className="flex flex-col gap-1.5 p-3 sm:p-4">
                             {list.items.map((product, index) => {
-                                const onStore = index < slots
+                                const onStore = onStoreFlags[index]
+                                const hidden = isHidden(product)
                                 return (
                                     <li key={product._id} className="contents">
-                                        {index === slots && (
+                                        {index === cutoffIndex && (
                                             <div className="my-2 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.06em] text-muted-foreground" role="separator">
                                                 <span className="h-px flex-1 border-t border-dashed" /> Storefront cut-off · not shown below <span className="h-px flex-1 border-t border-dashed" />
                                             </div>
@@ -368,6 +389,11 @@ const CuratedProductsManager = ({ config }) => {
                                                 <p className="text-xs text-muted-foreground">
                                                     <span className="font-semibold text-foreground">{inr(product.sellingPrice)}</span>
                                                     {Number(product.mrp) > Number(product.sellingPrice) && <span className="ml-1.5 line-through">{inr(product.mrp)}</span>}
+                                                    {hidden && (
+                                                        <span className="ef-tone--danger ml-2 rounded-full border px-1.5 py-px text-[11px] font-medium">
+                                                            Hidden: {product.hiddenReason === 'category' ? 'category deleted' : 'no variants'}
+                                                        </span>
+                                                    )}
                                                 </p>
                                             </div>
                                             <div className="flex shrink-0 items-center gap-1">

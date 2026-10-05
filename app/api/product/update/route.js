@@ -77,7 +77,6 @@ export async function PUT(request) {
         // the Daily Best Sells rail at all, and both homepage rails render the
         // name, image and price that just changed.
         revalidateTag('storefront-daily-best-sells')
-        revalidateTag('storefront-popular-products')
 
         return response(true, 200, 'Product updated successfully.')
 

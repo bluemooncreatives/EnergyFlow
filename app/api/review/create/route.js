@@ -51,7 +51,7 @@ export async function POST(request) {
         // refresh them so the new review shows straight away.
         revalidateTag('storefront-product-details')
         revalidateTag('storefront-related-products')
-        revalidateTag('storefront-popular-products')
+        revalidateTag('storefront-freshly-arrived-products')
 
         return response(true, 200, 'Thanks! Your review has been posted.')
 
