@@ -22,7 +22,10 @@ const useDealCountdown = (countdown) => {
     const endsAt = countdown?.endsAt
 
     useEffect(() => {
-        if (mode === 'off') return undefined
+        if (mode === 'off') {
+            setState({ remaining: null, ended: false })
+            return undefined
+        }
 
         let id
         const tick = () => {
@@ -47,8 +50,8 @@ const useDealCountdown = (countdown) => {
             })
         }
 
-        tick()
         id = setInterval(tick, 1000)
+        tick()
         return () => clearInterval(id)
     }, [mode, endsAt])
 
@@ -99,7 +102,7 @@ const DailyBestSellsSectionClient = ({ products = [], settings = DEFAULT_DEAL_SE
     const { remaining, ended } = useDealCountdown(countdown)
     useReveal(sectionRef, [products.length])
 
-    if (!products.length || ended) return null
+    if (!section.enabled || !products.length || ended) return null
 
     // On wide screens the banner plus however many deals exist (1–3) share one
     // row, so a short deal list never leaves empty columns behind it.

@@ -132,6 +132,8 @@ const BannerPreview = ({ banner, countdown }) => (
 const DealsPage = () => {
   const [tab, setTab] = useState('products')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [loadAttempt, setLoadAttempt] = useState(0)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(null)
   const [updatedAt, setUpdatedAt] = useState(null)
@@ -148,6 +150,8 @@ const DealsPage = () => {
 
   useEffect(() => {
     let cancelled = false
+    setLoading(true)
+    setLoadError(null)
     ;(async () => {
       try {
         const { data } = await axios.get('/api/deals/settings')
@@ -157,14 +161,16 @@ const DealsPage = () => {
         setSaved(data.data.settings)
         setUpdatedAt(data.data.updatedAt)
       } catch (error) {
-        showToast('error', error?.response?.data?.message || error.message)
+        if (cancelled) return
+        const message = error?.response?.data?.message || error.message
+        setLoadError(message)
+        showToast('error', message)
       } finally {
         if (!cancelled) setLoading(false)
       }
     })()
     return () => { cancelled = true }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [form, loadAttempt])
 
   // Warn before leaving with unsaved edits.
   useEffect(() => {
@@ -187,6 +193,7 @@ const DealsPage = () => {
   }, [mediaOpen, selectedMedia])
 
   const onSubmit = async (data) => {
+    if (loading || !saved || saving) return
     setSaving(true)
     try {
       const { data: res } = await axios.put('/api/deals/settings', toPayload(data))
@@ -239,6 +246,15 @@ const DealsPage = () => {
         </div>
       )}
 
+      {loadError && (
+        <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm">
+          <span>Could not load deal settings: {loadError}</span>
+          <Button type="button" variant="outline" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>
+            Retry settings
+          </Button>
+        </div>
+      )}
+
       <Tabs value={tab} onValueChange={setTab} className="min-w-0 gap-4">
         <TabsList className="h-9 w-fit">
           <TabsTrigger value="products" className="px-3">Products</TabsTrigger>
@@ -265,7 +281,9 @@ const DealsPage = () => {
               {/* Sticky save bar */}
               <div className="sticky top-[4.5rem] z-20 flex flex-wrap items-center justify-between gap-3 rounded-md border bg-card/95 px-4 py-3 shadow-sm backdrop-blur">
                 <div className="flex items-center gap-2 text-sm">
-                  {formState.isDirty ? (
+                  {loading || !saved ? (
+                    <span className="text-muted-foreground">{loading ? 'Loading settings…' : 'Settings unavailable'}</span>
+                  ) : formState.isDirty ? (
                     <span className="ef-tone--sun rounded-full border px-2.5 py-0.5 text-xs font-medium">Unsaved changes</span>
                   ) : (
                     <span className="ef-tone--forest rounded-full border px-2.5 py-0.5 text-xs font-medium">All changes saved</span>
@@ -275,7 +293,7 @@ const DealsPage = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button type="button" variant="ghost" className="h-9" onClick={resetDefaults} disabled={loading || saving}>
+                  <Button type="button" variant="ghost" className="h-9" onClick={resetDefaults} disabled={loading || !saved || saving}>
                     <RotateCcw className="size-4" /> Reset to defaults
                   </Button>
                   <Button type="button" variant="outline" className="h-9" disabled={!formState.isDirty || saving} onClick={() => form.reset()}>
@@ -284,14 +302,14 @@ const DealsPage = () => {
                   <ButtonLoading
                     type="submit"
                     loading={saving}
-                    disabled={loading || saving}
+                    disabled={loading || !saved || saving}
                     className="h-9"
                     text={<span className="inline-flex items-center gap-2"><Save className="size-4" /> Save &amp; publish</span>}
                   />
                 </div>
               </div>
 
-              <div className={cn('grid grid-cols-1 items-start gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]', loading && 'pointer-events-none opacity-60')}>
+              <fieldset disabled={loading || !saved || saving} className={cn('grid min-w-0 grid-cols-1 items-start gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]', (loading || !saved) && 'pointer-events-none opacity-60')}>
                 <div className="flex min-w-0 flex-col gap-4">
                   <FieldGroup title="Section" description="The heading above the deals rail on the homepage.">
                     <SwitchField
@@ -393,7 +411,7 @@ const DealsPage = () => {
                     {values.banner && values.countdown && <BannerPreview banner={values.banner} countdown={values.countdown} />}
                   </section>
                 </div>
-              </div>
+              </fieldset>
             </form>
           </Form>
         </TabsContent>

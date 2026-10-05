@@ -1,6 +1,6 @@
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
-import { catchError, response } from "@/lib/helperFunction"
+import { catchError, escapeRegex, response } from "@/lib/helperFunction"
 import ProductModel from "@/models/Product.model"
 import "@/models/Media.model"
 import "@/models/Category.model"
@@ -20,7 +20,7 @@ export async function GET(request) {
 
         const matchQuery = { deletedAt: null, isDeal: { $ne: true } }
         if (q) {
-            matchQuery.name = { $regex: q, $options: 'i' }
+            matchQuery.name = { $regex: escapeRegex(q), $options: 'i' }
         }
 
         const products = await ProductModel.find(matchQuery)

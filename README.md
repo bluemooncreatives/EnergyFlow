@@ -19,6 +19,15 @@ A full-stack e-commerce web application built with Next.js 15, featuring a compl
 - **Image Management**: Cloudinary integration for image uploads and optimization
 - **Data Analytics**: Visual analytics dashboard using Recharts
 - **CSV Export**: Export data functionality for reports
+- **Deals of the Month**: Configure homepage deal products, heading, banner and countdown at `/admin/deals`.
+
+### Configure Deals of the Month
+
+In **Admin → Deals of the Month → Products**, add products and save their display order. The homepage uses the first three eligible picks; empty slots use the deepest available discounts. Products need an active category and a live variant to appear.
+
+In **Section & banner**, edit the heading, description, banner photo from the media library, image alt text, button and destination link. Choose a monthly countdown, a custom end date in your local time, or no countdown. Custom offers hide when their deadline passes. The section switch hides the rail while preserving its configuration.
+
+Click **Save & publish** to persist section settings and refresh the storefront cache. Product additions and removals save immediately; reordered products use their own save bar.
 
 ## 🛠️ Tech Stack
 

@@ -92,9 +92,10 @@ export async function POST(request) {
             .lean()
         let nextOrder = (last?.dealSortOrder ?? -1) + 1
 
-        const operations = candidates.map((product) => ({
+        const candidateIds = new Set(candidates.map((product) => String(product._id)))
+        const operations = ids.filter((id) => candidateIds.has(id)).map((id) => ({
             updateOne: {
-                filter: { _id: product._id },
+                filter: { _id: id, deletedAt: null, isDeal: { $ne: true } },
                 update: { $set: { isDeal: true, dealSortOrder: nextOrder++ } }
             }
         }))
