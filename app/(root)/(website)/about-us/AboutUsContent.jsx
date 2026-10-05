@@ -128,7 +128,7 @@ const PEOPLE = [
         initials: 'PS',
         role: 'Director · Sourcing & operations',
         bio: [
-            'Parveen decides what earns a place on our shelf. He builds direct, lasting relationships with growers, mills and producers so quality is controlled at origin rather than inspected at the end.',
+            'Mr. Parveen Singla decides what earns a place on our shelf. He builds direct, lasting relationships with growers, mills and producers so quality is controlled at origin rather than inspected at the end.',
             'It takes longer to set up and it is far more reliable once it runs — and the same discipline shapes how we price: buy well, keep the chain short, pass the difference on.',
         ],
     },
@@ -137,7 +137,7 @@ const PEOPLE = [
         initials: 'AS',
         role: 'Director · Retail, brand & expansion',
         bio: [
-            'Ayush turns a single store into a network that can grow without losing what makes it work: a range people genuinely want, and a shopping experience that is easy online and in store.',
+            'Mr. Ayush Singla turns a single store into a network that can grow without losing what makes it work: a range people genuinely want, and a shopping experience that is easy online and in store.',
             'The goal is a professionally managed brand rather than a chain of lookalike outlets — one where every Energyflow store means the same thing to the person walking in.',
         ],
     },
