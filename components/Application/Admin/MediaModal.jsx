@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import loading from '@/public/assets/images/loading.svg'
 import ModalMediaBlock from './ModalMediaBlock'
 import { showToast } from '@/lib/showToast'
@@ -11,17 +11,24 @@ import ButtonLoading from '../ButtonLoading'
 import AdminEmptyState from './AdminEmptyState'
 import { CircleAlert, ImageOff } from 'lucide-react'
 import { ADMIN_MEDIA_SHOW } from '@/routes/AdminPanelRoute'
-const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple }) => {
+const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple, onSelect, filterMedia }) => {
 
-    const [previouslySelected, setPreviouslySelected] = useState([])
+    const previouslySelected = useRef([])
+    const wasOpen = useRef(false)
+    useEffect(() => {
+        if (open && !wasOpen.current) previouslySelected.current = [...selectedMedia]
+        wasOpen.current = open
+    }, [open, selectedMedia])
 
     const fetchMedia = async (page) => {
         const { data: response } = await axios.get(`/api/media?page=${page}&&limit=18&&deleteType=SD`)
+        if (response.success === false || !Array.isArray(response.mediaData)) throw new Error(response.message || 'Could not load media. Please retry.')
         return response
     }
 
     const { isPending, isError, error, data, isFetching, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery({
         queryKey: ['MediaModal'],
+        enabled: open,
         queryFn: async ({ pageParam }) => await fetchMedia(pageParam),
         placeholderData: keepPreviousData,
         initialPageParam: 0,
@@ -34,11 +41,10 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
 
     const handleClear = () => {
         setSelectedMedia([])
-        setPreviouslySelected([])
         showToast('success', 'Media selection cleared.')
     }
     const handleClose = () => {
-        setSelectedMedia(previouslySelected)
+        setSelectedMedia(previouslySelected.current)
         setOpen(false)
     }
     const handleSelect = () => {
@@ -46,14 +52,15 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
             return showToast('error', 'Please select a media.')
         }
 
-        setPreviouslySelected(selectedMedia)
+        if (onSelect?.(selectedMedia) === false) return
+        previouslySelected.current = [...selectedMedia]
         setOpen(false)
     }
 
     return (
         <Dialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={(next) => next ? setOpen(true) : handleClose()}
         >
             <DialogContent onInteractOutside={(e) => e.preventDefault()}
                 className="h-dvh max-h-dvh overflow-hidden max-w-[calc(100%-1rem)] border-0 bg-transparent p-0 py-4 shadow-none sm:max-w-[80%] sm:py-10"
@@ -87,7 +94,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                                             data?.pages?.map((page, index) => (
                                                 <React.Fragment key={index}>
                                                     {
-                                                        page?.mediaData?.map((media) => (
+                                                        page?.mediaData?.filter((media) => !filterMedia || filterMedia(media)).map((media) => (
                                                             <ModalMediaBlock
                                                                 key={media._id}
                                                                 media={media}
@@ -125,7 +132,7 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                             <Button type="button" variant="secondary" size="lg" onClick={handleClose} >
                                 Close
                             </Button>
-                            <Button type="button" size="lg" onClick={handleSelect} >
+                            <Button type="button" size="lg" disabled={isPending || isError || !selectedMedia.length} onClick={handleSelect} >
                                 Select
                             </Button>
                         </div>

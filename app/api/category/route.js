@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
 import CategoryModel from "@/models/Category.model"
 import { NextResponse } from "next/server"
+import '@/models/Media.model'
+import { categoryCover } from '@/lib/categoryCover'
 
 export async function GET(request) {
     try {
@@ -65,6 +67,9 @@ export async function GET(request) {
                     _id: 1,
                     name: 1,
                     slug: 1,
+                    coverImage: 1,
+                    coverAlt: 1,
+                    coverPosition: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     deletedAt: 1
@@ -75,13 +80,14 @@ export async function GET(request) {
         // Execute query  
 
         const getCategory = await CategoryModel.aggregate(aggregatePipeline)
+        await CategoryModel.populate(getCategory, { path: 'coverImage', match: { deletedAt: null }, select: 'secure_url alt' })
 
         // Get totalRowCount  
         const totalRowCount = await CategoryModel.countDocuments(matchQuery)
 
         return NextResponse.json({
             success: true,
-            data: getCategory,
+            data: getCategory.map((category) => ({ ...category, cover: categoryCover(category) })),
             meta: { totalRowCount }
         })
 

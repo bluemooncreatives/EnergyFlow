@@ -3,8 +3,8 @@ import fruitsBerries from '@/public/assets/images/category/fruits-berries.webp'
 import beansSpices from '@/public/assets/images/category/beans-spices.webp'
 import giftBox from '@/public/assets/images/banner/gift-box-deal.jpg'
 
-// Art-directed photography for the main categories, keyed by slug. Any other
-// category falls back to its first product photo from the catalogue.
+// Automatic fallback artwork. An admin-selected category cover takes priority.
+// Other categories without a cover use a product photo from the catalogue.
 export const CATEGORY_ART = {
     'dry-fruits-and-nuts': {
         src: dryFruits,

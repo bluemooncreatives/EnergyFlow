@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import { getCategoryShowcase } from '@/lib/services/categoryService'
 import { CATEGORY_ART } from './storefront/categoryArt'
+import { resolveCategoryArt } from '@/lib/categoryCover'
 
 // GSAP-driven client logic is split into its own chunk so it does not block
 // parsing/hydration of the critical path.
@@ -15,17 +16,21 @@ const WRITEUP =
     'festive hampers ready to gift. Whether you are restocking your pantry, building a daily wellness ' +
     'routine, or choosing a thoughtful gift, start here and find exactly what you need.'
 
-const mapCategory = (category) => ({
+const mapCategory = (category) => {
+    const art = resolveCategoryArt(category, CATEGORY_ART[category.slug])
+    return {
     id: `cat-${category.id}`,
     href: category.href,
     name: category.name,
     count: category.productCount || 0,
-    previewImage: CATEGORY_ART[category.slug]?.src ?? category.previewImage,
-    alt: CATEGORY_ART[category.slug]?.alt ?? category.alt,
+    previewImage: art.src,
+    alt: art.alt,
+    imagePosition: art.position || 'center',
     priceFrom: category.priceFrom,
     maxDiscount: category.maxDiscount || 0,
     products: category.products || [],
-})
+    }
+}
 
 const CategoryArchiveSection = async ({ tone }) => {
     const categories = await getCategoryShowcase()

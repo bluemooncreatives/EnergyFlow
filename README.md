@@ -29,6 +29,12 @@ In **Section & banner**, edit the heading, description, banner photo from the me
 
 Click **Save & publish** to persist section settings and refresh the storefront cache. Product additions and removals save immediately; reordered products use their own save bar.
 
+### Configure category covers
+
+Open **Admin → Category → Edit** (or **New Category**) and find **Category cover image**. Use **Upload cover** to upload an image to Cloudinary, or **Choose from library** to reuse an existing image. Adjust its alt text and crop focus using the preview, then save the category. The cover appears in **Shop by Category**, the shop menu and the featured category tile.
+
+**Remove custom cover** restores automatic artwork or a product photo after saving. Trashed or deleted media also falls back automatically; restoring the media restores its use as a cover. Categories appear on the homepage once they contain active products. Cloudinary uses the same configuration and Media library as product images.
+
 ## 🛠️ Tech Stack
 
 ### Frontend

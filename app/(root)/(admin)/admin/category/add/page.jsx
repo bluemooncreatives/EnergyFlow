@@ -5,7 +5,8 @@ import { ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD } from '@/routes/AdminPanelRoute'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import ButtonLoading from '@/components/Application/ButtonLoading'
-import { zSchema } from '@/lib/zodSchema'
+import { categorySchema } from '@/lib/categoryConfig'
+import CategoryCoverField from '@/components/Application/Admin/CategoryCoverField'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
@@ -20,24 +21,25 @@ const breadcrumbData = [
 
 const AddCategory = () => {
   const [loading, setLoading] = useState(false)
-  const formSchema = zSchema.pick({
-    name: true, slug: true
-  })
+  const [coverMedia, setCoverMedia] = useState(null)
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
       slug: "",
+      coverImage: null,
+      coverAlt: '',
+      coverPosition: 'center',
     },
   })
 
+  const name = form.watch('name')
   useEffect(() => {
-    const name = form.getValues('name')
     if (name) {
       form.setValue('slug', slugify(name).toLowerCase())
     }
-  }, [form.watch('name')])
+  }, [form, name])
 
   const onSubmit = async (values) => {
     setLoading(true)
@@ -48,6 +50,7 @@ const AddCategory = () => {
       }
 
       form.reset()
+      setCoverMedia(null)
       showToast('success', response.message)
     } catch (error) {
       showToast('error', error.message)
@@ -99,6 +102,7 @@ const AddCategory = () => {
             </div>
 
             <div className="mb-3">
+              <CategoryCoverField form={form} media={coverMedia} onMediaChange={setCoverMedia} disabled={loading} />
               <ButtonLoading loading={loading} type="submit" text="Add Category" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
             </div>
           </form>

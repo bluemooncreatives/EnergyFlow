@@ -30,7 +30,7 @@ const CategoryThumb = ({ category, index, className, sizes = '48px' }) => (
         aria-hidden="true"
     >
         {category.image ? (
-            <Image src={category.image} alt="" fill sizes={sizes} className="object-cover" />
+            <Image src={category.image} alt="" fill sizes={sizes} className="object-cover" style={{ objectPosition: category.imagePosition || 'center' }} />
         ) : (
             <span className="font-header text-lg font-semibold uppercase text-[var(--brand-primary)]">
                 {category.name.trim().charAt(0) || '•'}

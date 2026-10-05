@@ -6,11 +6,11 @@ import { ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD } from '@/routes/AdminPanelRoute'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import ButtonLoading from '@/components/Application/ButtonLoading'
-import { zSchema } from '@/lib/zodSchema'
+import { categoryUpdateSchema } from '@/lib/categoryConfig'
+import CategoryCoverField from '@/components/Application/Admin/CategoryCoverField'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { use, useEffect, useState } from 'react'
-import slugify from 'slugify'
 import { showToast } from '@/lib/showToast'
 import axios from 'axios'
 import useFetch from '@/hooks/useFetch'
@@ -23,20 +23,21 @@ const breadcrumbData = [
 const EditCategory = ({ params }) => {
 
     const { id } = use(params)
-    const { data: categoryData, error: recordError, errorStatus: recordErrorStatus, refetch: refetchRecord } = useFetch(`/api/category/get/${id}`)
+    const { data: categoryData, loading: recordLoading, error: recordError, errorStatus: recordErrorStatus, refetch: refetchRecord } = useFetch(`/api/category/get/${id}`)
 
 
     const [loading, setLoading] = useState(false)
-    const formSchema = zSchema.pick({
-        _id: true, name: true, slug: true
-    })
+    const [coverMedia, setCoverMedia] = useState(null)
 
     const form = useForm({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(categoryUpdateSchema),
         defaultValues: {
             _id: id,
             name: "",
             slug: "",
+            coverImage: null,
+            coverAlt: '',
+            coverPosition: 'center',
         },
     })
  
@@ -48,20 +49,17 @@ const EditCategory = ({ params }) => {
             form.reset({
                 _id: data?._id,
                 name: data?.name,
-                slug: data?.slug
+                slug: data?.slug,
+                coverImage: data?.coverImage?._id || null,
+                coverAlt: data?.coverAlt || '',
+                coverPosition: data?.coverPosition || 'center',
             })
+            setCoverMedia(data?.coverImage || null)
         }
-    }, [categoryData])
-
-
-    useEffect(() => {
-        const name = form.getValues('name')
-        if (name) {
-            form.setValue('slug', slugify(name).toLowerCase())
-        }
-    }, [form.watch('name')])
+    }, [categoryData, form])
 
     const onSubmit = async (values) => {
+        if (recordLoading || !categoryData?.success) return
         setLoading(true)
         try {
             const { data: response } = await axios.put('/api/category/update', values)
@@ -70,6 +68,7 @@ const EditCategory = ({ params }) => {
             }
 
             showToast('success', response.message)
+            form.reset(values)
         } catch (error) {
             showToast('error', error.message)
         } finally {
@@ -108,13 +107,14 @@ const EditCategory = ({ params }) => {
         <div className="flex flex-col gap-4 sm:gap-6">
             <PageHeader
                 title="Edit Category"
-                description="Update the category details and slug."
+                description="Update the category details, cover image and slug. Save to publish changes to the storefront."
                 breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
             />
 
             <div className="rounded-md bg-card p-4 sm:p-6">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <fieldset disabled={loading || recordLoading || !categoryData?.success}>
                         <div className="mb-5">
                             <FormField
                                 control={form.control}
@@ -147,8 +147,10 @@ const EditCategory = ({ params }) => {
                         </div>
 
                         <div className="mb-3">
+                            <CategoryCoverField form={form} media={coverMedia} onMediaChange={setCoverMedia} disabled={loading || recordLoading || !categoryData?.success} />
                             <ButtonLoading loading={loading} type="submit" text="Update Category" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
                         </div>
+                        </fieldset>
                     </form>
                 </Form>
             </div>

@@ -15,7 +15,8 @@ const ModalMediaBlock = ({ media, selectedMedia, setSelectedMedia, isMultiple })
 
                 newSelectedMedia = [...selectedMedia, {
                     _id: media._id,
-                    url: media.secure_url
+                    url: media.secure_url,
+                    alt: media.alt || '',
                 }]
             }
 
@@ -23,7 +24,7 @@ const ModalMediaBlock = ({ media, selectedMedia, setSelectedMedia, isMultiple })
 
         } else {
             // select single media 
-            setSelectedMedia([{ _id: media._id, url: media.secure_url }])
+            setSelectedMedia([{ _id: media._id, url: media.secure_url, alt: media.alt || '' }])
         }
     }
     return (

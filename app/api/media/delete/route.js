@@ -1,102 +1,47 @@
-import cloudinary from "@/lib/cloudinary";
-import { connectDB } from "@/lib/databaseConnection";
-import { catchError,  response } from "@/lib/helperFunction";
-import MediaModel from "@/models/Media.model";
-import { isAuthenticated } from "@/lib/authentication";
-import mongoose from "mongoose";
+import cloudinary from '@/lib/cloudinary'
+import { connectDB } from '@/lib/databaseConnection'
+import { response } from '@/lib/helperFunction'
+import MediaModel from '@/models/Media.model'
+import { isAuthenticated } from '@/lib/authentication'
+import { revalidateCatalogue } from '@/lib/catalogueCache'
+
+const validIds = (ids) => Array.isArray(ids) && ids.length > 0 && ids.length <= 100 && ids.every((id) => typeof id === 'string' && /^[a-f\d]{24}$/i.test(id))
 
 export async function PUT(request) {
     try {
         const auth = await isAuthenticated('admin')
-        if (!auth.isAuth) {
-            return response(false, 403, 'Unauthorized.')
-        }
-
+        if (!auth.isAuth) return response(false, 403, 'Unauthorized.', {}, { status: 403 })
+        const payload = await request.json().catch(() => null)
+        if (!validIds(payload?.ids) || !['SD', 'RSD'].includes(payload?.deleteType)) return response(false, 400, 'Invalid media IDs or operation.', {}, { status: 400 })
         await connectDB()
-        const payload = await request.json()
-
-        const ids = payload.ids || []
-        const deleteType = payload.deleteType
-
-        if (!Array.isArray(ids) || ids.length === 0) {
-            return response(false, 400, 'Invalid or empty id list.')
-        }
-
-        const media = await MediaModel.find({ _id: { $in: ids } }).lean()
-        if (!media.length) {
-            return response(false, 404, 'Data not found.')
-        }
-
-        if (!['SD', 'RSD'].includes(deleteType)) {
-            return response(false, 400, 'Invalid delet operation. Delete type should be SD or RSD for this route.')
-        }
-
-        if (deleteType === 'SD') {
-            await MediaModel.updateMany({ _id: { $in: ids } }, { $set: { deletedAt: new Date().toISOString() } });
-        } else {
-            await MediaModel.updateMany({ _id: { $in: ids } }, { $set: { deletedAt: null } });
-        }
-
-
-
-        return response(true, 200, deleteType === 'SD' ? 'Data moved into trash.' : "Data restored.")
-
-    } catch (error) {
-        return catchError(error)
+        await MediaModel.updateMany({ _id: { $in: payload.ids } }, { $set: { deletedAt: payload.deleteType === 'SD' ? new Date() : null } })
+        revalidateCatalogue()
+        return response(true, 200, payload.deleteType === 'SD' ? 'Images moved into trash.' : 'Images restored.')
+    } catch {
+        return response(false, 503, 'Could not update media. Please retry.', {}, { status: 503 })
     }
 }
 
-
 export async function DELETE(request) {
-
-    const session = await mongoose.startSession()
-    session.startTransaction()
-
     try {
         const auth = await isAuthenticated('admin')
-        if (!auth.isAuth) {
-            return response(false, 403, 'Unauthorized.')
-        }
-
+        if (!auth.isAuth) return response(false, 403, 'Unauthorized.', {}, { status: 403 })
+        const payload = await request.json().catch(() => null)
+        if (!validIds(payload?.ids) || payload.deleteType !== 'PD') return response(false, 400, 'Invalid media IDs or operation.', {}, { status: 400 })
         await connectDB()
-        const payload = await request.json()
+        const media = await MediaModel.find({ _id: { $in: payload.ids } }).lean()
+        if (media.some((item) => !item.deletedAt)) return response(false, 409, 'Move images to the trash before permanently deleting them.', {}, { status: 409 })
+        if (!media.length) return response(true, 200, 'Images already deleted.')
 
-        const ids = payload.ids || []
-        const deleteType = payload.deleteType
-
-        if (!Array.isArray(ids) || ids.length === 0) {
-            return response(false, 400, 'Invalid or empty id list.')
-        }
-
-        const media = await MediaModel.find({ _id: { $in: ids } }).session(session).lean()
-        if (!media.length) {
-            return response(false, 404, 'Data not found.')
-        }
-
-        if (!deleteType === 'PD') {
-            return response(false, 400, 'Invalid delet operation. Delete type should be PD for this route.')
-        }
-
-        await MediaModel.deleteMany({ _id: { $in: ids } }).session(session)
-
-
-        // delete all media from cloudinary.  
-        const publicIds = media.map(m => m.public_id)
-
-        try {
-            await cloudinary.api.delete_resources(publicIds)
-        } catch (error) {
-            await session.abortTransaction()
-            session.endSession()
-        }
-
-        await session.commitTransaction()
-        session.endSession()
-
-        return response(true, 200, 'Data deleted permanently')
-    } catch (error) {
-        await session.abortTransaction()
-        session.endSession()
-        return catchError(error)
+        // Cloudinary cannot join a MongoDB transaction. Failed deletions stay in
+        // trash; retries accept assets already absent from Cloudinary.
+        const result = await cloudinary.api.delete_resources(media.map((item) => item.public_id), { resource_type: 'image', type: 'upload', invalidate: true })
+        const removed = media.filter((item) => ['deleted', 'not_found', 'not found'].includes(result.deleted?.[item.public_id]))
+        if (removed.length) await MediaModel.deleteMany({ _id: { $in: removed.map((item) => item._id) }, deletedAt: { $ne: null } })
+        revalidateCatalogue()
+        if (removed.length !== media.length) return response(false, 503, 'Some images could not be deleted. They remain in the trash; please retry.', {}, { status: 503 })
+        return response(true, 200, 'Images deleted permanently.')
+    } catch {
+        return response(false, 503, 'Could not finish deletion. The media records are retained for retry.', {}, { status: 503 })
     }
 }

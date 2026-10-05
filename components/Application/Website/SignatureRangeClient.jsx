@@ -128,6 +128,7 @@ const TileMedia = ({ media, slot }) => {
     return (
         <Image
             src={media.src}
+            style={{ objectPosition: media.position || 'center' }}
             alt=""
             fill
             quality={82}

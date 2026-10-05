@@ -9,6 +9,7 @@ import { DT_CATEGORY_COLUMN } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
 import { ADMIN_CATEGORY_ADD, ADMIN_CATEGORY_EDIT, ADMIN_CATEGORY_SHOW, ADMIN_DASHBOARD, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
 import Link from "next/link"
+import Image from 'next/image'
 import { useCallback, useMemo } from "react"
 import { Plus } from 'lucide-react'
 
@@ -19,7 +20,17 @@ const breadcrumbData = [
 const ShowCategory = () => {
 
     const columns = useMemo(() => {
-        return columnConfig(DT_CATEGORY_COLUMN)
+        return columnConfig([
+            {
+                accessorKey: 'cover', header: 'Cover', enableSorting: false, enableColumnFilter: false,
+                Cell: ({ row }) => row.original.cover?.src ? (
+                    <span className="relative block h-16 w-12 overflow-hidden rounded-md">
+                        <Image src={row.original.cover.src} alt={row.original.cover.alt} fill sizes="48px" className="object-cover" style={{ objectPosition: row.original.cover.position }} />
+                    </span>
+                ) : <span className="text-xs text-muted-foreground">Automatic</span>,
+            },
+            ...DT_CATEGORY_COLUMN,
+        ])
     }, [])
 
     const action = useCallback((row, deleteType, handleDelete) => {
@@ -33,7 +44,7 @@ const ShowCategory = () => {
         <div className="flex flex-col gap-4 sm:gap-6">
             <PageHeader
                 title="Show Category"
-                description="Manage your product categories and hierarchy."
+                description="Manage categories and their storefront cover images. Edit a category to upload or choose a cover."
                 breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
                 actions={
                     <Button asChild size="lg" className="h-9">

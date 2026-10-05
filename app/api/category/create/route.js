@@ -3,7 +3,8 @@ import { revalidateTag } from "next/cache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
 import { catchError,  response } from "@/lib/helperFunction"
-import { zSchema } from "@/lib/zodSchema"
+import { categorySchema } from "@/lib/categoryConfig"
+import { validCategoryCover } from '@/lib/services/categoryCoverService'
 import CategoryModel from "@/models/Category.model"
 
 export async function POST(request) {
@@ -14,22 +15,17 @@ export async function POST(request) {
         }
 
         await connectDB()
-        const payload = await request.json()
+        const payload = await request.json().catch(() => null)
 
-        const schema = zSchema.pick({
-            name: true, slug: true
-        })
-
-        const validate = schema.safeParse(payload)
+        const validate = categorySchema.safeParse(payload)
         if (!validate.success) {
             return response(false, 400, 'Invalid or missing fields.', validate.error)
         }
 
-        const { name, slug } = validate.data
-
-        const newCategory = new CategoryModel({
-            name, slug
-        })
+        if (!await validCategoryCover(validate.data.coverImage)) {
+            return response(false, 400, 'Choose an active Cloudinary image from the media library.')
+        }
+        const newCategory = new CategoryModel(validate.data)
 
         await newCategory.save()
 
@@ -42,6 +38,7 @@ export async function POST(request) {
         return response(true, 200, 'Category added successfully.')
 
     } catch (error) {
+        if (error.code === 11000) return response(false, 409, 'A category with this name or slug already exists.', {}, { status: 409 })
         return catchError(error)
     }
 }

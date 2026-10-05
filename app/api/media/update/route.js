@@ -4,6 +4,7 @@ import { zSchema } from "@/lib/zodSchema";
 import MediaModel from "@/models/Media.model";
 import { isValidObjectId } from "mongoose";
 import { isAuthenticated } from "@/lib/authentication";
+import { revalidateCatalogue } from '@/lib/catalogueCache'
 export async function PUT(request) {
     try {
         const auth = await isAuthenticated('admin')
@@ -41,6 +42,7 @@ export async function PUT(request) {
         getMedia.title = title
 
         await getMedia.save()
+        revalidateCatalogue()
 
 
         return response(true, 200, 'Media updated successfully.')

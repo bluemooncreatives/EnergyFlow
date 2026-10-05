@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import { getSignatureShowcase } from '@/lib/services/categoryService'
 import { CATEGORY_ART, GIFTING_ART } from './storefront/categoryArt'
+import { resolveCategoryArt } from '@/lib/categoryCover'
 
 // GSAP-driven client logic is split into its own chunk so it does not block
 // parsing/hydration of the critical path.
@@ -27,7 +28,7 @@ const HAMPER_TILE = {
 // wins over its product photo when there is some.
 const toPickTile = (pick) => {
     if (!pick) return HAMPER_TILE
-    const art = CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null)
+    const art = resolveCategoryArt(pick, CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null))
 
     return {
         key: `category-${pick.slug}`,
@@ -38,7 +39,7 @@ const toPickTile = (pick) => {
         price: pick.priceFrom,
         badge: pick.productCount ? countLabel(pick.productCount) : null,
         tint: 'var(--tint-sage)',
-        media: { kind: 'cover', src: art?.src ?? pick.image, alt: art?.alt ?? pick.alt },
+        media: { kind: 'cover', ...art },
     }
 }
 

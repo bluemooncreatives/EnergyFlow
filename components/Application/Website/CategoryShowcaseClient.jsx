@@ -123,10 +123,11 @@ const Panel = ({ item, panelRef }) => {
                     {item.previewImage && (
                         <Image
                             src={item.previewImage}
-                            alt=""
+                            alt={item.alt || ''}
                             fill
                             sizes="(max-width: 1024px) 84vw, 50vw"
                             className="object-cover"
+                            style={{ objectPosition: item.imagePosition || 'center' }}
                         />
                     )}
                 </div>
