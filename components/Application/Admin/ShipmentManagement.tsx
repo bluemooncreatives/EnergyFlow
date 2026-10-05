@@ -2,12 +2,22 @@
 
 import axios, { AxiosError } from "axios"
 import { useEffect, useMemo, useState } from "react"
-import { AlertCircle, CheckCircle2, Copy, PackageCheck, RefreshCw, Truck } from "lucide-react"
+import { AlertCircle, Ban, CheckCircle2, Copy, PackageCheck, RefreshCw, Truck, XCircle } from "lucide-react"
 import ButtonLoading from "@/components/Application/ButtonLoading"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { isPickedUpStatus, SHIPMENT_CANCELLATION_REASONS } from "@/lib/shipmentCancellation"
 import { showToast } from "@/lib/showToast"
 import { cn } from "@/lib/utils"
 
@@ -33,6 +43,8 @@ type Shipment = {
     height?: number | null
     weight?: number | null
     shippingMode?: string | null
+    cancelledAt?: string | null
+    cancellationReason?: string | null
 }
 
 type OrderData = {
@@ -48,6 +60,8 @@ type OrderData = {
     pincode?: string | null
     paymentMethod?: string | null
     paymentStatus?: string | null
+    paidAmount?: number | null
+    status?: string | null
     shipment?: Shipment | null
 }
 
@@ -87,6 +101,15 @@ const formatAddress = (order: OrderData) => {
         .join(", ")
 }
 
+const formatDate = (value?: string | null) => {
+    if (!value) return null
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return null
+    return date.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+}
+
+const formatInr = (value: number) => value.toLocaleString("en-IN", { style: "currency", currency: "INR" })
+
 const dimensionDefaults = {
     length: "",
     breadth: "",
@@ -97,9 +120,18 @@ const dimensionDefaults = {
 const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagementProps) => {
     const shipment = orderData.shipment || {}
     const hasAwb = Boolean(shipment.awb)
+    const isCancelled = shipment.shipmentStatus === "CANCELLED"
+    const isPickedUp = isPickedUpStatus(shipment.shipmentStatus)
+    const orderCancelled = orderData.status === "cancelled"
+    const canCancel = hasAwb && !isCancelled && !isPickedUp
+    const paidAmount = Number(orderData.paidAmount || 0)
+    const cancelledOn = formatDate(shipment.cancelledAt)
     const [dimensions, setDimensions] = useState(dimensionDefaults)
     const [creatingShipment, setCreatingShipment] = useState(false)
     const [syncingShipment, setSyncingShipment] = useState(false)
+    const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
+    const [cancelReason, setCancelReason] = useState("")
+    const [cancellingShipment, setCancellingShipment] = useState(false)
 
     useEffect(() => {
         setDimensions({
@@ -169,6 +201,39 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
         }
     }
 
+    const cancelShipment = async () => {
+        if (!cancelReason) {
+            showToast("error", "Choose a cancellation reason.")
+            return
+        }
+
+        setCancellingShipment(true)
+        try {
+            const { data } = await axios.post<ApiResponse<OrderData>>("/api/orders/cancel-shipment", {
+                orderId: orderData._id,
+                reason: cancelReason,
+            })
+
+            if (!data.success) throw new Error(data.message)
+
+            onShipmentCreated(data.data)
+            setCancelDialogOpen(false)
+            setCancelReason("")
+            showToast("success", data.message)
+        } catch (error) {
+            const axiosError = error as AxiosError<ApiResponse<Partial<OrderData>>>
+            const failedOrder = axiosError.response?.data?.data
+            // A refusal (e.g. already picked up) carries the freshly synced order — show it.
+            if (failedOrder?._id) {
+                onShipmentCreated(failedOrder as OrderData)
+                setCancelDialogOpen(false)
+            }
+            showToast("error", axiosError.response?.data?.message || axiosError.message || "Unable to cancel shipment.")
+        } finally {
+            setCancellingShipment(false)
+        }
+    }
+
     return (
         <section className="rounded-lg border bg-background">
             <div className="flex flex-col gap-3 border-b p-4 sm:p-5 md:flex-row md:items-start md:justify-between">
@@ -218,13 +283,49 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                             <DimensionInput label="Weight" value={dimensions.weight} onChange={(value) => updateDimension("weight", value)} disabled={hasAwb} />
                         </div>
 
+                        {isCancelled && (
+                            <div className="space-y-1 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+                                <p className="flex items-center gap-2 font-semibold text-destructive">
+                                    <XCircle className="size-4 shrink-0" />
+                                    Shipment cancelled{cancelledOn ? ` on ${cancelledOn}` : ""}
+                                </p>
+                                {shipment.cancellationReason && (
+                                    <p className="text-muted-foreground">Reason: {shipment.cancellationReason}</p>
+                                )}
+                                <p className="text-muted-foreground">Delhivery will not pick up this package.</p>
+                                {paidAmount > 0 && (
+                                    <p className="font-medium text-foreground">
+                                        The customer paid {formatInr(paidAmount)} online — refund it from your payment dashboard.
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
+                        {hasAwb && isPickedUp && (
+                            <div className="flex items-start gap-2 rounded-md border bg-background p-3 text-xs text-muted-foreground">
+                                <Ban className="mt-0.5 size-3.5 shrink-0" />
+                                <span>The courier has picked up this shipment, so it can no longer be cancelled.</span>
+                            </div>
+                        )}
+
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div className="flex items-start gap-2 text-xs text-muted-foreground">
                                 <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
                                 <span>Dimensions are sent to Delhivery once. Edit them before creating the shipment.</span>
                             </div>
-                            <div className="flex w-full gap-2 sm:w-auto">
-                                {hasAwb && (
+                            <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap">
+                                {canCancel && (
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        className="h-11 flex-1 cursor-pointer sm:h-9 sm:flex-none"
+                                        onClick={() => setCancelDialogOpen(true)}
+                                    >
+                                        <XCircle className="size-3.5" />
+                                        Cancel Shipment
+                                    </Button>
+                                )}
+                                {hasAwb && !isCancelled && (
                                     <Button
                                         type="button"
                                         variant="outline"
@@ -238,9 +339,9 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                                 )}
                                 <ButtonLoading
                                     type="button"
-                                    text={hasAwb ? "Shipment Created" : "Create Shipment"}
+                                    text={isCancelled ? "Shipment Cancelled" : hasAwb ? "Shipment Created" : orderCancelled ? "Order Cancelled" : "Create Shipment"}
                                     loading={creatingShipment}
-                                    disabled={hasAwb || creatingShipment}
+                                    disabled={hasAwb || orderCancelled || creatingShipment}
                                     onClick={createShipment}
                                     variant="brand"
                                     className="h-11 flex-1 cursor-pointer sm:h-9 sm:flex-none"
@@ -250,6 +351,68 @@ const ShipmentManagement = ({ orderData, onShipmentCreated }: ShipmentManagement
                     </CardContent>
                 </Card>
             </div>
+
+            <Dialog
+                open={cancelDialogOpen}
+                onOpenChange={(open) => {
+                    if (!cancellingShipment) setCancelDialogOpen(open)
+                }}
+            >
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader className="">
+                        <DialogTitle className="">Cancel this shipment?</DialogTitle>
+                        <DialogDescription className="">
+                            Delhivery will cancel AWB <span className="font-mono font-medium text-foreground">{shipment.awb}</span> and
+                            this order will be marked as cancelled. The customer will get a cancellation email. This can&apos;t be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <label className="block space-y-1.5">
+                        <span className="block text-xs font-medium text-muted-foreground">Reason (shown to the customer)</span>
+                        <Select value={cancelReason} onValueChange={setCancelReason}>
+                            <SelectTrigger className="h-11 w-full sm:h-10" aria-label="Cancellation reason">
+                                <SelectValue placeholder="Choose a reason" />
+                            </SelectTrigger>
+                            <SelectContent className="">
+                                {SHIPMENT_CANCELLATION_REASONS.map((reason) => (
+                                    <SelectItem key={reason} value={reason} className="">{reason}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </label>
+
+                    <p className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <AlertCircle className="mt-0.5 size-3.5 shrink-0" />
+                        <span>Only possible before the courier picks up the package. The live status is checked with Delhivery first.</span>
+                    </p>
+                    {paidAmount > 0 && (
+                        <p className="text-xs font-medium text-foreground">
+                            The customer paid {formatInr(paidAmount)} online. Refunds are not automatic — issue it from your payment dashboard.
+                        </p>
+                    )}
+
+                    <DialogFooter className="">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-11 cursor-pointer sm:h-9"
+                            disabled={cancellingShipment}
+                            onClick={() => setCancelDialogOpen(false)}
+                        >
+                            Keep Shipment
+                        </Button>
+                        <ButtonLoading
+                            type="button"
+                            text="Cancel Shipment"
+                            loading={cancellingShipment}
+                            disabled={!cancelReason || cancellingShipment}
+                            onClick={cancelShipment}
+                            variant="destructive"
+                            className="h-11 cursor-pointer sm:h-9"
+                        />
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </section>
     )
 }

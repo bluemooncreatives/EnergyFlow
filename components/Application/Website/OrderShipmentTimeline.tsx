@@ -1,4 +1,4 @@
-import { CheckCircle2, Clock, MapPin, Package, PackageCheck, Truck } from "lucide-react"
+import { CheckCircle2, Clock, MapPin, Package, PackageCheck, Truck, XCircle } from "lucide-react"
 
 type ShipmentStatus =
     | "PENDING"
@@ -20,10 +20,14 @@ type Shipment = {
     shipmentCreatedAt?: string | Date | null
     deliveredAt?: string | Date | null
     lastSyncedAt?: string | Date | null
+    cancelledAt?: string | Date | null
+    cancellationReason?: string | null
 }
 
 type OrderShipmentTimelineProps = {
     shipment?: Shipment | null
+    /** The order's own status — an order can be cancelled before any shipment exists. */
+    orderStatus?: string | null
     fallbackLastUpdatedAt?: string | Date | null
 }
 
@@ -60,7 +64,7 @@ const STATUS_NOTE: Record<string, string> = {
     OUT_FOR_DELIVERY: "Your order is out for delivery.",
     DELIVERED: "Your order has been delivered. We hope you love it!",
     RTO: "The shipment is returning to origin. Please contact support for help.",
-    CANCELLED: "This shipment has been cancelled.",
+    CANCELLED: "This order was cancelled before it was shipped.",
 }
 
 const formatDate = (value?: string | Date | null) => {
@@ -87,8 +91,18 @@ const labelize = (value?: string | null) => {
 
 const getShipmentStatus = (status?: string | null) => String(status || "PENDING").toUpperCase()
 
-const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmentTimelineProps) => {
+const OrderShipmentTimeline = ({ shipment, orderStatus, fallbackLastUpdatedAt }: OrderShipmentTimelineProps) => {
     const shipmentStatus = getShipmentStatus(shipment?.shipmentStatus)
+
+    if (shipmentStatus === "CANCELLED" || orderStatus === "cancelled") {
+        return (
+            <OrderCancelledNotice
+                shipment={shipment}
+                cancelledAt={shipment?.cancelledAt || fallbackLastUpdatedAt}
+            />
+        )
+    }
+
     const activeStep = SHIPMENT_STATUS_STEP[shipmentStatus] || "placed"
     const activeStepIndex = TRACK_STEPS.findIndex((step) => step.key === activeStep)
     const lastUpdated = formatDate(
@@ -140,6 +154,38 @@ const OrderShipmentTimeline = ({ shipment, fallbackLastUpdatedAt }: OrderShipmen
                     )
                 })}
             </ol>
+        </section>
+    )
+}
+
+const OrderCancelledNotice = ({ shipment, cancelledAt }: { shipment?: Shipment | null; cancelledAt?: string | Date | null }) => {
+    const cancelledOn = formatDate(cancelledAt)
+
+    return (
+        <section className="px-4 py-5 sm:px-6 sm:py-6">
+            <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-4">
+                <XCircle className="mt-0.5 size-5 flex-shrink-0 text-destructive" />
+                <div className="min-w-0 space-y-1">
+                    <p className="text-sm font-semibold text-foreground">This order was cancelled</p>
+                    {cancelledOn && (
+                        <p className="text-[13px] text-muted-foreground">Cancelled on {cancelledOn}</p>
+                    )}
+                    {shipment?.cancellationReason && (
+                        <p className="text-[13px] text-muted-foreground">Reason: {shipment.cancellationReason}</p>
+                    )}
+                    <p className="text-[13px] leading-relaxed text-muted-foreground">
+                        It will not be shipped. If you paid online, any eligible refund will be processed to your original payment method.
+                    </p>
+                </div>
+            </div>
+
+            {shipment?.awb && (
+                <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+                    <ShipmentInfo label="Tracking Number (AWB)" value={shipment.awb} mono />
+                    <ShipmentInfo label="Courier Name" value={shipment.courier || "---"} />
+                    <ShipmentInfo label="Current Shipment Status" value="Cancelled" />
+                </div>
+            )}
         </section>
     )
 }

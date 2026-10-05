@@ -115,6 +115,7 @@ const OrderDetails = async ({ params }) => {
                         {/* ── Status note / tracker ── */}
                         <OrderShipmentTimeline
                             shipment={orderData?.shipment}
+                            orderStatus={status}
                             fallbackLastUpdatedAt={orderData?.updatedAt || orderData?.createdAt}
                         />
                     </div>

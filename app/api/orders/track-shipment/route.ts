@@ -34,6 +34,10 @@ export async function POST(request: NextRequest) {
             return response(false, 400, "Create the shipment before tracking it.", {}, { status: 400 })
         }
 
+        if (order.shipment.shipmentStatus === "CANCELLED") {
+            return response(false, 400, "This shipment was cancelled, so tracking is no longer updated.", {}, { status: 400 })
+        }
+
         const tracking = await syncOrderShipment({
             orderId: String(order._id),
             awb: order.shipment.awb,

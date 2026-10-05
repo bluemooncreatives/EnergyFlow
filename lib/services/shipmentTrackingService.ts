@@ -39,8 +39,9 @@ export const syncOrderShipment = async (
         updates["shipment.deliveredAt"] = validDate(tracking.statusDate) || now
     }
 
+    // A cancelled shipment is final — never let a tracking sync overwrite it.
     const result = await Order.updateOne(
-        { _id: input.orderId, "shipment.awb": input.awb },
+        { _id: input.orderId, "shipment.awb": input.awb, "shipment.shipmentStatus": { $ne: "CANCELLED" } },
         { $set: updates },
         { runValidators: true },
     )

@@ -27,6 +27,8 @@ export const defaultShipment = Object.freeze({
     shipmentCreatedAt: null,
     deliveredAt: null,
     lastSyncedAt: null,
+    cancelledAt: null,
+    cancellationReason: null,
 })
 
 export const createDefaultShipment = () => ({ ...defaultShipment })
@@ -147,6 +149,17 @@ const shipmentSchema = new mongoose.Schema({
     lastSyncedAt: {
         type: Date,
         default: defaultShipment.lastSyncedAt,
+    },
+    // Set only when an admin cancels the shipment on Delhivery before pickup.
+    cancelledAt: {
+        type: Date,
+        default: defaultShipment.cancelledAt,
+    },
+    cancellationReason: {
+        type: String,
+        trim: true,
+        default: defaultShipment.cancellationReason,
+        set: trimOrNull,
     },
 }, { _id: false })
 

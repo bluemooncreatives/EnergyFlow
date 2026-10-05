@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
             const query: Record<string, unknown> = {
                 deletedAt: null,
                 "shipment.awb": { $exists: true, $nin: [null, ""] },
-                "shipment.shipmentStatus": { $ne: "DELIVERED" },
+                "shipment.shipmentStatus": { $nin: ["DELIVERED", "CANCELLED"] },
                 ...(cursor ? { _id: { $gt: cursor } } : {}),
             }
 

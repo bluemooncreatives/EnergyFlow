@@ -72,9 +72,13 @@ const OrderDetails = ({ params }) => {
                 throw new Error(response.message)
             }
 
+            // The response isn't populated, so only take the new status from it.
+            setOrderData((current) => ({ ...current, status: orderStatus }))
             showToast('success', response.message)
 
         } catch (error) {
+            // Put the dropdown back to the saved status so it doesn't show a change that was refused.
+            setOrderStatus(orderData?.status)
             showToast('error', error.message)
         } finally {
             setUpdatingStatus(false)
