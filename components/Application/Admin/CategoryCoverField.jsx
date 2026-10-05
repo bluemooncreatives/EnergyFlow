@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { COVER_POSITIONS, isCategoryCoverUrl, resolveCategoryArt } from '@/lib/categoryCover'
-import { CATEGORY_ART } from '@/components/Application/Website/storefront/categoryArt'
+
 import { showToast } from '@/lib/showToast'
 import MediaModal from './MediaModal'
 import UploadMedia from './UploadMedia'
@@ -30,7 +30,7 @@ export default function CategoryCoverField({ form, media, onMediaChange, onBusyC
     }, [dirty])
     const [name, slug, imageId, alt, position] = form.watch(['name', 'slug', 'coverImage', 'coverAlt', 'coverPosition'])
     const custom = imageId && isCategoryCoverUrl(media?.secure_url) ? { src: media.secure_url, alt: alt || media.alt || name, position } : null
-    const art = resolveCategoryArt({ cover: custom, name }, CATEGORY_ART[slug])
+    const art = resolveCategoryArt({ cover: custom, name }, null)
 
     const choose = (asset) => {
         if (!asset || !isCategoryCoverUrl(asset.secure_url)) {

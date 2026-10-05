@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { getSignatureShowcase } from '@/lib/services/categoryService'
-import { CATEGORY_ART, GIFTING_ART } from './storefront/categoryArt'
+
 import { resolveCategoryArt } from '@/lib/categoryCover'
 
 // GSAP-driven client logic is split into its own chunk so it does not block
@@ -20,7 +20,7 @@ const HAMPER_TILE = {
     price: null,
     badge: 'Made to order',
     tint: 'var(--tint-sage)',
-    media: { kind: 'cover', ...GIFTING_ART },
+    media: { kind: 'cover', src: null, alt: '' },
 }
 
 // The catalogue's pick for the fourth tile. Always a live category with
@@ -28,7 +28,7 @@ const HAMPER_TILE = {
 // wins over its product photo when there is some.
 const toPickTile = (pick) => {
     if (!pick) return HAMPER_TILE
-    const art = resolveCategoryArt(pick, CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null))
+    const art = resolveCategoryArt(pick, null)
 
     return {
         key: `category-${pick.slug}`,
@@ -39,7 +39,7 @@ const toPickTile = (pick) => {
         price: pick.priceFrom,
         badge: pick.productCount ? countLabel(pick.productCount) : null,
         tint: 'var(--tint-sage)',
-        media: { kind: 'cover', ...art, fallbackSrc: resolveCategoryArt({ ...pick, cover: null }, CATEGORY_ART[pick.slug] ?? (pick.gifting ? GIFTING_ART : null)).src },
+        media: { kind: 'cover', ...art, fallbackSrc: resolveCategoryArt({ ...pick, cover: null }, null).src },
     }
 }
 
