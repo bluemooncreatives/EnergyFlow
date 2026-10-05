@@ -38,6 +38,9 @@ export const ADMIN_BESTSELLER_SHOW = '/admin/bestseller'
 // Freshly Arrived route
 export const ADMIN_FRESHLY_ARRIVED_SHOW = '/admin/freshly-arrived'
 
+// Deals of the Month route
+export const ADMIN_DEALS_SHOW = '/admin/deals'
+
 
 // Customer route
 export const ADMIN_CUSTOMERS_SHOW = '/admin/customers'

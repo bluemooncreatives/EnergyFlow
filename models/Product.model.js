@@ -72,6 +72,17 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    isDeal: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    // Lower number = appears earlier in the storefront Deals of the Month rail.
+    // Only meaningful when isDeal is true.
+    dealSortOrder: {
+        type: Number,
+        default: 0
+    },
     deletedAt: {
         type: Date,
         default: null,
@@ -97,5 +108,7 @@ productSchema.pre('validate', async function () {
 productSchema.index({ isBestseller: 1, deletedAt: 1, bestsellerSortOrder: 1 })
 // Drives the storefront Freshly Arrived query: active picks, ordered by rank.
 productSchema.index({ isFreshlyArrived: 1, deletedAt: 1, freshlyArrivedSortOrder: 1 })
+// Drives the storefront Deals of the Month query: active picks, ordered by rank.
+productSchema.index({ isDeal: 1, deletedAt: 1, dealSortOrder: 1 })
 const ProductModel = mongoose.models.Product || mongoose.model('Product', productSchema, 'products')
 export default ProductModel

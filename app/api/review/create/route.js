@@ -52,6 +52,7 @@ export async function POST(request) {
         revalidateTag('storefront-product-details')
         revalidateTag('storefront-related-products')
         revalidateTag('storefront-freshly-arrived-products')
+        revalidateTag('storefront-daily-best-sells')
 
         return response(true, 200, 'Thanks! Your review has been posted.')
 

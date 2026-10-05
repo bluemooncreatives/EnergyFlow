@@ -61,13 +61,17 @@ const Thumb = ({ src, alt, className }) => (
  *   exact                        true when the section always shows `slots`
  *                                (short lists are topped up automatically)
  *   breadcrumbHref, noun         breadcrumb + copy ("bestseller")
+ *   fillNoun                     what tops up empty slots in exact mode
+ *                                (default "newest products")
+ *   embedded                     true to skip the page header, for a page
+ *                                that renders its own (Deals of the Month)
  *
  * Handles: loading skeletons, load failure with retry, empty list, empty
  * catalogue, search with no match, bulk add from a visual picker, drag or
  * arrow reordering with save / discard, storefront cut-off marker.
  */
 const CuratedProductsManager = ({ config }) => {
-    const { title, description, icon: Icon, endpoint, slots, exact, breadcrumbHref, noun } = config
+    const { title, description, icon: Icon, endpoint, slots, exact, breadcrumbHref, noun, fillNoun = 'newest products', embedded = false } = config
     const list = useReorderList()
     const [available, setAvailable] = useState([])
     const [status, setStatus] = useState('loading') // loading | ready | error
@@ -187,11 +191,13 @@ const CuratedProductsManager = ({ config }) => {
 
     return (
         <div className="flex flex-col gap-5 sm:gap-6">
-            <PageHeader
-                title={title}
-                description={description}
-                breadcrumb={<BreadCrumb breadcrumbData={[{ href: ADMIN_DASHBOARD, label: 'Home' }, { href: breadcrumbHref, label: title }]} />}
-            />
+            {!embedded && (
+                <PageHeader
+                    title={title}
+                    description={description}
+                    breadcrumb={<BreadCrumb breadcrumbData={[{ href: ADMIN_DASHBOARD, label: 'Home' }, { href: breadcrumbHref, label: title }]} />}
+                />
+            )}
 
             {/* Stats + slot meter */}
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -200,7 +206,7 @@ const CuratedProductsManager = ({ config }) => {
                 <Stat
                     label={exact ? 'Auto-filled slots' : 'Beyond the cut-off'}
                     value={loading ? '-' : exact ? autoFilled : Math.max(0, sellableCount - slots)}
-                    hint={exact ? 'Topped up with newest products' : 'Saved, not shown yet'}
+                    hint={exact ? `Topped up with ${fillNoun}` : 'Saved, not shown yet'}
                     tone={exact && autoFilled > 0 ? 'text-[var(--brand-amber-ink)]' : undefined}
                 />
                 <Stat label="Available to add" value={loading ? '-' : available.length} hint="Active products not in the list" />
@@ -226,7 +232,7 @@ const CuratedProductsManager = ({ config }) => {
                 {exact && autoFilled > 0 && !loading && (
                     <p className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">
                         <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                        This section always shows {slots} products. The {autoFilled} empty {autoFilled === 1 ? 'slot is' : 'slots are'} filled with your newest products until you add more.
+                        This section always shows {slots} products. The {autoFilled} empty {autoFilled === 1 ? 'slot is' : 'slots are'} filled with your {fillNoun} until you add more.
                     </p>
                 )}
                 {hiddenCount > 0 && !loading && (
@@ -356,7 +362,7 @@ const CuratedProductsManager = ({ config }) => {
                             {Icon && <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary"><Icon className="size-5" aria-hidden="true" /></span>}
                             <p className="mt-4 font-medium">No {noun}s yet</p>
                             <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-                                {exact ? `Until you pick some, the storefront shows your ${slots} newest products.` : 'Pick products on the left to start this section.'}
+                                {exact ? `Until you pick some, the storefront shows your ${slots} ${fillNoun}.` : 'Pick products on the left to start this section.'}
                             </p>
                         </div>
                     ) : (

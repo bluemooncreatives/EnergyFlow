@@ -6,9 +6,9 @@ import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
 import ProductModel from "@/models/Product.model"
 import { annotateSellable, loadSellableScope } from "@/lib/services/sellability"
+import { DEALS_TAG } from "@/lib/services/dealsService"
 import "@/models/Media.model"
 
-const FRESHLY_ARRIVED_TAG = 'storefront-freshly-arrived-products'
 
 // Keep only well-formed, unique ObjectIds so a malformed payload can never
 // throw a Mongoose CastError or let duplicates skew the sort order.
@@ -26,7 +26,7 @@ const sanitizeIds = (rawIds) => {
     return valid
 }
 
-// GET — current freshly arrived picks in their configured order (admin list)
+// GET — current deal picks in their configured order (admin list)
 export async function GET() {
     try {
         const auth = await isAuthenticated('admin')
@@ -37,9 +37,9 @@ export async function GET() {
         await connectDB()
 
         const [items, scope] = await Promise.all([
-            ProductModel.find({ deletedAt: null, isFreshlyArrived: true })
-                .sort({ freshlyArrivedSortOrder: 1, createdAt: -1, _id: 1 })
-                .select('name slug category sellingPrice mrp media freshlyArrivedSortOrder')
+            ProductModel.find({ deletedAt: null, isDeal: true })
+                .sort({ dealSortOrder: 1, createdAt: -1, _id: 1 })
+                .select('name slug category sellingPrice mrp media dealSortOrder')
                 .populate('media', 'secure_url alt')
                 .populate({ path: 'category', select: 'slug name' })
                 .lean(),
@@ -50,13 +50,13 @@ export async function GET() {
         // so flag it here and the admin list can say why it is missing.
         const annotated = annotateSellable(items, scope)
 
-        return response(true, 200, 'Freshly arrived products fetched.', annotated)
+        return response(true, 200, 'Deal products fetched.', annotated)
     } catch (error) {
         return catchError(error)
     }
 }
 
-// POST — add one or more products to the freshly arrived list.
+// POST — add one or more products to the deals list.
 // Idempotent: already-added and deleted ids are ignored, and new entries are
 // appended after the current highest rank.
 export async function POST(request) {
@@ -78,7 +78,7 @@ export async function POST(request) {
         const candidates = await ProductModel.find({
             _id: { $in: ids },
             deletedAt: null,
-            isFreshlyArrived: { $ne: true }
+            isDeal: { $ne: true }
         }).select('_id').lean()
 
         if (candidates.length === 0) {
@@ -86,16 +86,16 @@ export async function POST(request) {
         }
 
         // Append after the current max rank so existing order is preserved.
-        const last = await ProductModel.findOne({ deletedAt: null, isFreshlyArrived: true })
-            .sort({ freshlyArrivedSortOrder: -1 })
-            .select('freshlyArrivedSortOrder')
+        const last = await ProductModel.findOne({ deletedAt: null, isDeal: true })
+            .sort({ dealSortOrder: -1 })
+            .select('dealSortOrder')
             .lean()
-        let nextOrder = (last?.freshlyArrivedSortOrder ?? -1) + 1
+        let nextOrder = (last?.dealSortOrder ?? -1) + 1
 
         const operations = candidates.map((product) => ({
             updateOne: {
                 filter: { _id: product._id },
-                update: { $set: { isFreshlyArrived: true, freshlyArrivedSortOrder: nextOrder++ } }
+                update: { $set: { isDeal: true, dealSortOrder: nextOrder++ } }
             }
         }))
         const result = await ProductModel.bulkWrite(operations)
@@ -104,11 +104,11 @@ export async function POST(request) {
         // schema predates these fields would strip them via strict mode). Without
         // this, the request would report success while nothing was persisted.
         if (!result.modifiedCount) {
-            return response(false, 500, 'Could not persist freshly arrived products. Please restart the server and try again.')
+            return response(false, 500, 'Could not persist deal products. Please restart the server and try again.')
         }
 
-        revalidateTag(FRESHLY_ARRIVED_TAG)
-        return response(true, 200, `${result.modifiedCount} product(s) added to freshly arrived.`)
+        revalidateTag(DEALS_TAG)
+        return response(true, 200, `${result.modifiedCount} product(s) added to deals.`)
     } catch (error) {
         return catchError(error)
     }
@@ -133,20 +133,20 @@ export async function PUT(request) {
 
         const operations = order.map((id, index) => ({
             updateOne: {
-                filter: { _id: id, deletedAt: null, isFreshlyArrived: true },
-                update: { $set: { freshlyArrivedSortOrder: index } }
+                filter: { _id: id, deletedAt: null, isDeal: true },
+                update: { $set: { dealSortOrder: index } }
             }
         }))
         await ProductModel.bulkWrite(operations)
 
-        revalidateTag(FRESHLY_ARRIVED_TAG)
-        return response(true, 200, 'Freshly arrived order updated.')
+        revalidateTag(DEALS_TAG)
+        return response(true, 200, 'Deals order updated.')
     } catch (error) {
         return catchError(error)
     }
 }
 
-// DELETE — remove one or more products from the freshly arrived list.
+// DELETE — remove one or more products from the deals list.
 export async function DELETE(request) {
     try {
         const auth = await isAuthenticated('admin')
@@ -164,11 +164,11 @@ export async function DELETE(request) {
 
         await ProductModel.updateMany(
             { _id: { $in: ids } },
-            { $set: { isFreshlyArrived: false, freshlyArrivedSortOrder: 0 } }
+            { $set: { isDeal: false, dealSortOrder: 0 } }
         )
 
-        revalidateTag(FRESHLY_ARRIVED_TAG)
-        return response(true, 200, 'Removed from freshly arrived.')
+        revalidateTag(DEALS_TAG)
+        return response(true, 200, 'Removed from deals.')
     } catch (error) {
         return catchError(error)
     }
