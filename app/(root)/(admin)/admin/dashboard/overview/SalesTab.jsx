@@ -8,7 +8,8 @@
  * around Recharts) which is the same library as OrderOverview.jsx.
  */
 
-import { useEffect, useState, useMemo } from 'react'
+import { useMemo } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
     Area, AreaChart, CartesianGrid, XAxis, YAxis,
     Bar, BarChart, Cell, Tooltip,
