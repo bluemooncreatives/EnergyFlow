@@ -28,18 +28,25 @@ const app = () => {
     let record = null
     let authenticated = true
     let refreshes = 0
+    let revision = 0
     const assets = new Map([[firstId, photo(firstId)], [secondId, photo(secondId, 'replacement')]])
     class Category {
         constructor(fields) { Object.assign(this, { _id: categoryId }, fields) }
-        async save() { record = this }
+        async save() { this.updatedAt = new Date(1700000000000 + ++revision).toISOString(); record = this }
         static findOne() {
             return {
                 then: (resolve) => Promise.resolve(record).then(resolve),
-                populate: () => ({ lean: async () => record ? {
-                    ...record,
-                    coverImage: assets.get(record.coverImage)?.deletedAt === null ? assets.get(record.coverImage) : null,
-                } : null }),
+                lean: async () => record ? { ...record } : null,
             }
+        }
+        static async populate(doc) {
+            doc.coverImage = assets.get(doc.coverImage)?.deletedAt === null ? assets.get(doc.coverImage) : null
+        }
+        static async findOneAndUpdate(filter, update) {
+            if (!record || record.deletedAt || (filter.updatedAt && filter.updatedAt.toISOString() !== record.updatedAt)) return null
+            Object.assign(record, update.$set)
+            await record.save()
+            return record
         }
     }
     const modules = {
@@ -71,6 +78,7 @@ const app = () => {
         update: (data) => update(request({ _id: categoryId, ...data })),
         get: () => get({}, { params: Promise.resolve({ id: categoryId }) }),
         deny: () => { authenticated = false },
+        trashCategory: () => { record.deletedAt = new Date() },
         get refreshes() { return refreshes },
     }
 }
@@ -95,6 +103,31 @@ test('category covers persist through create, reload, replace and remove, refres
     assert.equal(categoryCover(saved), null)
     assert.equal(resolveCategoryArt({ cover: categoryCover(saved), previewImage: '/product.jpg' }).src, '/product.jpg')
     assert.equal(api.refreshes, 4)
+})
+
+test('stale saves and concurrent category deletion cannot overwrite newer data', async () => {
+    const api = app()
+    await api.create({ name: 'Nuts', slug: 'nuts', coverImage: firstId })
+    const original = (await api.get()).data
+    assert.equal((await api.update({ name: 'New nuts', slug: 'nuts', updatedAt: original.updatedAt })).success, true)
+    assert.equal((await api.update({ name: 'Stale nuts', slug: 'nuts', updatedAt: original.updatedAt })).statusCode, 409)
+    assert.equal((await api.get()).data.name, 'New nuts')
+    api.trashCategory()
+    assert.equal((await api.update({ name: 'Deleted nuts', slug: 'nuts' })).statusCode, 409)
+})
+
+test('an unavailable cover retains its ID when editing other category details', async () => {
+    const api = app()
+    await api.create({ name: 'Nuts', slug: 'nuts', coverImage: firstId })
+    api.assets.get(firstId).deletedAt = new Date()
+    const saved = (await api.get()).data
+    assert.equal(saved.coverImage, null)
+    assert.equal(saved.coverImageId, firstId)
+    assert.equal((await api.update({ name: 'Updated nuts', slug: 'nuts', coverImage: firstId })).success, true)
+    api.assets.get(firstId).deletedAt = null
+    assert.equal((await api.get()).data.coverImage._id, firstId)
+    api.assets.get(secondId).deletedAt = new Date()
+    assert.equal((await api.update({ name: 'Nuts', slug: 'nuts', coverImage: secondId })).statusCode, 400)
 })
 
 test('invalid, missing and trashed media cannot be saved as category covers', async () => {

@@ -35,6 +35,7 @@ const mediaSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    deletionPending: { type: Boolean, default: false },
     deletedAt: {
         type: Date,
         default: null,
@@ -44,5 +45,8 @@ const mediaSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
+if (mongoose.models.Media && !mongoose.models.Media.schema.path('deletionPending')) {
+    mongoose.models.Media.schema.add({ deletionPending: mediaSchema.obj.deletionPending })
+}
 const MediaModel = mongoose.models.Media || mongoose.model('Media', mediaSchema, 'medias')
 export default MediaModel

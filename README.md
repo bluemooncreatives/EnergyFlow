@@ -35,6 +35,8 @@ Open **Admin → Category → Edit** (or **New Category**) and find **Category c
 
 **Remove custom cover** restores automatic artwork or a product photo after saving. Trashed or deleted media also falls back automatically; restoring the media restores its use as a cover. Categories appear on the homepage once they contain active products. Cloudinary uses the same configuration and Media library as product images.
 
+Failed uploads can be retried from the editor without uploading the file again or duplicating library records. Category saving waits until the upload finishes or is dismissed. If another admin changes the category, your stale save is rejected and your edits remain visible; **Reload latest (discard edits)** loads the new version. Unavailable covers keep their reference until explicitly replaced or removed. Broken image delivery falls back to automatic artwork, then the card background. Images whose permanent deletion has started remain in trash until deletion succeeds and cannot be restored during that operation.
+
 ## 🛠️ Tech Stack
 
 ### Frontend

@@ -47,7 +47,7 @@ const EditCategory = ({ params }) => {
 
 
     useEffect(() => {
-        if (categoryData && categoryData.success) {
+        if (categoryData?.success && categoryData.data?._id === id) {
             const data = categoryData.data
             form.reset({
                 _id: data?._id,
@@ -61,7 +61,7 @@ const EditCategory = ({ params }) => {
             setCoverMedia(data?.coverImage || null)
             setSaveError(null)
         }
-    }, [categoryData, form])
+    }, [categoryData, form, id])
 
     const onSubmit = async (values) => {
         if (loading || uploadBusy || recordLoading || !categoryData?.success || categoryData.data?._id !== id) return
@@ -126,7 +126,7 @@ const EditCategory = ({ params }) => {
                 </div>}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <fieldset disabled={loading || recordLoading || !categoryData?.success}>
+                        <fieldset disabled={loading || recordLoading || !categoryData?.success || categoryData.data?._id !== id}>
                         <div className="mb-5">
                             <FormField
                                 control={form.control}
@@ -159,7 +159,7 @@ const EditCategory = ({ params }) => {
                         </div>
 
                         <div className="mb-3">
-                            <CategoryCoverField form={form} media={coverMedia} onMediaChange={setCoverMedia} onBusyChange={setUploadBusy} disabled={loading || recordLoading || !categoryData?.success} />
+                            <CategoryCoverField key={id} form={form} media={coverMedia} onMediaChange={setCoverMedia} onBusyChange={setUploadBusy} disabled={loading || recordLoading || !categoryData?.success || categoryData.data?._id !== id} />
                             <ButtonLoading loading={loading} disabled={loading || uploadBusy} type="submit" text="Update Category" className="h-11 w-full cursor-pointer sm:h-9 sm:w-auto" size="lg" />
                         </div>
                         </fieldset>

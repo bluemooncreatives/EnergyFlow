@@ -89,6 +89,9 @@ const MediaModal = ({ open, setOpen, selectedMedia, setSelectedMedia, isMultiple
                                 </div>
                                 :
                                 <>
+                                    {filterMedia && !data?.pages?.some(page => page.mediaData.some(filterMedia)) && (
+                                        <p className="p-4 text-sm text-muted-foreground">No supported cover images in these results. Load more images, or close the library and upload a cover.</p>
+                                    )}
                                     <div className='grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6'>
                                         {
                                             data?.pages?.map((page, index) => (

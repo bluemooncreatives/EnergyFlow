@@ -35,7 +35,7 @@ const UploadMedia = ({ isMultiple, queryClient, onUploaded, onBusyChange, disabl
         setSaving(true)
         setError('')
         try {
-            const { data } = await axios.post('/api/media/create', files)
+            const { data } = await axios.post('/api/media/create', files, { timeout: 60000 })
             if (!data.success) throw new Error(data.message)
             // Refresh failures must not turn a successful upload into a failed one.
             await Promise.allSettled([

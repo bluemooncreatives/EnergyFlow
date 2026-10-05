@@ -21,6 +21,7 @@ export default function CategoryCoverField({ form, media, onMediaChange, onBusyC
     const [failedSrc, setFailedSrc] = useState(null)
     const dirty = form.formState.isDirty
     useEffect(() => { onBusyChange?.(uploadBusy || open) }, [uploadBusy, open, onBusyChange])
+    useEffect(() => () => { onBusyChange?.(false) }, [onBusyChange])
     useEffect(() => {
         if (!dirty) return
         const warn = (event) => { event.preventDefault(); event.returnValue = '' }
