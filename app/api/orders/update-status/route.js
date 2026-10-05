@@ -66,6 +66,13 @@ export async function PUT(request) {
                         order_id: orderData.order_id,
                         status,
                         orderDetailsUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/order-details/${orderData.order_id}`,
+                        // Courier/AWB/tracking link so a "shipped" mail is
+                        // actionable without the customer signing in.
+                        shipment: {
+                            courier: orderData.shipment?.courier,
+                            awb: orderData.shipment?.awb,
+                            trackingUrl: orderData.shipment?.trackingUrl,
+                        },
                     })
                 )
             } catch (mailError) {

@@ -1,13 +1,17 @@
 import {
     BRAND,
     FONT_BODY,
+    TYPE,
     emailShell,
     eyebrow,
     heading,
     paragraph,
-    button,
+    panel,
+    ctaRow,
+    link,
     firstName,
     contactUrl,
+    siteUrl,
 } from "./_shared";
 
 /**
@@ -36,21 +40,19 @@ export const passwordChanged = (opts = {}) => {
                 ? "Your Energyflow password was just reset successfully. You can now sign in with your new password."
                 : "Your Energyflow password was just changed successfully.";
 
+    const warning = panel(
+        `<p style="margin:0;font-family:${FONT_BODY};font-size:${TYPE.bodyText.size};line-height:${TYPE.bodyText.line};color:${BRAND.body};">
+        <strong style="color:${BRAND.pine};">Didn't do this?</strong> If you didn't make this change, your account may be at risk. Reset your password again immediately and ${link("contact our team", contactUrl())}.
+      </p>`
+    );
+
     const bodyHtml = `
 ${eyebrow("Security")}
 ${heading(headingText)}
 ${paragraph(`Hi ${firstName(name)},`)}
 ${paragraph(lead)}
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:8px 0 24px;">
-  <tr>
-    <td style="background-color:${BRAND.warm};border:1px solid ${BRAND.border};border-radius:12px;padding:18px 20px;font-family:${FONT_BODY};font-size:14px;line-height:22px;color:${BRAND.body};">
-      <strong style="color:${BRAND.oxblood};">Didn't do this?</strong> If you didn't make this change, your account may be at risk. Reset your password again immediately and <a href="${contactUrl()}" target="_blank" style="color:${BRAND.crimson};">contact our team</a>.
-    </td>
-  </tr>
-</table>
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 8px;">
-  <tr><td align="center">${button("Go to Energyflow", contactUrl().replace(/\/contact$/, ""))}</td></tr>
-</table>`;
+${warning}
+${ctaRow("Go to Energyflow", siteUrl(), { top: 0, bottom: 8 })}`;
 
     return emailShell({
         preheader: "Your Energyflow account password was just updated.",

@@ -1,11 +1,11 @@
 import {
     BRAND,
-    FONT_BODY,
-    FONT_DISPLAY,
     emailShell,
     eyebrow,
     heading,
     paragraph,
+    valueCard,
+    detailRows,
     firstName,
     esc,
 } from "./_shared";
@@ -24,33 +24,19 @@ import {
  * @param {string} data.message
  */
 export const contactConfirmation = ({ ticketId, name, subject, message }) => {
-    const refCard = `
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:8px 0 24px;">
-  <tr>
-    <td align="center" style="background-color:${BRAND.warm};border:1px solid ${BRAND.border};border-radius:12px;padding:20px 24px;">
-      <p style="margin:0 0 6px;font-family:${FONT_BODY};font-size:11px;font-weight:bold;letter-spacing:0;text-transform:uppercase;color:${BRAND.muted};">Your reference number</p>
-      <p style="margin:0;font-family:${FONT_DISPLAY};font-size:26px;letter-spacing:1px;color:${BRAND.oxblood};">${esc(ticketId)}</p>
-    </td>
-  </tr>
-</table>`;
-
-    const detail = (label, value) => `
-<tr>
-  <td style="padding:0 0 16px;">
-    <p style="margin:0 0 4px;font-family:${FONT_BODY};font-size:10px;font-weight:bold;letter-spacing:0;text-transform:uppercase;color:${BRAND.muted};">${esc(label)}</p>
-    <p style="margin:0;font-family:${FONT_BODY};font-size:15px;line-height:22px;color:${BRAND.ink};white-space:pre-wrap;">${esc(value)}</p>
-  </td>
-</tr>`;
-
     const bodyHtml = `
 ${eyebrow("Message received")}
 ${heading("Thanks for reaching out")}
 ${paragraph(`Hi ${firstName(name)},`)}
 ${paragraph("We've received your message and our team will get back to you as soon as possible. Please keep the reference number below for any follow-up — just reply to this email and we'll pick up right where you left off.")}
-${refCard}
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-top:1px solid ${BRAND.border};padding-top:8px;margin-top:8px;">
-  ${subject ? detail("Subject", subject) : ""}
-  ${detail("Your message", message)}
+${valueCard({ caption: "Your reference number", value: ticketId, size: "26px", tracking: "2px" })}
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-top:1px solid ${BRAND.border};margin-top:8px;">
+  <tr><td style="padding-top:20px;">
+    ${detailRows([
+        ["Subject", esc(subject)],
+        ["Your message", esc(message), { wrap: true }],
+    ])}
+  </td></tr>
 </table>`;
 
     return emailShell({

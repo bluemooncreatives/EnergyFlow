@@ -1,10 +1,17 @@
 import {
     BRAND,
     FONT_BODY,
+    FONT_DISPLAY,
+    TYPE,
     emailShell,
     eyebrow,
     heading,
-    button,
+    highlightBand,
+    detailRows,
+    ctaRowRuled,
+    mailLink,
+    telLink,
+    formatCount,
     esc,
     siteUrl,
 } from "./_shared";
@@ -33,55 +40,38 @@ export const giftEnquiryNotification = ({
     products = [],
     message,
 }) => {
-    const row = (label, value) => `
-<tr>
-  <td style="padding:0 0 16px;">
-    <p style="margin:0 0 4px;font-family:${FONT_BODY};font-size:10px;font-weight:bold;letter-spacing:0;text-transform:uppercase;color:${BRAND.muted};">${esc(label)}</p>
-    <p style="margin:0;font-family:${FONT_BODY};font-size:15px;line-height:22px;color:${BRAND.ink};white-space:pre-wrap;">${value}</p>
-  </td>
-</tr>`;
+    const list = Array.isArray(products) ? products : [];
 
-    const headline = `
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:4px 0 24px;">
-  <tr>
-    <td style="background-color:${BRAND.sun};border-radius:12px;padding:18px 22px;">
-      <p style="margin:0 0 4px;font-family:${FONT_BODY};font-size:11px;font-weight:bold;text-transform:uppercase;color:${BRAND.oxblood};">Requested quantity</p>
-      <p style="margin:0;font-family:${FONT_BODY};font-size:26px;font-weight:bold;color:${BRAND.oxblood};">${esc(Number(quantity).toLocaleString("en-IN"))} boxes</p>
-    </td>
-  </tr>
-</table>`;
+    const headline = highlightBand(`
+      <p style="margin:0 0 4px;font-family:${FONT_BODY};font-size:${TYPE.eyebrow};line-height:16px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:${BRAND.sunInk};">Requested quantity</p>
+      <p style="margin:0;font-family:${FONT_DISPLAY};font-size:26px;line-height:32px;font-weight:600;color:${BRAND.sunInk};">${esc(formatCount(quantity))} boxes</p>`,
+        { pad: "18px 22px" });
 
-    const productList = products.length
-        ? products.map((p) => `• ${esc(p.name)}`).join("<br />")
+    const productList = list.length
+        ? list.map((p) => `• ${esc(p?.name)}`).join("<br />")
         : "(No specific box chosen)";
 
     const bodyHtml = `
 ${eyebrow("Corporate gifting")}
 ${heading("New gifting enquiry")}
 ${headline}
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
-  ${row("Reference", esc(ticketId))}
-  ${row("Contact", `${esc(name)}${company ? ` &nbsp;·&nbsp; ${esc(company)}` : ""}`)}
-  ${row("Email", `<a href="mailto:${esc(email)}" style="color:${BRAND.crimson};">${esc(email)}</a>`)}
-  ${row("Phone", `<a href="tel:${esc(String(phone).replace(/[^\d+]/g, ""))}" style="color:${BRAND.crimson};">${esc(phone)}</a>`)}
-  ${city ? row("City", esc(city)) : ""}
-  ${row("Occasion", esc(occasion))}
-  ${row("Budget per box", esc(budget) || "(Not specified)")}
-  ${row("Needed by", esc(deliveryDate) || "(Flexible)")}
-  ${row("Custom branding", branding ? "Yes — logo / personalised packaging" : "No")}
-  ${row("Boxes of interest", productList)}
-  ${row("Message", esc(message) || "(No message)")}
-</table>
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-  <tr>
-    <td style="border-top:1px solid ${BRAND.border};padding-top:24px;">
-      ${button("Open in admin", esc(`${siteUrl()}/admin/gift-enquiries/details/${id}`))}
-    </td>
-  </tr>
-</table>`;
+${detailRows([
+        ["Reference", esc(ticketId)],
+        ["Contact", `${esc(name)}${company ? ` &nbsp;·&nbsp; ${esc(company)}` : ""}`],
+        ["Email", mailLink(email)],
+        ["Phone", telLink(phone)],
+        ["City", esc(city)],
+        ["Occasion", esc(occasion)],
+        ["Budget per box", esc(budget) || "(Not specified)"],
+        ["Needed by", esc(deliveryDate) || "(Flexible)"],
+        ["Custom branding", branding ? "Yes — logo / personalised packaging" : "No"],
+        ["Boxes of interest", productList],
+        ["Message", esc(message) || "(No message)", { wrap: true }],
+    ])}
+${ctaRowRuled("Open in admin", `${siteUrl()}/admin/gift-enquiries/details/${encodeURIComponent(id || "")}`)}`;
 
     return emailShell({
-        preheader: `${name}${company ? ` (${company})` : ""} wants ${quantity} gift boxes.`,
+        preheader: `${name}${company ? ` (${company})` : ""} wants ${formatCount(quantity)} gift boxes.`,
         title: "New gifting enquiry",
         bodyHtml,
     });

@@ -1,19 +1,23 @@
 import {
     BRAND,
-    FONT_BODY,
-    FONT_DISPLAY,
     emailShell,
     eyebrow,
     heading,
     paragraph,
-    button,
+    idRow,
+    timeline,
+    detailRows,
+    panel,
+    label,
+    ctaRow,
+    link,
     firstName,
     esc,
 } from "./_shared";
 
 /**
- * Per-status copy. Only customer-meaningful transitions get an email — internal
- * states like "pending"/"unverified" are intentionally excluded by the caller.
+ * Per-status copy. Only customer-meaningful transitions get an email —
+ * internal states like "pending"/"unverified" are excluded by the caller.
  */
 const STATUS_COPY = {
     processing: {
@@ -43,7 +47,7 @@ const STATUS_COPY = {
 };
 
 // Ordered customer-facing journey used to render the progress timeline.
-const TIMELINE = ["confirmed", "shipped", "delivered"];
+const TIMELINE = ["Confirmed", "Shipped", "Delivered"];
 
 const stageIndexFor = (status) => {
     if (status === "delivered") return 2;
@@ -60,46 +64,49 @@ const stageIndexFor = (status) => {
  * @param {string} data.order_id
  * @param {string} data.status            One of processing|shipped|delivered|cancelled.
  * @param {string} data.orderDetailsUrl
+ * @param {object} [data.shipment]        { courier, awb, trackingUrl } — rendered
+ *                                        on the "shipped" mail when present, so the
+ *                                        customer gets the AWB without signing in.
  */
 export const orderStatusUpdate = (data = {}) => {
-    const { name, order_id, status, orderDetailsUrl = "#" } = data;
+    const { name, order_id, status, orderDetailsUrl = "#", shipment = {} } = data;
     const copy = STATUS_COPY[status] || STATUS_COPY.processing;
     const cancelled = status === "cancelled";
 
-    const activeIndex = stageIndexFor(status);
-    const timeline = cancelled
-        ? ""
-        : `
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0 8px;">
-  <tr>
-    ${TIMELINE.map((label, i) => {
-        const active = i <= activeIndex;
-        return `<td align="center" width="33%" style="font-family:${FONT_BODY};font-size:11px;font-weight:bold;letter-spacing:0;text-transform:uppercase;color:${active ? BRAND.oxblood : BRAND.muted};padding-top:8px;">
-      <div style="width:12px;height:12px;border-radius:50%;background-color:${active ? BRAND.crimson : BRAND.border};margin:0 auto 8px;"></div>
-      ${esc(label)}
-    </td>`;
-    }).join("")}
-  </tr>
-</table>`;
+    const { courier, awb, trackingUrl } = shipment || {};
+
+    // Courier details only make sense once the parcel is actually moving.
+    const trackingBlock =
+        status === "shipped" && (courier || awb || trackingUrl)
+            ? panel(
+                `${label("Tracking")}
+      ${detailRows(
+                    [
+                        ["Courier", esc(courier)],
+                        ["Tracking number (AWB)", esc(awb)],
+                        ["Track online", trackingUrl ? link("Open tracking page", trackingUrl) : ""],
+                    ],
+                    { gap: 12 }
+                )}`,
+                { margin: "20px 0 4px", pad: "18px 20px 6px" }
+            )
+            : "";
+
+    // Prefer the courier's own tracking page as the CTA when we have one.
+    const ctaUrl = status === "shipped" && trackingUrl ? trackingUrl : orderDetailsUrl;
 
     const bodyHtml = `
 ${eyebrow(copy.eyebrow)}
 ${heading(copy.title)}
 ${paragraph(`Hi ${firstName(name)},`)}
 ${paragraph(copy.lead)}
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:4px 0 8px;">
-  <tr>
-    <td style="font-family:${FONT_BODY};font-size:13px;color:${BRAND.muted};">Order ID</td>
-    <td align="right" style="font-family:${FONT_DISPLAY};font-size:16px;font-weight:bold;color:${BRAND.oxblood};">${esc(order_id)}</td>
-  </tr>
-</table>
-${timeline}
-<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:28px 0 8px;">
-  <tr><td align="center">${button(copy.cta, esc(orderDetailsUrl), cancelled ? BRAND.crimson : BRAND.oxblood)}</td></tr>
-</table>`;
+${idRow("Order ID", order_id)}
+${cancelled ? "" : timeline(TIMELINE, stageIndexFor(status))}
+${trackingBlock}
+${ctaRow(copy.cta, ctaUrl, { top: 28, bottom: 8, bg: BRAND.pine })}`;
 
     return emailShell({
-        preheader: `${copy.title} — order ${order_id}.`,
+        preheader: order_id ? `${copy.title} — order ${order_id}.` : `${copy.title}.`,
         title: copy.title,
         bodyHtml,
     });
