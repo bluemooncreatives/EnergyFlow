@@ -134,18 +134,18 @@ const RangeFields = () => {
                 <TextField control={control} name="range.searchPlaceholder" label="Search placeholder" maxLength={40} />
                 <AreaField control={control} name="range.note" label="Note under the row" maxLength={260} rows={3} />
             </FieldGroup>
-            <FieldGroup title="How we work" description="The sticky photo beside the numbered sourcing steps.">
+            <FieldGroup title="How we work" description="The headline and lead with a chip per step; the chosen step opens in a card, beside a photo carrying a tracker that fills as you move through the steps.">
                 <SectionSwitch name="sourcing.enabled" label="Show this section" />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="sourcing.eyebrow" label="Label" maxLength={40} />
-                    <TextField control={control} name="sourcing.indexLabel" label="Index label (right)" maxLength={40} />
+                    <TextField control={control} name="sourcing.indexLabel" label="Small line under the lead" maxLength={40} />
                 </div>
                 <TitlePair base="sourcing" titleLabel="First line" accentLabel="Second line" />
                 <AreaField control={control} name="sourcing.lead" label="Lead" maxLength={300} rows={3} />
-                <ImageField name="sourcing.image" label="Sticky photo" defaultImage={D.sourcing.image} autoNote="None: a plain panel." />
+                <ImageField name="sourcing.image" label="Photo" defaultImage={D.sourcing.image} autoNote="None: a plain panel." />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <TextField control={control} name="sourcing.photoEyebrow" label="Photo label" maxLength={40} />
-                    <TextField control={control} name="sourcing.photoTitle" label="Photo title" maxLength={60} />
+                    <TextField control={control} name="sourcing.photoEyebrow" label="Tracker label" maxLength={40} />
+                    <TextField control={control} name="sourcing.photoTitle" label="Photo caption" maxLength={60} />
                 </div>
             </FieldGroup>
             <FieldGroup title="Sourcing steps">
@@ -209,7 +209,7 @@ const PeopleFields = () => {
                 <SectionSwitch name="testimonials.enabled" label="Show this section" />
                 <TextField control={control} name="testimonials.label" label="Section label" maxLength={40} />
                 <TextField control={control} name="testimonials.title" label="Headline" maxLength={60} />
-                <ImageField name="testimonials.image" label="Panel photo" defaultImage={D.testimonials.image} autoNote="None: the quote card fills the panel." />
+                <ImageField name="testimonials.image" label="Photo" defaultImage={D.testimonials.image} autoNote="None: the quote takes the space." />
             </FieldGroup>
         </>
     )
@@ -219,11 +219,11 @@ const WorkFields = () => {
     const { control } = useFormContext()
     return (
         <>
-            <FieldGroup title="Work with us" description="Tabs (one per offer) switching a pine card with a photo, title, copy and button.">
+            <FieldGroup title="Work with us" description="A row of photo cards, one per offer: the chosen card opens wide with its title, copy and button, the rest show their label.">
                 <SectionSwitch name="work.enabled" label="Show this section" />
                 <TextField control={control} name="work.label" label="Section label" maxLength={40} />
                 <TitlePair base="work" />
-                <AreaField control={control} name="work.description" label="Description (beside the card)" maxLength={320} rows={3} />
+                <AreaField control={control} name="work.description" label="Description (beside the headline)" maxLength={320} rows={3} />
             </FieldGroup>
             <FieldGroup title="Tabs">
                 <ListField
@@ -262,9 +262,9 @@ const VisitFields = () => {
                 <TextField control={control} name="visit.label" label="Section label" maxLength={40} />
                 <AreaField control={control} name="visit.statement" label="Invitation" maxLength={240} rows={3} />
                 <TextField control={control} name="visit.ctaLabel" label="Directions button" maxLength={30} hint="Opens Google Maps at the store address." />
-                <AreaField control={control} name="visit.note" label="Note under the small photo" maxLength={160} rows={2} />
+                <AreaField control={control} name="visit.note" label="Note under the address" maxLength={160} rows={2} />
             </FieldGroup>
-            <FieldGroup title="Photos" description="The first is the large store photo; the rest step through the small card. With none, the store front photo shows.">
+            <FieldGroup title="Photos" description="Listed beside the tall photo by their tag and caption; hovering a row shows its photo. With none, the store front photo shows.">
                 <ListField
                     name="visit.photos"
                     label="Photos"
@@ -283,7 +283,7 @@ const VisitFields = () => {
                     )}
                 />
             </FieldGroup>
-            <FieldGroup title="You may also like" description="Four bestsellers at the end of the page.">
+            <FieldGroup title="You may also like" description="A pine band at the end of the page with up to eight bestsellers in a row that scrolls.">
                 <SectionSwitch name="related.enabled" label="Show product picks" />
                 <TextField control={control} name="related.eyebrow" label="Label" maxLength={40} />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">

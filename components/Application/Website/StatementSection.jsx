@@ -47,7 +47,7 @@ const PHRASE_PARTS = [
     { type: 'word', text: 'second-guess.' },
 ]
 
-const StatementSection = ({ className }) => {
+const StatementSection = ({ className, eyebrow = 'The promise' }) => {
     const containerRef = useRef(null)
     const statementRef = useRef(null)
     const watermarkLeftRef = useRef(null)
@@ -170,7 +170,7 @@ const StatementSection = ({ className }) => {
                         <span className={styles.beaconPing} />
                         <span className={styles.beaconStatic} />
                     </span>
-                    <span className={styles.eyebrowText}>02 · The Promise</span>
+                    <span className={styles.eyebrowText}>{eyebrow}</span>
                 </div>
 
                 {/* The Full-Width Statement Typography */}
@@ -221,7 +221,7 @@ const StatementSection = ({ className }) => {
 
                 {/* Call to Action */}
                 <div ref={ctaRef} className={styles.ctaContainer}>
-                    <StoreButton href={WEBSITE_SHOP} size="lg" arrow>
+                    <StoreButton href={WEBSITE_SHOP} arrow>
                         Browse everything
                     </StoreButton>
                 </div>

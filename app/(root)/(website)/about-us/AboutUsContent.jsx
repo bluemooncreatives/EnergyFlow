@@ -1,22 +1,20 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import Section from '@/components/Application/Website/storefront/Section'
-import SectionHeader from '@/components/Application/Website/storefront/SectionHeader'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
-import ProductBox from '@/components/Application/Website/ProductBox'
 import StatementSection from '@/components/Application/Website/StatementSection'
-import { fillTokens, pad2 } from '@/lib/pageContent/shared'
+import { fillTokens } from '@/lib/pageContent/shared'
 import { WEBSITE_HOME, WEBSITE_SHOP } from '@/routes/WebsiteRoute'
 import { cn } from '@/lib/utils'
 import AboutLeadership from './AboutLeadership'
 import AboutMotion from './AboutMotion'
 import AboutPromise from './AboutPromise'
 import AboutRangeExplorer from './AboutRangeExplorer'
+import AboutRelated from './AboutRelated'
+import AboutSourcing from './AboutSourcing'
 import AboutTestimonials from './AboutTestimonials'
 import AboutVisit from './AboutVisit'
 import AboutWorkWithUs from './AboutWorkWithUs'
-import SourcingSteps from './SourcingSteps'
 import styles from './about-us.module.css'
 
 /* The page's copy, lists and photos come from Admin → Pages → About us
@@ -79,9 +77,10 @@ const AboutUsContent = ({ content, products = [], categories = [], stats, testim
     }
     const numbered = Object.keys(show).filter((key) => show[key])
     const numberOf = (key) => numbered.indexOf(key) + 2
-
-    const sourcing = content.sourcing
-    const steps = sourcing.steps.filter((step) => step.title)
+    // Backgrounds alternate by position among the sections that show, so a
+    // hidden section never leaves two of the same tone back to back. The
+    // statement above is sunken, so the first numbered section is page.
+    const toneOf = (key) => (numbered.indexOf(key) % 2 ? 'sunken' : 'page')
 
     return (
         <AboutMotion>
@@ -181,63 +180,25 @@ const AboutUsContent = ({ content, products = [], categories = [], stats, testim
             </section>
 
             {/* ── Statement ──────────────────────────────────────────── */}
-            {content.statement.enabled && <StatementSection />}
+            {content.statement.enabled && <StatementSection eyebrow="The promise" />}
 
-            {show.promise && <AboutPromise content={content.promise} number={numberOf('promise')} rating={rating} />}
+            {show.promise && <AboutPromise content={content.promise} number={numberOf('promise')} rating={rating} tone={toneOf('promise')} />}
 
-            {show.range && <AboutRangeExplorer content={content.range} categories={categories} number={numberOf('range')} />}
+            {show.range && <AboutRangeExplorer content={content.range} categories={categories} number={numberOf('range')} tone={toneOf('range')} />}
 
-            {show.sourcing && (
-                <Section tone="page" id="how-we-work">
-                    <div className={styles.sourcingHeader} data-reveal>
-                        <div className={styles.sourcingHeaderMeta}>
-                            {sourcing.eyebrow && <span className="ef-eyebrow">{sourcing.eyebrow}</span>}
-                            <span className={styles.sourcingHeaderIndex}>
-                                {sourcing.indexLabel} <span aria-hidden="true">[{pad2(numberOf('sourcing'))}]</span>
-                            </span>
-                        </div>
-                        <div className={styles.sourcingHeaderMain}>
-                            <h2 className={styles.sourcingHeadline}>
-                                {sourcing.title}
-                                {sourcing.titleAccent && <><br /><span>{sourcing.titleAccent}</span></>}
-                            </h2>
-                            {sourcing.lead && <p className={styles.sourcingLead}>{sourcing.lead}</p>}
-                        </div>
-                    </div>
-                    <SourcingSteps
-                        steps={steps}
-                        figure={sourcing.image?.url ? { src: sourcing.image.url, alt: sourcing.image.alt, position: sourcing.image.position } : null}
-                        photoEyebrow={sourcing.photoEyebrow}
-                        photoTitle={sourcing.photoTitle}
-                    />
-                </Section>
-            )}
+            {show.sourcing && <AboutSourcing content={content.sourcing} number={numberOf('sourcing')} tone={toneOf('sourcing')} />}
 
-            {show.leadership && <AboutLeadership content={content.leadership} number={numberOf('leadership')} />}
+            {show.leadership && <AboutLeadership content={content.leadership} number={numberOf('leadership')} tone={toneOf('leadership')} />}
 
             {show.testimonials && (
-                <AboutTestimonials content={content.testimonials} testimonials={testimonials} number={numberOf('testimonials')} />
+                <AboutTestimonials content={content.testimonials} testimonials={testimonials} rating={rating} number={numberOf('testimonials')} tone={toneOf('testimonials')} />
             )}
 
-            {show.work && <AboutWorkWithUs content={content.work} number={numberOf('work')} />}
+            {show.work && <AboutWorkWithUs content={content.work} number={numberOf('work')} tone={toneOf('work')} />}
 
-            {show.visit && <AboutVisit content={content.visit} number={numberOf('visit')} />}
+            {show.visit && <AboutVisit content={content.visit} number={numberOf('visit')} tone={toneOf('visit')} />}
 
-            {content.related.enabled && products.length > 0 && (
-                <Section tone="sunken">
-                    <SectionHeader
-                        eyebrow={content.related.eyebrow}
-                        title={content.related.title}
-                        accent={content.related.titleAccent}
-                        align="center"
-                    />
-                    <div className="grid grid-cols-2 gap-[var(--grid-gap)] sm:grid-cols-3 lg:grid-cols-4">
-                        {products.map((item) => (
-                            <ProductBox key={item._id} product={item} />
-                        ))}
-                    </div>
-                </Section>
-            )}
+            {content.related.enabled && products.length > 0 && <AboutRelated content={content.related} products={products} />}
         </AboutMotion>
     )
 }

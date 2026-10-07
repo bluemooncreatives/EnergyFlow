@@ -43,7 +43,7 @@ const PortraitCaption = ({ person }) => (
  * one open with role and bio, the rest muted with a radio-style marker.
  * Phones drop the side portrait and show it inside the open entry instead.
  */
-const AboutLeadership = ({ content, number }) => {
+const AboutLeadership = ({ content, number, tone = 'sunken' }) => {
     const uid = useId()
     const [active, setActive] = useState(0)
 
@@ -52,7 +52,7 @@ const AboutLeadership = ({ content, number }) => {
     const current = people[Math.min(active, people.length - 1)]
 
     return (
-        <Section tone="sunken" aria-labelledby="leadership-title">
+        <Section tone={tone} aria-labelledby="leadership-title">
             <AboutMetaRow label={content.label} number={number} />
 
             <div className="grid gap-[clamp(1.5rem,4vw,3.5rem)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
@@ -95,7 +95,7 @@ const AboutLeadership = ({ content, number }) => {
                                                 <span className={cn('size-2.5 rounded-full bg-brand-bright transition-transform duration-300', open ? 'scale-100' : 'scale-0')} />
                                             </span>
                                             <span className="min-w-0 flex-1">
-                                                <span className={cn('block font-header text-[clamp(1.25rem,1rem+1vw,1.875rem)] font-semibold leading-tight transition-colors', open ? 'text-ink-strong' : 'text-ink-muted group-hover:text-ink-strong')}>
+                                                <span className={cn('block font-header text-[clamp(1.25rem,1rem+1vw,1.875rem)] font-medium leading-tight transition-colors', open ? 'text-ink-strong' : 'text-ink-muted group-hover:text-ink-strong')}>
                                                     {person.name}
                                                 </span>
                                                 {person.role && <span className="mt-1 block text-[0.8125rem] font-medium uppercase text-brand-bright">{person.role}</span>}

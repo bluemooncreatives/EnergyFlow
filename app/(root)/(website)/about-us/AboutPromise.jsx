@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, HandCoins, Leaf, PackageCheck, ShieldCheck, Sprout, Star, Truck } from 'lucide-react'
 import Section from '@/components/Application/Website/storefront/Section'
 import { cn } from '@/lib/utils'
-import { AboutMetaRow, upperNumber } from './AboutUi'
+import { ABOUT_STATEMENT, AboutMetaRow, upperNumber } from './AboutUi'
 
 const PILLAR_ICONS = [Sprout, ShieldCheck, PackageCheck, HandCoins, Truck, Leaf]
 
@@ -17,7 +17,7 @@ const PILLAR_ICONS = [Sprout, ShieldCheck, PackageCheck, HandCoins, Truck, Leaf]
  *
  * rating — { avg, count } when it should show, else null
  */
-const AboutPromise = ({ content, number, rating }) => {
+const AboutPromise = ({ content, number, rating, tone = 'page' }) => {
     const photo = content.photo?.url ? content.photo : null
     const second = content.secondaryPhoto?.url ? content.secondaryPhoto : null
     const pillars = content.pillars.filter(Boolean)
@@ -26,7 +26,7 @@ const AboutPromise = ({ content, number, rating }) => {
     const [headline, ...rows] = timeline
 
     return (
-        <Section tone="page" aria-labelledby="promise-title">
+        <Section tone={tone} aria-labelledby="promise-title">
             <AboutMetaRow label={content.label} number={number} />
 
             <div className="grid gap-[clamp(1.25rem,3vw,3rem)] lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
@@ -64,7 +64,7 @@ const AboutPromise = ({ content, number, rating }) => {
                 <div className="flex min-w-0 flex-col gap-[clamp(1.5rem,3vw,2.5rem)]">
                     <h2
                         id="promise-title"
-                        className="m-0 font-header text-[clamp(1.5rem,1.05rem+2vw,3rem)] font-medium leading-[1.12] text-ink-strong [text-wrap:balance]"
+                        className={ABOUT_STATEMENT}
                         data-reveal
                     >
                         <span aria-hidden="true" className="text-brand-bright">“</span>{content.statement}<span aria-hidden="true" className="text-brand-bright">”</span>
@@ -75,8 +75,8 @@ const AboutPromise = ({ content, number, rating }) => {
                             {pillars.map((pillar, i) => {
                                 const Icon = PILLAR_ICONS[i % PILLAR_ICONS.length]
                                 return (
-                                    <li key={`${pillar}-${i}`} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-surface-card py-1.5 pl-1.5 pr-4 text-[0.8125rem] font-medium text-ink-strong ring-1 ring-inset ring-line-soft">
-                                        <span aria-hidden="true" className="grid size-7 place-items-center rounded-full bg-tint-pistachio text-brand-bright">
+                                    <li key={`${pillar}-${i}`} className="inline-flex min-h-10 items-center gap-2 rounded-[var(--radius-control)] bg-surface-card py-1.5 pl-1.5 pr-3.5 text-[0.8125rem] font-medium text-ink-strong ring-1 ring-inset ring-line-soft">
+                                        <span aria-hidden="true" className="grid size-7 place-items-center rounded-[calc(var(--radius-control)-0.1875rem)] bg-tint-pistachio text-brand-bright">
                                             <Icon className="size-3.5" />
                                         </span>
                                         {pillar}
@@ -97,9 +97,8 @@ const AboutPromise = ({ content, number, rating }) => {
                             <div className={cn('flex flex-col justify-between gap-5 py-1', !second && 'sm:col-span-2')} data-reveal>
                                 {content.secondaryText && <p className="text-[0.9375rem] leading-relaxed text-ink-body">{content.secondaryText}</p>}
                                 {content.ctaLabel && (
-                                    <Link href={content.ctaHref} className="ef-cta self-start">
-                                        <span>{content.ctaLabel}</span>
-                                        <span className="ef-cta__box" aria-hidden="true"><ArrowRight /></span>
+                                    <Link href={content.ctaHref} className="ef-btn ef-btn--outline self-start">
+                                        {content.ctaLabel} <ArrowRight className="ef-btn__arrow" aria-hidden="true" />
                                     </Link>
                                 )}
                             </div>

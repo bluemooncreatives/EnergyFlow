@@ -93,7 +93,7 @@ export default async function AboutUsPage() {
       />
       <AboutUsContent
         content={content || mergeAboutPage(null)}
-        products={pickRandom(bestsellers ?? [], 4)}
+        products={pickRandom(bestsellers ?? [], 8)}
         categories={categories}
         stats={stats}
         testimonials={testimonials ?? []}

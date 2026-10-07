@@ -73,7 +73,7 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem 1.1rem;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: var(--radius-control, 0.5rem);
   border: 1px solid color-mix(in srgb, var(--brand-primary, #0B3D2E) 14%, transparent);
   background: color-mix(in srgb, var(--surface-card, #F7F3E8) 80%, transparent);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
