@@ -34,8 +34,20 @@ export const usePrefersReducedMotion = () => {
     return reduced
 }
 
-// Ticker: a phrase followed by a small cut-out (or a dot) as the separator.
-const TickerItem = ({ item }) => (
+// A heavy six-spoke asterisk, the separator on the gifting ticker.
+const Asterisk = () => (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="mx-5 size-[1.375rem] shrink-0 text-sun sm:mx-8 sm:size-8">
+        <g fill="currentColor">
+            <rect x="9.6" y="0" width="4.8" height="24" rx="2.4" />
+            <rect x="9.6" y="0" width="4.8" height="24" rx="2.4" transform="rotate(60 12 12)" />
+            <rect x="9.6" y="0" width="4.8" height="24" rx="2.4" transform="rotate(-60 12 12)" />
+        </g>
+    </svg>
+)
+
+// Ticker: a phrase followed by a small cut-out, an asterisk or a dot as the
+// separator.
+const TickerItem = ({ item, separator }) => (
     <li data-marquee-item className="flex shrink-0 items-center">
         <span className="whitespace-nowrap font-header text-[1.25rem] font-semibold uppercase leading-none sm:text-[1.75rem]">
             {item.label}
@@ -48,6 +60,8 @@ const TickerItem = ({ item }) => (
                 draggable={false}
                 className="mx-5 h-10 w-auto shrink-0 sm:mx-7 sm:h-14"
             />
+        ) : separator === 'asterisk' ? (
+            <Asterisk />
         ) : (
             <span aria-hidden="true" className="mx-5 size-2 shrink-0 rounded-full bg-current sm:mx-7" />
         )}
@@ -109,10 +123,12 @@ const ShowcaseItem = ({ item, index }) => (
 //     horizontally scrollable row.
 //
 // `items`: [{ label, image?, href? }] — `image` is a static image import;
-// showcase items need `href` and `image`.
+// showcase items need `href` and `image`. `separator` ('dot' | 'asterisk')
+// marks the gap between ticker phrases that carry no image.
 const Marquee = ({
     items = [],
     variant = 'ticker',
+    separator = 'dot',
     label,
     speed = 1,
     reverse = false,
@@ -339,7 +355,7 @@ const Marquee = ({
                         className="m-0 flex shrink-0 list-none p-0"
                     >
                         {items.map((item, i) => (
-                            <Item key={item.label} item={item} index={i} />
+                            <Item key={`${item.label}-${i}`} item={item} index={i} separator={separator} />
                         ))}
                     </ul>
                 ))}

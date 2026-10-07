@@ -37,6 +37,14 @@ Open **Admin → Category → Edit** (or **New Category**) and find **Category c
 
 Failed uploads can be retried from the editor without uploading the file again or duplicating library records. Category saving waits until the upload finishes or is dismissed. If another admin changes the category, your stale save is rejected and your edits remain visible; **Reload latest (discard edits)** loads the new version. Unavailable covers keep their reference until explicitly replaced or removed. Broken image delivery falls back to automatic artwork, then the card background. Images whose permanent deletion has started remain in trash until deletion succeeds and cannot be restored during that operation.
 
+### Configure the Gift Boxes and About Us pages
+
+Open **Admin → Page Content → Gift Boxes Page** or **About Us Page**. Each tab covers a group of sections: switch a section off to hide it (its content is kept), edit its copy, reorder or add list items (cards, steps, people, tabs, FAQs), and pick photos from the media library with alt text and a crop focus. Click **Save & publish** to put the changes live; **Defaults** loads the designed copy back into the form, and **Discard** drops unsaved edits.
+
+The gift boxes themselves still come from Products in the Gift Boxes category. A photo slot left empty is automatic: the page uses a gift box photo, then brand artwork. Empty lists hide their section, and the numbered sections renumber around anything hidden. Corporate testimonials start empty and only real quotes belong there; the About page's reviews come from **Admin → Testimonials**. On the About page, `{categories}` and `{products}` in a hero figure show live catalogue counts.
+
+Trashed or deleted media falls back automatically and returns when restored. If another admin publishes while you are editing, your save is refused and your edits stay on screen; **Reload latest (discard edits)** loads their version.
+
 ## 🛠️ Tech Stack
 
 ### Frontend

@@ -1283,6 +1283,13 @@ body {
   .ef-icon-btn:hover:not(:disabled) { background: var(--brand-primary); border-color: var(--brand-primary); color: var(--on-brand); }
   .ef-icon-btn:disabled { opacity: 0.35; cursor: default; }
   .ef-icon-btn svg { width: 1.125rem; height: 1.125rem; }
+  /* On a pine band the pine hover fill would vanish: go sunflower there. */
+  .ef-section--inverse .ef-icon-btn:hover:not(:disabled),
+  .ef-on-inverse .ef-icon-btn:hover:not(:disabled) {
+    background: var(--brand-sun);
+    border-color: var(--brand-sun);
+    color: var(--brand-sun-ink);
+  }
 
   /* ── Back to top ─────────────────────────────────────────────── */
   /* Desktop only. Phones and tablets already carry a bottom bar — the cart

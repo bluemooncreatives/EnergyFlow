@@ -6,7 +6,7 @@ import styles from './about-us.module.css'
 
 // The copy and photograph render in the initial HTML. The observer only moves
 // the visual chapter marker as the reader travels through the four steps.
-const SourcingSteps = ({ steps, figure }) => {
+const SourcingSteps = ({ steps, figure, photoEyebrow, photoTitle }) => {
     const [active, setActive] = useState(0)
     const rowsRef = useRef([])
     const total = String(steps.length).padStart(2, '0')
@@ -40,13 +40,16 @@ const SourcingSteps = ({ steps, figure }) => {
         <div className={styles.sourcingGrid}>
             <div className={styles.sourcingVisual}>
                 <figure className={styles.sourcingFigure} data-reveal>
-                    <Image
-                        src={figure.src}
-                        alt={figure.alt}
-                        fill
-                        sizes="(max-width: 1023px) 100vw, 44vw"
-                        className={styles.sourcingImage}
-                    />
+                    {figure?.src && (
+                        <Image
+                            src={figure.src}
+                            alt={figure.alt}
+                            fill
+                            sizes="(max-width: 1023px) 100vw, 44vw"
+                            className={styles.sourcingImage}
+                            style={{ objectPosition: figure.position || 'center 52%' }}
+                        />
+                    )}
                     <div className={styles.sourcingPhotoTop} aria-hidden="true">
                         <span className={styles.sourcingPhotoTag}>
                             <span className={styles.sourcingPhotoDot} /> Source to home
@@ -57,13 +60,13 @@ const SourcingSteps = ({ steps, figure }) => {
                         </span>
                     </div>
                     <figcaption className={styles.sourcingPhotoCaption}>
-                        <span className={styles.sourcingPhotoEyebrow}>The path behind every pack</span>
-                        <span className={styles.sourcingPhotoTitle}>Care travels<br />with every pack.</span>
+                        {photoEyebrow && <span className={styles.sourcingPhotoEyebrow}>{photoEyebrow}</span>}
+                        {photoTitle && <span className={styles.sourcingPhotoTitle}>{photoTitle}</span>}
                         <span className={styles.sourcingProgress} aria-hidden="true">
                             <span style={{ width: `${((active + 1) / steps.length) * 100}%` }} />
                         </span>
                         <span className={styles.sourcingProgressLabels} aria-hidden="true">
-                            <span>Origin</span>
+                            <span>{steps[0]?.phase || 'Origin'}</span>
                             <span>Your kitchen</span>
                         </span>
                     </figcaption>
@@ -73,7 +76,7 @@ const SourcingSteps = ({ steps, figure }) => {
             <ol className={styles.steps} aria-label="How our products reach you">
                 {steps.map((step, index) => (
                     <li
-                        key={step.title}
+                        key={`${step.title}-${index}`}
                         ref={(el) => { rowsRef.current[index] = el }}
                         className={styles.step}
                         data-active={index === active}
@@ -83,7 +86,7 @@ const SourcingSteps = ({ steps, figure }) => {
                             {String(index + 1).padStart(2, '0')}
                         </span>
                         <div className={styles.stepCopy}>
-                            <span className={styles.stepPhase}>{step.phase}</span>
+                            {step.phase && <span className={styles.stepPhase}>{step.phase}</span>}
                             <h3 className={styles.stepTitle}>{step.title}</h3>
                             <p className={styles.stepBody}>{step.body}</p>
                         </div>

@@ -2,6 +2,7 @@ import ShopClient from '@/components/Application/Website/ShopClient'
 import CorporateGiftingPage from '@/components/Application/Website/gifting/CorporateGiftingPage'
 import { getDefaultShopProducts, getShopFilters, getShopProducts } from '@/lib/services/shopService'
 import { getGiftingCollection } from '@/lib/services/giftingService'
+import { getGiftPageContent } from '@/lib/services/pageContentService'
 import { getCategorySeo } from '@/lib/catalogSeo'
 import { GIFTING_CATEGORY_SLUG } from '@/lib/giftEnquiry'
 
@@ -85,12 +86,15 @@ const Shop = async ({ searchParams }) => {
     // Gift boxes on their own open the corporate gifting experience; any
     // extra filter, sort or search falls through to the normal listing.
     if (isGiftingView(resolvedSearchParams)) {
-        const collection = await getGiftingCollection().catch(() => null)
+        const [collection, content] = await Promise.all([
+            getGiftingCollection().catch(() => null),
+            getGiftPageContent().catch(() => null),
+        ])
         if (collection) {
             return (
                 <>
                     <CloudinaryPreconnect />
-                    <CorporateGiftingPage collection={collection} seo={getCategorySeo(GIFTING_CATEGORY_SLUG, collection.category.name)} />
+                    <CorporateGiftingPage collection={collection} seo={getCategorySeo(GIFTING_CATEGORY_SLUG, collection.category.name)} content={content} />
                 </>
             )
         }

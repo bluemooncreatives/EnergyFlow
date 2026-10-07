@@ -1,9 +1,12 @@
 // Server-rendered on purpose: the story, sourcing and leadership copy must be
-// in the HTML for crawlers. AboutUsContent is a server component too — only the
-// motion wrapper and the sourcing list ship JavaScript.
+// in the HTML for crawlers. AboutUsContent is a server component; only the
+// motion wrapper and the interactive sections ship JavaScript.
 import AboutUsContent from "./AboutUsContent";
+import { mergeAboutPage } from "@/lib/pageContent/aboutPage";
 import { getBestsellerProducts } from "@/lib/services/productService";
 import { getHomeCategories, getNavCategories } from "@/lib/services/categoryService";
+import { getAboutPageContent } from "@/lib/services/pageContentService";
+import { STAT_MINIMUMS, getStoreStats } from "@/lib/services/storeStatsService";
 import { getTestimonials } from "@/lib/services/testimonialService";
 import { formatCategoryName, JsonLd, absoluteUrl, breadcrumbSchema } from "@/lib/seo";
 import { pickRandom } from "@/lib/utils";
@@ -34,22 +37,24 @@ export const metadata = {
 
 // Every read below is a cached service, so this page can be served from the
 // edge cache and refreshed in the background rather than re-queried per visit.
-// (It was force-dynamic only so the "You may also like" picks could be
-// re-randomised on every request — not worth a database round trip per view.)
+// Publishing from Admin → Pages → About us revalidates it straight away.
 export const revalidate = 300;
 
 const EMPTY_NAV = { categories: [], totalProducts: 0 };
 
 export default async function AboutUsPage() {
-  const [bestsellers, homeCategories, nav, testimonials] = await Promise.all([
-    // A failed read just drops the section — the page never breaks on it.
+  const [content, bestsellers, homeCategories, nav, testimonials, storeStats] = await Promise.all([
+    // A failed read just drops (or defaults) the section — the page never
+    // breaks on it.
+    getAboutPageContent().catch(() => null),
     getBestsellerProducts().catch(() => []),
     getHomeCategories().catch(() => []),
     getNavCategories().catch(() => EMPTY_NAV),
     getTestimonials().catch(() => []),
+    getStoreStats().catch(() => null),
   ]);
 
-  const categories = (homeCategories ?? []).filter((category) => category.previewImage).map((category) => ({
+  const categories = (homeCategories ?? []).map((category) => ({
     ...category,
     name: formatCategoryName(category.name),
   }));
@@ -58,6 +63,11 @@ export default async function AboutUsPage() {
     categoryCount: nav?.categories?.length || categories.length,
     productCount: nav?.totalProducts || 0,
   };
+
+  // The average only shows once there are enough reviews to mean something.
+  const rating = storeStats?.reviewCount >= STAT_MINIMUMS.reviews && storeStats?.ratingAvg > 0
+    ? { avg: storeStats.ratingAvg, count: storeStats.reviewCount }
+    : null;
 
   const aboutSchema = {
     "@context": "https://schema.org",
@@ -82,10 +92,12 @@ export default async function AboutUsPage() {
         ])}
       />
       <AboutUsContent
+        content={content || mergeAboutPage(null)}
         products={pickRandom(bestsellers ?? [], 4)}
         categories={categories}
         stats={stats}
         testimonials={testimonials ?? []}
+        rating={rating}
       />
     </>
   );

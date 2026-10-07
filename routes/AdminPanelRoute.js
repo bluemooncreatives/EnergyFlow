@@ -70,6 +70,10 @@ export const ADMIN_GIFT_ENQUIRY_DETAILS = (id) => id ? `/admin/gift-enquiries/de
 export const ADMIN_NEWSLETTER_SHOW = '/admin/newsletter'
 export const ADMIN_NEWSLETTER_SETTINGS = '/admin/newsletter/settings'
 
+// Page content: copy, lists and photos of hand-designed storefront pages
+export const ADMIN_PAGES_GIFT_BOXES = '/admin/pages/gift-boxes'
+export const ADMIN_PAGES_ABOUT = '/admin/pages/about-us'
+
 // Trash route
 
 export const ADMIN_TRASH = '/admin/trash'

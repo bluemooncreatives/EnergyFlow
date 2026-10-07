@@ -45,7 +45,8 @@ import { formatProductName } from '@/lib/seo'
 import { scrollToElement } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
 import { COLLECTION_ANCHOR, ENQUIRY_ANCHOR, useGiftingSelection } from './GiftingSelection'
-import { WHATSAPP_HREF, pad, photoOf } from './GiftingUi'
+import { DEFAULT_GIFT_PAGE } from '@/lib/pageContent/giftPage'
+import { GiftSectionHead, WHATSAPP_HREF, pad, photoOf } from './GiftingUi'
 
 // Field styles, all built from the storefront tokens.
 const LABEL = 'mb-1.5 block text-[0.8125rem] font-semibold text-ink-strong'
@@ -198,7 +199,8 @@ const BriefRow = ({ label, value }) => (
  * signed-in customer's name and email are filled in, and any "Enquire" button
  * or occasion tile on the page brings the form back to its first step.
  */
-const GiftEnquiryForm = ({ products = [] }) => {
+const GiftEnquiryForm = ({ products = [], content, number }) => {
+    const heading = content || DEFAULT_GIFT_PAGE.enquiry
     const auth = useSelector((store) => store.authStore?.auth)
     const { selected, setSelected, toggle, enquiryRequest } = useGiftingSelection()
     const [step, setStep] = useState(0)
@@ -422,25 +424,18 @@ const GiftEnquiryForm = ({ products = [] }) => {
         <section id={ENQUIRY_ANCHOR} className="ef-section ef-section--page scroll-mt-20" aria-labelledby="enquiry-title">
             <div className="ef-container">
                 {/* ── Heading ── */}
-                <div className="mb-[var(--section-gap)] grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,8fr)] lg:gap-10">
-                    <div><span className="ef-eyebrow">Corporate &amp; bulk orders</span></div>
-                    <div className="flex flex-col items-start gap-4">
-                        <h2 id="enquiry-title" className="ef-title">
-                            Tell us what you&apos;re <span className="ef-title__accent">gifting</span>
-                        </h2>
-                        <p className="ef-lead max-w-2xl">
-                            Three short steps, about two minutes. Our gifting team comes back with box options, a quote at
-                            volume pricing and delivery timelines.
-                        </p>
+                <GiftSectionHead number={number} eyebrow={heading.eyebrow} title={heading.title} accent={heading.titleAccent} id="enquiry-title">
+                    {heading.description && <p className="ef-lead max-w-2xl">{heading.description}</p>}
+                    {heading.perks?.length > 0 && (
                         <ul className="flex flex-wrap gap-2">
-                            {[`Bulk orders from ${MIN_GIFT_QUANTITY} boxes`, 'Logo sleeves & notes', 'Reply in 1 working day'].map((item) => (
-                                <li key={item} className="ef-badge ef-badge--soft gap-1.5">
-                                    <Check className="size-3.5 text-brand-bright" strokeWidth={3} aria-hidden="true" /> {item}
+                            {heading.perks.map((item) => (
+                                <li key={item} className="ef-badge ef-badge--soft h-auto min-h-[1.625rem] gap-1.5 whitespace-normal py-1">
+                                    <Check className="size-3.5 shrink-0 text-brand-bright" strokeWidth={3} aria-hidden="true" /> {item}
                                 </li>
                             ))}
                         </ul>
-                    </div>
-                </div>
+                    )}
+                </GiftSectionHead>
 
                 <div ref={panelRef} className="grid scroll-mt-28 items-start gap-[var(--grid-gap)] lg:grid-cols-[minmax(0,1fr)_minmax(19rem,25rem)] lg:gap-8">
                     {/* ── Form / success ── */}

@@ -7,6 +7,7 @@ import ProductBox from '@/components/Application/Website/ProductBox'
 import CorporateGiftingPage from '@/components/Application/Website/gifting/CorporateGiftingPage'
 import { getCategoryLanding, getShopFilters } from '@/lib/services/shopService'
 import { getGiftingCollection } from '@/lib/services/giftingService'
+import { getGiftPageContent } from '@/lib/services/pageContentService'
 import { GIFTING_CATEGORY_SLUG } from '@/lib/giftEnquiry'
 import { getCategorySeo } from '@/lib/catalogSeo'
 import {
@@ -71,12 +72,16 @@ const CategoryPage = async ({ params }) => {
 
     // Gift boxes get the corporate gifting experience instead of a grid.
     if (category.slug === GIFTING_CATEGORY_SLUG) {
-        const collection = await getGiftingCollection().catch(() => null)
+        // A failed content read falls back to the designed defaults.
+        const [collection, content] = await Promise.all([
+            getGiftingCollection().catch(() => null),
+            getGiftPageContent().catch(() => null),
+        ])
         if (collection) {
             return (
                 <>
                     <CloudinaryPreconnect />
-                    <CorporateGiftingPage collection={collection} seo={seo} />
+                    <CorporateGiftingPage collection={collection} seo={seo} content={content} />
                 </>
             )
         }
