@@ -84,12 +84,19 @@ const OccasionFields = () => {
     const { control } = useFormContext()
     return (
         <>
-            <FieldGroup title="Occasions band" description="The pine band of tall photo cards. Each card opens the enquiry form with its occasion picked.">
+            <FieldGroup title="Occasions band" description="A featured spread: pick an occasion from the chips to see its photo, who it’s for and what goes in. “Plan this box” opens the enquiry form with that occasion picked.">
                 <SectionSwitch name="occasions.enabled" label="Show the occasions band" />
                 <Headline base="occasions" />
-                <AreaField control={control} name="occasions.label" label="Side note" maxLength={120} rows={2} />
+                <AreaField control={control} name="occasions.label" label="Note under the button" maxLength={120} rows={2} />
+                <ImageField
+                    name="occasions.image"
+                    label="Fallback large photo"
+                    defaultImage={DEFAULT_GIFT_PAGE.occasions.image}
+                    autoNote={AUTO}
+                    hint="Used for any occasion without its own large photo."
+                />
             </FieldGroup>
-            <FieldGroup title="Occasion cards">
+            <FieldGroup title="Occasions">
                 <ListField
                     name="occasions.items"
                     label="Cards"
@@ -103,8 +110,20 @@ const OccasionFields = () => {
                                 <TextField control={control} name={`${prefix}.title`} label="Title" maxLength={40} />
                                 <SelectField name={`${prefix}.occasion`} label="Opens the form with" options={OCCASIONS} />
                             </div>
-                            <AreaField control={control} name={`${prefix}.note`} label="Note" maxLength={120} rows={2} />
-                            <ImageField name={`${prefix}.image`} label="Card photo" autoNote={AUTO} hint="Portrait photos work best." />
+                            <AreaField control={control} name={`${prefix}.note`} label="Note" maxLength={120} rows={2} hint="Shown as the quote beside the photo." />
+                            <TextField control={control} name={`${prefix}.audience`} label="Perfect for" maxLength={60} hint="Who it's for, e.g. “Clients, partners & vendors”. Leave empty to hide." />
+                            <TagsField name={`${prefix}.includes`} label="What you can add" max={L.occasionIncludes} maxLength={32} hint="Short tags under the quote, e.g. “Logo sleeves”." />
+                            <TextField
+                                control={control}
+                                name={`${prefix}.product`}
+                                label="Featured box"
+                                maxLength={120}
+                                hint="The gift box shown on the photo card, by the end of its web address (e.g. gift-box-black). Empty or not found: the boxes take turns."
+                            />
+                            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <ImageField name={`${prefix}.image`} label="Large photo" autoNote="Automatic: the section’s large photo." hint="Fills the big frame when this occasion is picked." />
+                                <ImageField name={`${prefix}.thumb`} label="Up next photo" autoNote="Automatic: the featured box’s photo." hint="The small card that previews this occasion. Portrait works best." />
+                            </div>
                         </>
                     )}
                 />
