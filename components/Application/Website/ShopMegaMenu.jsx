@@ -258,13 +258,15 @@ export const ShopMegaMenu = ({ item, data, linkClassName }) => {
                             style={{ background: preview.image ? 'var(--palette-pine)' : tintAt(previewIndex) }}
                         >
                             {primed && preview.image ? (
-                                <Image
+                                <CoverImage
                                     key={preview.id}
                                     src={preview.image}
+                                    fallbackSrc={preview.fallbackImage}
                                     alt=""
                                     fill
                                     sizes="(min-width: 1280px) 272px, 240px"
                                     className="object-cover transition-transform duration-700 ease-out animate-in fade-in-0 group-hover:scale-[1.04] motion-reduce:animate-none"
+                                    style={{ objectPosition: preview.imagePosition || 'center' }}
                                 />
                             ) : (
                                 <span
