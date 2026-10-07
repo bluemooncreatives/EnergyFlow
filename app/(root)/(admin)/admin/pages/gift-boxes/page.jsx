@@ -168,43 +168,6 @@ const PromiseFields = () => {
     )
 }
 
-const ProcessFields = () => {
-    const { control } = useFormContext()
-    return (
-        <>
-            <FieldGroup title="How bulk orders work" description="An accent line over the headline, a lead and a photo, beside an indexed list of steps that open one at a time.">
-                <SectionSwitch name="process.enabled" label="Show the steps" />
-                <TextField control={control} name="process.eyebrow" label="Label" maxLength={40} />
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <TextField control={control} name="process.kicker" label="Accent line" maxLength={40} hint="Shown above the headline in the accent colour." />
-                    <TextField control={control} name="process.title" label="Headline" maxLength={60} />
-                </div>
-                <AreaField control={control} name="process.description" label="Lead" maxLength={240} rows={3} />
-                <TextField control={control} name="process.ctaLabel" label="Button text" maxLength={30} hint="Under the list; opens the enquiry form." />
-                <ImageField name="process.image" label="Photo" defaultImage={DEFAULT_GIFT_PAGE.process.image} autoNote="None: no photo. This section never borrows box photos, so it can’t repeat the collection." />
-            </FieldGroup>
-            <FieldGroup title="Steps">
-                <ListField
-                    name="process.items"
-                    label="Steps"
-                    noun="step"
-                    max={L.steps}
-                    newItem={item('process.items')}
-                    itemTitle={(value) => value.title}
-                    renderItem={(prefix) => (
-                        <>
-                            <TextField control={control} name={`${prefix}.title`} label="Step title" maxLength={50} />
-                            <AreaField control={control} name={`${prefix}.copy`} label="Detail" maxLength={260} rows={3} />
-                            <TagsField name={`${prefix}.tags`} label="What it covers" max={L.tags} maxLength={32} />
-                            <ImageField name={`${prefix}.image`} label="Step thumbnail" autoNote="None: the open step shows no thumbnail." hint="Shown top-right of the open step." />
-                        </>
-                    )}
-                />
-            </FieldGroup>
-        </>
-    )
-}
-
 const TestimonialFields = () => {
     const { control } = useFormContext()
     return (
@@ -298,7 +261,6 @@ const SECTIONS = [
     { value: 'collection', label: 'Collection', keys: ['collection'], content: <CollectionFields /> },
     { value: 'occasions', label: 'Occasions', keys: ['occasions'], content: <OccasionFields /> },
     { value: 'promise', label: 'Promise', keys: ['promise'], content: <PromiseFields /> },
-    { value: 'process', label: 'Process', keys: ['process'], content: <ProcessFields /> },
     { value: 'testimonials', label: 'Testimonials', keys: ['testimonials'], content: <TestimonialFields /> },
     { value: 'enquiry', label: 'Enquiry & banner', keys: ['enquiry', 'cta'], content: <EnquiryFields /> },
     { value: 'faq', label: 'FAQs', keys: ['faq'], content: <FaqFields /> },

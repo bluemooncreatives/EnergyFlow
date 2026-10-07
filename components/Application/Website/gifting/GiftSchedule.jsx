@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils'
 import { GiftSectionHead, pad } from './GiftingUi'
 
 /**
- * The "match schedule" layout from the gifting references, shared by the
- * collection and the bulk-order steps:
+ * The "match schedule" layout from the gifting references, used by the
+ * collection:
  *
  *   [(03) Schedule] ─────────────────────────────────────────────
  *   Accent line:                     01. Open item         [thumb]

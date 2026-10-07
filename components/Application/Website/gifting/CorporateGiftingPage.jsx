@@ -8,7 +8,6 @@ import GiftCtaBanner from './GiftCtaBanner'
 import GiftEnquiryForm from './GiftEnquiryForm'
 import GiftFaq from './GiftFaq'
 import GiftOccasionsBand from './GiftOccasionsBand'
-import GiftProcessSchedule from './GiftProcessSchedule'
 import GiftPromiseCards from './GiftPromiseCards'
 import GiftTestimonials from './GiftTestimonials'
 import GiftTicker from './GiftTicker'
@@ -70,11 +69,10 @@ const CorporateGiftingPage = ({ collection, seo, content }) => {
     const show = {
         occasions: page.occasions.enabled && page.occasions.items.some((item) => item.title),
         promise: page.promise.enabled && page.promise.items.some((item) => item.title),
-        process: page.process.enabled && page.process.items.some((item) => item.title),
         testimonials: page.testimonials.enabled && page.testimonials.items.some((item) => item.quote && item.name),
         faq: page.faq.enabled && faqs.length > 0,
     }
-    const order = ['collection', 'occasions', 'promise', 'process', 'testimonials', 'enquiry', 'faq']
+    const order = ['collection', 'occasions', 'promise', 'testimonials', 'enquiry', 'faq']
         .filter((key) => show[key] !== false)
     const numberOf = (key) => order.indexOf(key) + 1
 
@@ -116,7 +114,6 @@ const CorporateGiftingPage = ({ collection, seo, content }) => {
 
             {show.occasions && <GiftOccasionsBand content={page.occasions} photos={photos} products={products} number={numberOf('occasions')} />}
             {show.promise && <GiftPromiseCards content={page.promise} photos={photos} number={numberOf('promise')} />}
-            {show.process && <GiftProcessSchedule content={page.process} number={numberOf('process')} />}
             {show.testimonials && <GiftTestimonials content={page.testimonials} photos={photos} number={numberOf('testimonials')} />}
             <GiftEnquiryForm products={products} content={page.enquiry} number={numberOf('enquiry')} />
             {show.faq && <GiftFaq content={page.faq} faqs={faqs} number={numberOf('faq')} />}
