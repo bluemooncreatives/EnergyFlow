@@ -195,7 +195,7 @@ const EditProduct = ({ params }) => {
                         Name<span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="Enter category name" {...field} />
+                        <Input type="text" placeholder="Enter product name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
