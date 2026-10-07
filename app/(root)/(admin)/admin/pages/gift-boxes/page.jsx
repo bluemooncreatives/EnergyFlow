@@ -72,11 +72,9 @@ const CollectionFields = () => {
         <>
             <FieldGroup title="Collection" description="The boxes themselves come from Products in the Gift Boxes category. This is the copy around them.">
                 <Headline base="collection" eyebrowHint="The small pill beside the section number." />
-                <TextField control={control} name="collection.listTitle" label="List title" maxLength={30} hint="Above the ruled list of boxes and prices." />
-            </FieldGroup>
-            <FieldGroup title="Footnote" description="Bottom of the left column (under the list on phones).">
-                <TextField control={control} name="collection.noteTitle" label="Footnote title" maxLength={60} />
-                <AreaField control={control} name="collection.note" label="Footnote" maxLength={240} rows={3} />
+                <p className="text-xs text-muted-foreground">With accent words, the headline reads as an accent line on top, then the accent words below.</p>
+                <AreaField control={control} name="collection.note" label="Lead" maxLength={240} rows={3} hint="The short paragraph under the headline." />
+                <TextField control={control} name="collection.listTitle" label="List name (screen readers)" maxLength={30} hint="Read out for the list of boxes." />
             </FieldGroup>
         </>
     )
@@ -164,7 +162,7 @@ const ProcessFields = () => {
                 </div>
                 <AreaField control={control} name="process.description" label="Lead" maxLength={240} rows={3} />
                 <TextField control={control} name="process.ctaLabel" label="Button text" maxLength={30} hint="Under the list; opens the enquiry form." />
-                <ImageField name="process.image" label="Photo (desktop)" autoNote={AUTO} />
+                <ImageField name="process.image" label="Photo" defaultImage={DEFAULT_GIFT_PAGE.process.image} autoNote="None: no photo. This section never borrows box photos, so it can’t repeat the collection." />
             </FieldGroup>
             <FieldGroup title="Steps">
                 <ListField
@@ -179,7 +177,7 @@ const ProcessFields = () => {
                             <TextField control={control} name={`${prefix}.title`} label="Step title" maxLength={50} />
                             <AreaField control={control} name={`${prefix}.copy`} label="Detail" maxLength={260} rows={3} />
                             <TagsField name={`${prefix}.tags`} label="What it covers" max={L.tags} maxLength={32} />
-                            <ImageField name={`${prefix}.image`} label="Step photo" autoNote={AUTO} />
+                            <ImageField name={`${prefix}.image`} label="Step thumbnail" autoNote="None: the open step shows no thumbnail." hint="Shown top-right of the open step." />
                         </>
                     )}
                 />

@@ -106,7 +106,7 @@ const SideCard = ({ products }) => {
         <aside
             data-fit-aside
             aria-label="The collection at a glance"
-            className="hidden min-w-[15rem] flex-1 self-stretch lg:flex lg:flex-col lg:justify-between lg:gap-4 lg:rounded-tile lg:bg-surface-card lg:p-4 lg:shadow-elev-1 lg:ring-1 lg:ring-inset lg:ring-line-soft xl:p-5"
+            className="hidden min-w-[15rem] flex-1 self-stretch lg:flex lg:flex-col lg:justify-between lg:gap-2 lg:rounded-tile lg:bg-surface-card lg:p-4 lg:shadow-elev-1 lg:ring-1 lg:ring-inset lg:ring-line-soft xl:p-5"
         >
             <p className="flex flex-col">
                 <span className="font-header text-[clamp(1.125rem,0.9rem+0.5vw,1.375rem)] font-semibold leading-tight text-ink-strong">
@@ -200,7 +200,7 @@ const GiftWordmarkHero = ({ hero, products = [], photos = [] }) => {
                         </span>
                     )}
                     {hero.caption && (
-                        <p className="max-w-[36rem] text-[clamp(0.9375rem,0.85rem+0.4vw,1.125rem)] leading-relaxed text-cream/90 [text-wrap:balance] [@media(max-height:640px)]:hidden">
+                        <p className="max-w-[36rem] text-[clamp(0.9375rem,0.85rem+0.4vw,1.125rem)] leading-relaxed text-cream/90 [text-wrap:balance] lg:max-w-full lg:truncate [@media(max-height:640px)]:hidden">
                             {hero.caption}
                         </p>
                     )}

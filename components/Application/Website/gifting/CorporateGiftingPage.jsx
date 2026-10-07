@@ -116,7 +116,7 @@ const CorporateGiftingPage = ({ collection, seo, content }) => {
 
             {show.occasions && <GiftOccasionsBand content={page.occasions} photos={photos} number={numberOf('occasions')} />}
             {show.promise && <GiftPromiseCards content={page.promise} photos={photos} number={numberOf('promise')} />}
-            {show.process && <GiftProcessSchedule content={page.process} photos={photos} number={numberOf('process')} />}
+            {show.process && <GiftProcessSchedule content={page.process} number={numberOf('process')} />}
             {show.testimonials && <GiftTestimonials content={page.testimonials} photos={photos} number={numberOf('testimonials')} />}
             <GiftEnquiryForm products={products} content={page.enquiry} number={numberOf('enquiry')} />
             {show.faq && <GiftFaq content={page.faq} faqs={faqs} number={numberOf('faq')} />}
