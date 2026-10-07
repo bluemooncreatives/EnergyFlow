@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import OrderModel, { withDefaultShipmentMany } from "@/models/Order.model";
 import mongoose from "mongoose";
+import { orderedMediaPipeline } from '@/lib/productMedia'
 
 export async function GET(request) {
     try {
@@ -67,8 +68,10 @@ export async function GET(request) {
                         {
                             $lookup: {
                                 from: 'medias',
-                                localField: 'media',
-                                foreignField: '_id',
+                                let: { mediaIds: { $ifNull: ['$media', []] } },
+                                // Saved order, so the thumbnail is the main image. A past
+                                // order keeps its photos even if they were trashed since.
+                                pipeline: orderedMediaPipeline({ liveOnly: false }),
                                 as: 'media'
                             }
                         }

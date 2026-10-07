@@ -18,7 +18,8 @@ import useFetch from '@/hooks/useFetch'
 import Select from '@/components/Application/Select'
 import Editor from '@/components/Application/Admin/LazyEditor'
 import MediaModal from '@/components/Application/Admin/MediaModal'
-import Image from 'next/image'
+import MediaOrderField from '@/components/Application/Admin/MediaOrderField'
+import { mediaLimitMessage, mediaSelectionProblem } from '@/lib/productMedia'
 import { useRouter } from 'next/navigation'
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: 'Home' },
@@ -92,8 +93,9 @@ const AddProduct = () => {
   const onSubmit = async (values) => {
     setLoading(true)
     try {
-      if (selectedMedia.length <= 0) {
-        return showToast('error', 'Please select media.')
+      const mediaProblem = mediaSelectionProblem(selectedMedia)
+      if (mediaProblem) {
+        return showToast('error', mediaProblem)
       }
 
       const pricing = validatePricing(values.mrp, values.sellingPrice)
@@ -279,34 +281,28 @@ const AddProduct = () => {
               </div>
             </div>
 
-            <div className="md:col-span-2 border border-dashed rounded p-3 text-center sm:p-5">
+            <div className="md:col-span-2">
               <MediaModal
                 open={open}
                 setOpen={setOpen}
                 selectedMedia={selectedMedia}
                 setSelectedMedia={setSelectedMedia}
                 isMultiple={true}
+                onSelect={(picked) => {
+                  const limit = mediaLimitMessage(picked)
+                  if (limit) {
+                    showToast('error', limit)
+                    return false
+                  }
+                }}
               />
-
-              {selectedMedia.length > 0 && (
-                <div className="flex justify-center items-center flex-wrap mb-3 gap-2">
-                  {selectedMedia.map((media) => (
-                    <div key={media._id} className="size-20 border sm:size-24">
-                      <Image
-                        src={media.url}
-                        height={100}
-                        width={100}
-                        alt=""
-                        className="size-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button type="button" onClick={() => setOpen(true)} className="mx-auto block w-full max-w-[200px] cursor-pointer rounded-md border bg-muted p-4 transition hover:bg-muted/70 sm:p-5">
-                <span className="font-semibold">Select Media</span>
-              </button>
+              <MediaOrderField
+                kind="product"
+                value={selectedMedia}
+                onChange={setSelectedMedia}
+                onBrowse={() => setOpen(true)}
+                disabled={loading}
+              />
             </div>
 
             <p className="mt-5 text-sm text-muted-foreground">

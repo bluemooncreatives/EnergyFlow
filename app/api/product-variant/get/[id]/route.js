@@ -27,7 +27,7 @@ export async function GET(request, { params }) {
 
         filter._id = id
 
-        const getProductVariant = await ProductVariantModel.findOne(filter).populate('media', '_id secure_url').lean()
+        const getProductVariant = await ProductVariantModel.findOne(filter).populate('media', '_id secure_url alt deletedAt deletionPending').lean()
 
         if (!getProductVariant) {
             return response(false, 404, 'Product variant not found.')

@@ -4,6 +4,7 @@ import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
 import { zSchema } from "@/lib/zodSchema"
+import { mediaIssueMessage, unavailableMediaMessage } from "@/lib/services/mediaGuard"
 import { validatePricing } from "@/lib/pricing"
 import { normalizePackSize } from "@/lib/utils"
 import ProductModel from "@/models/Product.model"
@@ -32,7 +33,14 @@ export async function PUT(request) {
 
         const validate = schema.safeParse(payload)
         if (!validate.success) {
-            return response(false, 400, 'Invalid or missing fields.', validate.error)
+            return response(false, 400, mediaIssueMessage(validate.error) || 'Invalid or missing fields.', validate.error)
+        }
+
+        // The image list is ordered (first = main image); every image in it must
+        // still be in the library.
+        const mediaError = await unavailableMediaMessage(validate.data.media)
+        if (mediaError) {
+            return response(false, 400, mediaError)
         }
 
         const validatedData = validate.data
