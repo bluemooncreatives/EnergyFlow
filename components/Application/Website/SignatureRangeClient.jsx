@@ -14,7 +14,6 @@ import Section from './storefront/Section'
 import SectionHeader from './storefront/SectionHeader'
 import { StoreLink } from './storefront/StoreButton'
 import { formatINR } from './storefront/format'
-import { OilBottle } from './storefront/ProductIllustrations'
 import bilonaGhee from '@/public/assets/images/marquee/bilona-ghee-jar.webp'
 import chocolates from '@/public/assets/images/marquee/chocolates.webp'
 
@@ -48,7 +47,12 @@ const RANGES = [
         cta: 'Shop oils',
         enquire: 'Enquire about oils',
         tint: 'var(--tint-pistachio)',
-        media: { kind: 'art', Art: OilBottle },
+        media: {
+            kind: 'cover',
+            src: 'https://res.cloudinary.com/g5wdpcrr/image/upload/v1791407760/healthy-product-olive-oil_m1dogt.webp',
+            // Keep the bottle (right of centre) clear of the bottom-left panel.
+            position: '65% center',
+        },
     },
     {
         key: 'chocolates',
@@ -85,6 +89,13 @@ const MEDIA_CLASSES = {
 const IMAGE_SIZES = {
     featured: '(max-width: 1024px) 80vw, 36vw',
     wide: '(max-width: 1024px) 60vw, 22vw',
+    compact: '(max-width: 1024px) 50vw, 24vw',
+}
+
+// A cover fills the whole tile, so it needs the tile's full width.
+const COVER_SIZES = {
+    featured: '(max-width: 1024px) 100vw, 40vw',
+    wide: '(max-width: 1024px) 100vw, 48vw',
     compact: '(max-width: 1024px) 50vw, 24vw',
 }
 
@@ -133,7 +144,7 @@ const TileMedia = ({ media, slot }) => {
             alt=""
             fill
             quality={82}
-            sizes={cover ? IMAGE_SIZES.compact : IMAGE_SIZES[slot]}
+            sizes={cover ? COVER_SIZES[slot] : IMAGE_SIZES[slot]}
             className={cover ? 'object-cover' : 'object-contain drop-shadow-[0_24px_28px_rgba(8,58,47,0.2)]'}
         />
     )
