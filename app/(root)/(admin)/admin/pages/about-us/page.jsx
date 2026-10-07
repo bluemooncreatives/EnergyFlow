@@ -134,17 +134,14 @@ const RangeFields = () => {
                 <TextField control={control} name="range.searchPlaceholder" label="Search placeholder" maxLength={40} />
                 <AreaField control={control} name="range.note" label="Note under the row" maxLength={260} rows={3} />
             </FieldGroup>
-            <FieldGroup title="How we work" description="The headline and lead with a chip per step; the chosen step opens in a card, beside a photo carrying a tracker that fills as you move through the steps.">
+            <FieldGroup title="How we work" description="The headline and lead, a stepper with one stop per step (it fills as you move along), the chosen step in a card, and that step's photo with a “Next stop” card.">
                 <SectionSwitch name="sourcing.enabled" label="Show this section" />
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <TextField control={control} name="sourcing.eyebrow" label="Label" maxLength={40} />
-                    <TextField control={control} name="sourcing.indexLabel" label="Small line under the lead" maxLength={40} />
-                </div>
+                <TextField control={control} name="sourcing.eyebrow" label="Label" maxLength={40} />
                 <TitlePair base="sourcing" titleLabel="First line" accentLabel="Second line" />
                 <AreaField control={control} name="sourcing.lead" label="Lead" maxLength={300} rows={3} />
                 <ImageField name="sourcing.image" label="Fallback photo" defaultImage={D.sourcing.image} autoNote="None: a plain panel." hint="Shows for any step without a photo of its own." />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <TextField control={control} name="sourcing.photoEyebrow" label="Tracker label" maxLength={40} />
+                    <TextField control={control} name="sourcing.photoEyebrow" label="Stepper label" maxLength={40} hint="Above the stepper, e.g. “The path behind every pack”." />
                     <TextField control={control} name="sourcing.photoTitle" label="Photo caption" maxLength={60} />
                 </div>
             </FieldGroup>
