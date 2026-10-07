@@ -40,7 +40,12 @@ const AboutSourcing = ({ content, number, tone = 'page' }) => {
     const count = steps.length
     const index = Math.min(active, count - 1)
     const step = steps[index]
-    const photo = content.image?.url ? content.image : null
+    // Each step's own photo, else the section's. Steps sharing a photo share
+    // one <Image>, so a switch only cross-fades when the picture changes.
+    const fallback = content.image?.url ? content.image : null
+    const arts = steps.map((item) => (item.image?.url ? item.image : fallback))
+    const photo = arts[index]
+    const frames = [...new Map(arts.filter(Boolean).map((art) => [art.url, art])).values()]
     const filled = Math.round((BARS * (index + 1)) / count)
 
     const select = (i, focus = false) => {
@@ -145,9 +150,24 @@ const AboutSourcing = ({ content, number, tone = 'page' }) => {
                     className="ef-tile relative m-0 flex min-h-[28rem] flex-col justify-between bg-pine p-3 text-cream shadow-elev-2 sm:min-h-[34rem] sm:p-4"
                     data-reveal
                 >
-                    {photo ? (
-                        <Image src={photo.url} alt={photo.alt} fill sizes="(max-width: 1024px) 92vw, 40vw" className="-z-20 object-cover" style={{ objectPosition: photo.position || 'center 52%' }} />
-                    ) : (
+                    {frames.map((frame) => {
+                        const shown = frame.url === photo?.url
+                        return (
+                            <Image
+                                key={frame.url}
+                                src={frame.url}
+                                alt={shown ? frame.alt : ''}
+                                fill
+                                sizes="(max-width: 1024px) 92vw, 40vw"
+                                className={cn(
+                                    '-z-20 object-cover transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none',
+                                    shown ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0'
+                                )}
+                                style={{ objectPosition: frame.position || 'center' }}
+                            />
+                        )
+                    })}
+                    {!photo && (
                         <span aria-hidden="true" className="absolute inset-0 -z-20" style={{ background: 'var(--brand-panel-gradient)' }} />
                     )}
                     <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-pine-deep/80 via-transparent to-transparent" />

@@ -142,7 +142,7 @@ const RangeFields = () => {
                 </div>
                 <TitlePair base="sourcing" titleLabel="First line" accentLabel="Second line" />
                 <AreaField control={control} name="sourcing.lead" label="Lead" maxLength={300} rows={3} />
-                <ImageField name="sourcing.image" label="Photo" defaultImage={D.sourcing.image} autoNote="None: a plain panel." />
+                <ImageField name="sourcing.image" label="Fallback photo" defaultImage={D.sourcing.image} autoNote="None: a plain panel." hint="Shows for any step without a photo of its own." />
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <TextField control={control} name="sourcing.photoEyebrow" label="Tracker label" maxLength={40} />
                     <TextField control={control} name="sourcing.photoTitle" label="Photo caption" maxLength={60} />
@@ -163,6 +163,7 @@ const RangeFields = () => {
                                 <TextField control={control} name={`${prefix}.title`} label="Title" maxLength={60} />
                             </div>
                             <AreaField control={control} name={`${prefix}.body`} label="Body" maxLength={320} rows={3} />
+                            <ImageField name={`${prefix}.image`} label="Photo" autoNote="None: the fallback photo shows." hint="Fades in when this step's pill is picked." />
                         </>
                     )}
                 />
