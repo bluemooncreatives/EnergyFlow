@@ -48,7 +48,7 @@ export const upperNumber = (value) => {
 }
 
 // Google Maps at the store's address (the hero card and the visit section).
-export const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([COMPANY.brand, ...COMPANY.addressLines].join(', '))}`
+export const DIRECTIONS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(COMPANY.mapsQuery)}`
 
 // The cream, sun-dot tag the storefront's photo cards share.
 export const PhotoTag = ({ children, className }) => (
