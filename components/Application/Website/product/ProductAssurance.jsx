@@ -5,8 +5,8 @@ import StoreButton from '../storefront/StoreButton'
 
 // Keep in step with the shipping / returns policy pages and the FAQ.
 const POLICIES = [
-    { icon: Clock, label: 'Delivery', value: '4-7', unit: 'days', text: 'Dispatched within 1-2 business days and delivered in 4-7 days.' },
-    { icon: Truck, label: 'Shipping', value: '₹0', unit: 'on prepaid', text: 'Free shipping on all prepaid orders, anywhere in India.' },
+    { icon: Clock, label: 'Dispatch', value: '1-2', unit: 'business days', text: 'Every order is packed fresh and dispatched within 1-2 business days.' },
+    { icon: Truck, label: 'Delivery', value: '4-7', unit: 'days', text: 'Delivered in 2-4 days to metros and 4-7 days elsewhere in India, with a tracking link.' },
     { icon: RefreshCw, label: 'Returns', value: '7', unit: 'day window', text: 'Damaged, incorrectly sealed or wrong items reported within 7 days are replaced or refunded. Opened food packs can only be returned for a genuine quality issue.' },
     { icon: CreditCard, label: 'Refunds', value: '5-7', unit: 'business days', text: 'Refunds go back to the original payment method within 5-7 business days.' },
 ]

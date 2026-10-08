@@ -18,8 +18,8 @@ const BENEFITS = [
     },
     {
         Icon: Truck,
-        title: 'Free Shipping',
-        description: 'No hidden costs - just the price you see at checkout.',
+        title: 'Pan-India Delivery',
+        description: 'Packed within 1-2 working days and tracked all the way to your door.',
     },
     {
         Icon: ShieldCheck,

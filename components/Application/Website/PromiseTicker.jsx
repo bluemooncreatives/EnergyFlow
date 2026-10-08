@@ -11,8 +11,8 @@ import bilonaGhee from '@/public/assets/images/marquee/bilona-ghee.webp'
 const PROMISES = [
     { label: 'Freshly sourced', image: mixedNuts },
     { label: 'Every lot quality checked', image: cashews },
-    { label: 'Free shipping', image: chocolates },
-    { label: 'Delivered across India', image: fruitJellies },
+    { label: 'Delivered across India', image: chocolates },
+    { label: 'Tracked to your door', image: fruitJellies },
     { label: 'Bulk & gifting orders', image: bilonaGhee },
 ]
 

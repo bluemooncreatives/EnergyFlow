@@ -157,7 +157,7 @@ const GiftOccasionsBand = ({ content, photos = [], products = [], number }) => {
                     <SectionTag number={number} eyebrow={content.eyebrow} />
                     <span className="flex shrink-0 items-center gap-2 text-[0.8125rem] font-medium text-ink-muted max-sm:hidden">
                         <Truck className="size-4 text-brand" strokeWidth={1.75} aria-hidden="true" />
-                        Free delivery across India
+                        Delivered across India
                     </span>
                 </div>
 

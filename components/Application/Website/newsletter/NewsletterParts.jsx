@@ -45,7 +45,7 @@ export const NewsletterBadge = ({ offer, className, style }) => {
         ? 'Welcome gift ✦ Join the club ✦ Welcome gift ✦ Join the club ✦ '
         : 'Join the club ✦ Fresh drops ✦ Member deals ✦ '
     const [line1, line2] = splitBadge(offer?.badge)
-    // Scale the text to the longest line so "FREE SHIPPING" fits as well as "10%".
+    // Scale the text to the longest line so "WELCOME GIFT" fits as well as "10%".
     const longest = Math.max(line1.length, line2.length, 1)
     const bigStyle = { fontSize: `calc(var(--nl-badge-size, 8.5rem) * ${Math.min(0.16, 0.8 / longest).toFixed(3)})` }
 

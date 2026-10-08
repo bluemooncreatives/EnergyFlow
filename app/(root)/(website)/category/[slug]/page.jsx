@@ -5,6 +5,8 @@ import PageHero from '@/components/Application/Website/storefront/PageHero'
 import StoreButton from '@/components/Application/Website/storefront/StoreButton'
 import ProductBox from '@/components/Application/Website/ProductBox'
 import CorporateGiftingPage from '@/components/Application/Website/gifting/CorporateGiftingPage'
+import DairyPage from '@/components/Application/Website/dairy/DairyPage'
+import { DAIRY_CATEGORY_SLUG } from '@/components/Application/Website/dairy/dairyContent'
 import { getCategoryLanding, getShopFilters } from '@/lib/services/shopService'
 import { getGiftingCollection } from '@/lib/services/giftingService'
 import { getGiftPageContent } from '@/lib/services/pageContentService'
@@ -36,7 +38,8 @@ export async function generateMetadata({ params }) {
 
     const { seo, total, products } = landing
     const path = WEBSITE_CATEGORY(landing.category.slug)
-    const image = products.find((product) => product.media?.[0]?.secure_url)?.media[0].secure_url
+    // The category cover when the admin set one, else the first product photo.
+    const image = landing.cover?.src || products.find((product) => product.media?.[0]?.secure_url)?.media[0].secure_url
 
     return {
         title: pageTitle(seo.title),
@@ -94,6 +97,16 @@ const CategoryPage = async ({ params }) => {
     const related = (seo.related || [])
         .filter((relatedSlug) => relatedSlug !== category.slug && categoryBySlug.has(relatedSlug))
         .map((relatedSlug) => ({ slug: relatedSlug, name: categoryBySlug.get(relatedSlug) }))
+
+    // The dairy aisle is a story page about bilona ghee, not a bare grid.
+    if (category.slug === DAIRY_CATEGORY_SLUG) {
+        return (
+            <>
+                <CloudinaryPreconnect />
+                <DairyPage landing={landing} seo={seo} related={related} />
+            </>
+        )
+    }
 
     const collectionSchema = {
         '@context': 'https://schema.org',

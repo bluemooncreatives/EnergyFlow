@@ -75,7 +75,7 @@ export const Stepper = ({ value, onDec, onInc, decDisabled, incDisabled, decLabe
 )
 
 const TRUST = [
-    { icon: Truck, title: 'Free shipping', sub: 'On prepaid orders' },
+    { icon: Truck, title: 'Pan-India delivery', sub: 'Tracked to your door' },
     { icon: RefreshCw, title: 'Easy returns', sub: 'Damaged or wrong items' },
     { icon: ShieldCheck, title: 'Secure checkout', sub: '100% protected' },
 ]
