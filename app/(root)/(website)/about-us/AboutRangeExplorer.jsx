@@ -72,7 +72,7 @@ const Details = ({ category, className }) => (
             {category.name}
         </h3>
         <p className="mt-2.5 max-w-[17rem] text-[0.875rem] leading-relaxed text-ink-body">
-            {productsLabel(category.productCount || 0)} in this aisle, packed fresh in Delhi and delivered free across India.
+            {productsLabel(category.productCount || 0)} in this aisle, packed fresh in Delhi and delivered across India.
         </p>
         <dl className="mt-4">
             <dt className="sr-only">Products</dt>

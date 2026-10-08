@@ -46,7 +46,7 @@ const DairyHero = ({ title, cover = null, photos = [], total = 0 }) => {
     const facts = [
         { value: String(total || '—'), label: total === 1 ? 'Product in the aisle' : 'Products in the aisle' },
         { value: 'A2', label: 'Gir cow ghee' },
-        { value: 'Free', label: 'Shipping across India' },
+        { value: '1-2 days', label: 'To pack and dispatch' },
     ]
 
     return (
@@ -81,7 +81,7 @@ const DairyHero = ({ title, cover = null, photos = [], total = 0 }) => {
 
                     <p className="ef-lead mt-5 max-w-xl" data-reveal>
                         Pure dairy staples for the Indian kitchen, starting with A2 Gir cow ghee made by the traditional
-                        bilona method. Every pack is checked before it leaves us and shipped free across India.
+                        bilona method. Every pack is checked before it leaves us and shipped across India.
                     </p>
 
                     <div className="mt-7 grid w-full grid-cols-2 gap-2.5 sm:flex sm:w-auto" data-reveal>

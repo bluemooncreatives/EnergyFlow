@@ -222,7 +222,7 @@ const GiftOccasionsBand = ({ content, photos = [], products = [], number }) => {
                         ) : (
                             <div className="absolute inset-x-3 bottom-3 grid grid-cols-2 gap-4 rounded-card bg-surface-card p-4 shadow-elev-2 sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[min(23rem,calc(100%-2.5rem))] sm:p-5">
                                 <Stat label="Bulk orders from" value={MIN_GIFT_QUANTITY} unit="boxes" />
-                                <Stat label="Delivery" value="Free" unit="across India" />
+                                <Stat label="Delivery across" value="India" />
                             </div>
                         )}
                     </div>

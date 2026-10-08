@@ -31,7 +31,7 @@ const DairyCta = ({ photo }) => (
                         Pure dairy, <span className="ef-title__accent">delivered.</span>
                     </h2>
                     <p className="ef-lead max-w-lg">
-                        Desi dairy staples, packed within 1-2 working days and shipped free across India. Buying for a
+                        Desi dairy staples, packed within 1-2 working days and shipped across India. Buying for a
                         family function, a temple or a shop? Message us for bulk.
                     </p>
                     <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
