@@ -30,9 +30,9 @@ const Portrait = ({ person, sizes, className, children }) => {
 }
 
 const PortraitCaption = ({ person }) => (
-    <figcaption className="absolute inset-x-3 bottom-3 flex flex-col gap-2 rounded-card bg-pine-deep/55 p-4 backdrop-blur-md sm:inset-x-4 sm:bottom-4">
-        {person.quote && <span className="text-[0.9375rem] font-medium leading-snug">“{person.quote}”</span>}
-        <span className="text-[0.75rem] font-semibold uppercase text-cream/75">{person.name}</span>
+    <figcaption className="absolute inset-x-3 bottom-3 flex flex-col gap-1.5 rounded-card bg-pine-deep/55 p-3 backdrop-blur-md sm:inset-x-4 sm:bottom-4 md:gap-2 md:p-4">
+        {person.quote && <span className="text-[0.8125rem] font-medium leading-snug md:text-[0.9375rem]">“{person.quote}”</span>}
+        <span className="text-[0.6875rem] font-semibold uppercase text-cream/75 md:text-[0.75rem]">{person.name}</span>
     </figcaption>
 )
 
