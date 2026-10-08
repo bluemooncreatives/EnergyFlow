@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CoverImage from './storefront/CoverImage'
 import Link from 'next/link'
 import gsap from 'gsap'
@@ -21,9 +21,10 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 // The three lines Energyflow leads with. Each deep-links into a name search;
 // `term` keys the live stats from getSignatureShowcase. Media kinds:
-//   cutout — a transparent photo floating on the tile's tint
-//   cover  — a full-bleed photograph
-//   art    — a flat illustration, until a cutout exists for the line
+//   cutout    — a transparent photo floating on the tile's tint
+//   cover     — a full-bleed photograph
+//   slideshow — full-bleed product photos that crossfade (live chocolates)
+//   art       — a flat illustration, until a cutout exists for the line
 const RANGES = [
     {
         key: 'ghee',
@@ -129,10 +130,62 @@ const resolveRange = (range, stats, availability) => {
     }
 }
 
-const TileMedia = ({ media, slot }) => {
+// The chocolate tile shows the catalogue's own gift / premium chocolates: it
+// leads to their category and rotates through a few of the products' photos.
+// With nothing live it keeps the static cutout (and the enquiry, if empty).
+const withChocolateLine = (tile, line) => {
+    if (!line?.count) return tile
+    const category = line.category
+    const title = category?.premium ? category.name : tile.title
+
+    return {
+        ...tile,
+        title,
+        href: category?.href || tile.href,
+        label: `Shop ${title}`,
+        media: line.items?.length ? { kind: 'slideshow', slides: line.items } : tile.media,
+    }
+}
+
+// Which slide a slideshow tile is on. Still under reduced motion and while
+// the page is hidden; a single photo never moves.
+const SLIDE_MS = 3800
+
+const useSlideshow = (count) => {
+    const [index, setIndex] = useState(0)
+
+    useEffect(() => {
+        if (count < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        const id = setInterval(() => {
+            if (!document.hidden) setIndex((i) => (i + 1) % count)
+        }, SLIDE_MS)
+        return () => clearInterval(id)
+    }, [count])
+
+    return count ? index % count : 0
+}
+
+const TileMedia = ({ media, slot, slide = 0 }) => {
     if (media.kind === 'art') {
         const { Art } = media
         return <Art className="size-full drop-shadow-[0_18px_24px_rgba(8,58,47,0.14)]" />
+    }
+
+    if (media.kind === 'slideshow') {
+        return media.slides.map((item, i) => (
+            <CoverImage
+                key={item.image}
+                src={item.image}
+                alt=""
+                fill
+                quality={82}
+                sizes={COVER_SIZES[slot]}
+                className={cn(
+                    'object-cover transition-opacity duration-1000 ease-out motion-reduce:transition-none',
+                    i === slide ? 'opacity-100' : 'opacity-0'
+                )}
+            />
+        ))
     }
 
     const cover = media.kind === 'cover'
@@ -151,7 +204,9 @@ const TileMedia = ({ media, slot }) => {
 }
 
 const RangeTile = ({ tile, slot, index, total }) => {
-    const cover = tile.media.kind === 'cover'
+    const slides = tile.media.kind === 'slideshow' ? tile.media.slides : null
+    const slide = useSlideshow(slides?.length || 0)
+    const cover = tile.media.kind === 'cover' || Boolean(slides)
     const price = formatINR(tile.price)
 
     return (
@@ -183,7 +238,7 @@ const RangeTile = ({ tile, slot, index, total }) => {
                 aria-hidden="true"
                 className={cn('pointer-events-none absolute', cover ? 'inset-x-0 -inset-y-[6%]' : MEDIA_CLASSES[slot])}
             >
-                <TileMedia media={tile.media} slot={slot} />
+                <TileMedia media={tile.media} slot={slot} slide={slide} />
             </div>
 
             {cover && (
@@ -218,8 +273,15 @@ const RangeTile = ({ tile, slot, index, total }) => {
                 )}
             >
                 <div className="flex min-w-0 flex-col gap-1.5">
-                    <span className="hidden truncate text-[0.6875rem] font-semibold uppercase tracking-[0em] text-cream/70 @min-[13rem]/tile:block">
-                        {tile.eyebrow}
+                    {/* A slideshow names the product in view instead */}
+                    <span
+                        key={slides ? slide : undefined}
+                        className={cn(
+                            'hidden truncate text-[0.6875rem] font-semibold uppercase tracking-[0em] text-cream/70 @min-[13rem]/tile:block',
+                            slides && 'motion-safe:animate-in motion-safe:fade-in motion-safe:duration-700'
+                        )}
+                    >
+                        {slides ? slides[slide].name : tile.eyebrow}
                     </span>
                     {/* size before leading: cn() drops a leading-* that precedes a text size */}
                     <span
@@ -424,13 +486,19 @@ const useSignatureMotion = (gridRef) => {
     }, { scope: gridRef })
 }
 
-const SignatureRangeClient = ({ tone = 'page', stats = null, availability = null, pick }) => {
+const SignatureRangeClient = ({ tone = 'page', stats = null, chocolates = null, availability = null, pick }) => {
     const sectionRef = useRef(null)
     const gridRef = useRef(null)
     useReveal(sectionRef)
     useSignatureMotion(gridRef)
 
-    const tiles = [...RANGES.map((range) => resolveRange(range, stats, availability)), pick].filter(Boolean)
+    const tiles = [
+        ...RANGES.map((range) => {
+            const tile = resolveRange(range, stats, availability)
+            return range.key === 'chocolates' ? withChocolateLine(tile, chocolates) : tile
+        }),
+        pick,
+    ].filter(Boolean)
 
     return (
         <Section ref={sectionRef} tone={tone} aria-labelledby="signature-title">

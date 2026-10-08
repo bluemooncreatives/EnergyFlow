@@ -54,6 +54,7 @@ const SignatureRangeSection = async ({ availability = null, tone = 'page' }) => 
         <SignatureRangeClient
             tone={tone}
             stats={showcase?.terms ?? null}
+            chocolates={showcase?.chocolates ?? null}
             availability={availability}
             pick={toPickTile(showcase?.pick)}
         />
