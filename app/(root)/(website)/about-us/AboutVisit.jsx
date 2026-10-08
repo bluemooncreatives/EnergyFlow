@@ -55,11 +55,18 @@ const AboutVisit = ({ content, number, tone = 'page' }) => {
                         <address className="flex flex-col gap-2 text-[0.875rem] not-italic leading-relaxed text-ink-body">
                             <span className="inline-flex items-start gap-2">
                                 <MapPin className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden="true" />
-                                {COMPANY.legalName}, {COMPANY.addressLines.join(', ')}
+                                <span>
+                                    {COMPANY.storeName}
+                                    <br />
+                                    {COMPANY.addressLines.join(', ')}
+                                </span>
                             </span>
-                            <a href={COMPANY.phoneHref} className="ef-focus inline-flex w-fit items-center gap-2 rounded-sm text-ink-strong hover:text-brand-bright">
-                                <Phone className="size-4 shrink-0 text-brand" aria-hidden="true" /> {COMPANY.phone}
-                            </a>
+                            <span className="inline-flex items-center gap-2">
+                                <Phone className="size-4 shrink-0 text-brand" aria-hidden="true" />
+                                <a href={COMPANY.phoneHref} className="ef-focus rounded-sm text-ink-strong hover:text-brand-bright">{COMPANY.phone}</a>
+                                <span aria-hidden="true" className="text-ink-muted">/</span>
+                                <a href={COMPANY.altPhoneHref} className="ef-focus rounded-sm text-ink-strong hover:text-brand-bright">{COMPANY.altPhone}</a>
+                            </span>
                             <a href={`mailto:${COMPANY.email}`} className="ef-focus inline-flex w-fit items-center gap-2 break-all rounded-sm text-ink-strong hover:text-brand-bright">
                                 <Mail className="size-4 shrink-0 text-brand" aria-hidden="true" /> {COMPANY.email}
                             </a>

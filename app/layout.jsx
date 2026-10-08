@@ -108,11 +108,11 @@ const organizationSchema = {
   foundingDate: '2025-11-19',
   slogan: 'Fuel Your Health, Energize Your Life.',
   email: 'energyflow0001@gmail.com',
-  telephone: '+91-9289657742',
+  telephone: '+91-9871722695',
   areaServed: { '@type': 'Country', name: 'India' },
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Rangpuri, Mahipalpur',
+    streetAddress: 'L-180, Street No. 7, opp. DC Burger, Mahipalpur',
     addressLocality: 'New Delhi',
     addressRegion: 'Delhi',
     postalCode: '110037',
@@ -121,7 +121,7 @@ const organizationSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'customer service',
-    telephone: '+91-9289657742',
+    telephone: '+91-9871722695',
     email: 'energyflow0001@gmail.com',
     areaServed: 'IN',
     availableLanguage: ['English', 'Hindi'],

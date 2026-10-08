@@ -30,8 +30,8 @@ const AboutPromise = ({ content, number, rating, tone = 'page' }) => {
             <AboutMetaRow label={content.label} number={number} />
 
             <div className="grid gap-[clamp(1.25rem,3vw,3rem)] lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
-                {/* ── Portrait ── */}
-                <div className="flex min-w-0 flex-col gap-3" data-reveal>
+                {/* ── Portrait ── phones get the promise itself, not the picture ── */}
+                <div className="flex min-w-0 flex-col gap-3 max-md:hidden" data-reveal>
                     <figure className="ef-tile relative m-0 aspect-[4/5] bg-pine shadow-elev-2 max-lg:max-h-[34rem] lg:aspect-auto lg:min-h-[32rem] lg:flex-1">
                         {photo ? (
                             <Image

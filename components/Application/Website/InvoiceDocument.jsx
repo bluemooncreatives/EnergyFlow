@@ -45,8 +45,8 @@ const BRAND = {
     name: 'Energyflow',
     tagline: 'Fuel your health, energize your life.',
     email: 'energyflow0001@gmail.com',
-    phone: '+91 92896 57742',
-    address: 'Rangpuri, Mahipalpur, New Delhi 110037',
+    phone: '+91 98717 22695',
+    address: 'L-180, Street No. 7, opp. DC Burger, Mahipalpur, New Delhi 110037',
 }
 
 // Mirrors the --palette-* / semantic tokens in app/design-system.css.

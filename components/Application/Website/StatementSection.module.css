@@ -268,14 +268,18 @@
     letter-spacing: -0.025em;
   }
 
+  /* Inline, the pill is wider than a phone line box, so it wraps to two
+     lines and — being taller than the line it sits on — spills over the
+     words above and below it. Give it a line of its own instead. */
   .chipWrap {
-    margin-block: 0.15em;
+    display: block;
+    margin-block: 0.45em;
   }
 
   .chip {
     gap: 0.3em;
-    padding: 0.22em 0.55em;
-    font-size: 0.78em;
+    padding: 0.24em 0.7em;
+    font-size: 0.8em;
     line-height: 1.35;
     border-radius: 1.2em;
   }

@@ -57,14 +57,14 @@ const PrivacyPolicy = () => {
                     <p>
                         The data controller responsible for your personal information is:<br /><br />
                         <strong>Business Name:</strong> Energyflow<br />
-                        <strong>Registered Address:</strong> Rangpuri, Mahipalpur, New Delhi - 110037<br />
+                        <strong>Registered Address:</strong> L-180, Street No. 7, opp. DC Burger, Mahipalpur, New Delhi - 110037<br />
                         <strong>Email:</strong>{' '}
                         <a href="mailto:energyflow0001@gmail.com" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
                             energyflow0001@gmail.com
                         </a><br />
                         <strong>Phone:</strong>{' '}
-                        <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                            +91 92896 57742
+                        <a href="tel:+919871722695" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                            +91 98717 22695
                         </a>
                     </p>
                     <p>
@@ -284,11 +284,11 @@ const PrivacyPolicy = () => {
                             </a>
                         </li>
                         <li><strong>Phone:</strong>{' '}
-                            <a href="tel:+919289657742" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
-                                +91 92896 57742
+                            <a href="tel:+919871722695" className='text-brand underline underline-offset-2 hover:text-brand-hover'>
+                                +91 98717 22695
                             </a>
                         </li>
-                        <li><strong>Address:</strong> Energyflow, Rangpuri, Mahipalpur, New Delhi - 110037</li>
+                        <li><strong>Address:</strong> Energyflow, L-180, Street No. 7, opp. DC Burger, Mahipalpur, New Delhi - 110037</li>
                     </ul>
                     <p className='mt-4 text-[0.9375rem] leading-[1.75] text-ink-body lg:text-base'>
                         You may also review our{' '}

@@ -12,7 +12,7 @@ import NewsletterFooterStrip from '@/components/Application/Website/newsletter/N
 import { FACEBOOK_URL, INSTAGRAM_URL, X_URL } from '@/lib/socialLinks'
 
 const CONTACT_EMAIL = 'energyflow0001@gmail.com'
-const CONTACT_PHONE = '+919289657742'
+const CONTACT_PHONE = '+919871722695'
 
 // Shown when the catalogue has no categories yet, so the column is never empty.
 const fallbackCategoryLinks = [
@@ -166,11 +166,11 @@ const Footer = ({ categoryLinks = [], newsletter = null }) => {
                         <ul className='space-y-2.5 text-[0.9375rem] text-white/80'>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <MapPin className='size-5 shrink-0 lg:order-2' />
-                                <span>Rangpuri, Mahipalpur, New Delhi - 110037</span>
+                                <span>L-180, Street No. 7, opp. DC Burger, Mahipalpur, New Delhi - 110037</span>
                             </li>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <Phone className='size-5 shrink-0 lg:order-2' />
-                                <Link href={`tel:${CONTACT_PHONE}`} className='transition-colors hover:text-[var(--brand-amber)]'>+91 92896 57742</Link>
+                                <Link href={`tel:${CONTACT_PHONE}`} className='transition-colors hover:text-[var(--brand-amber)]'>+91 98717 22695</Link>
                             </li>
                             <li className='flex lg:justify-end items-center gap-2'>
                                 <Mail className='size-5 shrink-0 lg:order-2' />

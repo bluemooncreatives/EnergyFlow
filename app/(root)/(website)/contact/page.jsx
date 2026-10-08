@@ -257,15 +257,18 @@ const ContactPage = () => {
               <div className={styles.sectionLabel}><p>Where</p></div>
               <div className={styles.divider} />
               <div className={styles.item}><p>Energyflow</p></div>
-              <div className={styles.item}><p>Rangpuri, Mahipalpur</p></div>
-              <div className={styles.item}><p>New Delhi - 110037</p></div>
+              <div className={styles.item}><p>L-180, Street No. 7, opp. DC Burger</p></div>
+              <div className={styles.item}><p>Mahipalpur, New Delhi - 110037</p></div>
             </div>
 
             <div>
               <div className={styles.sectionLabel}><p>Call</p></div>
               <div className={styles.divider} />
               <div className={styles.item}>
-                <a href="tel:+919289657742">+91 92896 57742</a>
+                <a href="tel:+919871722695">+91 98717 22695</a>
+              </div>
+              <div className={styles.item}>
+                <a href="tel:+918527278367">+91 85272 78367</a>
               </div>
             </div>
 

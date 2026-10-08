@@ -112,7 +112,7 @@ const AboutLeadership = ({ content, number, tone = 'sunken' }) => {
                                     >
                                         <div className="min-h-0 overflow-hidden">
                                             <div className="flex flex-col gap-4 pb-6 pl-10">
-                                                <Portrait person={person} sizes="90vw" className="aspect-[4/3] max-h-[22rem] lg:hidden">
+                                                <Portrait person={person} sizes="(min-width: 480px) 20rem, 80vw" className="aspect-[4/5] w-full max-w-[20rem] lg:hidden">
                                                     <PortraitCaption person={person} />
                                                 </Portrait>
                                                 {bio.map((paragraph) => (

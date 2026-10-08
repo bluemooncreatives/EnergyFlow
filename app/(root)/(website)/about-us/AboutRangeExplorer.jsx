@@ -74,23 +74,12 @@ const Details = ({ category, className }) => (
         <p className="mt-2.5 max-w-[17rem] text-[0.875rem] leading-relaxed text-ink-body">
             {productsLabel(category.productCount || 0)} in this aisle, packed fresh in Delhi and delivered free across India.
         </p>
-        <dl className="mt-4 flex items-center gap-5">
-            <div>
-                <dt className="sr-only">Products</dt>
-                <dd className="flex items-baseline gap-1.5">
-                    <span className="font-header text-[1.375rem] font-semibold leading-none tabular-nums text-ink-strong">{category.productCount || 0}</span>
-                    <span className="text-[0.75rem] text-ink-muted">on the shelf</span>
-                </dd>
-            </div>
-            {category.year && (
-                <div className="border-l border-line-soft pl-5">
-                    <dt className="sr-only">Stocked since</dt>
-                    <dd className="flex items-baseline gap-1.5">
-                        <span className="text-[0.75rem] text-ink-muted">since</span>
-                        <span className="font-header text-[1.375rem] font-semibold leading-none tabular-nums text-ink-strong">{category.year}</span>
-                    </dd>
-                </div>
-            )}
+        <dl className="mt-4">
+            <dt className="sr-only">Products</dt>
+            <dd className="flex items-baseline gap-1.5">
+                <span className="font-header text-[1.375rem] font-semibold leading-none tabular-nums text-ink-strong">{category.productCount || 0}</span>
+                <span className="text-[0.75rem] text-ink-muted">on the shelf</span>
+            </dd>
         </dl>
     </div>
 )
