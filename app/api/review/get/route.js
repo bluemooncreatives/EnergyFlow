@@ -15,6 +15,7 @@ export async function GET(request) {
 
         let matchQuery = {
             deletedAt: null,
+            isDraft: { $ne: true },
             product: new mongoose.Types.ObjectId(productId)
         }
 

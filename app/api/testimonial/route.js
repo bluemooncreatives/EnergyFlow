@@ -36,7 +36,7 @@ export async function GET() {
 
         const testimonials = await TestimonialModel.find({ deletedAt: null })
             .sort({ sortOrder: 1, createdAt: -1, _id: 1 })
-            .select('name review rating isActive sortOrder')
+            .select('name review rating isActive sortOrder isDraft')
             .lean()
 
         return response(true, 200, 'Testimonials fetched.', testimonials)

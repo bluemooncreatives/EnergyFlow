@@ -406,6 +406,7 @@ const ShowTestimonials = () => {
                   <div className={cn('min-w-0 flex-1', !t.isActive && 'opacity-60')}>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <p className="text-sm font-semibold">{t.name}</p>
+                      {t.isDraft && <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium">Draft</span>}
                       <Stars value={t.rating} size="size-3" />
                       {t.isActive
                         ? <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium ef-tone--forest">Live · #{index + 1}</span>

@@ -8,6 +8,9 @@ import mongoose from "mongoose";
  * admin writes by hand (name + quote + star rating).
  */
 const testimonialSchema = new mongoose.Schema({
+    isDraft: { type: Boolean, default: false },
+    seedKey: { type: String, trim: true },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
     // Reviewer display name shown beneath the quote.
     name: {
         type: String,
@@ -58,6 +61,7 @@ const testimonialSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 testimonialSchema.index({ deletedAt: 1, isActive: 1, sortOrder: 1 })
+testimonialSchema.index({ seedKey: 1 }, { unique: true, sparse: true })
 
 const TestimonialModel = mongoose.models.Testimonial || mongoose.model('Testimonial', testimonialSchema, 'testimonials')
 export default TestimonialModel

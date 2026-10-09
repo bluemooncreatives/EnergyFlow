@@ -27,6 +27,10 @@ export async function PUT(request) {
             return response(false, 400, 'Invalid testimonial id.')
         }
 
+        if (payload.isActive === true && await TestimonialModel.exists({ _id, isDraft: true })) {
+            return response(false, 400, 'Add a genuine customer quote as a new testimonial before publishing.')
+        }
+
         const update = {}
 
         // Active toggle (boolean only — ignore anything non-boolean).

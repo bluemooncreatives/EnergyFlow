@@ -45,6 +45,25 @@ The gift boxes themselves still come from Products in the Gift Boxes category. A
 
 Trashed or deleted media falls back automatically and returns when restored. If another admin publishes while you are editing, your save is refused and your edits stay on screen; **Reload latest (discard edits)** loads their version.
 
+### Populate feedback drafts
+
+Run `npm run db:seed-feedback -- --dry-run` to preview the catalogue matches,
+then `npm run db:seed-feedback -- --write` to populate MongoDB. The script loads
+`MONGODB_URI` from the existing ignored environment files and uses the same
+database as the application (`MONGODB_DB_NAME`, default `YT-NEXTJS-ECOMMERCE`).
+
+The curated copy uses Indian names and specific products from the store's
+catalogue. Only non-deleted products with a live category and variant receive
+records. Reviews and testimonials are saved as unpublished drafts, excluded
+from public reviews, rating summaries, structured data and customer analytics.
+No customer accounts, email addresses or purchase verification are fabricated.
+Genuine customer quotes can be added through **Admin → Testimonials** for
+publication; draft entries remain available there for editorial reference.
+
+Unique seed keys make reruns safe: existing entries, edits, order and trash state
+are preserved. The script creates the reviews and testimonials indexes without
+dropping collections or replacing existing data.
+
 ## 🛠️ Tech Stack
 
 ### Frontend

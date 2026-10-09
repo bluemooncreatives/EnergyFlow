@@ -13,7 +13,7 @@ export async function GET(request) {
         }
 
         const reviews = await ReviewModel.aggregate([
-            { $match: { product: new mongoose.Types.ObjectId(productId), deletedAt: null } },
+            { $match: { product: new mongoose.Types.ObjectId(productId), deletedAt: null, isDraft: { $ne: true } } },
             { $group: { _id: "$rating", count: { $sum: 1 } } },
             { $sort: { _id: 1 } }
         ])

@@ -13,7 +13,7 @@ export async function GET() {
         }
         await connectDB()
 
-        const latestReview = await ReviewModel.find({ deletedAt: null })
+        const latestReview = await ReviewModel.find({ deletedAt: null, isDraft: { $ne: true } })
             .sort({ createdAt: -1 })
             .limit(10)
             .populate({
