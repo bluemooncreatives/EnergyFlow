@@ -9,7 +9,7 @@ import TestimonialModel from "@/models/Testimonial.model"
 
 // PUT — update a single testimonial. Supports two intents from one endpoint:
 //   • Full edit: { _id, name, review, testimonialRating }
-//   • Quick active toggle: { _id, isActive }
+//   • Visibility selection: { _id, status: 'draft' | 'live' }
 // Only the fields present in the payload are applied, so the toggle never has
 // to resend (and re-validate) the whole record.
 export async function PUT(request) {
@@ -27,15 +27,18 @@ export async function PUT(request) {
             return response(false, 400, 'Invalid testimonial id.')
         }
 
-        if (payload.isActive === true && await TestimonialModel.exists({ _id, isDraft: true })) {
-            return response(false, 400, 'Add a genuine customer quote as a new testimonial before publishing.')
-        }
-
         const update = {}
 
-        // Active toggle (boolean only — ignore anything non-boolean).
-        if (typeof payload.isActive === 'boolean') {
+        // Keep the legacy active flag aligned with the two visibility states.
+        if (payload.status !== undefined) {
+            if (!['draft', 'live'].includes(payload.status)) {
+                return response(false, 400, 'Status must be draft or live.')
+            }
+            update.isDraft = payload.status === 'draft'
+            update.isActive = !update.isDraft
+        } else if (typeof payload.isActive === 'boolean') {
             update.isActive = payload.isActive
+            update.isDraft = !payload.isActive
         }
 
         // Content edit — validate the editable fields together so a partial
@@ -65,7 +68,7 @@ export async function PUT(request) {
         const updated = await TestimonialModel.findOneAndUpdate(
             { _id, deletedAt: null },
             { $set: update },
-            { new: true }
+            { new: true, runValidators: true }
         ).lean()
 
         if (!updated) {

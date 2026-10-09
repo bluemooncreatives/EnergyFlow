@@ -98,7 +98,7 @@ export async function GET(request) {
             {
                 $unwind: { path: '$userData', preserveNullAndEmptyArrays: true }
             },
-            { $set: { 'userData.name': { $cond: ['$isDraft', { $concat: ['$reviewerName', ' (draft)'] }, '$userData.name'] } } },
+            { $set: { 'userData.name': { $ifNull: ['$userData.name', '$reviewerName'] } } },
             ...(Object.keys(postMatchQuery).length ? [{ $match: postMatchQuery }] : []),
             { $sort: Object.keys(sortQuery).length ? sortQuery : { createdAt: -1 } },
             { $skip: start },
@@ -150,7 +150,7 @@ export async function GET(request) {
                 {
                     $unwind: { path: '$userData', preserveNullAndEmptyArrays: true }
                 },
-                { $set: { 'userData.name': { $cond: ['$isDraft', { $concat: ['$reviewerName', ' (draft)'] }, '$userData.name'] } } },
+                { $set: { 'userData.name': { $ifNull: ['$userData.name', '$reviewerName'] } } },
                 { $match: postMatchQuery },
                 { $count: 'count' }
             ]

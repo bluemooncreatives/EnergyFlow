@@ -8,8 +8,6 @@ import {
   AlertTriangle,
   ArrowDown,
   ArrowUp,
-  Eye,
-  EyeOff,
   GripVertical,
   Loader2,
   Pencil,
@@ -23,6 +21,7 @@ import {
 
 import BreadCrumb from '@/components/Application/Admin/BreadCrumb'
 import PageHeader from '@/components/Application/Admin/PageHeader'
+import FeedbackStatusSelect from '@/components/Application/Admin/FeedbackStatusSelect'
 import ConfirmDialog from '@/components/Application/Admin/data-table/ConfirmDialog'
 import useReorderList from '@/components/Application/Admin/curation/useReorderList'
 import UnsavedOrderBar from '@/components/Application/Admin/curation/UnsavedOrderBar'
@@ -44,8 +43,10 @@ const RATING_WORDS = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent']
 const FILTERS = [
   { id: 'all', label: 'All' },
   { id: 'live', label: 'Live' },
-  { id: 'hidden', label: 'Hidden' },
+  { id: 'draft', label: 'Draft' },
 ]
+
+const isLive = (testimonial) => testimonial.isActive && !testimonial.isDraft
 
 const errorMessage = (error) => error?.response?.data?.message || error?.message || 'Something went wrong.'
 
@@ -101,7 +102,7 @@ const LivePreview = ({ name, review, rating }) => (
 )
 
 /**
- * Testimonials: write, preview, publish/hide, reorder and delete the quotes
+ * Testimonials: write, preview, choose Draft/Live, reorder and delete the quotes
  * in the homepage "What They Say" section.
  *
  * Reordering works on the full list only (filters are for finding entries),
@@ -113,6 +114,7 @@ const ShowTestimonials = () => {
   const [submitting, setSubmitting] = useState(false)
   const [savingOrder, setSavingOrder] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [visibility, setVisibility] = useState('draft')
   const [busyId, setBusyId] = useState(null)
   const [filter, setFilter] = useState('all')
   const [pendingDelete, setPendingDelete] = useState(null)
@@ -148,22 +150,24 @@ const ShowTestimonials = () => {
 
   const items = list.items
   const stats = useMemo(() => {
-    const live = items.filter((t) => t.isActive).length
+    const live = items.filter(isLive).length
     const avg = items.length ? items.reduce((s, t) => s + (Number(t.rating) || 0), 0) / items.length : 0
-    return { total: items.length, live, hidden: items.length - live, avg }
+    return { total: items.length, live, draft: items.length - live, avg }
   }, [items])
 
   const visible = items
     .map((t, index) => ({ t, index }))
-    .filter(({ t }) => filter === 'all' || (filter === 'live' ? t.isActive : !t.isActive))
+    .filter(({ t }) => filter === 'all' || (filter === 'live' ? isLive(t) : !isLive(t)))
 
   const resetForm = () => {
     form.reset({ name: '', review: '', testimonialRating: 5 })
     setEditingId(null)
+    setVisibility('draft')
   }
 
   const startEdit = (testimonial) => {
     setEditingId(testimonial._id)
+    setVisibility(isLive(testimonial) ? 'live' : 'draft')
     form.reset({ name: testimonial.name, review: testimonial.review, testimonialRating: testimonial.rating })
     composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     requestAnimationFrame(() => form.setFocus('name'))
@@ -178,8 +182,8 @@ const ShowTestimonials = () => {
     try {
       const isEdit = Boolean(editingId)
       const { data } = isEdit
-        ? await axios.put('/api/testimonial/update', { _id: editingId, ...values })
-        : await axios.post('/api/testimonial', values)
+        ? await axios.put('/api/testimonial/update', { _id: editingId, ...values, status: visibility })
+        : await axios.post('/api/testimonial', { ...values, status: visibility })
       if (!data.success) throw new Error(data.message)
       showToast('success', data.message)
       resetForm()
@@ -191,13 +195,14 @@ const ShowTestimonials = () => {
     }
   }
 
-  const toggleActive = async (testimonial) => {
+  const changeStatus = async (testimonial, nextStatus) => {
     setBusyId(testimonial._id)
     try {
-      const { data } = await axios.put('/api/testimonial/update', { _id: testimonial._id, isActive: !testimonial.isActive })
+      const { data } = await axios.put('/api/testimonial/update', { _id: testimonial._id, status: nextStatus })
       if (!data.success) throw new Error(data.message)
-      list.setItems((prev) => prev.map((t) => (t._id === testimonial._id ? { ...t, isActive: !t.isActive } : t)))
-      showToast('success', testimonial.isActive ? 'Hidden from the storefront.' : 'Now live on the storefront.')
+      list.setItems((prev) => prev.map((t) => (t._id === testimonial._id ? { ...t, isActive: nextStatus === 'live', isDraft: nextStatus === 'draft' } : t)))
+      if (editingId === testimonial._id) setVisibility(nextStatus)
+      showToast('success', nextStatus === 'draft' ? 'Moved to draft.' : 'Now live on the storefront.')
     } catch (error) {
       showToast('error', errorMessage(error))
     } finally {
@@ -252,7 +257,7 @@ const ShowTestimonials = () => {
         {[
           { label: 'Total', value: stats.total },
           { label: 'Live', value: stats.live, tone: 'text-[var(--success)]' },
-          { label: 'Hidden', value: stats.hidden },
+          { label: 'Draft', value: stats.draft },
           { label: 'Average rating', value: stats.total ? stats.avg.toFixed(1) : '-', extra: <Stars value={Math.round(stats.avg)} /> },
         ].map(({ label, value, tone, extra }) => (
           <div key={label} className="rounded-xl border bg-card p-4">
@@ -325,12 +330,18 @@ const ShowTestimonials = () => {
                 )}
               />
 
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-medium">Status</span>
+                <FeedbackStatusSelect value={visibility} onChange={setVisibility} disabled={submitting} label="Testimonial visibility" />
+              </div>
+              <p className="text-xs text-muted-foreground">{visibility === 'draft' ? 'Drafts are only visible in the admin panel.' : 'This quote will appear on the storefront when saved.'}</p>
+
               <LivePreview name={watchName} review={watchReview} rating={Number(watchRating) || 0} />
 
               <div className="flex items-center gap-2">
-                <Button type="submit" className="h-10 flex-1 gap-2" disabled={submitting}>
+                <Button type="submit" className="h-10 flex-1 gap-2" disabled={submitting || busyId !== null}>
                   {submitting ? <Loader2 className="size-4 animate-spin" /> : editingId ? <Pencil className="size-4" /> : <Plus className="size-4" />}
-                  {editingId ? 'Save changes' : 'Add testimonial'}
+                  {editingId ? 'Save changes' : visibility === 'draft' ? 'Save draft' : 'Publish testimonial'}
                 </Button>
                 {(editingId || form.formState.isDirty) && (
                   <Button type="button" variant="outline" className="h-10 gap-1.5" onClick={resetForm} disabled={submitting}>
@@ -348,7 +359,7 @@ const ShowTestimonials = () => {
             <div>
               <h3 id="list-title" className="text-base font-semibold">Current testimonials</h3>
               <p className="text-sm text-muted-foreground">
-                {canReorder ? 'Drag or use the arrows to reorder. Hidden quotes are skipped on the storefront.' : 'Switch to “All” to reorder.'}
+                {canReorder ? 'Drag or use the arrows to reorder. Drafts are skipped on the storefront.' : 'Switch to “All” to reorder.'}
               </p>
             </div>
             <div className="flex shrink-0 rounded-lg bg-muted p-1" role="tablist" aria-label="Filter testimonials">
@@ -362,7 +373,7 @@ const ShowTestimonials = () => {
                   className={cn('rounded-md px-3 py-1.5 text-sm font-medium transition', filter === f.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground')}
                 >
                   {f.label}
-                  <span className="ml-1.5 text-xs tabular-nums opacity-70">{f.id === 'all' ? stats.total : f.id === 'live' ? stats.live : stats.hidden}</span>
+                  <span className="ml-1.5 text-xs tabular-nums opacity-70">{f.id === 'all' ? stats.total : f.id === 'live' ? stats.live : stats.draft}</span>
                 </button>
               ))}
             </div>
@@ -382,10 +393,10 @@ const ShowTestimonials = () => {
             <div className="flex flex-col items-center px-6 py-14 text-center">
               <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary"><Quote className="size-5" aria-hidden="true" /></span>
               <p className="mt-4 font-medium">
-                {items.length === 0 ? 'No testimonials yet' : filter === 'live' ? 'No live testimonials' : 'No hidden testimonials'}
+                {items.length === 0 ? 'No testimonials yet' : filter === 'live' ? 'No live testimonials' : 'No draft testimonials'}
               </p>
               <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-                {items.length === 0 ? 'Add one on the left. Until then the storefront shows a default set so the section is never empty.' : 'Try another filter.'}
+                {items.length === 0 ? 'Add one on the left and choose Draft or Live. The storefront section appears when a quote is live.' : 'Try another filter.'}
               </p>
             </div>
           ) : (
@@ -398,19 +409,18 @@ const ShowTestimonials = () => {
                     'group flex flex-wrap items-start gap-3 rounded-lg border bg-card p-3 transition sm:flex-nowrap',
                     'data-[dragging]:opacity-40 data-[over]:border-primary data-[over]:shadow-[0_-2px_0_var(--primary)]',
                     editingId === t._id && 'border-primary shadow-[0_0_0_1px_var(--primary)]',
-                    !t.isActive && 'bg-muted/40'
+                    !isLive(t) && 'bg-muted/40'
                   )}
                 >
                   {canReorder && <GripVertical className="mt-2 size-4 shrink-0 cursor-grab text-muted-foreground active:cursor-grabbing max-sm:hidden" aria-hidden="true" />}
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-primary">{initialsOf(t.name)}</span>
-                  <div className={cn('min-w-0 flex-1', !t.isActive && 'opacity-60')}>
+                  <div className={cn('min-w-0 flex-1', !isLive(t) && 'opacity-60')}>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <p className="text-sm font-semibold">{t.name}</p>
-                      {t.isDraft && <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium">Draft</span>}
                       <Stars value={t.rating} size="size-3" />
-                      {t.isActive
+                      {isLive(t)
                         ? <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium ef-tone--forest">Live · #{index + 1}</span>
-                        : <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium ef-tone--pine">Hidden</span>}
+                        : <span className="rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium ef-tone--sun">Draft</span>}
                     </div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">“{t.review}”</p>
                   </div>
@@ -421,9 +431,7 @@ const ShowTestimonials = () => {
                         <Button type="button" variant="ghost" size="icon" className="size-8" disabled={index === items.length - 1} onClick={() => list.move(index, 1)} aria-label={`Move ${t.name} down`}><ArrowDown className="size-4" /></Button>
                       </>
                     )}
-                    <Button type="button" variant="ghost" size="icon" className="size-8" disabled={busyId === t._id} onClick={() => toggleActive(t)} aria-label={t.isActive ? `Hide ${t.name}` : `Publish ${t.name}`} title={t.isActive ? 'Hide from storefront' : 'Show on storefront'}>
-                      {busyId === t._id ? <Loader2 className="size-4 animate-spin" /> : t.isActive ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
-                    </Button>
+                    <FeedbackStatusSelect value={isLive(t) ? 'live' : 'draft'} onChange={(nextStatus) => changeStatus(t, nextStatus)} disabled={busyId !== null || submitting} label={`Visibility for ${t.name}`} />
                     <Button type="button" variant="ghost" size="icon" className="size-8" onClick={() => startEdit(t)} aria-label={`Edit ${t.name}`} title="Edit">
                       <Pencil className="size-4" />
                     </Button>

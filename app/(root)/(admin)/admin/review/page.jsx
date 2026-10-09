@@ -3,6 +3,7 @@ import BreadCrumb from "@/components/Application/Admin/BreadCrumb"
 import DatatableWrapper from "@/components/Application/Admin/DatatableWrapper"
 import DeleteAction from "@/components/Application/Admin/DeleteAction"
 import PageHeader from "@/components/Application/Admin/PageHeader"
+import ReviewStatusControl from "@/components/Application/Admin/ReviewStatusControl"
 import { DT_REVIEW_COLUMN, } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
 import { ADMIN_DASHBOARD, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
@@ -16,7 +17,9 @@ const breadcrumbData = [
 const ShowReview = () => {
 
     const columns = useMemo(() => {
-        return columnConfig(DT_REVIEW_COLUMN)
+        return columnConfig(DT_REVIEW_COLUMN.map((column) => column.accessorKey === 'isDraft'
+            ? { ...column, Cell: ({ row }) => <ReviewStatusControl review={row.original} /> }
+            : column))
     }, [])
 
     const action = useCallback((row, deleteType, handleDelete) => {
@@ -30,7 +33,7 @@ const ShowReview = () => {
         <div className="flex flex-col gap-4 sm:gap-6">
             <PageHeader
                 title="Reviews"
-                description="Monitor customer sentiment and product feedback."
+                description="Choose Draft to keep a review private or Live to show it on the storefront."
                 breadcrumb={<BreadCrumb breadcrumbData={breadcrumbData} />}
             />
 

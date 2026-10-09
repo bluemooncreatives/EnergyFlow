@@ -57,6 +57,10 @@ export async function POST(request) {
         await connectDB()
         const payload = await request.json()
 
+        if (payload?.status !== undefined && !['draft', 'live'].includes(payload.status)) {
+            return response(false, 400, 'Status must be draft or live.')
+        }
+
         const schema = zSchema.pick({
             name: true, review: true, testimonialRating: true,
         })
@@ -79,6 +83,8 @@ export async function POST(request) {
             review,
             rating: testimonialRating,
             sortOrder: nextOrder,
+            isDraft: payload.status === 'draft',
+            isActive: payload.status !== 'draft',
         })
 
         revalidateTag(TESTIMONIALS_TAG)

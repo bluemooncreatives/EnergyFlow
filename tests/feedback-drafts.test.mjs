@@ -25,11 +25,13 @@ test('only eligible catalogue products receive feedback, with valid references a
     }
 })
 
-test('unpublished authors cannot be turned into customer reviews without a real user', async () => {
+test('reviews retain a customer reference or display name independently of Draft/Live visibility', async () => {
     const base = { product: new mongoose.Types.ObjectId(), title: 'Great with chai', review: 'The cashews make a nice evening snack.', rating: 4 }
     await new ReviewModel({ ...base, isDraft: true, reviewerName: 'Priya Sharma' }).validate()
     await assert.rejects(new ReviewModel({ ...base, isDraft: true }).validate(), /reviewerName/)
-    await assert.rejects(new ReviewModel({ ...base, reviewerName: 'Priya Sharma' }).validate(), /user/)
+    await new ReviewModel({ ...base, isDraft: false, reviewerName: 'Priya Sharma' }).validate()
+    await new ReviewModel({ ...base, isDraft: true, user: new mongoose.Types.ObjectId() }).validate()
+    await assert.rejects(new ReviewModel({ ...base, isDraft: false }).validate(), /user|reviewerName/)
     await new ReviewModel({ ...base, user: new mongoose.Types.ObjectId() }).validate()
     for (const rating of [0, 6, 3.5]) {
         await assert.rejects(new ReviewModel({ ...base, rating, user: new mongoose.Types.ObjectId() }).validate(), /rating/)

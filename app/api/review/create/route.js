@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache"
+import { revalidateReviews } from "@/lib/reviewCache"
 import { isAuthenticated } from "@/lib/authentication"
 import { connectDB } from "@/lib/databaseConnection"
 import { catchError, response } from "@/lib/helperFunction"
@@ -49,10 +49,7 @@ export async function POST(request) {
 
         // Rating summaries are cached on the product page and product cards;
         // refresh them so the new review shows straight away.
-        revalidateTag('storefront-product-details')
-        revalidateTag('storefront-related-products')
-        revalidateTag('storefront-freshly-arrived-products')
-        revalidateTag('storefront-daily-best-sells')
+        revalidateReviews()
 
         return response(true, 200, 'Thanks! Your review has been posted.')
 

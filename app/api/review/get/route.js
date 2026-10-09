@@ -41,7 +41,7 @@ export async function GET(request) {
             {
                 $project: {
                     _id: 1,
-                    reviewedBy: '$userData.name',
+                    reviewedBy: { $ifNull: ['$userData.name', '$reviewerName'] },
                     avatar: "$userData.avatar",
                     rating: 1,
                     title: 1,

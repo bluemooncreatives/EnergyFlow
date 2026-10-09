@@ -10,11 +10,11 @@ const reviewSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: function () { return !this.isDraft },
+        required: function () { return !this.reviewerName },
     },
 
-    // Unpublished copy has a display name without creating a customer account.
-    reviewerName: { type: String, trim: true, required: function () { return this.isDraft } },
+    // Admin-managed reviews retain their display name in either visibility state.
+    reviewerName: { type: String, trim: true, required: function () { return !this.user } },
     isDraft: { type: Boolean, default: false },
     seedKey: { type: String, trim: true },
 
