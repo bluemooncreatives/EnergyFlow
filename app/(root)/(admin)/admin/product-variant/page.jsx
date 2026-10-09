@@ -7,6 +7,7 @@ import PageHeader from "@/components/Application/Admin/PageHeader"
 import { Button } from "@/components/ui/button"
 import { DT_PRODUCT_VARIANT_COLUMN } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
+import { PRODUCT_VARIANT_FILTERS } from '@/lib/adminCatalogFilters.mjs'
 import { ADMIN_DASHBOARD, ADMIN_PRODUCT_VARIANT_ADD, ADMIN_PRODUCT_VARIANT_EDIT, ADMIN_PRODUCT_VARIANT_SHOW, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
 import Link from "next/link"
 import { useCallback, useMemo } from "react"
@@ -51,6 +52,7 @@ const ShowProductVariant = () => {
                     fetchUrl="/api/product-variant"
                     initialPageSize={10}
                     columnsConfig={columns}
+                    filtersConfig={PRODUCT_VARIANT_FILTERS}
                     exportEndpoint="/api/product-variant/export"
                     deleteEndpoint="/api/product-variant/delete"
                     deleteType="SD"

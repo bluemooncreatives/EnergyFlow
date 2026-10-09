@@ -6,11 +6,12 @@ import {
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Download, Inbox, Loader2, MoreHorizontal, Recycle, RotateCcw, SearchX, Trash, Trash2, X } from 'lucide-react'
 import useDeleteMutation from '@/hooks/useDeleteMutation'
 import { showToast } from '@/lib/showToast'
 import { cn } from '@/lib/utils'
+import { serverColumnFilter } from '@/lib/adminCatalogFilters.mjs'
 import { download, generateCsv, mkConfig } from 'export-to-csv'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -22,6 +23,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import DataTableToolbar from './data-table/DataTableToolbar'
+import DataTableFilters from './data-table/DataTableFilters'
 import DataTablePagination from './data-table/DataTablePagination'
 import DataTableColumnHeader from './data-table/DataTableColumnHeader'
 import DataTableViewOptions from './data-table/DataTableViewOptions'
@@ -82,6 +84,7 @@ const Datatable = ({
     queryKey,
     fetchUrl,
     columnsConfig,
+    filtersConfig,
     initialPageSize = 10,
     exportEndpoint,
     deleteEndpoint,
@@ -105,16 +108,25 @@ const Datatable = ({
     const deleteMutation = useDeleteMutation(queryKey, deleteEndpoint)
     const selectedIds = Object.keys(rowSelection)
     const selectedCount = selectedIds.length
+    const hasFilters = columnFilters.length > 0
+    const filteredExport = Boolean(filtersConfig?.length && (hasFilters || globalFilter))
 
     const handleGlobalFilterChange = (value) => {
-        setGlobalFilter((prev) => {
-            const nextValue = typeof value === 'function' ? value(prev) : value
-            if (nextValue !== prev) {
-                setPagination((p) => ({ ...p, pageIndex: 0 }))
-                setRowSelection({})
-            }
-            return nextValue
-        })
+        const nextValue = typeof value === 'function' ? value(globalFilter) : value
+        setGlobalFilter(nextValue)
+        setPagination((p) => ({ ...p, pageIndex: 0 }))
+        setRowSelection({})
+    }
+
+    const handleColumnFiltersChange = (updater) => {
+        setColumnFilters(updater)
+        setPagination((p) => ({ ...p, pageIndex: 0 }))
+        setRowSelection({})
+    }
+
+    const clearSearchAndFilters = () => {
+        handleGlobalFilterChange('')
+        handleColumnFiltersChange([])
     }
 
     // Row menus call this; it opens the confirmation instead of acting.
@@ -128,11 +140,13 @@ const Datatable = ({
         isError,
         isFetching,
         isLoading,
+        isPlaceholderData,
         refetch,
     } = useQuery({
         queryKey: [queryKey, { columnFilters, globalFilter, pagination, sorting, deleteType }],
-        queryFn: async () => {
+        queryFn: async ({ signal }) => {
             const { data: response } = await axios.get(fetchUrl, {
+                signal,
                 params: {
                     start: pagination.pageIndex * pagination.pageSize,
                     size: pagination.pageSize,
@@ -142,6 +156,7 @@ const Datatable = ({
                     deleteType,
                 },
             })
+            if (!response.success) throw new Error(response.message || 'Could not load this table.')
             return response
         },
         placeholderData: keepPreviousData,
@@ -149,6 +164,16 @@ const Datatable = ({
 
     const total = Number(meta?.totalRowCount) || 0
     const rows = Array.isArray(data) ? data : []
+
+    // A refreshed dataset can shrink after deletes or edits in another tab.
+    useEffect(() => {
+        if (isFetching || isPlaceholderData || isError) return
+        const lastPage = Math.max(0, Math.ceil(total / pagination.pageSize) - 1)
+        if (pagination.pageIndex > lastPage) {
+            setPagination((p) => ({ ...p, pageIndex: lastPage }))
+            setRowSelection({})
+        }
+    }, [total, pagination.pageSize, pagination.pageIndex, isFetching, isPlaceholderData, isError])
 
     const confirmDelete = async () => {
         if (!pendingDelete) return
@@ -174,14 +199,16 @@ const Datatable = ({
                 fieldSeparator: ',',
                 decimalSeparator: '.',
                 useKeysAsHeaders: true,
-                filename: `${String(queryKey).replace(/-data$/, '')}-${selectedCount ? 'selected' : 'all'}-${stamp}`,
+                filename: `${String(queryKey).replace(/-data$/, '')}-${selectedCount ? 'selected' : filteredExport ? 'filtered' : 'all'}-${stamp}`,
             })
 
             let records
             if (selectedCount) {
                 records = selectedRows.map((row) => row.original)
             } else {
-                const { data: response } = await axios.get(exportEndpoint)
+                const { data: response } = await axios.get(exportEndpoint, filtersConfig?.length ? {
+                    params: { filters: JSON.stringify(columnFilters), globalFilter, sorting: JSON.stringify(sorting), deleteType },
+                } : undefined)
                 if (!response.success) throw new Error(response.message)
                 records = response.data
             }
@@ -226,6 +253,10 @@ const Datatable = ({
             return {
                 accessorKey: col.accessorKey,
                 id: col.id || col.accessorKey,
+                // Manual filtering still runs TanStack's automatic removal check.
+                // Its inferred numeric filter expects arrays and removes our
+                // server-side { min, max } values unless we supply a filterFn.
+                filterFn: serverColumnFilter,
                 meta: { title },
                 header: ({ column }) => <DataTableColumnHeader column={column} title={title} />,
                 cell: ({ row, getValue }) => {
@@ -279,7 +310,6 @@ const Datatable = ({
 
         return [selectionColumn, ...dataColumns, actionsColumn]
         // handleDelete only sets state, so a stale closure is harmless.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columnsConfig, createAction, deleteType])
 
     const table = useReactTable({
@@ -295,17 +325,19 @@ const Datatable = ({
         onSortingChange: (updater) => {
             setSorting(updater)
             setPagination((p) => ({ ...p, pageIndex: 0 }))
+            setRowSelection({})
         },
-        onPaginationChange: setPagination,
+        onPaginationChange: (updater) => { setPagination(updater); setRowSelection({}) },
         onRowSelectionChange: setRowSelection,
         onColumnVisibilityChange: setColumnVisibility,
         onGlobalFilterChange: handleGlobalFilterChange,
-        onColumnFiltersChange: setColumnFilters,
+        onColumnFiltersChange: handleColumnFiltersChange,
         getCoreRowModel: getCoreRowModel(),
     })
 
     const visibleColumns = table.getVisibleLeafColumns().length
     const searching = Boolean(globalFilter)
+    const narrowing = searching || hasFilters
     const pinClass = (pin) =>
         pin === 'left'
             ? 'sticky left-0 z-[1] w-12 pl-4 pr-2'
@@ -315,7 +347,7 @@ const Datatable = ({
 
     const dialogCopy = pendingDelete ? DELETE_COPY[pendingDelete.type]?.(pendingDelete.ids.length) : null
     const pageRows = table.getRowModel().rows
-    const showError = !isLoading && isError && rows.length === 0
+    const showError = !isLoading && isError
     const showEmpty = !isLoading && !showError && pageRows.length === 0
 
     // Error / empty copy shared by the desktop table and the phone card list.
@@ -333,19 +365,19 @@ const Datatable = ({
     ) : showEmpty ? (
         <div className="mx-auto flex max-w-sm flex-col items-center text-center">
             <span className="flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
-                {searching ? <SearchX className="size-5" aria-hidden="true" /> : <Inbox className="size-5" aria-hidden="true" />}
+                {narrowing ? <SearchX className="size-5" aria-hidden="true" /> : <Inbox className="size-5" aria-hidden="true" />}
             </span>
-            <p className="mt-4 break-all font-semibold">{searching ? `No matches for “${globalFilter}”` : 'Nothing here yet'}</p>
+            <p className="mt-4 break-all font-semibold">{hasFilters ? 'No records match these filters' : searching ? `No matches for “${globalFilter}”` : 'Nothing here yet'}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-                {searching
-                    ? 'Try a shorter or different search term.'
+                {narrowing
+                    ? 'Adjust your filters or try a different search term.'
                     : deleteType === 'PD'
                         ? 'The recycle bin is empty.'
                         : 'New records will appear here as they come in.'}
             </p>
-            {searching && (
-                <Button variant="outline" className="mt-5 h-10 px-4 sm:h-9" onClick={() => table.setGlobalFilter('')}>
-                    Clear search
+            {narrowing && (
+                <Button variant="outline" className="mt-5 h-10 px-4 sm:h-9" onClick={clearSearchAndFilters}>
+                    {hasFilters ? 'Clear search and filters' : 'Clear search'}
                 </Button>
             )}
         </div>
@@ -403,15 +435,17 @@ const Datatable = ({
                                 </Button>
                             )}
                             {exportEndpoint && (
-                                <Button className="h-10 gap-2 px-3 sm:h-9" disabled={exportLoading || total === 0} onClick={() => handleExport([])}>
+                                <Button className="h-10 gap-2 px-3 sm:h-9" disabled={exportLoading || total === 0 || isFetching || isError} onClick={() => handleExport([])}>
                                     {exportLoading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-                                    <span className="sm:hidden">Export</span><span className="max-sm:hidden">Export all</span>
+                                    <span className="sm:hidden">Export</span><span className="max-sm:hidden">{filteredExport ? 'Export filtered' : 'Export all'}</span>
                                 </Button>
                             )}
                         </div>
                     </>
                 )}
             </div>
+
+            {filtersConfig?.length > 0 && <DataTableFilters table={table} config={filtersConfig} facets={meta?.facets} total={total} busy={isFetching} loading={isLoading} failed={isError} />}
 
             {/* Table */}
             <div className="relative">

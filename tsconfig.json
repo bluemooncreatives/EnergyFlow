@@ -31,11 +31,13 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next-admin-catalog-check/types/**/*.ts",
     ".next-check/types/**/*.ts",
+    ".next-codex-category-edges/types/**/*.ts",
     ".next-verify/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    ".next-codex-category-edges/types/**/*.ts"
+    ".next-admin-catalog-ui/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -7,6 +7,7 @@ import PageHeader from "@/components/Application/Admin/PageHeader"
 import { Button } from "@/components/ui/button"
 import { DT_PRODUCT_COLUMN } from "@/lib/column"
 import { columnConfig } from "@/lib/helperFunction"
+import { PRODUCT_FILTERS } from '@/lib/adminCatalogFilters.mjs'
 import { ADMIN_DASHBOARD, ADMIN_PRODUCT_ADD, ADMIN_PRODUCT_EDIT, ADMIN_PRODUCT_SHOW, ADMIN_TRASH } from "@/routes/AdminPanelRoute"
 import Link from "next/link"
 import { useCallback, useMemo } from "react"
@@ -51,6 +52,7 @@ const ShowProduct = () => {
                     fetchUrl="/api/product"
                     initialPageSize={10}
                     columnsConfig={columns}
+                    filtersConfig={PRODUCT_FILTERS}
                     exportEndpoint="/api/product/export"
                     deleteEndpoint="/api/product/delete"
                     deleteType="SD"
