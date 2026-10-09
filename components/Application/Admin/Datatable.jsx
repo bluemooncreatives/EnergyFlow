@@ -160,6 +160,9 @@ const Datatable = ({
             return response
         },
         placeholderData: keepPreviousData,
+        // Refresh catalogue options on return from create/edit pages and when
+        // an admin returns to this tab after changing records elsewhere.
+        ...(filtersConfig?.length ? { staleTime: 0, refetchOnWindowFocus: true, refetchOnReconnect: true } : {}),
     })
 
     const total = Number(meta?.totalRowCount) || 0

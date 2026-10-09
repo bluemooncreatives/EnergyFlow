@@ -140,6 +140,15 @@ test('MongoDB: dynamic facets, paging, joined filters and export agree on curren
             assert.equal(listed.meta.totalRowCount, exported.length)
             assert.deepEqual(listed.data, exported.slice(0, 10))
             assert.deepEqual(catalogResult(kind, (await aggregate({ start: 10 }))[0]).data, exported.slice(10, 20))
+            if (exported.length) {
+                const price = exported[0].sellingPrice
+                const filters = [{ id: 'sellingPrice', value: { min: price, max: price } }]
+                const priceExport = await aggregate({ filters }, true)
+                const priceResult = catalogResult(kind, (await aggregate({ filters }))[0])
+                assert.deepEqual(priceExport, exported.filter((row) => row.sellingPrice === price))
+                assert.equal(priceResult.meta.totalRowCount, priceExport.length)
+                assert.deepEqual(priceResult.meta.facets.sellingPrice, listed.meta.facets.sellingPrice)
+            }
             const firstOption = listed.meta.facets[selectId][0]
             if (firstOption) {
                 const filters = [{ id: selectId, value: [firstOption.value] }]
